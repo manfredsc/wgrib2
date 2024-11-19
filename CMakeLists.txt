@@ -132,8 +132,6 @@ endif()
 message(STATUS "Checking if the user wants to use PNG...")
 if(USE_PNG)
   find_package(g2c 1.9.0 CONFIG REQUIRED)
-  #find_package(ZLIB REQUIRED)
-  #find_package(PNG REQUIRED)
 endif()
 
 # Find required packages to use AEC
