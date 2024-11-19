@@ -174,12 +174,12 @@ class Wgrib2(MakefilePackage, CMakePackage):
     depends_on("libaec@1.0.6:", when="@3.2: +aec")
     depends_on("netcdf-c", when="@3.2: +netcdf4")
     depends_on("jasper@:2", when="@3.2:3.4 +jasper")
-    depends_on("g2c +jasper", when="@develop +jasper")
+    depends_on("g2c@develop +jasper", when="@develop +jasper")
     depends_on("zlib-api", when="@3.2:3.4 +png")
     depends_on("libpng", when="@3.2:3.4 +png")
-    depends_on("g2c@2.0: +png", when="@develop +png")
+    depends_on("g2c@develop +png", when="@develop +png")
     depends_on("openjpeg", when="@3.2:3.4 +openjpeg")
-    depends_on("g2c +openjpeg", when="@develop +openjpeg")
+    depends_on("g2c@develop +openjpeg", when="@develop +openjpeg")
 
     @when("@:2 ^gmake@4.2:")
 
