@@ -14,9 +14,9 @@
 #define _CONFIG_H
 #endif
 
-#ifdef USE_PNG
-    #include "grib2.h"
-#endif
+//#ifdef USE_PNG
+//    #include "grib2.h"
+//#endif
 
 #include "wgrib2_api.h"
 
@@ -506,10 +506,11 @@ int wrt_sec(unsigned const char *sec0, unsigned const char *sec1, unsigned const
 int scaling(unsigned char **sec, double *base, int *decimal, int *binary, int *nbits);
 unsigned char *mk_bms(float *data, unsigned int *ndata);
 
-#ifdef USE_PNG
-int dec_png(unsigned char *pngbuf,g2int *width,g2int *height, unsigned char *cout);
-#endif
+//#ifdef USE_PNG
+//int dec_png(unsigned char *pngbuf,g2int *width,g2int *height, unsigned char *cout);
+//#endif
 //int dec_png_clone(unsigned char *pngbuf,int *width,int *height, unsigned char *cout, int *grib2_bit_depth, unsigned int ndata);
+int g2c_dec_png(unsigned char *pngbuf, int *width, int *height, unsigned char *cout);
 int ieee_grib_out(unsigned char **sec, float *data, unsigned int ndata, struct seq_file *out);
 int jpeg_grib_out(unsigned char **sec, float *data, unsigned int ndata, 
     int nx, int ny, int use_scale, int dec_scale, int bin_scale, FILE *out);
