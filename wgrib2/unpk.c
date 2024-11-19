@@ -227,6 +227,7 @@ int unpk_grib(unsigned char **sec, float *data) {
 	dec_scale = Int_Power(10.0, -int2(p+17));
 	nbits = p[19];
 
+    printf("nbits = %d", nbits);
         if (nbits == 0) {
             tmp = reference*dec_scale;
             if (bitmap_flag == 255) {
