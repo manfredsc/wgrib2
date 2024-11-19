@@ -253,7 +253,7 @@ int unpk_grib(unsigned char **sec, float *data) {
 	if ((c = (unsigned char *) malloc(4*sizeof(char) * (size_t) ndata)) == NULL)
             fatal_error("unpk: png decode allocation error", "");
 
-    i = dec_png(sec[7]+5, &width, &height, (unsigned char *) c)
+    i = dec_png(sec[7]+5, &width, &height, (unsigned char *) c);
 	//i = (int) dec_png_clone(sec[7]+5, &width, &height, (unsigned char *) c, &nbits, ndata);
 	if (i) fatal_error_i("unpk: png decode error %d",i);
 	mask_pointer = (bitmap_flag == 255) ? NULL : sec[6] + 6;
