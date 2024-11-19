@@ -50,6 +50,7 @@ int unpk_grib(unsigned char **sec, float *data) {
 #ifdef USE_PNG
     //int width, height;
     g2int width, height;
+    int i;
 #endif
 
 #if (defined USE_JASPER || defined USE_OPENJPEG)
