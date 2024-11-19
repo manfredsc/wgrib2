@@ -17,8 +17,9 @@
 #endif
 
 #ifdef USE_PNG
-   #include <png.h>
-   int i;
+    #include "grib2.h"
+//   #include <png.h>
+//   int i;
 #endif
 
 #ifdef USE_AEC
@@ -47,7 +48,8 @@ int unpk_grib(unsigned char **sec, float *data) {
     double bin_scale, dec_scale, b;
 
 #ifdef USE_PNG
-    int width, height;
+    //int width, height;
+    g2int width, height;
 #endif
 
 #if (defined USE_JASPER || defined USE_OPENJPEG)
@@ -251,7 +253,8 @@ int unpk_grib(unsigned char **sec, float *data) {
 	if ((c = (unsigned char *) malloc(4*sizeof(char) * (size_t) ndata)) == NULL)
             fatal_error("unpk: png decode allocation error", "");
 
-	i = (int) dec_png_clone(sec[7]+5, &width, &height, (unsigned char *) c, &nbits, ndata);
+    i = dec_png(sec[7]+5, &width, &height, (unsigned char *) c)
+	//i = (int) dec_png_clone(sec[7]+5, &width, &height, (unsigned char *) c, &nbits, ndata);
 	if (i) fatal_error_i("unpk: png decode error %d",i);
 	mask_pointer = (bitmap_flag == 255) ? NULL : sec[6] + 6;
 
