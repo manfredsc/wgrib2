@@ -263,8 +263,8 @@ int unpk_grib(unsigned char **sec, float *data) {
 //	check sizes
 
 	if (mask_pointer == NULL) {
-	    //if (ndata != width*height) 
-    	//	fatal_error_i("png size mismatch w*h=%d", width*height);
+	    if (ndata != width*height) 
+    		fatal_error_i("png size mismatch w*h=%d", width*height);
 	}
 	else {
 	    if (ndata != width*height + missing_points(mask_pointer, GB2_Sec3_npts(sec)) )
