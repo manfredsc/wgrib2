@@ -133,6 +133,30 @@ integers which limits the maximum size of scaled integers
 to 25 after accounting for the limits of the packing and
 unpacking routines.
 
+<p> The complex-2 and complex-3 compression schemes also
+store scaled integers but different.  The complex-1 stores
+the scaled intger values, so it is limited to a 25 bit
+integers.  Hewever, complex-2 stores the delta (the difference
+from previously defined grid point).  The magnitude of delta
+is limited by the original series but the delta can be
+either positive or negative.  So under worst case, the
+deltas need one more bit to store the scaled integers.
+So if you scale the grid point values to 24 bits, you
+will have a scaled deltas being 25 bits.  The complex-3
+packing stores the deltas of the delta series. This is
+good for smooth fields, but for the worst case could 
+cause two extra bits to store the original grid data.
+So at worst case, the data would need to be scaled at 23
+bits.
+
+<p> The extra bits needed for complex-2 and complex-3 are
+very rare.  It was first encountered in 11/2024 which
+is about a decade after the complex packing was introduced.
+In 11/2024, code was added to the complex packing to detect
+the increase in bits needed and reduce the precision if it
+cause the precision to be greater than 25 bits.
+
+
 <p> Grib fields are usually stored as a scaled integers,
 and usually you don't need 25 bits of precision.  For
 example, temperature to the nearest 0.1 degree, means

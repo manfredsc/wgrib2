@@ -109,6 +109,7 @@ copy_test_data(ref_simple_packing.grib2.spread.txt)
 copy_test_data(ref_new_grid_gdt_32769.grib2)
 copy_test_data(png_4bits.png)
 copy_test_data(large_png.grb2)
+copy_test_data(ref_c3_overflow.grib2)
 
 # Run these shell tests.
 shell_test(run_wgrib2_tests)

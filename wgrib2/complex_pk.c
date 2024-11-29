@@ -84,13 +84,13 @@ static int sizeofsection2(int mn, int mx, int n, int ref_bits, int width_bits, i
 }
 
 static int size_all(struct section *s, int ref_bits, int width_bits, int has_undef) {
-	unsigned int bytes, bits;
+        unsigned int bytes, bits;
 
         bytes = bits = 0;
         while (s) {
             bits += sizeofsection(s, ref_bits, width_bits, has_undef);
-	    bytes += (bits / 8);
-	    bits = bits % 8;
+            bytes += (bits / 8);
+            bits = bits % 8;
             s = s->tail;
         }
         return (int) (bytes + (bits != 0));
@@ -722,8 +722,7 @@ int complex_grib_out(unsigned char **sec, float *data, unsigned int ndata,
 	if (int_min_max_array(v, nndata, &vmn, &vmx) != 0) fatal_error("complex_pk: int_min_max error","");
     }
 
-//fprintf(stderr , "\n pre process v[i] data extri_0 %d extra_1 %d\n",extra_0, extra_1);
-//for (i = 0; i < nndata;i++) {
+//fprintf(stderr , "\n pre process v[i] data extri_0 %d extra_1 %d\n",extra_0, extra_1); //for (i = 0; i < nndata;i++) {
 //fprintf(stderr," %d:%d ", i, v[i]);
 //}
 //fprintf(stderr,"\n");
@@ -731,6 +730,25 @@ int complex_grib_out(unsigned char **sec, float *data, unsigned int ndata,
 #ifdef DEBUG
 printf("2: vmx %d vmn %d nbits %d\n", vmx, vmn, find_nbits(vmx-vmn+has_undef));
 #endif
+
+    /*
+       c2: values are deltas, which are both plus and minus
+           so range of values is up to twice range of input (one more bit)
+       c3: values are deltas of the deltas
+           the range of deltas are up to 2x initial values
+           the potential rannge of deltas of deltas are 4x initial values
+     */
+    
+    j = find_nbits(vmx-vmn+has_undef);
+    if (j > 25) {
+       free(v);
+       free(sec5);
+       free(sec6);
+       max_bits -= 1;
+       if (packing_mode == 3) max_bits -= 1;
+       return complex_grib_out(sec, data, ndata, use_scale, dec_scale, bin_scale, 
+          wanted_bits, max_bits, packing_mode, use_bitmap, out);
+    }
 
     if (has_undef) {
 #pragma omp parallel for private(i)
