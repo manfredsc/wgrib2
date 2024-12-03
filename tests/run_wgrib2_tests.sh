@@ -145,7 +145,7 @@ if [ `echo "$line" | grep -c ":rpn_rms=0:"` -ne 1 ] ; then
   exit 1
 fi
 
-
+../wgrib2/wgrib2 data/ref_c3_overflow.grib2 -set_grib_type c3 -set_grib_max_bits 25 -grib_out c3_overflow.grib2
 
 echo "*** SUCCESS!"
 exit 0
