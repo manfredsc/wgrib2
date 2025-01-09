@@ -299,6 +299,7 @@ int f_nc_table(ARG1)
   g2nc_conv * old_nct;
   char *tptr;
   float min, max, range, ftmp;
+  int search_lev;
 
   if (mode == -1)
   {
@@ -533,42 +534,53 @@ wgib2_name:wgrib2_level|*:nc_name|ignore[:ignore|no|float|deflate{0-9}|[short|by
 
           for (i=0; i < nc_table->nlev; i++)
           {
-            search_lev: ir = strcspn(prd,"+-.0123456789");
-            itmp = strcspn(prd,"#"); /* inline comment */
-            if ( ir < 0 || ir >= strlen(prd) || itmp < ir )
-            { /* read next line */
-              prd = fgets(input, _MAX_PATH, fl);
-              if (prd == NULL )
-              {
-                fprintf(stderr,"nc_table: error reading multy line $levs \n");
-                ierr = -7;
-                break;
+            search_lev = 1;
+            while (search_lev == 1) {
+              // search_lev: ir = strcspn(prd,"+-.0123456789");
+              ir = strcspn(prd,"+-.0123456789");
+              itmp = strcspn(prd,"#"); /* inline comment */
+              if ( ir < 0 || ir >= strlen(prd) || itmp < ir )
+              { /* read next line */
+                prd = fgets(input, _MAX_PATH, fl);
+                if (prd == NULL )
+                {
+                  fprintf(stderr,"nc_table: error reading multy line $levs \n");
+                  ierr = -7;
+                  search_lev = 1;
+                  continue;
+                }
+                continue;
               }
-              goto search_lev;
+              itmp = strcspn(prd,":"); /* second important fields separator before number */
+              if (itmp <= ir )
+              {
+                fprintf(stderr,"nc_table: error entering $levs, check that there are $nlev values defined\n");
+                ierr = -8;
+                search_lev = 1;
+                continue;
+              }
+              prd += ir;
+              ir = sscanf(prd,"%g",&nc_table->lv[i]);
+              if ( ir < 1 )
+              {
+                fprintf(stderr,"nc_table: $levs formatted input error\n");
+                ierr = -9;
+                search_lev = 1;
+                continue;
+              }
+              ir = strcspn(prd," ,;:\n");
+              if(ir <= strlen(prd) ) prd += ir;
+              else
+              {
+                fprintf(stderr,"nc_table: $levs parsing error, do no found fields separator\n");
+                ierr = -10;
+                search_lev = 1;
+                continue;
+              }
+              search_lev = 0;
             }
-            itmp = strcspn(prd,":"); /* second important fields separator before number */
-            if (itmp <= ir )
-            {
-              fprintf(stderr,"nc_table: error entering $levs, check that there are $nlev values defined\n");
-              ierr = -8;
-              break;
-            }
-            prd += ir;
-            ir = sscanf(prd,"%g",&nc_table->lv[i]);
-            if ( ir < 1 )
-            {
-              fprintf(stderr,"nc_table: $levs formatted input error\n");
-              ierr = -9;
-              break;
-            }
-            ir = strcspn(prd," ,;:\n");
-            if(ir <= strlen(prd) ) prd += ir;
-            else
-            {
-              fprintf(stderr,"nc_table: $levs parsing error, do no found fields separator\n");
-              ierr = -10;
-              break;
-            }
+            /* end of search lev */
+            if (ierr) break;
           }
           if ( ierr ) break;
         }
@@ -881,6 +893,7 @@ int f_nc_time(ARG1)
   const char *p;
   int year,month,day,hour,minute,second,dt_val,dt_conv,err_code;
   char dt_type[25];
+  int skip_date;
 
   if (mode == -1)
   {
@@ -890,6 +903,7 @@ int f_nc_time(ARG1)
     nc_date0_type = 0;
     nc_date0 = 0;
     nc_dt = 0;
+    skip_date = 0;
 
     sscanf(arg1,"%c",&chr);
 
@@ -897,47 +911,48 @@ int f_nc_time(ARG1)
     if (chr==':')
     { /* separator symbol is first, time step only, any long string*/
       p++;
-      goto get_time_step;
+      skip_date = 1;
     }
     if (strlen(p) < 14)
     { /* time step only */
-      goto get_time_step;
+      skip_date = 1;
     }
-    /* include date */
-    nc_date0_type = 1;    /*absolute */
-    if (chr=='-')
-    {
-      p++;
-      nc_date0_type = -1; /* relative*/
-    }
-    else if (chr == '+')
-    {
-      p++;
-    }
-    if (sscanf(p,"%4d%2d%2d%2d%2d%2d",&year,&month,&day,&hour,&minute,&second) != 6)
-      fatal_error("nc_time: bad format of yyyymmddhhnnss value in nc_time: %s", arg1);
+    if (skip_date == 0) {
+      /* include date */
+      nc_date0_type = 1;    /*absolute */
+      if (chr=='-')
+      {
+        p++;
+        nc_date0_type = -1; /* relative*/
+      }
+      else if (chr == '+')
+      {
+        p++;
+      }
+      if (sscanf(p,"%4d%2d%2d%2d%2d%2d",&year,&month,&day,&hour,&minute,&second) != 6)
+        fatal_error("nc_time: bad format of yyyymmddhhnnss value in nc_time: %s", arg1);
 
-    if(year<0 || year>9999 || month<1 || month>12 || day<1 || day>31 ||
-       hour <0 || hour>23 || minute < 0 || minute >59 || second < 0 || second >59)
-      fatal_error("nc_time: bad value of yyyymmddhhnnss value in nc_time: %s", arg1);
+      if(year<0 || year>9999 || month<1 || month>12 || day<1 || day>31 ||
+         hour <0 || hour>23 || minute < 0 || minute >59 || second < 0 || second >59)
+         fatal_error("nc_time: bad value of yyyymmddhhnnss value in nc_time: %s", arg1);
 
 #ifdef DEBUG_NC
 printf("nc_time: date0_type=%d date0=%d.%d.%d %d:%d:%d\n",nc_date0_type,year,month,day,hour,minute,second);
 #endif
-    nc_date0 = get_unixtime(year, month, day, hour, minute, second, &err_code);
-    if(err_code)
-      fatal_error("nc_time: time [sec] is out of range for this OS","");
+      nc_date0 = get_unixtime(year, month, day, hour, minute, second, &err_code);
+      if(err_code)
+        fatal_error("nc_time: time [sec] is out of range for this OS","");
 
-    p+=14;
-    if (strlen(p) <= 1)
-    {
-      if (nc_date0_type > 0) return 0;
-      fatal_error("nc_time: negative yyyymmddhhnnss (relative date) need time step in -nc_time option: %s", arg1);
+      p+=14;
+      if (strlen(p) <= 1)
+      {
+        if (nc_date0_type > 0) return 0;
+        fatal_error("nc_time: negative yyyymmddhhnnss (relative date) need time step in -nc_time option: %s", arg1);
+      }
+      p++; /*pass separator symbol ':' or other*/
     }
-    p++; /*pass separator symbol ':' or other*/
-
-get_time_step:
-
+ 
+    /* now for the time step */ 
     if (sscanf(p,"%d%s",&dt_val,dt_type) != 2)
       fatal_error("nc_time: bad time step in nc_time: %s", p);
 

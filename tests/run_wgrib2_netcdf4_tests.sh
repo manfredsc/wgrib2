@@ -3,7 +3,7 @@
 #
 # Alyson Stahl, 4/22/24
 
-set -e 
+set -ex
 
 echo "*** Testing converting from grib to netcdf to grib"
 # make template
@@ -35,6 +35,12 @@ echo "*** Testing converting from grib to netcdf using table"
 ncdump -h tablenc.nc > tablenc.txt
 touch tablenc.txt
 diff -w tablenc.txt data/ref_tablenc.gdas.t12z.pgrb2.1p00.anl.75r.grib2.txt
+
+echo "*** Testing nc_time" 
+../wgrib2/wgrib2 data/gdas.t12z.pgrb2.1p00.anl.75r.grib2 -match ":UGRD:" -nc_time 20200101000000 -netcdf test_time.nc
+if [ `ncdump test_time.nc | grep -c "time = 1577836800,"` -ne 1 ] ; then
+  exit 1
+fi
 
 echo "*** SUCCESS!"
 exit 0
