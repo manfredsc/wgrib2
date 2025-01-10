@@ -22,10 +22,9 @@ Alias.c Ave_test.c Ave_var.c Bbox.c bitstream.c Box_ave.c
 Check_pdt_size.c Checksum.c Cluster.c cname.c codetable_4_230.c
 CodeTable.c Code_Values.c Code_Values_JMA.c complex_pk.c Config.c
 copy.c crc32.c Cress_lola.c Csv.c Csv_long.c cubed_sphere2ll.c
-CubeFace2global.c Cyclic.c Data.c dec_png_clone.c
-Dump.c Earth.c Else.c End.c Endif.c Ensemble.c
-Ens_processing.c Ens_qc.c EOF.c Export_lonlat.c ExtName.c
-fatal_error.c Fcst_ave.c ffopen.c Fi.c File.c Fix_CFSv2_fcst.c
+CubeFace2global.c Cyclic.c Data.c Dump.c Earth.c Else.c End.c
+Endif.c Ensemble.c Ens_processing.c Ens_qc.c EOF.c Export_lonlat.c
+ExtName.c fatal_error.c Fcst_ave.c ffopen.c Fi.c File.c Fix_CFSv2_fcst.c
 Fix_ncep_2.c Fix_ncep_3.c Fix_ncep_4.c Fix_ncep.c Fix_undef.c
 FlagTable.c flt2ieee.c flt2ieee_nan.c Flush.c fnlist.c For.c Ftime1.c
 Ftime2.c Ftime.c Ftn_api.c gaussian2ij.c Gctpc.c gctpc_ll2xy.c GDT.c
@@ -108,10 +107,6 @@ if(USE_NETCDF)
   target_link_libraries(wgrib2_exe PUBLIC NetCDF::NetCDF_C)
 endif()
 
-if(USE_PNG)
-  target_link_libraries(obj_lib PUBLIC PNG::PNG)
-endif()
-
 if(USE_OPENMP)
   target_link_libraries(obj_lib PUBLIC OpenMP::OpenMP_C)
   if(BUILD_SHARED_LIB)
@@ -143,7 +138,7 @@ if(USE_AEC)
   target_link_libraries(wgrib2_exe PRIVATE ${LIBAEC_LIBRARIES})
 endif()
 
-if(USE_JASPER OR USE_OPENJPEG)
+if(USE_JASPER OR USE_OPENJPEG OR USE_PNG)
   target_link_libraries(obj_lib PUBLIC g2c::g2c)
   target_link_libraries(wgrib2_exe PRIVATE g2c::g2c)
 endif()
