@@ -157,7 +157,7 @@ if(BUILD_LIB)
   message(STATUS "Adding wgrib2 library build...")
   ### Package config
   include(CMakePackageConfigHelpers)
-  set(CONFIG_INSTALL_DESTINATION lib/cmake/${PROJECT_NAME})
+  set(CONFIG_INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
   # No need for config file if library isn't built
   export(EXPORT wgrib2_exports
