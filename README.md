@@ -59,22 +59,35 @@ Trahan, George Trojan, Sergey Varlamov
 CMake Build and testing: Kyle Gerheiser, Alyson Stahl, Edward
 Hartnett, Alex Richert
 
-# Installing
+# Prerequisites
 
-Building wgrib2 requires, CMake, a C compiler, a Fortran compiler
+Building wgrib2 requires, CMake (version 3.15+), a C compiler, a Fortran compiler
 (optional), and various 3rd party libraries depending on build
 configuration.
+
+- A Fortran compiler is only required if MAKE_FTN_API=ON or USE_IPOLATES=ON
+- wgrib2 optionally depends on netcdf-c to read and write NetCDF files
+- [NCEPLIBS-ip](https://github.com/NOAA-EMC/NCEPLIBS-ip) library (version 5.1.0+) is required
+for grid interpolation.
+- [libaec.a](https://gitlab.dkrz.de/k202009/libaec) (version 1.0.6+) is required to support files
+with AEC compression.
+-[NCEPLIBS-g2c](https://github.com/NOAA-EMC/NCEPLIBS-g2c) library (version 1.9.0+) is required to use wgrib2 with JPEG and PNG compression. Make sure that the library is built with the appropriate build options enabled (some are not enabled by default). For example, to use wgrib2 with OpenJPEG, g2c must be built with OpenJPEG enabled and Jasper disabled. Please refer to [g2c's readme file](https://github.com/NOAA-EMC/NCEPLIBS-g2c?tab=readme-ov-file) for more detail.
+
+
+# Installing
+
+Download the tarball from the release page and unpack it, and cd into the main directory of the library. Then run the following commands, substituting your directory locations for the CMAKE_INSTALL_PREFIX (where wgrib2 will be installed), and the CMAKE_PREFIX_PATH (where the build will look for dependencies):
+
+```
+mkdir build && cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=install -DCMAKE_PREFIX_PATH="/usr/local/NCEPLIBS-g2c;/usr/local/NCEPLIBS-ip"
+make
+make install
+```
 
 The CMake build provided here supports most build options (NetCDF,
 PNG, Jasper, spectral, and ipolates), but not certain features such as
 MySQL. 
-
-```
-mkdir build && cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=install -DCMAKE_PREFIX_PATH=path/to/dependencies
-make
-make install
-```
 
 # Using the wgrib2 library
 
