@@ -35,8 +35,7 @@ jobs:
         find /Library/Frameworks/ -name "png*"
         sudo rm -rf /Library/Frameworks/Mono.framework
         brew update
-        brew install libpng
-        brew install jpeg-turbo
+        brew install libpng jpeg-turbo libaec
 
     - name: "Build dependencies"
       uses: NOAA-EMC/ci-build-nceplibs@develop
