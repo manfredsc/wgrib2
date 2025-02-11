@@ -1,0 +1,66 @@
+# This is a GitHub actions workflow for wgrib2.
+#
+# This builds the develop branch on MacOS.
+#
+# Alyson Stahl, 2/11/2025
+name: MacOS
+on:
+  push:
+    branches:
+    - develop
+  pull_request:
+    branches:
+    - develop
+
+# Cancel in-progress workflows when pushing to a branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  MacOS:
+    runs-on: macos-latest
+    env:
+      FC: gfortran-12
+    strategy:
+      fail-fast: true
+      matrix:
+        ccompiler: [gcc-12, gcc-14, clang]
+        jasper-version: [4.0.0]
+        openmp: [ ON, OFF ]
+        config:
+        - {
+            name: "jasper_on openjpeg_off",
+            options: "-DUSE_AEC=ON -DUSE_PNG=ON -DUSE_JASPER=ON -DUSE_OPENJPEG=OFF -DBUILD_SHARED_LIB=ON -DBUILD_LIB=ON -DMAKE_FTN_API=ON"
+          }
+
+    steps:
+    - name: install-dependencies
+      run: |
+        find /Library/Frameworks/ -name "png*"
+        sudo rm -rf /Library/Frameworks/Mono.framework
+        brew update
+        brew install libpng
+        brew install jpeg-turbo
+
+    - name: "Build dependencies"
+      uses: NOAA-EMC/ci-build-nceplibs@develop
+      with:
+        g2c-version: develop
+        jasper-version: version-${{ matrix.jasper-version }}
+        ip-version: develop
+        ip-cmake-args: -DOPENMP=${{matrix.openmp}}
+
+    - name: checkout
+      uses: actions/checkout@v4
+      with:
+        path: wgrib2
+
+    - name: build
+      run: |
+        cd wgrib2
+        mkdir build
+        cd build
+        cmake -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/jasper;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-g2c;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-ip" .. -DUSE_AEC=ON -DUSE_PNG=ON -DUSE_JASPER=ON -DBUILD_SHARED_LIB=ON -DBUILD_LIB=ON -DMAKE_FTN_API=ON -DUSE_OPENMP=${{matrix.openmp}}
+        make VERBOSE=1
+        ctest --verbose --output-on-failure --rerun-failed
