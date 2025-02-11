@@ -23,6 +23,7 @@ jobs:
     env:
       FC: gfortran-12
     strategy:
+      fail-fast: false
       matrix:
         ccompiler: [gcc-12, gcc-14, clang]
         jasper-version: [4.0.0]
