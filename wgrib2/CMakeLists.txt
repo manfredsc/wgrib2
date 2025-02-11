@@ -95,13 +95,12 @@ if(BUILD_LIB)
   # target_compile_definitions(wgrib2_lib PRIVATE CALLABLE_WGRIB2)
 endif()
 
-
 add_executable(wgrib2_exe wgrib2_main.c)
 set_target_properties(wgrib2_exe PROPERTIES OUTPUT_NAME wgrib2)
 
 if(USE_NETCDF)
   target_link_libraries(obj_lib PUBLIC NetCDF::NetCDF_C)
-  if(BUILD_SHARED_LIB)
+  if(BUILD_LIB)
     target_link_libraries(wgrib2_lib PUBLIC NetCDF::NetCDF_C)
   endif()
   target_link_libraries(wgrib2_exe PUBLIC NetCDF::NetCDF_C)
@@ -109,7 +108,7 @@ endif()
 
 if(USE_OPENMP)
   target_link_libraries(obj_lib PUBLIC OpenMP::OpenMP_C)
-  if(BUILD_SHARED_LIB)
+  if(BUILD_LIB)
     target_link_libraries(wgrib2_lib PUBLIC OpenMP::OpenMP_C)
   endif()
 endif()
@@ -118,6 +117,9 @@ if(USE_IPOLATES)
   target_link_libraries(obj_lib PUBLIC ip::ip_d)
   target_link_libraries(wgrib2_exe PUBLIC ip::ip_d)
 
+  if(BUILD_LIB)
+    target_link_libraries(wgrib2_lib PUBLIC ip::ip_d)
+  endif()
   # Link to the Fortran runtime library for each compiler if using ip2.
   # The wgrib2 exectuable is created using the C compiler and
   # doesn't link the necessary Fortran library required for ip2.
@@ -129,22 +131,25 @@ if(USE_IPOLATES)
   
 endif()
 
-## target_link_libraries(obj_lib PUBLIC gctpc -lm)
-
 # Link to gctpc directly because object libraries do not link transitively
 target_link_libraries(wgrib2_exe PRIVATE gctpc -lm)
 
 if(USE_AEC)
+  if(BUILD_LIB)
+    target_link_libraries(wgrib2_lib PUBLIC ${LIBAEC_LIBRARIES})
+  endif()
   target_link_libraries(wgrib2_exe PRIVATE ${LIBAEC_LIBRARIES})
 endif()
 
 if(USE_JASPER OR USE_OPENJPEG OR USE_PNG)
   target_link_libraries(obj_lib PUBLIC g2c::g2c)
+  if(BUILD_LIB)
+    target_link_libraries(wgrib2_lib PUBLIC g2c::g2c)
+  endif()
   target_link_libraries(wgrib2_exe PRIVATE g2c::g2c)
 endif()
 
 target_link_libraries(wgrib2_exe PRIVATE obj_lib)
-# target_link_libraries(wgrib2_exe PRIVATE wgrib2_lib)
 
 if(BUILD_LIB)
   set(headers wgrib2_api.h wgrib2.h ${CMAKE_BINARY_DIR}/wgrib2/wgrib2_meta.h)
