@@ -28,11 +28,6 @@ jobs:
         ccompiler: [gcc-12, gcc-14, clang]
         jasper-version: [4.0.0]
         openmp: [ ON, OFF ]
-        config:
-        - {
-            name: "jasper_on openjpeg_off",
-            options: "-DUSE_AEC=ON -DUSE_PNG=ON -DUSE_JASPER=ON -DUSE_OPENJPEG=OFF -DBUILD_SHARED_LIB=ON -DBUILD_LIB=ON -DMAKE_FTN_API=ON"
-          }
 
     steps:
     - name: install-dependencies
