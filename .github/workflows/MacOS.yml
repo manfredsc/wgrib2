@@ -22,6 +22,7 @@ jobs:
     runs-on: macos-latest
     env:
       FC: gfortran-12
+      LD_LIBRARY_PATH: "/Users/runner/work/wgrib2/wgrib2/nceplibs/jasper/lib/"
     strategy:
       fail-fast: false
       matrix:
@@ -55,7 +56,7 @@ jobs:
         cd wgrib2
         mkdir build
         cd build
-        export CFLAGS='-I/Users/runner/work/wgrib2/wgrib2/nceplibs/NCEPLIBS-g2c/include' LDFLAGS='-L/Users/runner/work/wgrib2/wgrib2/nceplibs/jasper/lib'
+        export CFLAGS='-I/Users/runner/work/wgrib2/wgrib2/nceplibs/NCEPLIBS-g2c/include'
         #cmake -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/jasper;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-g2c;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-ip" .. -DUSE_AEC=OFF -DUSE_PNG=ON -DUSE_JASPER=ON -DBUILD_SHARED_LIB=${{matrix.sharedlib}} -DMAKE_FTN_API=ON -DUSE_OPENMP=${{matrix.openmp}}
         cmake -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/jasper;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-g2c;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-ip" .. -DBUILD_LIB=OFF -DBUILD_SHARED_LIB=OFF -DUSE_PNG=ON -DUSE_AEC=ON -DUSE_JASPER=ON
         make VERBOSE=1
