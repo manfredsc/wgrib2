@@ -139,6 +139,7 @@ if(USE_AEC)
     target_link_libraries(wgrib2_lib PUBLIC ${LIBAEC_LIBRARIES})
   endif()
   target_link_libraries(wgrib2_exe PRIVATE ${LIBAEC_LIBRARIES})
+  target_include_directories(wgrib2_exe PRIVATE ${LIBAEC_INCLUDE_DIRS})
 endif()
 
 if(USE_JASPER OR USE_OPENJPEG OR USE_PNG)
