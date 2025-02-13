@@ -22,7 +22,7 @@ jobs:
     runs-on: macos-latest
     env:
       FC: gfortran-12
-      #LD_LIBRARY_PATH: "/Users/runner/work/wgrib2/wgrib2/nceplibs/jasper/lib/"
+      LD_LIBRARY_PATH: "/Users/runner/work/wgrib2/wgrib2/nceplibs/jasper/lib/"
     strategy:
       fail-fast: false
       matrix:
@@ -42,7 +42,7 @@ jobs:
       uses: NOAA-EMC/ci-build-nceplibs@develop
       with:
         g2c-version: develop
-        g2c-cmake-args: -DUSE_Jasper=ON
+        g2c-cmake-args: -DUSE_Jasper=ON -DJasper_ROOT="Users/runner/work/wgrib2/wgrib2/nceplibs/jasper"
         jasper-version: version-${{ matrix.jasper-version }}
         ip-version: develop
 
@@ -58,6 +58,6 @@ jobs:
         cd build
         export CFLAGS='-I/Users/runner/work/wgrib2/wgrib2/nceplibs/NCEPLIBS-g2c/include'
         #cmake -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/jasper;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-g2c;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-ip" .. -DUSE_AEC=OFF -DUSE_PNG=ON -DUSE_JASPER=ON -DBUILD_SHARED_LIB=${{matrix.sharedlib}} -DMAKE_FTN_API=ON -DUSE_OPENMP=${{matrix.openmp}}
-        cmake -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/jasper;$GITHUB_WORKSPACE/nceplibs/jasper/lib;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-g2c;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-ip" .. -DBUILD_LIB=OFF -DBUILD_SHARED_LIB=OFF -DUSE_PNG=ON -DUSE_AEC=ON -DUSE_JASPER=ON
+        cmake -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/jasper;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-g2c;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-ip" .. -DBUILD_LIB=OFF -DBUILD_SHARED_LIB=OFF -DUSE_PNG=ON -DUSE_AEC=ON -DUSE_JASPER=ON
         make VERBOSE=1
         ctest --verbose --output-on-failure --rerun-failed
