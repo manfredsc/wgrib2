@@ -22,7 +22,6 @@ jobs:
     runs-on: macos-latest
     env:
       FC: gfortran-12
-      LD_LIBRARY_PATH: "/Users/runner/work/wgrib2/wgrib2/nceplibs/jasper/lib/"
     strategy:
       fail-fast: false
       matrix:
