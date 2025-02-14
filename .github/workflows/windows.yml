@@ -41,7 +41,7 @@ jobs:
     - name: "Build dependencies"
       uses: NOAA-EMC/ci-build-nceplibs@develop
       with:
-        jasper-version: version-4.0.0
+        #jasper-version: version-4.0.0
         g2c-version: develop
         #g2c-cmake-args: -DUSE_OpenJPEG=${{matrix.openjpeg}} -DUSE_Jasper=${{matrix.jasper}}
         ip-version: develop

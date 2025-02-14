@@ -25,7 +25,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ccompiler: [gcc-12, gcc-14, clang]
+        ccompiler: [gcc, clang]
         sharedlib: [ON, OFF]
         jasper: [ON, OFF]
         openjpeg: [ON, OFF]
