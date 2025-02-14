@@ -15,9 +15,6 @@ on:
 jobs:
   Windows:
     runs-on: windows-latest
-    env:
-      CXX: g++
-      FC: gfortran
     strategy:
       matrix:
         ccompiler: [gcc, clang]
@@ -34,7 +31,7 @@ jobs:
         update: true
         install: >-
           mingw-w64-x86_64-gcc
-          mingw-w64-x86_64-g++
+          mingw-w64-x86_64-gcc-fortran
           mingw-w64-x86_64-clang
           mingw-w64-x86_64-cmake
           mingw-w64-x86_64-ninja
