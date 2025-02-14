@@ -16,6 +16,7 @@ jobs:
   Windows:
     runs-on: windows-latest
     env:
+      CXX: g++
       FC: gfortran
     strategy:
       matrix:
