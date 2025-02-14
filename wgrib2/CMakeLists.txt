@@ -69,10 +69,6 @@ endif()
 # make this an object lib so we can re-use most of object files
 add_library(obj_lib OBJECT ${lib_src})
 target_compile_definitions(obj_lib PUBLIC ${definitions_list}) 
-#target_include_directories(obj_lib PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-
-add_executable(wgrib2_exe wgrib2_main.c)
-set_target_properties(wgrib2_exe PROPERTIES OUTPUT_NAME wgrib2)
 
 # Write wgrib2_meta.h. This is installed and contains pre-processor
 # defines for other packages using wgrib2.
@@ -80,6 +76,9 @@ configure_file (
   "${PROJECT_SOURCE_DIR}/wgrib2/wgrib2_meta.h.in"
   "${PROJECT_BINARY_DIR}/wgrib2/wgrib2_meta.h"
   )
+
+add_executable(wgrib2_exe wgrib2_main.c)
+set_target_properties(wgrib2_exe PROPERTIES OUTPUT_NAME wgrib2)
 
 if(BUILD_LIB)
   if(BUILD_SHARED_LIB)

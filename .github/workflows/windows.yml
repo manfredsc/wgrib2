@@ -54,7 +54,7 @@ jobs:
         cd wgrib2
         mkdir build
         cd build
-        cmake .. -DBUILD_SHARED_LIB=${{matrix.sharedlib}} -DMAKE_FTN_API=OFF
+        cmake .. -DBUILD_SHARED_LIB=${{matrix.sharedlib}} -DMAKE_FTN_API=ON
         cmake --build .
     
     - name: test
