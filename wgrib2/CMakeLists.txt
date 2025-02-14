@@ -83,10 +83,10 @@ configure_file (
 
 if(BUILD_LIB)
   if(BUILD_SHARED_LIB)
-    add_library(wgrib2_lib SHARED $<TARGET_OBJECTS:obj_lib>)
+    add_library(wgrib2_lib SHARED ${lib_src})
     set_property(TARGET wgrib2_lib PROPERTY POSITION_INDEPENDENT_CODE ON)
   else()
-    add_library(wgrib2_lib STATIC $<TARGET_OBJECTS:obj_lib> $<TARGET_OBJECTS:gctpc>)
+    add_library(wgrib2_lib STATIC ${lib_src} $<TARGET_OBJECTS:gctpc>)
     set_property(TARGET wgrib2_lib PROPERTY POSITION_INDEPENDENT_CODE ON)
   endif()
 
