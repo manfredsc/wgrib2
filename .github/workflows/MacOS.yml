@@ -26,7 +26,6 @@ jobs:
       fail-fast: false
       matrix:
         ccompiler: [gcc-12, gcc-14, clang]
-        openmp: [ON, OFF]
         sharedlib: [ON, OFF]
         jasper: [ON, OFF]
         openjpeg: [ON, OFF]
@@ -61,7 +60,7 @@ jobs:
         mkdir build
         cd build
         export CFLAGS='-I/Users/runner/work/wgrib2/wgrib2/nceplibs/NCEPLIBS-g2c/include'
-        cmake -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/jasper;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-g2c;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-ip" .. -DUSE_AEC=ON -DUSE_PNG=ON -DUSE_JASPER=${{matrix.jasper}} -DUSE_OPENJPEG=${{matrix.openjpeg}} -DBUILD_SHARED_LIB=${{matrix.sharedlib}} -DMAKE_FTN_API=ON -DUSE_OPENMP=${{matrix.openmp}}
+        cmake -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/jasper;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-g2c;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-ip" .. -DUSE_AEC=ON -DUSE_PNG=ON -DUSE_JASPER=${{matrix.jasper}} -DUSE_OPENJPEG=${{matrix.openjpeg}} -DBUILD_SHARED_LIB=${{matrix.sharedlib}} -DMAKE_FTN_API=ON -DUSE_OPENMP=ON
         make VERBOSE=1
     
     - name: test
