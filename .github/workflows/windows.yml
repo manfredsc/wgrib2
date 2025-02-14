@@ -38,13 +38,6 @@ jobs:
           mingw-w64-x86_64-libpng
           mingw-w64-x86_64-openjpeg2
 
-    - name: "Build dependencies"
-      uses: NOAA-EMC/ci-build-nceplibs@develop
-      with:
-        #jasper-version: version-4.0.0
-        g2c-version: develop
-        #g2c-cmake-args: -DUSE_OpenJPEG=${{matrix.openjpeg}} -DUSE_Jasper=${{matrix.jasper}}
-        ip-version: develop
     - name: checkout
       uses: actions/checkout@v4
       with:
@@ -55,7 +48,7 @@ jobs:
         cd wgrib2
         mkdir build
         cd build
-        cmake -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/jasper;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-g2c;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-ip" .. -DBUILD_SHARED_LIB=${{matrix.sharedlib}} -DMAKE_FTN_API=ON
+        cmake .. -DBUILD_SHARED_LIB=${{matrix.sharedlib}} -DMAKE_FTN_API=ON
         make VERBOSE=1
     
     - name: test
