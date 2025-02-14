@@ -69,7 +69,7 @@ endif()
 # make this an object lib so we can re-use most of object files
 add_library(obj_lib OBJECT ${lib_src})
 target_compile_definitions(obj_lib PUBLIC ${definitions_list}) 
-target_include_directories(obj_lib PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+#target_include_directories(obj_lib PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
 add_executable(wgrib2_exe wgrib2_main.c)
 set_target_properties(wgrib2_exe PROPERTIES OUTPUT_NAME wgrib2)
