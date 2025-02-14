@@ -6,7 +6,7 @@
 echo "see if shared library made"
 set -xe
 
-if [ ! -f ../wgrib2/libwgrib2.so -a ! -f ../wgrib2/libwgrib2.a ] ; then
+if [ ! -f ../wgrib2/libwgrib2.so -a ! -f ../wgrib2/libwgrib2.a  &&  ! -f ../wgrib2/libwgrib2.dylib ] ; then
    echo "failed: did not find libwgrib2"
    exit 1
 fi

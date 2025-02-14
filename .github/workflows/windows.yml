@@ -16,7 +16,7 @@ jobs:
   Windows:
     runs-on: windows-latest
     env:
-      FC: gfortran-12
+      FC: gfortran
     strategy:
       matrix:
         ccompiler: [gcc, clang]
