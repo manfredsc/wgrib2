@@ -1,0 +1,64 @@
+# This is a GitHub actions workflow for wgrib2.
+#
+# This builds the develop branch on windows.
+#
+# Alyson Stahl, 2/14/2025
+name: Windows
+on:
+  push:
+    branches:
+    - develop
+  pull_request:
+    branches:
+    - develop
+
+jobs:
+  Windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        ccompiler: [gcc, clang]
+        sharedlib: [ON, OFF]
+    defaults:
+      run:
+        shell: msys2 {0}
+
+    steps:
+    - name: install-dependencies
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: MINGW64
+        update: true
+        install: >-
+          mingw-w64-x86_64-gcc
+          mingw-w64-x86_64-clang
+          mingw-w64-x86_64-cmake
+          mingw-w64-x86_64-ninja
+          mingw-w64-x86_64-libaec
+          mingw-w64-x86_64-libpng
+          mingw-w64-x86_64-openjpeg2
+
+    - name: "Build dependencies"
+      uses: NOAA-EMC/ci-build-nceplibs@develop
+      with:
+        jasper-version: version-4.0.0
+        g2c-version: develop
+        #g2c-cmake-args: -DUSE_OpenJPEG=${{matrix.openjpeg}} -DUSE_Jasper=${{matrix.jasper}}
+        ip-version: develop
+    - name: checkout
+      uses: actions/checkout@v4
+      with:
+        path: wgrib2
+
+    - name: build
+      run: |
+        cd wgrib2
+        mkdir build
+        cd build
+        cmake -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/jasper;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-g2c;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-ip" .. -DBUILD_SHARED_LIB=${{matrix.sharedlib}} -DMAKE_FTN_API=ON
+        make VERBOSE=1
+    
+    - name: test
+      run: |
+        cd $GITHUB_WORKSPACE/wgrib2/build
+        ctest --verbose --output-on-failure --rerun-failed
