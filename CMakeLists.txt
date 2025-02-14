@@ -125,8 +125,9 @@ if(USE_OPENMP)
         set(OpenMP_libgomp_LIBRARY ${OpenMP_CXX_LIB_NAMES})
         set(OpenMP_libiomp5_LIBRARY ${OpenMP_CXX_LIB_NAMES})
       endif()
+  else()
+    find_package(OpenMP REQUIRED COMPONENTS C)
   endif()
-  find_package(OpenMP REQUIRED COMPONENTS C)
 endif()
 
 # Find required packages to use AEC
