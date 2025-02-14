@@ -26,8 +26,8 @@ jobs:
       fail-fast: false
       matrix:
         ccompiler: [gcc-12, gcc-14, clang]
-        #openmp: [ ON, OFF ]
-        #sharedlib: [ ON, OFF ]
+        openmp: [ ON, OFF ]
+        sharedlib: [ ON, OFF ]
 
     steps:
     - name: install-dependencies
@@ -40,6 +40,7 @@ jobs:
       uses: NOAA-EMC/ci-build-nceplibs@develop
       with:
         g2c-version: develop
+        g2c-cmake-args: -DUSE_OpenJPEG=ON -DUSE_Jasper=OFF
         ip-version: develop
 
     - name: checkout
@@ -54,7 +55,7 @@ jobs:
         cd build
         export CFLAGS='-I/Users/runner/work/wgrib2/wgrib2/nceplibs/NCEPLIBS-g2c/include'
         #cmake -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/jasper;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-g2c;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-ip" .. -DUSE_AEC=OFF -DUSE_PNG=ON -DUSE_JASPER=ON -DBUILD_SHARED_LIB=${{matrix.sharedlib}} -DMAKE_FTN_API=ON -DUSE_OPENMP=${{matrix.openmp}}
-        cmake -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-g2c;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-ip" .. -DBUILD_LIB=ON -DBUILD_SHARED_LIB=OFF -DUSE_PNG=ON -DUSE_AEC=ON -DUSE_JASPER=ON
+        cmake -DCMAKE_PREFIX_PATH="$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-g2c;$GITHUB_WORKSPACE/nceplibs/NCEPLIBS-ip" .. -DBUILD_LIB=ON -DBUILD_SHARED_LIB=OFF -DUSE_PNG=ON -DUSE_AEC=ON -DUSE_OPENJPEG=ON
         make VERBOSE=1
     
     - name: test
