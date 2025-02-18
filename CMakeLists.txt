@@ -1,6 +1,6 @@
 # This is the main CMake build file for the wgrib2 project.
 #
-# Kyle Gerheiser, Edward Hartnett, Wesley Ebisuzaki
+# Kyle Gerheiser, Edward Hartnett, Wesley Ebisuzaki, Alyson Stahl
 cmake_minimum_required(VERSION 3.15)
 
 # Read the current version number from file VERSION.
@@ -8,6 +8,12 @@ file(STRINGS "VERSION" pVersion)
 
 # Set up project with version number from VERSION file.
 project(wgrib2 VERSION ${pVersion} LANGUAGES C)
+
+# Provide install directories according to GNU standards.
+include(GNUInstallDirs)
+
+# Find CMake code we need.
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 # Handle user build options.
 option(ENABLE_DOCS "Enable generation of doxygen-based documentation." OFF)
@@ -54,8 +60,6 @@ endif()
 SET(TEST_FILE_DIR "." CACHE STRING "Check this directory for test files before using FTP.")
 message(STATUS "Finding test data files in directory ${TEST_FILE_DIR}.")
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-
 # Set default install path if not provided.
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set(CMAKE_INSTALL_PREFIX
@@ -63,37 +67,16 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     CACHE PATH "default install path" FORCE)
 endif()
 
-include(GNUInstallDirs)
-
-message(STATUS "Setting compiler flags...")
-if(CMAKE_C_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
-  set(CMAKE_C_FLAGS "-g -traceback ${CMAKE_C_FLAGS} -DIFORT")
-  if(CMAKE_C_COMPILER_ID MATCHES "^(IntelLLVM)$")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Rno-debug-disables-optimization")
-  endif()
-  set(CMAKE_C_FLAGS_DEBUG "-O0")
-elseif(CMAKE_C_COMPILER_ID MATCHES "^(GNU)$")
-  set(CMAKE_C_FLAGS "-g ${CMAKE_C_FLAGS} -DGFORTRAN")
-  set(CMAKE_C_FLAGS_DEBUG "-O0")
-endif()
-
-if(CMAKE_Fortran_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
-  set(CMAKE_Fortran_FLAGS "-g -traceback ${CMAKE_Fortran_FLAGS}")
-  set(CMAKE_Fortran_FLAGS_DEBUG "-O0")
-elseif(CMAKE_Fortran_COMPILER_ID MATCHES "^(GNU)$")
-  set(CMAKE_Fortran_FLAGS "-g -fbacktrace ${CMAKE_Fortran_FLAGS}")
-  set(CMAKE_Fortran_FLAGS_DEBUG "-ggdb -O0")
-endif()
-
-message(STATUS "Checking if user wants to use NCEPLIBS-g2c...")
-if(USE_G2CLIB) 
-  if(USE_PNG) 
-    message(FATAL_ERROR "If USE_G2CLIB is on, USE_PNG must be off")
-  endif()
+if(USE_OPENJPEG AND USE_JASPER)
+  message(FATAL_ERROR "USE_OPENJPEG OR USE_JASPER, not both")
 endif()
 
 if (BUILD_SHARED_LIB AND NOT BUILD_LIB)
    message(FATAL_ERROR "BUILD_SHARED_LIB is on but BUILD_LIB is off")
+endif()
+
+if(MAKE_FTN_API AND NOT BUILD_LIB)
+  message(FATAL_ERROR "MAKE_FTN_API should only be on when building library")
 endif()
 
 # If user wants to use NCEPLIBS-ip, find it and the sp library.
@@ -101,7 +84,6 @@ message(STATUS "Checking if the user want to use NCEPLIBS-ip...")
 if(USE_IPOLATES)
   find_package(ip 5.1.0 CONFIG REQUIRED)
   list(APPEND definitions_list -DIPOLATES_LIB="ipolates_lib_d")
-  # list(APPEND definitions_list -DUSE_IPOLATES)
 endif()
 
 message(STATUS "Checking if the user want to use NetCDF...")
@@ -109,29 +91,23 @@ if(USE_NETCDF)
   find_package(NetCDF MODULE REQUIRED COMPONENTS C)
 endif()
 
-if(USE_OPENJPEG AND USE_JASPER)
-  message(FATAL_ERROR "USE_OPENJPEG OR USE_JASPER, not both")
-endif()
-
-message(STATUS "Checking if the user wants to use Jasper...")
-if(USE_JASPER)
+if(USE_JASPER OR USE_OPENJPEG OR USE_PNG)
   find_package(g2c 1.9.0 CONFIG REQUIRED)
-endif()
-
-# Find required packages to use OpenJPEG
-message(STATUS "Checking if the user wants to use OpenJPEG...")
-if(USE_OPENJPEG)
-  find_package(g2c 1.9.0 CONFIG REQUIRED)
+  message(STATUS "Checking if the user wants to use Jasper or OpenJPEG...")
+  if(USE_JASPER)
+    find_package(Jasper 2.0.25 REQUIRED)
+  elseif(USE_OPENJPEG)
+    find_package(OpenJPEG REQUIRED)
+  endif()
+  message(STATUS "Checking if the user wants to use PNG...")
+  if(USE_PNG)
+    find_package(PNG REQUIRED)
+  endif()
 endif()
 
 message(STATUS "Checking if the user want to use OpenMP...")
 if(USE_OPENMP)
   find_package(OpenMP REQUIRED COMPONENTS C)
-endif()
-
-message(STATUS "Checking if the user wants to use PNG...")
-if(USE_PNG)
-  find_package(g2c 1.9.0 CONFIG REQUIRED)
 endif()
 
 # Find required packages to use AEC
@@ -148,10 +124,6 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 message(STATUS "Adding wgrib2, aux_probs subdirectories...")
 add_subdirectory(wgrib2)
 add_subdirectory(aux_progs)
-
-if(MAKE_FTN_API AND NOT BUILD_LIB)
-  message(FATAL_ERROR "MAKE_FTN_API should only be on when building library")
-endif()
 
 if(BUILD_LIB)
   message(STATUS "Adding wgrib2 library build...")
@@ -185,6 +157,26 @@ endif()
 
 if (BUILD_WGRIB)
   add_subdirectory(wgrib)
+endif()
+
+message(STATUS "Setting compiler flags...")
+if(CMAKE_C_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
+  set(CMAKE_C_FLAGS "-g -traceback ${CMAKE_C_FLAGS} -DIFORT")
+  if(CMAKE_C_COMPILER_ID MATCHES "^(IntelLLVM)$")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Rno-debug-disables-optimization")
+  endif()
+  set(CMAKE_C_FLAGS_DEBUG "-O0")
+elseif(CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$")
+  set(CMAKE_C_FLAGS "-g ${CMAKE_C_FLAGS} -DGFORTRAN")
+  set(CMAKE_C_FLAGS_DEBUG "-O0")
+endif()
+
+if(CMAKE_Fortran_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
+  set(CMAKE_Fortran_FLAGS "-g -traceback ${CMAKE_Fortran_FLAGS}")
+  set(CMAKE_Fortran_FLAGS_DEBUG "-O0")
+elseif(CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$")
+  set(CMAKE_Fortran_FLAGS "-g -fbacktrace ${CMAKE_Fortran_FLAGS}")
+  set(CMAKE_Fortran_FLAGS_DEBUG "-ggdb -O0")
 endif()
 
 # Turn on unit testing.
