@@ -67,8 +67,6 @@ if(MAKE_FTN_API)
 endif()
 
 # make this an object lib so we can re-use most of object files
-# The only files that differ are ${callable_src} which are compiled
-# with -DCALLABLE_WGRIB2
 add_library(obj_lib OBJECT ${lib_src})
 target_compile_definitions(obj_lib PUBLIC ${definitions_list}) 
 
@@ -79,72 +77,96 @@ configure_file (
   "${PROJECT_BINARY_DIR}/wgrib2/wgrib2_meta.h"
   )
 
-if(BUILD_LIB)
+add_executable(wgrib2_exe wgrib2_main.c)
+set_target_properties(wgrib2_exe PROPERTIES OUTPUT_NAME wgrib2)
 
+if(BUILD_LIB)
   if(BUILD_SHARED_LIB)
-    add_library(wgrib2_lib SHARED ${lib_src} )
+    add_library(wgrib2_lib SHARED ${lib_src})
     set_property(TARGET wgrib2_lib PROPERTY POSITION_INDEPENDENT_CODE ON)
   else()
-    add_library(wgrib2_lib STATIC ${lib_src} $<TARGET_OBJECTS:gctpc> )
-#    add_library(wgrib2_lib STATIC ${lib_src} )
+    add_library(wgrib2_lib STATIC ${lib_src} $<TARGET_OBJECTS:gctpc>)
     set_property(TARGET wgrib2_lib PROPERTY POSITION_INDEPENDENT_CODE ON)
   endif()
 
   # library and executable have same name (wgrib2) but different target names
   set_target_properties(wgrib2_lib PROPERTIES OUTPUT_NAME wgrib2)
-  # target_compile_definitions(wgrib2_lib PRIVATE CALLABLE_WGRIB2)
 endif()
-
-
-add_executable(wgrib2_exe wgrib2_main.c)
-set_target_properties(wgrib2_exe PROPERTIES OUTPUT_NAME wgrib2)
 
 if(USE_NETCDF)
   target_link_libraries(obj_lib PUBLIC NetCDF::NetCDF_C)
-  if(BUILD_SHARED_LIB)
+  target_link_libraries(wgrib2_exe PRIVATE NetCDF::NetCDF_C)
+  if(BUILD_LIB)
     target_link_libraries(wgrib2_lib PUBLIC NetCDF::NetCDF_C)
   endif()
-  target_link_libraries(wgrib2_exe PUBLIC NetCDF::NetCDF_C)
 endif()
 
 if(USE_OPENMP)
   target_link_libraries(obj_lib PUBLIC OpenMP::OpenMP_C)
-  if(BUILD_SHARED_LIB)
+  target_link_libraries(wgrib2_exe PRIVATE OpenMP::OpenMP_C)
+  if(BUILD_LIB)
     target_link_libraries(wgrib2_lib PUBLIC OpenMP::OpenMP_C)
   endif()
 endif()
 
 if(USE_IPOLATES)
   target_link_libraries(obj_lib PUBLIC ip::ip_d)
-  target_link_libraries(wgrib2_exe PUBLIC ip::ip_d)
-
-  # Link to the Fortran runtime library for each compiler if using ip2.
-  # The wgrib2 exectuable is created using the C compiler and
-  # doesn't link the necessary Fortran library required for ip2.
-  if(CMAKE_Fortran_COMPILER_ID MATCHES "^(Intel)$")
-    target_link_libraries(wgrib2_exe PRIVATE "-lifcore")
-  elseif(CMAKE_Fortran_COMPILER_ID MATCHES "^(GNU)$")
-    target_link_libraries(wgrib2_exe PRIVATE "-lgfortran")
+  target_link_libraries(wgrib2_exe PRIVATE ip::ip_d)
+  if(BUILD_LIB)
+    target_link_libraries(wgrib2_lib PUBLIC ip::ip_d)
   endif()
-  
 endif()
 
-## target_link_libraries(obj_lib PUBLIC gctpc -lm)
-
-# Link to gctpc directly because object libraries do not link transitively
-target_link_libraries(wgrib2_exe PRIVATE gctpc -lm)
-
 if(USE_AEC)
+  target_link_libraries(obj_lib PUBLIC ${LIBAEC_LIBRARIES})
+  target_include_directories(obj_lib PUBLIC "${LIBAEC_INCLUDE_DIRS}")
   target_link_libraries(wgrib2_exe PRIVATE ${LIBAEC_LIBRARIES})
+  target_include_directories(wgrib2_exe PRIVATE "${LIBAEC_INCLUDE_DIRS}")
+  if(BUILD_LIB)
+    target_link_libraries(wgrib2_lib PUBLIC ${LIBAEC_LIBRARIES})
+    target_include_directories(wgrib2_lib PUBLIC "${LIBAEC_INCLUDE_DIRS}")
+  endif()
 endif()
 
 if(USE_JASPER OR USE_OPENJPEG OR USE_PNG)
   target_link_libraries(obj_lib PUBLIC g2c::g2c)
   target_link_libraries(wgrib2_exe PRIVATE g2c::g2c)
+  if(BUILD_LIB)
+    target_link_libraries(wgrib2_lib PUBLIC g2c::g2c)
+  endif()
 endif()
 
+if(USE_JASPER)
+  target_link_libraries(obj_lib PUBLIC ${JASPER_LIBRARIES})
+  target_include_directories(obj_lib PUBLIC "${JASPER_INCLUDE_DIR}")
+  target_link_libraries(wgrib2_exe PRIVATE ${JASPER_LIBRARIES})
+  target_include_directories(wgrib2_exe PRIVATE "${JASPER_INCLUDE_DIR}")
+  if(BUILD_LIB)
+    target_link_libraries(wgrib2_lib PUBLIC ${JASPER_LIBRARIES})
+    target_include_directories(wgrib2_lib PUBLIC "${JASPER_INCLUDE_DIR}")
+  endif()
+elseif(USE_OPENJPEG)
+  target_link_libraries(obj_lib PUBLIC ${OpenJPEG_LIBRARIES})
+  target_link_libraries(wgrib2_exe PRIVATE ${OpenJPEG_LIBRARIES})
+  if(BUILD_LIB)
+    target_link_libraries(wgrib2_lib PUBLIC ${OpenJPEG_LIBRARIES})
+  endif()
+endif()
+
+if(USE_PNG)
+  target_link_libraries(obj_lib PUBLIC ${PNG_LIBRARIES})
+  target_include_directories(obj_lib PUBLIC "${PNG_INCLUDE_DIRS}")
+  target_link_libraries(wgrib2_exe PRIVATE ${PNG_LIBRARIES})
+  target_include_directories(wgrib2_exe PRIVATE "${PNG_INCLUDE_DIRS}")
+  if(BUILD_LIB)
+    target_link_libraries(wgrib2_lib PUBLIC ${PNG_LIBRARIES})
+    target_include_directories(wgrib2_lib PUBLIC "${PNG_INCLUDE_DIRS}")
+  endif()
+endif()
+
+# Link to gctpc directly because object libraries do not link transitively
+target_link_libraries(wgrib2_exe PRIVATE gctpc -lm)
 target_link_libraries(wgrib2_exe PRIVATE obj_lib)
-# target_link_libraries(wgrib2_exe PRIVATE wgrib2_lib)
 
 if(BUILD_LIB)
   set(headers wgrib2_api.h wgrib2.h ${CMAKE_BINARY_DIR}/wgrib2/wgrib2_meta.h)
