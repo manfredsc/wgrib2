@@ -47,8 +47,8 @@ class Wgrib2(MakefilePackage, CMakePackage):
     """Utility for interacting with GRIB2 files"""
 
     homepage = "https://www.cpc.ncep.noaa.gov/products/wesley/wgrib2"
-    url = "https://www.ftp.cpc.ncep.noaa.gov/wd51we/wgrib2/wgrib2.tgz.v2.0.8"
-    git = "https://github.com/NOAA-EMC/wgrib2"
+    url = "https://github.com/NOAA-EMC/wgrib2/archive/refs/tags/v3.6.0.tar.gz"
+    git = "https://github.com/NOAA-EMC/wgrib2.git"
 
     maintainers("t-brown", "AlexanderRichert-NOAA", "Hang-Lei-NOAA", "edwardhartnett")
 
@@ -80,6 +80,9 @@ class Wgrib2(MakefilePackage, CMakePackage):
         sha256="d7f1a4f9872922c62b3c7818c022465532cca1f5666b75d3ac5735f0b2747793",
         extension="tar.gz",
     )
+
+    depends_on("c", type="build")
+    depends_on("fortran", type="build")
 
     def url_for_version(self, version):
         if version >= Version("3.2.0"):
