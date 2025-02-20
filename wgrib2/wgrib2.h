@@ -84,32 +84,30 @@ struct ARGLIST {int fn; int i_argc;};
 
 /* calling arguments for function API */
 
-#define ARG0	int mode, unsigned char **sec, float *data, unsigned int ndata, char *inv_out, void **local
-#define ARG1	ARG0, const char *arg1
-#define ARG2	ARG0, const char *arg1, const char *arg2
-#define ARG3	ARG0, const char *arg1, const char *arg2, const char *arg3
-#define ARG4	ARG0, const char *arg1, const char *arg2, const char *arg3, const char *arg4
-#define ARG5	ARG0, const char *arg1, const char *arg2, const char *arg3, const char *arg4, const char *arg5
-#define ARG6	ARG0, const char *arg1, const char *arg2, const char *arg3, const char *arg4, const char *arg5, const char *arg6
-#define ARG7	ARG0, const char *arg1, const char *arg2, const char *arg3, const char *arg4, const char *arg5, const char *arg6, const char *arg7
-#define ARG8	ARG0, const char *arg1, const char *arg2, const char *arg3, const char *arg4, const char *arg5, const char *arg6, const char *arg7, const char *arg8
+#define ARG     int mode, unsigned char **sec, float *data, unsigned int ndata, char *inv_out, void **local
+#define ARG0	ARG, const char *dum1, const char *dum2, const char *dum3, const char *dum4, const char *dum5, const char *dum6, const char *dum7, const char *dum8
+#define ARG1	ARG, const char *arg1, const char *dum2, const char *dum3, const char *dum4, const char *dum5, const char *dum6, const char *dum7, const char *dum8
+#define ARG2	ARG, const char *arg1, const char *arg2, const char *dum3, const char *dum4, const char *dum5, const char *dum6, const char *dum7, const char *dum8
+#define ARG3	ARG, const char *arg1, const char *arg2, const char *arg3, const char *dum4, const char *dum5, const char *dum6, const char *dum7, const char *dum8
+#define ARG4	ARG, const char *arg1, const char *arg2, const char *arg3, const char *arg4, const char *dum5, const char *dum6, const char *dum7, const char *dum8
+#define ARG5	ARG, const char *arg1, const char *arg2, const char *arg3, const char *arg4, const char *arg5, const char *dum6, const char *dum7, const char *dum8
+#define ARG6	ARG, const char *arg1, const char *arg2, const char *arg3, const char *arg4, const char *arg5, const char *arg6, const char *dum7, const char *dum8
+#define ARG7	ARG, const char *arg1, const char *arg2, const char *arg3, const char *arg4, const char *arg5, const char *arg6, const char *arg7, const char *dum8
+#define ARG8	ARG, const char *arg1, const char *arg2, const char *arg3, const char *arg4, const char *arg5, const char *arg6, const char *arg7, const char *arg8
 
-/* old convention, to be discontinued */
-
-#define CALL_ARG0		mode, sec, data,  ndata, inv_out, local
-#define CALL_ARG1		mode, sec, data,  ndata, inv_out, local, arg1
-#define CALL_ARG2		mode, sec, data,  ndata, inv_out, local, arg1, arg2
-#define CALL_ARG3		mode, sec, data,  ndata, inv_out, local, arg1, arg2, arg3
 
 /* buf = buffer our text out from function */
 /* void **local, pointer for static data */
 
-#define call_ARG0(inv_out,local)	mode, sec, data, ndata, inv_out, local
-#define call_ARG1(inv_out,local,arg1)	mode, sec, data, ndata, inv_out, local, arg1
-#define call_ARG2(inv_out,local,arg1,arg2)	mode, sec, data, ndata, inv_out, local, arg1, arg2
-#define call_ARG3(inv_out,local,arg1,arg2,arg3)	mode, sec, data, ndata, inv_out, local, arg1, arg2, arg3
-#define call_ARG4(inv_out,local,arg1,arg2,arg3,arg4)	mode, sec, data, ndata, inv_out, local, arg1, arg2, arg3, arg4
-#define call_ARG5(inv_out,local,arg1,arg2,arg3,arg4,arg5) mode, sec, data, ndata, inv_out, local, arg1, arg2, arg3, arg4, arg5
+#define call_ARG0(inv_out,local)	        mode, sec, data, ndata, inv_out, local, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+#define call_ARG1(inv_out,local,arg1)	        mode, sec, data, ndata, inv_out, local, arg1, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+#define call_ARG2(inv_out,local,arg1,arg2)	mode, sec, data, ndata, inv_out, local, arg1, arg2, NULL, NULL, NULL, NULL, NULL, NULL
+#define call_ARG3(inv_out,local,arg1,arg2,arg3)	mode, sec, data, ndata, inv_out, local, arg1, arg2, arg3, NULL, NULL, NULL, NULL, NULL
+#define call_ARG4(inv_out,local,arg1,arg2,arg3,arg4)	mode, sec, data, ndata, inv_out, local, arg1, arg2, arg3, arg4, NULL, NULL, NULL, NULL
+#define call_ARG5(inv_out,local,arg1,arg2,arg3,arg4,arg5) mode, sec, data, ndata, inv_out, local, arg1, arg2, arg3, arg4, arg5, NULL, NULL, NULL
+#define call_ARG6(inv_out,local,arg1,arg2,arg3,arg4,arg5,arg6) mode, sec, data, ndata, inv_out, local, arg1, arg2, arg3, arg4, arg5, arg6, NULL, NULL
+#define call_ARG7(inv_out,local,arg1,arg2,arg3,arg4,arg5,arg6,arg7) mode, sec, data, ndata, inv_out, local, arg1, arg2, arg3, arg4, arg5, arg6, arg7, NULL
+#define call_ARG8(inv_out,local,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8) mode, sec, data, ndata, inv_out, local, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8
 
 
 /* delayed errors */
@@ -447,7 +445,6 @@ int flag_table_3_5(unsigned char **sec);
 unsigned char *flag_table_3_5_location(unsigned char **sec);
 int flag_table_3_9(unsigned char **sec);
 int flag_table_3_10(unsigned char **sec);
-int set_metadata_string(ARG0, const char *string);
 
 unsigned int pds_fcst_time(unsigned char **sec);
 float *ij2p(unsigned int i, unsigned j, int scan_mode, unsigned int nx, unsigned int ny, float *data);
@@ -680,6 +677,7 @@ double get_unixtime(int year, int month, int day, int hour, int minute, int seco
 int JMA_Nb(unsigned char **sec);
 int JMA_Nr(unsigned char **sec);
 
+int set_metadata_string(ARG1);
 #ifdef USE_IPOLATES
 void ipolates_grib2_single_field(int *interpol, int *ipopt, int *gdt_in, int *gdttmpl_in, int *gdttmpl_size_in,
   int *gdt_out, int *gdttmpl_out, int *gdttmpl_size_out, int *mi, int *mo, int *km,
