@@ -10,6 +10,8 @@
  * 1/2007 mods M. Schwarb: unsigned int ndata
  * 2/2008 WNE add -if support
  * 2/2008 WNE fixed bug in processing of submessages
+ * 2/2025 WNE previously could be main() or wgrib2().  Now only wgrib2()
+ *            the main() version became wgrib2_main.c
  */
 
 #include <stdio.h>
@@ -120,7 +122,6 @@ int version_if;		/* 0-old stype 1-modern if */
 
 int wgrib2(int argc, const char **argv) {
 
-//WNE    FILE *in;
     struct seq_file in_file;
     unsigned char *msg, *sec[10];	/* sec[9] = last valid bitmap */
     long int last_pos;
@@ -154,7 +155,6 @@ int wgrib2(int argc, const char **argv) {
 
     if (initial_call) {		/* only done 1st time */
 	setup_user_gribtable();
-//      jas_init();
 //      gctpc initialiation
         init(-1,-1,"gctpc_error.txt", "gctpc_param.txt");
         initial_call = 0;
@@ -270,7 +270,7 @@ int wgrib2(int argc, const char **argv) {
     fprintf(stderr,"going to init options,  narglist %d\n",narglist);
 #endif
 
-    /* initialize options,  mode = -1 */
+    /* initialize options,  execute with mode = -1 */
 
 #ifdef DEBUG
     fprintf(stderr,"going to init options,  narglist %d\n",narglist);
@@ -312,9 +312,10 @@ int wgrib2(int argc, const char **argv) {
 		new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
 		new_argv[arglist[j].i_argc+4], new_argv[arglist[j].i_argc+5],
 		new_argv[arglist[j].i_argc+6], new_argv[arglist[j].i_argc+7]));
+
+	// option could change mode, save it for future use
         if (mode != -1) old_mode = mode;
 
-        // if(inv_out[0] != 0)  fprintf(inv_file, "%s", inv_out);
         if(inv_out[0] != 0) {
 	    fwrite_file(inv_out, 1, strnlen(inv_out,INV_BUFFER), &inv_file);
 	}
@@ -401,9 +402,6 @@ int wgrib2(int argc, const char **argv) {
 	    }
 
             if (pos != last_pos) {
-// //	        if (in_file.file_type == PIPE) msg = rd_grib2_msg_seq(sec, in, &pos, &len, &num_submsgs);
-//	        if (in_file.file_type == PIPE) msg = rd_grib2_msg_seq_file(sec, &in_file, &pos, &len, &num_submsgs);
-//		else if (in_file.file_type == DISK) msg = rd_grib2_msg(sec, in, &pos, &len, &num_submsgs);
 	        msg = rd_grib2_msg_seq_file(sec, &in_file, &pos, &len, &num_submsgs);
 	        if (msg == NULL) {
                     fatal_error_i("grib message #%d not found for %s", msg_no,in_file.filename);
@@ -437,9 +435,6 @@ int wgrib2(int argc, const char **argv) {
 	}
         else if (input == all_mode) {
 	    if (submsg == 0) {
-// //	        if (in_file.file_type == PIPE) msg = rd_grib2_msg_seq(sec, in, &pos, &len, &num_submsgs);
-//	        if (in_file.file_type == PIPE) msg = rd_grib2_msg_seq_file(sec, &in_file, &pos, &len, &num_submsgs);
-//		else if (in_file.file_type == DISK) msg = rd_grib2_msg(sec, in, &pos, &len, &num_submsgs);
 	        msg = rd_grib2_msg_seq_file(sec, &in_file, &pos, &len, &num_submsgs);
 		if (msg == NULL) break;
                 submsg = 1;
@@ -447,9 +442,6 @@ int wgrib2(int argc, const char **argv) {
 	    else if (submsg > num_submsgs) {
 		pos += len;
                 msg_no++;
-// //	        if (in_file.file_type == PIPE) msg = rd_grib2_msg_seq(sec, in, &pos, &len, &num_submsgs);
-//	        if (in_file.file_type == PIPE) msg = rd_grib2_msg_seq_file(sec, &in_file, &pos, &len, &num_submsgs);
-//		else if (in_file.file_type == DISK) msg = rd_grib2_msg(sec, in, &pos, &len, &num_submsgs);
 	        msg = rd_grib2_msg_seq_file(sec, &in_file, &pos, &len, &num_submsgs);
 		if (msg == NULL) break;
                 submsg = 1;
@@ -596,6 +588,7 @@ int wgrib2(int argc, const char **argv) {
 	/* Decode NDFD WxText */
 	if (WxText) mk_WxKeys(sec);
 
+	// some operatonal files need to be fixed
 	// any fixes to raw grib message before decode need to be placed here
 	if (fix_ncep_2_flag) fix_ncep_2(sec);
 	if (fix_ncep_3_flag) fix_ncep_3(sec);
@@ -819,7 +812,7 @@ int wgrib2(int argc, const char **argv) {
             // if (functions[arglist[j].fn].type == inv) fprintf(inv_file, "%s", item_deliminator);
             if (functions[arglist[j].fn].type == inv) fwrite_file(item_deliminator, 1, strlen(item_deliminator), &inv_file);
             if (functions[arglist[j].fn].type != setup) {
-
+                new_inv_out();   // inv_out[0] = 0;
 	        n_arg = functions[arglist[j].fn].nargs;
                 if (n_arg == 0) functions[arglist[j].fn].fn(call_ARG0(inv_out,local+j));
 
@@ -911,7 +904,6 @@ int wgrib2(int argc, const char **argv) {
 
     for (j = 0; j < narglist; j++) {
         mode = -2;
-//        if (functions[arglist[j].fn].type != setup) {
 	    n_arg = functions[arglist[j].fn].nargs;
 	    new_inv_out();	// inv_out[0] = 0;
 
