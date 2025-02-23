@@ -127,7 +127,7 @@ int wgrib2(int argc, const char **argv) {
     long int last_pos;
 
     int file_arg, i, j, num_submsgs;
-    int n_arg, old_mode;
+    int n_arg;
     unsigned int k, ndata;
     static int err_4_3_count = 0;
     float *data;
@@ -266,55 +266,47 @@ int wgrib2(int argc, const char **argv) {
 
     /* initialize options,  mode = -1 */
 
-#ifdef DEBUG
-    fprintf(stderr,"going to init options,  narglist %d\n",narglist);
-#endif
-
     /* initialize options,  execute with mode = -1 */
 
 #ifdef DEBUG
     fprintf(stderr,"going to init options,  narglist %d\n",narglist);
 #endif
-    old_mode = 0;
     for (j = 0; j < narglist; j++) {
 	new_inv_out();	/* inv_out[0] = 0; */
 	n_arg = functions[arglist[j].fn].nargs;
         err = 0;
 #ifdef DEBUG
-    fprintf(stderr,"going to init option %s\n", functions[arglist[j].fn].name);
+    fprintf(stderr,"going to init option %s %d\n", functions[arglist[j].fn].name, n_arg);
 #endif
-        mode = -1;
-        // if (n_arg == 0) err = functions[arglist[j].fn].fn(-1,NULL,NULL,0, inv_out,local+j);
-        if (n_arg == 0) err = functions[arglist[j].fn].fn(call_ARG0(inv_out,local+j));
-	else if (n_arg == 1) err = functions[arglist[j].fn].fn(call_ARG1(inv_out,local+j,
-                new_argv[arglist[j].i_argc]));
-	else if (n_arg == 2) err = functions[arglist[j].fn].fn(call_ARG2(inv_out,local+j,
-		new_argv[arglist[j].i_argc],new_argv[arglist[j].i_argc+1]));
-	else if (n_arg == 3) err = functions[arglist[j].fn].fn(call_ARG3(inv_out,local+j,
-		new_argv[arglist[j].i_argc],new_argv[arglist[j].i_argc+1],new_argv[arglist[j].i_argc+2]));
-	else if (n_arg == 4) err = functions[arglist[j].fn].fn(call_ARG4(inv_out,local+j,
-		new_argv[arglist[j].i_argc  ],new_argv[arglist[j].i_argc+1],
-                new_argv[arglist[j].i_argc+2],new_argv[arglist[j].i_argc+3]));
-	else if (n_arg == 5) err = functions[arglist[j].fn].fn(call_ARG5(inv_out,local+j,
-		new_argv[arglist[j].i_argc  ],new_argv[arglist[j].i_argc+1],new_argv[arglist[j].i_argc+2],
-		new_argv[arglist[j].i_argc+3], new_argv[arglist[j].i_argc+4]));
-	else if (n_arg == 6) err = functions[arglist[j].fn].fn(call_ARG6(inv_out,local+j,
-		new_argv[arglist[j].i_argc  ],new_argv[arglist[j].i_argc+1],
+        if (n_arg == 0) err = functions[arglist[j].fn].fn(init_ARG0(inv_out,local+j));
+	else if (n_arg == 1) err = functions[arglist[j].fn].fn(init_ARG1(inv_out,local+j,
+                new_argv[arglist[j].i_argc  ]));
+	else if (n_arg == 2) err = functions[arglist[j].fn].fn(init_ARG2(inv_out,local+j,
+		new_argv[arglist[j].i_argc  ], new_argv[arglist[j].i_argc+1]));
+	else if (n_arg == 3) err = functions[arglist[j].fn].fn(init_ARG3(inv_out,local+j,
+		new_argv[arglist[j].i_argc  ], new_argv[arglist[j].i_argc+1],
+                new_argv[arglist[j].i_argc+2]));
+	else if (n_arg == 4) err = functions[arglist[j].fn].fn(init_ARG4(inv_out,local+j,
+		new_argv[arglist[j].i_argc  ], new_argv[arglist[j].i_argc+1],
+                new_argv[arglist[j].i_argc+2] ,new_argv[arglist[j].i_argc+3]));
+	else if (n_arg == 5) err = functions[arglist[j].fn].fn(init_ARG5(inv_out,local+j,
+		new_argv[arglist[j].i_argc  ], new_argv[arglist[j].i_argc+1],
+                new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3], 
+                new_argv[arglist[j].i_argc+4]));
+	else if (n_arg == 6) err = functions[arglist[j].fn].fn(init_ARG6(inv_out,local+j,
+		new_argv[arglist[j].i_argc  ], new_argv[arglist[j].i_argc+1],
 		new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
 		new_argv[arglist[j].i_argc+4], new_argv[arglist[j].i_argc+5]));
-	else if (n_arg == 7) err = functions[arglist[j].fn].fn(call_ARG7(inv_out,local+j,
-		new_argv[arglist[j].i_argc  ],new_argv[arglist[j].i_argc+1],
+	else if (n_arg == 7) err = functions[arglist[j].fn].fn(init_ARG7(inv_out,local+j,
+		new_argv[arglist[j].i_argc  ], new_argv[arglist[j].i_argc+1],
 		new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
 		new_argv[arglist[j].i_argc+4], new_argv[arglist[j].i_argc+5],
 		new_argv[arglist[j].i_argc+6]));
-	else if (n_arg == 8) err = functions[arglist[j].fn].fn(call_ARG8(inv_out,local+j,
-		new_argv[arglist[j].i_argc  ],new_argv[arglist[j].i_argc+1],
+	else if (n_arg == 8) err = functions[arglist[j].fn].fn(init_ARG8(inv_out,local+j,
+		new_argv[arglist[j].i_argc  ], new_argv[arglist[j].i_argc+1],
 		new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
 		new_argv[arglist[j].i_argc+4], new_argv[arglist[j].i_argc+5],
 		new_argv[arglist[j].i_argc+6], new_argv[arglist[j].i_argc+7]));
-
-	// option could change mode, save it for future use
-        if (mode != -1) old_mode = mode;
 
         if(inv_out[0] != 0) {
 	    fwrite_file(inv_out, 1, strnlen(inv_out,INV_BUFFER), &inv_file);
@@ -326,7 +318,6 @@ int wgrib2(int argc, const char **argv) {
 	}
     }
     fflush_file(&inv_file);
-    mode = old_mode;
 
     /* error and EOF handlers have been initialized */
 #ifdef DEBUG
@@ -907,39 +898,39 @@ int wgrib2(int argc, const char **argv) {
 	    n_arg = functions[arglist[j].fn].nargs;
 	    new_inv_out();	// inv_out[0] = 0;
 
-            if (n_arg == 0) err |= functions[arglist[j].fn].fn(call_ARG0(inv_out,local+j));
+            if (n_arg == 0) err |= functions[arglist[j].fn].fn(fin_ARG0(inv_out,local+j));
 
-            else if (n_arg == 1) err |= functions[arglist[j].fn].fn(call_ARG1(inv_out,local+j,
+            else if (n_arg == 1) err |= functions[arglist[j].fn].fn(fin_ARG1(inv_out,local+j,
                 new_argv[arglist[j].i_argc  ]));
 
-            else if (n_arg == 2) err |= functions[arglist[j].fn].fn(call_ARG2(inv_out,local+j,
+            else if (n_arg == 2) err |= functions[arglist[j].fn].fn(fin_ARG2(inv_out,local+j,
                 new_argv[arglist[j].i_argc  ],new_argv[arglist[j].i_argc+1]));
 
-            else if (n_arg == 3) err |= functions[arglist[j].fn].fn(call_ARG3(inv_out,local+j,
+            else if (n_arg == 3) err |= functions[arglist[j].fn].fn(fin_ARG3(inv_out,local+j,
                 new_argv[arglist[j].i_argc  ],new_argv[arglist[j].i_argc+1],
                 new_argv[arglist[j].i_argc+2]));
 
-            else if (n_arg == 4) err |= functions[arglist[j].fn].fn(call_ARG4(inv_out,local+j,
+            else if (n_arg == 4) err |= functions[arglist[j].fn].fn(fin_ARG4(inv_out,local+j,
                 new_argv[arglist[j].i_argc  ],new_argv[arglist[j].i_argc+1],
                 new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3]));
 			
-            else if (n_arg == 5) err |= functions[arglist[j].fn].fn(call_ARG5(inv_out,local+j,
+            else if (n_arg == 5) err |= functions[arglist[j].fn].fn(fin_ARG5(inv_out,local+j,
                 new_argv[arglist[j].i_argc  ],new_argv[arglist[j].i_argc+1],
                 new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
                 new_argv[arglist[j].i_argc+4]));
 
-            else if (n_arg == 6) err |= functions[arglist[j].fn].fn(call_ARG6(inv_out,local+j,
+            else if (n_arg == 6) err |= functions[arglist[j].fn].fn(fin_ARG6(inv_out,local+j,
                 new_argv[arglist[j].i_argc  ],new_argv[arglist[j].i_argc+1],
                 new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
                 new_argv[arglist[j].i_argc+4], new_argv[arglist[j].i_argc+5]));
 
-            else if (n_arg == 7) err |= functions[arglist[j].fn].fn(call_ARG7(inv_out,local+j,
+            else if (n_arg == 7) err |= functions[arglist[j].fn].fn(fin_ARG7(inv_out,local+j,
                 new_argv[arglist[j].i_argc  ],new_argv[arglist[j].i_argc+1],
                 new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
                 new_argv[arglist[j].i_argc+4], new_argv[arglist[j].i_argc+5],
                 new_argv[arglist[j].i_argc+6]));
             
-            else if (n_arg == 8) err |= functions[arglist[j].fn].fn(call_ARG8(inv_out,local+j,
+            else if (n_arg == 8) err |= functions[arglist[j].fn].fn(fin_ARG8(inv_out,local+j,
                 new_argv[arglist[j].i_argc  ],new_argv[arglist[j].i_argc+1],
                 new_argv[arglist[j].i_argc+2], new_argv[arglist[j].i_argc+3],
                 new_argv[arglist[j].i_argc+4], new_argv[arglist[j].i_argc+5],

@@ -109,6 +109,25 @@ struct ARGLIST {int fn; int i_argc;};
 #define call_ARG7(inv_out,local,arg1,arg2,arg3,arg4,arg5,arg6,arg7) mode, sec, data, ndata, inv_out, local, arg1, arg2, arg3, arg4, arg5, arg6, arg7, NULL
 #define call_ARG8(inv_out,local,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8) mode, sec, data, ndata, inv_out, local, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8
 
+#define init_ARG0(inv_out,local)	        -1, NULL, NULL, 0, inv_out, local, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+#define init_ARG1(inv_out,local,arg1)	        -1, NULL, NULL, 0, inv_out, local, arg1, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+#define init_ARG2(inv_out,local,arg1,arg2)	-1, NULL, NULL, 0, inv_out, local, arg1, arg2, NULL, NULL, NULL, NULL, NULL, NULL
+#define init_ARG3(inv_out,local,arg1,arg2,arg3)	-1, NULL, NULL, 0, inv_out, local, arg1, arg2, arg3, NULL, NULL, NULL, NULL, NULL
+#define init_ARG4(inv_out,local,arg1,arg2,arg3,arg4)	-1, NULL, NULL, 0, inv_out, local, arg1, arg2, arg3, arg4, NULL, NULL, NULL, NULL
+#define init_ARG5(inv_out,local,arg1,arg2,arg3,arg4,arg5) -1, NULL, NULL, 0, inv_out, local, arg1, arg2, arg3, arg4, arg5, NULL, NULL, NULL
+#define init_ARG6(inv_out,local,arg1,arg2,arg3,arg4,arg5,arg6) -1, NULL, NULL, 0, inv_out, local, arg1, arg2, arg3, arg4, arg5, arg6, NULL, NULL
+#define init_ARG7(inv_out,local,arg1,arg2,arg3,arg4,arg5,arg6,arg7) -1, NULL, NULL, 0, inv_out, local, arg1, arg2, arg3, arg4, arg5, arg6, arg7, NULL
+#define init_ARG8(inv_out,local,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8) -1, NULL, NULL, 0, inv_out, local, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8
+
+#define fin_ARG0(inv_out,local)	        -2, NULL, NULL, 0, inv_out, local, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+#define fin_ARG1(inv_out,local,arg1)	        -2, NULL, NULL, 0, inv_out, local, arg1, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+#define fin_ARG2(inv_out,local,arg1,arg2)	-2, NULL, NULL, 0, inv_out, local, arg1, arg2, NULL, NULL, NULL, NULL, NULL, NULL
+#define fin_ARG3(inv_out,local,arg1,arg2,arg3)	-2, NULL, NULL, 0, inv_out, local, arg1, arg2, arg3, NULL, NULL, NULL, NULL, NULL
+#define fin_ARG4(inv_out,local,arg1,arg2,arg3,arg4)	-2, NULL, NULL, 0, inv_out, local, arg1, arg2, arg3, arg4, NULL, NULL, NULL, NULL
+#define fin_ARG5(inv_out,local,arg1,arg2,arg3,arg4,arg5) -2, NULL, NULL, 0, inv_out, local, arg1, arg2, arg3, arg4, arg5, NULL, NULL, NULL
+#define fin_ARG6(inv_out,local,arg1,arg2,arg3,arg4,arg5,arg6) -2, NULL, NULL, 0, inv_out, local, arg1, arg2, arg3, arg4, arg5, arg6, NULL, NULL
+#define fin_ARG7(inv_out,local,arg1,arg2,arg3,arg4,arg5,arg6,arg7) -2, NULL, NULL, 0, inv_out, local, arg1, arg2, arg3, arg4, arg5, arg6, arg7, NULL
+#define fin_ARG8(inv_out,local,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8) -2, NULL, NULL, 0, inv_out, local, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8
 
 /* delayed errors */
 #define DELAYED_NONERROR_END		1
