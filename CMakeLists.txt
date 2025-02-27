@@ -34,6 +34,7 @@ option(USE_PNG "Use PNG to enable decoding of GRIB2 data with PNG packing (packi
 option(USE_JASPER "Use Jasper to enable encoding/decoding of GRIB2 data with JPEG 2000 packing (packing type 40)." off)
 option(USE_OPENJPEG "Use OpenJPEG to enable encoding/decoding of GRIB2 data with JPEG 2000 packing (packing type 40)." off)
 option(USE_AEC "Use AEC to enable encoding/decoding of GRIB2 data with CCSDS packing (packing type 42)." off)
+option(BUILD_EXTRA "Build user-contributed code" ON)
 option(FTP_TEST_FILES "Fetch and test with files on FTP site." OFF)
 option(FTP_LARGE_TEST_FILES "Fetch and test with very large files on FTP site." OFF)
 option(FTP_EXTRA_TEST_FILES "Fetch even more large files from FTP and test them." OFF)
