@@ -123,6 +123,11 @@ configure_file("${PROJECT_SOURCE_DIR}/wgrib2/config.h.in" "${CMAKE_CURRENT_BINAR
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 message(STATUS "Adding wgrib2, aux_probs subdirectories...")
+
+if (BUILD_EXTRA)
+  add_subdirectory(extra)
+endif()
+
 add_subdirectory(wgrib2)
 add_subdirectory(aux_progs)
 

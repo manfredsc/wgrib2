@@ -183,6 +183,14 @@ if(USE_PNG)
   endif()
 endif()
 
+if (BUILD_EXTRA)
+  target_link_libraries(obj_lib PRIVATE wgrib2_extra)
+  target_link_libraries(wgrib2_exe PRIVATE wgrib2_extra)
+  if(BUILD_LIB)
+    target_link_libraries(wgrib2_lib PRIVATE wgrib2_extra)
+  endif()
+endif()
+
 # Link to gctpc directly because object libraries do not link transitively
 target_link_libraries(wgrib2_exe PRIVATE gctpc -lm)
 target_link_libraries(wgrib2_exe PRIVATE obj_lib)
