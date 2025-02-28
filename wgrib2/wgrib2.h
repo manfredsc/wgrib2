@@ -158,6 +158,9 @@ int update_sec4(unsigned char **sec, unsigned char *sec4);
 
 #define ONES	(~ (int) 0)
 
+/* definition for fnlist */
+struct function {const char *name; int (*fn)(); enum fntype type; int nargs; const char *desc; int sort;};
+
 struct full_date {
    int year, month, day, hour, minute, second;
 };
