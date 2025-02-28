@@ -12,7 +12,7 @@
 #include <string.h>
 #include "grb2.h"
 #include "wgrib2.h"
-#include "fnlist.h"
+#include "fnlist_exta.h"
 
 #ifdef USE_MYSQL
 
