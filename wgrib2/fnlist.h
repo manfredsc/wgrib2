@@ -4,6 +4,9 @@
 
 #include "wgrib2.h"
 
+#ifndef BUILD_EXTRA
+#include "fnlist_extra.h"
+#endif
 extern struct function functions[];
 
 extern int nfunctions;

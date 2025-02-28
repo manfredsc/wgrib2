@@ -4,11 +4,9 @@
  * Alyson Stahl 2/28/2025
  */
 
-struct extraftn {const char *name; int (*fn)(); enum fntype type; int nargs; const char *desc; int sort;};
+#include "wgrib2.h"
 
-extern struct extraftn extraftns[];
-
-extern int nextraftns;
+extern struct function extraftns[];
 
 int f_mysql(int mode, unsigned char **sec, float *data, unsigned int ndata, char *inv, void **local,
             const char *arg1, const char *arg2, const char *arg3, const char *arg4, const char *arg5);
