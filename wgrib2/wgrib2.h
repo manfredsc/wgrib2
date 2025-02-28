@@ -158,9 +158,6 @@ int update_sec4(unsigned char **sec, unsigned char *sec4);
 
 #define ONES	(~ (int) 0)
 
-/* definition for fnlist */
-struct function {const char *name; int (*fn)(); enum fntype type; int nargs; const char *desc; int sort;};
-
 struct full_date {
    int year, month, day, hour, minute, second;
 };
@@ -682,6 +679,9 @@ double get_unixtime(int year, int month, int day, int hour, int minute, int seco
 
 int JMA_Nb(unsigned char **sec);
 int JMA_Nr(unsigned char **sec);
+
+/* definition for fnlist */
+struct function {const char *name; int (*fn)(); enum fntype type; int nargs; const char *desc; int sort;};
 
 #ifdef USE_IPOLATES
 void ipolates_grib2_single_field(int *interpol, int *ipopt, int *gdt_in, int *gdttmpl_in, int *gdttmpl_size_in,
