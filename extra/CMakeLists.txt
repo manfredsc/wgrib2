@@ -4,7 +4,7 @@
 # It optionally builds all user-contributed (non-operational) 
 # codes if BUILD_EXTRA=ON.
 
-set(src Mysql.c Mysql_dump.c Mysql_speed.c)
+set(src fnlist_extra.c Mysql.c Mysql_dump.c Mysql_speed.c)
 
 include_directories(../wgrib2/)
 
