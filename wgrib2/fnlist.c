@@ -403,9 +403,9 @@ static struct function base_functions[] = {
 };
 
 #ifdef BUILD_EXTRA
-   struct function functions = base_functions.merge(extraftns);
+   struct function functions[] = base_functions.merge(extraftns);
 #else
-   struct function functions = base_functions;
+   struct function functions[] = base_functions;
 #endif
 
 int nfunctions = sizeof functions / sizeof functions[0];
