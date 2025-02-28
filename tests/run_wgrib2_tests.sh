@@ -3,15 +3,15 @@
 #
 # Ed Hartnett, Alyson Stahl 3/27/24
 
-set -e
-echo ""
-echo "*** Running wgrib2 tests"
-
 echo "*** print most help options"
 ../wgrib2/wgrib2 -h most
 
 echo "*** print all help options"
 ../wgrib2/wgrib2 -h all
+
+set -e
+echo ""
+echo "*** Running wgrib2 tests"
 
 # Just run executable; it returns 8.
 echo "*** testing run with no args..."
