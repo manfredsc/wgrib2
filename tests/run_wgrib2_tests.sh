@@ -3,9 +3,6 @@
 #
 # Ed Hartnett, Alyson Stahl 3/27/24
 
-echo "*** print most help options"
-../wgrib2/wgrib2 -h most
-
 echo "*** print all help options"
 ../wgrib2/wgrib2 -h all
 
