@@ -24,7 +24,6 @@ ALGORITHM REFERENCES
 
 /* Variables common to all subroutines in this code file
   -----------------------------------------------------*/
-static double azimuth;
 static double r_major;		/* major axis 				*/
 static double r_minor;		/* minor axis 				*/
 static double scale_factor;	/* scale factor				*/
@@ -214,7 +213,6 @@ double lat;			/* (I) Latitude 		*/
 double *x;			/* (O) X projection coordinate 	*/
 double *y;			/* (O) Y projection coordinate 	*/
 {
-double theta;		/* angle					*/
 double sin_phi; /* sin and cos value				*/
 double t;	/* temporary values				*/
 double con;	/* cone constant, small m			*/

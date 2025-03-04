@@ -213,7 +213,7 @@ double *lon;			/* (I) Longitude 		*/
 double *lat;			/* (I) Latitude 		*/
 {
 double theta;		/* angle					*/
-double c, t, tq;	/* temporary values				*/
+double t;	/* temporary values				*/
 double con;	/* cone constant, small m			*/
 double vs,us,q,s,ts1;
 double vl,ul;
