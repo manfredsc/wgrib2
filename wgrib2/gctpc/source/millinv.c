@@ -70,7 +70,6 @@ double *lon;			/* (I) Longitude */
 double *lat;			/* (I) Latitude */
 
 {
-double dlon;
 
 /* Inverse  equations
   ------------------*/

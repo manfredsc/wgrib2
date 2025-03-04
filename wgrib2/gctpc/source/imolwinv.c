@@ -73,7 +73,6 @@ double *lon;		/* (O) Longitude */
 double *lat;		/* (O) Latitude */
 {
 double theta;
-double temp;
 long region;
 
 /* Inverse equations

@@ -40,7 +40,6 @@ double lat1;			/* latitude of true scale	*/
 double false_east;		/* x offset in meters		*/
 double false_north;		/* y offset in meters		*/
 {
-double temp;			/* temporary variable		*/
 
 /* Place parameters in static storage for common use
   -------------------------------------------------*/
@@ -69,11 +68,6 @@ double y;			/* (O) Y projection coordinate 	*/
 double *lon;			/* (I) Longitude 		*/
 double *lat;			/* (I) Latitude 		*/
 {
-double sinphi, cosphi;	/* sin and cos value				*/
-double dlon;		/* delta longitude value			*/
-double coslon;		/* cos of longitude				*/
-double ksp;		/* scale factor					*/
-double g;		
 
 /* Inverse equations
   -----------------*/

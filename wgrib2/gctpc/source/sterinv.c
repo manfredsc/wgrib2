@@ -42,7 +42,6 @@ double center_lat;		/* center latitude		*/
 double false_east;		/* x offset in meters		*/
 double false_north;		/* y offset in meters		*/
 {
-double temp;			/* temporary variable		*/
 
 /* Place parameters in static storage for common use
   -------------------------------------------------*/

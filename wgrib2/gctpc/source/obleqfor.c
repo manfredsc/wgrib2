@@ -89,8 +89,6 @@ double cos_delta_lon;
 double sin_lat;
 double cos_lat;
 double z;
-double sin_z;
-double cos_z;
 double Az;
 double sin_Az;
 double cos_Az;
@@ -99,9 +97,6 @@ double x_prime;
 double y_prime;
 double M;
 double N;
-double diff_angle;
-double sin_diff_angle;
-double cos_diff_angle;
 
 /* Forward equations
   -----------------*/

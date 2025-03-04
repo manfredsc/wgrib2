@@ -68,11 +68,7 @@ double lat;			/* (I) Latitude 		*/
 double *x;			/* (O) X projection coordinate 	*/
 double *y;			/* (O) Y projection coordinate 	*/
 {
-double sinphi, cosphi;	/* sin and cos value				*/
 double dlon;		/* delta longitude value			*/
-double coslon;		/* cos of longitude				*/
-double ksp;		/* scale factor					*/
-double g;		
 
 /* Forward equations
   -----------------*/

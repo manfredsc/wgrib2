@@ -75,7 +75,6 @@ double *lat;			/* (I) Latitude 		*/
 double rh;		/* height above ellipsoid			*/
 double z;		/* angle					*/
 double sinz,cosz;	/* sin of z and cos of z			*/
-double temp;
 double con;
 
 /* Inverse equations
@@ -114,7 +113,6 @@ if (fabs(con) <= EPSLN)
 con = cosz - sin_p12 * sin(*lat);
 if ((fabs(con) < EPSLN) && (fabs(x) < EPSLN))
    return(OK);
-temp = atan2((x * sinz * cos_p12), (con * rh));
 *lon = adjust_lon(lon_center + atan2((x * sinz * cos_p12), (con * rh)));
 
 return(OK);

@@ -52,8 +52,6 @@ double r_min; 			/* Minor axis			 	*/
 double false_east;		/* x offset in meters			*/
 double false_north;		/* y offset in meters			*/
 {
-long i;
-double temp;
 double es;
 double chi;
 double esphi;
@@ -68,7 +66,6 @@ lon_center = -152.0 * D2R;
 lat_center = 64.0 * D2R;
 n = 6;
 
-temp = r_minor / r_major;
 es = .006768657997291094;
 e = sqrt(es);
 
@@ -109,8 +106,6 @@ double *lon;			/* (I) Longitude */
 double *lat;			/* (I) Latitude */
 
 {
-double dlon;
-double sinlon,coslon;
 double esphi;
 double r;
 double s;

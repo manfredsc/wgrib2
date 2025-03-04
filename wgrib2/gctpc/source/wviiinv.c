@@ -65,7 +65,6 @@ double y;		/* (I) Y projection coordinate */
 double *lon;		/* (O) Longitude */
 double *lat;		/* (O) Latitude */
 {
-double temp;		/* Re-used temporary variable */
 double t1, t2, p, c;
 
 /* Inverse equations

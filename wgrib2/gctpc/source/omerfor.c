@@ -68,7 +68,7 @@ double ts1,ts2;
 double h,l;
 double j,p,dlon;
 double f,g,gama;
-double sinphi,cosphi;
+double sinphi;
 
 /* Place parameters in static storage for common use
   -------------------------------------------------*/
@@ -215,10 +215,9 @@ double *x;			/* (O) X projection coordinate 	*/
 double *y;			/* (O) Y projection coordinate 	*/
 {
 double theta;		/* angle					*/
-double sin_phi, cos_phi;/* sin and cos value				*/
-double b;		/* temporary values				*/
-double c, t, tq;	/* temporary values				*/
-double con, n, ml;	/* cone constant, small m			*/
+double sin_phi; /* sin and cos value				*/
+double t;	/* temporary values				*/
+double con;	/* cone constant, small m			*/
 double q,us,vl;
 double ul,vs;
 double s;

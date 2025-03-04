@@ -52,8 +52,6 @@ double r_min; 			/* Minor axis			 	*/
 double false_east;		/* x offset in meters			*/
 double false_north;		/* y offset in meters			*/
 {
-long i;
-double temp;
 double es;
 double chi;
 double esphi;

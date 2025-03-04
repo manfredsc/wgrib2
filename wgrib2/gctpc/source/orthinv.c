@@ -75,7 +75,6 @@ double *lat;			/* (I) Latitude 		*/
 double rh;		/* height above ellipsoid			*/
 double z;		/* angle					*/
 double sinz,cosz;	/* sin of z and cos of z			*/
-double temp;
 double con;
 
 /* Inverse equations

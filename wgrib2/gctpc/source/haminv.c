@@ -44,7 +44,6 @@ double center_long;		/* (I) Center longitude 		*/
 double false_east;		/* x offset in meters			*/
 double false_north;		/* y offset in meters			*/
 {
-long i;
 
 /* Place parameters in static storage for common use
   -------------------------------------------------*/
@@ -71,7 +70,6 @@ double *lon;			/* (I) Longitude */
 double *lat;			/* (I) Latitude */
 
 {
-double dlon;
 double fac;
 
 /* Inverse equations

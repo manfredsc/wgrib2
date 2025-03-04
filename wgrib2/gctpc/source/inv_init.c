@@ -36,10 +36,8 @@ long zone;		/* zone number					*/
 double azimuth;		/* azimuth					*/
 double angle;		/* rotation anlge				*/
 double alf;		/* SOM angle					*/
-double lon;		/* longitude					*/
 double lon1;		/* longitude point in utm scene			*/
 double lon2;		/* 2nd longitude point 				*/
-double lat;		/* latitude					*/
 double lat1;		/* 1st standard parallel			*/
 double lat2;		/* 2nd standard parallel			*/
 double center_long;	/* center longitude				*/
