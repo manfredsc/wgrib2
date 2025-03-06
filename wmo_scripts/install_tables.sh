@@ -1,7 +1,7 @@
 #!/bin/sh
 #  03/2025  Public Domain  Manfred Schwarb
 
-cd tables || exit 1
+cd tables.tmp || exit 1
 
 #for fil in *.dat *.c; do
 #  diff -Nu "../../wgrib2/$fil" .

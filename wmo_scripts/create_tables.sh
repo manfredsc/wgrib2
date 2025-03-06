@@ -4,8 +4,8 @@ homedir=`pwd`
 PATH="$homedir:$PATH"
 
 scriptlist=`ls $homedir/get_*.sh`
-mkdir -p tables
-cd tables
+mkdir -p tables.tmp
+cd tables.tmp
 
 indx=0
 for script in $scriptlist; do
