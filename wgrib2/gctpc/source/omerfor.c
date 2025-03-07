@@ -89,7 +89,6 @@ bl = sqrt(1.0 + es * pow(cos_p20,4.0)/(1.0 - es));
 al = r_major * bl * scale_factor * com / con;
 if (fabs(lat_origin) < EPSLN)
    {
-   ts = 1.0;
    d = 1.0;
    el = 1.0;
    }
