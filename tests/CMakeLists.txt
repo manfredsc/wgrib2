@@ -110,8 +110,6 @@ copy_test_data(ref_new_grid_gdt_32769.grib2)
 copy_test_data(png_4bits.png)
 copy_test_data(large_png.grb2)
 copy_test_data(ref_c3_overflow.grib2)
-copy_test_data(LARGECAT220250305_12_1443copy.grib2)
-copy_test_data(ref_LARGECAT220250305_12_1443copy_stats.txt)
 
 # Run these shell tests.
 shell_test(run_wgrib2_tests)
@@ -181,6 +179,8 @@ endif()
 if (USE_JASPER OR USE_OPENJPEG)
   shell_test(run_jpeg_tests)
   copy_test_data(ref_jpeg2simple.txt)
+  copy_test_data(LARGECAT220250305_12_1443copy.grib2)
+  copy_test_data(ref_LARGECAT220250305_12_1443copy_stats.txt)
 endif()
 
 if (MAKE_FTN_API)
