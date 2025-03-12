@@ -15,9 +15,7 @@ if (BUILD_LIB)
   set_property(TARGET wgrib2_extra PROPERTY POSITION_INDEPENDENT_CODE ON)
 endif()
 
-target_include_directories(wgrib2_extra PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}>)
+target_include_directories(wgrib2_extra PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
 install(
   TARGETS wgrib2_extra
