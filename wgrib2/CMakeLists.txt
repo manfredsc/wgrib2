@@ -184,7 +184,7 @@ if(USE_PNG)
 endif()
 
 if (BUILD_EXTRA)
-  target_link_libraries(obj_lib PRIVATE wgrib2_extra)
+  target_link_libraries(obj_lib PUBLIC wgrib2_extra)
   target_link_libraries(wgrib2_exe PRIVATE wgrib2_extra)
   if(BUILD_LIB)
     target_link_libraries(wgrib2_lib PRIVATE wgrib2_extra)
