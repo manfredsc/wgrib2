@@ -92,7 +92,7 @@ if(USE_NETCDF)
 endif()
 
 if(USE_JASPER OR USE_OPENJPEG OR USE_PNG)
-  find_package(g2c 1.9.0 CONFIG REQUIRED)
+  find_package(g2c 2.1.0 CONFIG REQUIRED)
   message(STATUS "Checking if the user wants to use Jasper or OpenJPEG...")
   if(USE_JASPER)
     find_package(Jasper 2.0.25 REQUIRED)

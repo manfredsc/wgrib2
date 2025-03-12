@@ -180,6 +180,8 @@ endif()
 if (USE_JASPER OR USE_OPENJPEG)
   shell_test(run_jpeg_tests)
   copy_test_data(ref_jpeg2simple.txt)
+  copy_test_data(LARGECAT220250305_12_1443copy.grib2)
+  copy_test_data(ref_LARGECAT220250305_12_1443copy_stats.txt)
 endif()
 
 if (MAKE_FTN_API)
