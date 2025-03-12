@@ -208,6 +208,8 @@ int unpk_grib(unsigned char **sec, float *data) {
                 data[ii] = (mask & 128) ? ((ifld[kk++]*bin_scale)+reference)*dec_scale : UNDEFINED;
                 mask <<= 1;
             }
+    } else {
+        fatal_error_i("unknown bitmap: %d", bitmap_flag);
     }
 
     free(ifld);
