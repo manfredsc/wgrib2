@@ -9,6 +9,7 @@ set(src Mysql.c Mysql_dump.c Mysql_speed.c)
 include_directories(../wgrib2/)
 
 add_library(wgrib2_extra OBJECT ${src})
+set_target_properties(wgrib2_extra PROPERTIES PUBLIC_HEADER "fnlist_extra.h")
 target_compile_definitions(wgrib2_extra PUBLIC ${definitions_list}) 
 
 if (BUILD_LIB)
