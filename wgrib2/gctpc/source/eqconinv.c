@@ -29,7 +29,7 @@ static double r_minor;		/* minor axis 				*/
 static double lon_center;	/* Center longitude (projection center) */
 static double lat_origin;	/* center latitude			*/
 static double e0,e1,e2,e3;	/* eccentricity constants		*/
-static double e,es,esp;		/* eccentricity constants		*/
+static double e,es;		/* eccentricity constants		*/
 static double ml0;		/* small value m			*/
 static double false_northing;	/* y offset in meters			*/
 static double false_easting;	/* x offset in meters			*/
@@ -40,19 +40,22 @@ static double rh;
 
 /* Initialize the Equidistant Conic projection
   ------------------------------------------*/
-long eqconinvint(r_maj,r_min,lat1,lat2,center_lon,center_lat,false_east,
-	false_north, mode)
+long eqconinvint(double r_maj, double r_min, double lat1, double lat2,
+        double center_lon, double center_lat, double false_east,
+        double false_north, long mode) {
+// long eqconinvint(r_maj,r_min,lat1,lat2,center_lon,center_lat,false_east,
+//	false_north, mode)
 
-double r_maj;			/* major axis			*/
-double r_min;			/* minor axis			*/
-double lat1;			/* latitude of standard parallel*/
-double lat2;			/* latitude of standard parallel*/
-double center_lon;		/* center longitude		*/
-double center_lat;		/* center latitude		*/
-double false_east;		/* x offset in meters		*/
-double false_north;		/* y offset in meters		*/
-long   mode;			/* which format is present A B	*/
-{
+// double r_maj;			/* major axis			*/
+// double r_min;			/* minor axis			*/
+// double lat1;			/* latitude of standard parallel*/
+// double lat2;			/* latitude of standard parallel*/
+// double center_lon;		/* center longitude		*/
+// double center_lat;		/* center latitude		*/
+// double false_east;		/* x offset in meters		*/
+// double false_north;		/* y offset in meters		*/
+// long   mode;			/* which format is present A B	*/
+// {
 double temp;			/* temporary variable		*/
 double sinphi,cosphi;		/* sin and cos values		*/
 double ms1,ms2;
@@ -130,12 +133,13 @@ return(OK);
 
 /* Equidistant Conic inverse equations--mapping x,y to lat/long
   -----------------------------------------------------------*/
-long eqconinv(x, y, lon, lat)
-double x;			/* (O) X projection coordinate 	*/
-double y;			/* (O) Y projection coordinate 	*/
-double *lon;			/* (I) Longitude 		*/
-double *lat;			/* (I) Latitude 		*/
-{
+long eqconinv(double x, double y, double *lon, double *lat) {
+// long eqconinv(x, y, lon, lat)
+// double x;			/* (O) X projection coordinate 	*/
+// double y;			/* (O) Y projection coordinate 	*/
+// double *lon;			/* (I) Longitude 		*/
+// double *lat;			/* (I) Latitude 		*/
+// {
 
 double rh1;
 double ml;

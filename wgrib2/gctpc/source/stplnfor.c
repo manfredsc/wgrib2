@@ -30,8 +30,6 @@ static long id;		/* indicates which projection is to be transformed */
 /* set the initialized values for zone and spheroid.  This value determines
    wheather to initialize or not
   ------------------------------------------------------------------------*/
-static long inzone = 0;		/* previous zone value */
-static long insphere = -1;      /* previous spheroid value */
 
 /* the Nad 27 State Plane Zones are set in this array
   --------------------------------------------------*/
@@ -60,13 +58,14 @@ static long NAD83[134] = {101,102,5010,5300,201,202,203,301,302,401,402,403,
 		5001,5002,5003,5004,5005,5006,5007,5008,5009,5200,0000,5400};                                             
 /* Initialize the State Plane projection
   ------------------------------------*/
-long stplnforint( zone,sphere,fn27,fn83)
-
-long   zone;		/* zone number */
-long   sphere;		/* spheroid number */
-char   *fn27;		/* name of file containing the NAD27 parameters */
-char   *fn83;		/* name of file containing the NAD83 parameters */
-{
+long stplnforint(long zone, long sphere, char *fn27, char *fn83) {
+//long stplnforint( zone,sphere,fn27,fn83)
+//
+//long   zone;		/* zone number */
+//long   sphere;		/* spheroid number */
+//char   *fn27;		/* name of file containing the NAD27 parameters */
+//char   *fn83;		/* name of file containing the NAD83 parameters */
+//{
 long ind;		/* index for the zone */
 long i;			/* loop control variable */
 long nadval;		/* datum value for the report (27 or 83) */
@@ -225,6 +224,10 @@ if (id == 4)
    false_east = table[7];
    false_north = table[8];
    mode = 1;
+   lon1 = -9999.0;  /* silence compiler */
+   lat1 = -9999.0;  /* silence compiler */
+   lon2 = -9999.0;  /* silence compiler */
+   lat2 = -9999.0;  /* silence compiler */
    omerforint(r_maj,r_min,scale_fact,azimuth,lon_orig,lat_orig,false_east,
               false_north,lon1,lat1,lon2,lat2,mode);
    }
@@ -234,12 +237,13 @@ return(OK);
 
 /* State plane forward equations--mapping lat,long to x,y
   -----------------------------------------------------*/
-long stplnfor(lon, lat, x, y)
-double lon;			/* (I) Longitude 		*/
-double lat;			/* (I) Latitude 		*/
-double *x;			/* (O) X projection coordinate 	*/
-double *y;			/* (O) Y projection coordinate 	*/
-{
+long stplnfor(double lon, double lat, double *x, double *y) {
+//long stplnfor(lon, lat, x, y)
+//double lon;			/* (I) Longitude 		*/
+//double lat;			/* (I) Latitude 		*/
+//double *x;			/* (O) X projection coordinate 	*/
+//double *y;			/* (O) Y projection coordinate 	*/
+//{
 long iflg;
 
 /* Forward equations
