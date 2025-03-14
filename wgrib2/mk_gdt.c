@@ -118,6 +118,7 @@ int mk_gdt(unsigned char **sec, int *igdtnum, int *igdttmpl, int *igdtleni) {
 	    case 3:
 		*out++ = (int) uint_n(in, 3);
 		in += 3;
+		break;
 	    case 4:
 		*out++ = (int) uint4(in);
 		in += 4;
