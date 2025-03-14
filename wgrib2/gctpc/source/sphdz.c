@@ -63,7 +63,6 @@ ALGORITHM REFERENCES
 #define RADVAL 19
 
 #include "cproj.h"
-#include "proj.h"
 
 	/* Semi-Major axis of supported Spheroids */
 static double major[SPHDCT] = {
