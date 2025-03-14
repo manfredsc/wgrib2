@@ -12,11 +12,7 @@
 #include "wgrib2.h"
 #include "grb2.h"
 
-#if defined USE_JASPER  || defined USE_OPENJPEG
-    #include "grib2.h"
-#endif
-
-#ifdef USE_PNG
+#if defined USE_JASPER  || defined USE_OPENJPEG || defined USE_PNG
     #include "grib2.h"
 #endif
 
@@ -197,7 +193,13 @@ int unpk_grib(unsigned char **sec, float *data) {
 	err = g2c_dec_jpeg2000((char *) sec[7]+5, (size_t) GB2_Sec7_size(sec)-5, ifld);
 	if (err != 0) fatal_error_i("dec_jpeg2000, error %d",err);
 
-    if (bitmap_flag == 0 || bitmap_flag == 254) {
+    if (bitmap_flag == 255) {
+#pragma omp parallel for private(ii)
+        for (ii = 0; ii < ndata; ii++) {
+            data[ii] = ((ifld[ii]*bin_scale)+reference)*dec_scale;
+        }
+            }
+    else if (bitmap_flag == 0 || bitmap_flag == 254) {
         mask_pointer = sec[6] + 6;
         mask = 0;
 	    kk = 0;
@@ -206,10 +208,10 @@ int unpk_grib(unsigned char **sec, float *data) {
                 data[ii] = (mask & 128) ? ((ifld[kk++]*bin_scale)+reference)*dec_scale : UNDEFINED;
                 mask <<= 1;
             }
+    } else {
+        fatal_error_i("unknown bitmap: %d", bitmap_flag);
     }
-	else if (bitmap_flag != 255) {
-            fatal_error_i("unknown bitmap: %d", bitmap_flag);
-	}
+
     free(ifld);
 	return 0;
     }
