@@ -878,17 +878,17 @@ contains
 !       does not work for staggered grids
 !
         if (present(data2)) then
-            if (max0(nnx,one)*max0(nny,one) .ne. ndata) then
+            if (max(nnx,one)*max(nny,one) .ne. ndata) then
                 write(*,*) '*** FATAL ERROR: ndata != nx*ny ', ndata, nnx, nny
                 grb2_inq = -1
                 return
             endif
             if (.not.allocated(data2)) then
-                allocate(data2(max0(nnx,one),max0(nny,one)))
+                allocate(data2(max(nnx,one),max(nny,one)))
             else
-                if (size(data2,1).ne.max0(nnx,one) .or. size(data2,2).ne.max0(nny,one)) then
+                if (size(data2,1).ne.max(nnx,one) .or. size(data2,2).ne.max(nny,one)) then
                     deallocate(data2)
-                    allocate(data2(max0(nnx,one),max0(nny,one)))
+                    allocate(data2(max(nnx,one),max(nny,one)))
                 endif
             endif
             i = wgrib2_get_reg_data(data2, ndata, 19)
@@ -903,17 +903,17 @@ contains
         endif
 
 	if (present(lon)) then
-            if (max0(nnx,one)*max0(nny,one) .ne. ndata) then
+            if (max(nnx,one)*max(nny,one) .ne. ndata) then
                 write(*,*) '*** FATAL ERROR: ndata != nx*ny ', ndata, nnx, nny
                 grb2_inq = -1
                 return
             endif
             if (.not.allocated(lon)) then
-                allocate(lon(max0(nnx,one),max0(nny,one)))
+                allocate(lon(max(nnx,one),max(nny,one)))
             else
-                if (size(lon,1).ne.max0(nnx,one) .or. size(lon,2).ne.max0(nny,one)) then
+                if (size(lon,1).ne.max(nnx,one) .or. size(lon,2).ne.max(nny,one)) then
                     deallocate(lon)
-                    allocate(lon(max0(nnx,one),max0(nny,one)))
+                    allocate(lon(max(nnx,one),max(nny,one)))
                 endif
             endif
             i = wgrib2_get_reg_data(lon, ndata, 17)
@@ -925,17 +925,17 @@ contains
         endif
 
         if (present(lat)) then
-            if (max0(nnx,one)*max0(nny,one) .ne. ndata) then
+            if (max(nnx,one)*max(nny,one) .ne. ndata) then
                 write(*,*) '*** FATAL ERROR: ndata != nx*ny ', ndata, nnx, nny
                 grb2_inq = -1
                 return
             endif
             if (.not.allocated(lat)) then
-                allocate(lat(max0(nnx,one),max0(nny,one)))
+                allocate(lat(max(nnx,one),max(nny,one)))
             else
-                if (size(lat,1).ne.max0(nnx,one) .or. size(lat,2).ne.max0(nny,one)) then
+                if (size(lat,1).ne.max(nnx,one) .or. size(lat,2).ne.max(nny,one)) then
                     deallocate(lat)
-                    allocate(lat(max0(nnx,one),max0(nny,one)))
+                    allocate(lat(max(nnx,one),max(nny,one)))
                 endif
             endif
             i = wgrib2_get_reg_data(lat, ndata, 18)
