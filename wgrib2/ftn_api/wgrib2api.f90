@@ -42,7 +42,7 @@ use wgrib2lowapi
 
 	real, parameter ::   grb2_UNDEFINED = 9.999e20
         integer, private :: next_mem
-        private :: reserve_mem_buffer_name, all_line
+        private :: reserve_mem_buffer_name
 contains
 
 !       character (len=)  reserve_mem_buffer_name(buffer)
@@ -329,12 +329,11 @@ contains
 
         character (len=300) :: cmd(80)
         character (len=10) :: pack
-        integer :: i,n, yrev
+        integer :: i,n
         logical :: present_data1, present_data2
 
 	integer (C_INT) :: ierr
 	integer (C_SIZE_T) :: ndata, nx, ny
-	real (C_FLOAT), allocatable :: wgrib2_data(:)
 
 !        write(*,*) '>> grb2_wrt'
         present_data1 = present(data1)
@@ -571,7 +570,7 @@ contains
 
 	logical rewind_inv
         integer isubmsg
-	integer (C_SIZE_T) :: ndata, nnx, nny, imsgno, one, iret
+	integer (C_SIZE_T) :: ndata, nnx, nny, imsgno, one
 
         m = grb2_var_args(lines,0,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11, &
           a12,a13,a14,a15,a16,a17,a18,a19,a20)
@@ -977,7 +976,8 @@ contains
 	character (len=*), intent(inout) :: string
 	character (len=*), intent(in) :: substring
 	integer, intent(in) :: position
-	integer :: i, k, ilen, start
+	integer :: i, k, ilen
+        integer :: start = 0   ! silence compiler
 
 	grb2_set_substring = 8
 	if (position.lt.1) return
@@ -1011,7 +1011,8 @@ contains
 
         character (len=*), intent(in) :: string
         integer, intent(in) :: position
-        integer :: i, ilen, k, start
+        integer :: i, ilen, k
+        integer :: start = 0   ! silence compiler
 
         if (position.lt.1) then
             grb2_get_substring = ''
