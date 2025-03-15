@@ -786,19 +786,19 @@ contains
 !	write(*,*) 'ndata=',ndata, nnx, nny
 
         if (present(npts)) then
-           npts = ndata
+           npts = int(ndata, KIND=kind(npts))
         endif
         if (present(nx)) then
-           nx = nnx
+           nx = int(nnx, KIND=kind(nx))
         endif
         if (present(ny)) then
-           ny = nny
+           ny = int(nny, KIND=kind(ny))
         endif
         if (present(nmatch)) then
             nmatch = grb2_inq
         endif
         if (present(msgno)) then
-            msgno = imsgno
+            msgno = int(imsgno, KIND=kind(msgno))
         endif
         if (present(submsg)) then
             submsg = isubmsg
@@ -871,7 +871,7 @@ contains
                 endif
             endif
             if (present(nread)) then
-                nread = ndata
+                nread = int(ndata, KIND=kind(nread))
             endif
         endif
 !
@@ -898,7 +898,7 @@ contains
                 return
             endif
             if (present(nread)) then
-                nread = ndata
+                nread = int(ndata, KIND=kind(nread))
             endif
         endif
 
