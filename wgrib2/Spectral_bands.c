@@ -19,7 +19,7 @@ int f_spectral_bands_extname(ARG0) {
     int code1, code2, instrument, scale_factor, scaled_val;
     unsigned char *nb_location, *bandstart;
     double value;
-    const char *instype=NULL, *shortname=NULL;
+    const char *agency=NULL, *instype=NULL, *shortname=NULL, *longname=NULL;
     const char *satellite=NULL, *pol=NULL;
     
     const char *shortname1=NULL, *satellite1=NULL, *pol1=NULL;
@@ -56,9 +56,6 @@ int f_spectral_bands_extname(ARG0) {
         instype=NULL;
         shortname=NULL;
         satellite=NULL;
-        switch(code1&511) {
-#include "BUFRTable_0_02_020.dat"
-        }
         switch(code2) {
 #include "BUFRTable_0_01_007.dat"
         }
