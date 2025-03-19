@@ -749,6 +749,7 @@ int f_grid(ARG0) {
 	    case 40110:
 		 if ((center != JMA1) && (center != JMA2)) break;
 		 /* JMA 40110 is like azimuthal equidistant except for 2 more parameters */
+		 /* fall through */
             case 110: 
 		 sprintf(inv_out,"%sEquatorial azimuthal equidistant projection (%d x %d)",nl,nx,ny);
                  inv_out += strlen(inv_out);
