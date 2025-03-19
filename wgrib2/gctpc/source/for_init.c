@@ -21,29 +21,33 @@ ALGORITHM REFERENCES
 *******************************************************************************/
 #include "cproj.h"
 
-void for_init(outsys,outzone,outparm,outspheroid,fn27,fn83,iflg,for_trans)
+void for_init(long outsys, long outzone, double *outparm, long outspheroid,
+        char *fn27, char *fn83, long *iflg, long (*for_trans[])(double, double, double *, double *)) {
 
-long outsys;		/* output system code				*/
-long outzone;		/* output zone number				*/
-double *outparm;	/* output array of projection parameters	*/
-long outspheroid;	/* output spheroid				*/
-char *fn27;		/* NAD 1927 parameter file			*/
-char *fn83;		/* NAD 1983 parameter file			*/
-long *iflg;		/* status flag					*/
-long (*for_trans[])();	/* forward function pointer			*/
-{
+//  void for_init(outsys,outzone,outparm,outspheroid,fn27,fn83,iflg,for_trans)
+//  
+//  long outsys;		/* output system code				*/
+//  long outzone;		/* output zone number				*/
+//  double *outparm;	/* output array of projection parameters	*/
+//  long outspheroid;	/* output spheroid				*/
+//  char *fn27;		/* NAD 1927 parameter file			*/
+//  char *fn83;		/* NAD 1983 parameter file			*/
+//  long *iflg;		/* status flag					*/
+//  long (*for_trans[])();	/* forward function pointer			*/
+//  {
+
 long zone;		/* zone number					*/
-double azimuth;		/* azimuth					*/
-double alf;		/* SOM angle					*/
+double azimuth = -9999.0;/* azimuth					*/  /* silence compiler */
+double alf = -9999.0;	/* SOM angle					*/  /* silence compiler */
 double angle;		/* rotation anlge				*/
-double lon1;		/* longitude point in utm scene			*/
-double lon2;		/* 2nd longitude 				*/
-double lat1;		/* 1st standard parallel			*/
-double lat2;		/* 2nd standard parallel			*/
+double lon1 = -9999.0;	/* longitude point in utm scene			*/  /* silence compiler */
+double lon2 = -9999.0;	/* 2nd longitude 				*/  /* silence compiler */
+double lat1 = -9999.0;	/* 1st standard parallel			*/  /* silence compiler */
+double lat2 = -9999.0;	/* 2nd standard parallel			*/  /* silence compiler */
 double center_long;	/* center longitude				*/
 double center_lat;	/* center latitude				*/
 double h;		/* height above sphere				*/
-double lon_origin;	/* longitude at origin				*/
+double lon_origin = -9999.0;/* longitude at origin			*/  /* silence compiler */
 double lat_origin;	/* latitude at origin				*/
 double r_major;		/* major axis in meters				*/
 double r_minor;		/* minor axis in meters				*/
@@ -52,8 +56,8 @@ double false_easting;	/* false easting in meters			*/
 double false_northing;	/* false northing in meters			*/
 double shape_m;		/* constant used for Oblated Equal Area		*/
 double shape_n;		/* constant used for Oblated Equal Area		*/
-long   start;		/* where SOM starts beginning or end		*/
-double time;		/* SOM time					*/
+long   start = -9999;	/* where SOM starts beginning or end		*/  /* silence compiler */
+double time = -9999.0;	/* SOM time					*/  /* silence compiler */
 double radius;		/* radius of sphere				*/
 long tmpspheroid;	/* temporary spheroid for UTM			*/
 long path;		/* SOM path number				*/
@@ -62,36 +66,6 @@ long mode;		/* which initialization method  to use A or B	*/
 
 	/* Function declarations for function pointer use
 	-----------------------------------------------*/
-long utmfor();
-long stplnfor();
-long alberfor();
-long lamccfor();
-long merfor();
-long psfor();
-long polyfor();
-long eqconfor();
-long tmfor();
-long sterfor();
-long lamazfor();
-long azimfor();
-long gnomfor();
-long orthfor();
-long gvnspfor();
-long sinfor();
-long equifor();
-long millfor();
-long vandgfor();
-long omerfor();
-long somfor();
-long hamfor();
-long robfor();
-long goodfor();
-long molwfor();
-long imolwfor();
-long alconfor();
-long wivfor();
-long wviifor();
-long obleqfor();
 
 /* Initialize forward transformations
 -----------------------------------*/
