@@ -24,7 +24,6 @@ ALGORITHM REFERENCES
 
 /* Variables common to all subroutines in this code file
   -----------------------------------------------------*/
-static double azimuth;
 static double r_major;		/* major axis 				*/
 static double r_minor;		/* minor axis 				*/
 static double scale_factor;	/* scale factor				*/
@@ -44,23 +43,27 @@ static double sinaz,cosaz;
 
 /* Initialize the Oblique Mercator  projection
   ------------------------------------------*/
-long omerforint(r_maj,r_min,scale_fact,azimuth,lon_orig,lat_orig,false_east,
-	    false_north,lon1,lat1,lon2,lat2,mode) 
-
-double r_maj;			/* major axis			*/
-double r_min;			/* minor axis			*/
-double scale_fact;		/* scale factor			*/
-double azimuth;			/* azimuth east of north	*/
-double lon_orig;		/* longitude of origin		*/
-double lat_orig;		/* center latitude		*/
-double false_east;		/* x offset in meters		*/
-double false_north;		/* y offset in meters		*/
-double lon1;			/* fist point to define central line	*/
-double lat1;			/* fist point to define central line	*/
-double lon2;			/* second point to define central line	*/
-double lat2;			/* second point to define central line	*/
-long   mode;			/* which format type A or B	*/
-{
+long omerforint(double r_maj, double r_min, double scale_fact,
+        double azimuth, double lon_orig, double lat_orig, double false_east,
+        double false_north, double lon1, double lat1, double lon2, double lat2,
+        long mode) {
+//long omerforint(r_maj,r_min,scale_fact,azimuth,lon_orig,lat_orig,false_east,
+//	    false_north,lon1,lat1,lon2,lat2,mode) 
+//
+//double r_maj;			/* major axis			*/
+//double r_min;			/* minor axis			*/
+//double scale_fact;		/* scale factor			*/
+//double azimuth;			/* azimuth east of north	*/
+//double lon_orig;		/* longitude of origin		*/
+//double lat_orig;		/* center latitude		*/
+//double false_east;		/* x offset in meters		*/
+//double false_north;		/* y offset in meters		*/
+//double lon1;			/* fist point to define central line	*/
+//double lat1;			/* fist point to define central line	*/
+//double lon2;			/* second point to define central line	*/
+//double lat2;			/* second point to define central line	*/
+//long   mode;			/* which format type A or B	*/
+//{
 double temp;			/* temporary variable		*/
 double con,com;
 double ts;
@@ -68,7 +71,7 @@ double ts1,ts2;
 double h,l;
 double j,p,dlon;
 double f,g,gama;
-double sinphi,cosphi;
+double sinphi;
 
 /* Place parameters in static storage for common use
   -------------------------------------------------*/
@@ -90,7 +93,6 @@ bl = sqrt(1.0 + es * pow(cos_p20,4.0)/(1.0 - es));
 al = r_major * bl * scale_factor * com / con;
 if (fabs(lat_origin) < EPSLN)
    {
-   ts = 1.0;
    d = 1.0;
    el = 1.0;
    }
@@ -208,17 +210,16 @@ return(OK);
 
 /* Oblique Mercator forward equations--mapping lat,long to x,y
   ----------------------------------------------------------*/
-long omerfor(lon, lat, x, y)
-double lon;			/* (I) Longitude 		*/
-double lat;			/* (I) Latitude 		*/
-double *x;			/* (O) X projection coordinate 	*/
-double *y;			/* (O) Y projection coordinate 	*/
-{
-double theta;		/* angle					*/
-double sin_phi, cos_phi;/* sin and cos value				*/
-double b;		/* temporary values				*/
-double c, t, tq;	/* temporary values				*/
-double con, n, ml;	/* cone constant, small m			*/
+long omerfor(double lon, double lat, double *x, double *y) {
+//long omerfor(lon, lat, x, y)
+//double lon;			/* (I) Longitude 		*/
+//double lat;			/* (I) Latitude 		*/
+//double *x;			/* (O) X projection coordinate 	*/
+//double *y;			/* (O) Y projection coordinate 	*/
+//{
+double sin_phi; /* sin and cos value				*/
+double t;       /* temporary values				*/
+double con;     /* cone constant, small m			*/
 double q,us,vl;
 double ul,vs;
 double s;
