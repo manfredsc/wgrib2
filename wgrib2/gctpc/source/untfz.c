@@ -23,7 +23,6 @@ ALGORITHM REFERENCES
     Printing Office, Washington D.C., 1989.
 *******************************************************************************/
 #include "cproj.h"
-#include "proj.h"
 
 static double factors[6][6] = {
 	{1.0, 0.0, 0.0, 206264.8062470963, 57.29577951308231, 0.0},
