@@ -42,7 +42,7 @@ use wgrib2lowapi
 
 	real, parameter ::   grb2_UNDEFINED = 9.999e20
         integer, private :: next_mem
-        private :: reserve_mem_buffer_name, all_line
+        private :: reserve_mem_buffer_name
 contains
 
 !       character (len=)  reserve_mem_buffer_name(buffer)
@@ -329,12 +329,11 @@ contains
 
         character (len=300) :: cmd(80)
         character (len=10) :: pack
-        integer :: i,n, yrev
+        integer :: i,n
         logical :: present_data1, present_data2
 
 	integer (C_INT) :: ierr
 	integer (C_SIZE_T) :: ndata, nx, ny
-	real (C_FLOAT), allocatable :: wgrib2_data(:)
 
 !        write(*,*) '>> grb2_wrt'
         present_data1 = present(data1)
@@ -571,7 +570,7 @@ contains
 
 	logical rewind_inv
         integer isubmsg
-	integer (C_SIZE_T) :: ndata, nnx, nny, imsgno, one, iret
+	integer (C_SIZE_T) :: ndata, nnx, nny, imsgno, one
 
         m = grb2_var_args(lines,0,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11, &
           a12,a13,a14,a15,a16,a17,a18,a19,a20)
@@ -786,19 +785,19 @@ contains
 !	write(*,*) 'ndata=',ndata, nnx, nny
 
         if (present(npts)) then
-           npts = ndata
+           npts = int(ndata, KIND=kind(npts))
         endif
         if (present(nx)) then
-           nx = nnx
+           nx = int(nnx, KIND=kind(nx))
         endif
         if (present(ny)) then
-           ny = nny
+           ny = int(nny, KIND=kind(ny))
         endif
         if (present(nmatch)) then
             nmatch = grb2_inq
         endif
         if (present(msgno)) then
-            msgno = imsgno
+            msgno = int(imsgno, KIND=kind(msgno))
         endif
         if (present(submsg)) then
             submsg = isubmsg
@@ -871,24 +870,24 @@ contains
                 endif
             endif
             if (present(nread)) then
-                nread = ndata
+                nread = int(ndata, KIND=kind(nread))
             endif
         endif
 !
 !       does not work for staggered grids
 !
         if (present(data2)) then
-            if (max0(nnx,one)*max0(nny,one) .ne. ndata) then
+            if (max(nnx,one)*max(nny,one) .ne. ndata) then
                 write(*,*) '*** FATAL ERROR: ndata != nx*ny ', ndata, nnx, nny
                 grb2_inq = -1
                 return
             endif
             if (.not.allocated(data2)) then
-                allocate(data2(max0(nnx,one),max0(nny,one)))
+                allocate(data2(max(nnx,one),max(nny,one)))
             else
-                if (size(data2,1).ne.max0(nnx,one) .or. size(data2,2).ne.max0(nny,one)) then
+                if (size(data2,1).ne.max(nnx,one) .or. size(data2,2).ne.max(nny,one)) then
                     deallocate(data2)
-                    allocate(data2(max0(nnx,one),max0(nny,one)))
+                    allocate(data2(max(nnx,one),max(nny,one)))
                 endif
             endif
             i = wgrib2_get_reg_data(data2, ndata, 19)
@@ -898,22 +897,22 @@ contains
                 return
             endif
             if (present(nread)) then
-                nread = ndata
+                nread = int(ndata, KIND=kind(nread))
             endif
         endif
 
 	if (present(lon)) then
-            if (max0(nnx,one)*max0(nny,one) .ne. ndata) then
+            if (max(nnx,one)*max(nny,one) .ne. ndata) then
                 write(*,*) '*** FATAL ERROR: ndata != nx*ny ', ndata, nnx, nny
                 grb2_inq = -1
                 return
             endif
             if (.not.allocated(lon)) then
-                allocate(lon(max0(nnx,one),max0(nny,one)))
+                allocate(lon(max(nnx,one),max(nny,one)))
             else
-                if (size(lon,1).ne.max0(nnx,one) .or. size(lon,2).ne.max0(nny,one)) then
+                if (size(lon,1).ne.max(nnx,one) .or. size(lon,2).ne.max(nny,one)) then
                     deallocate(lon)
-                    allocate(lon(max0(nnx,one),max0(nny,one)))
+                    allocate(lon(max(nnx,one),max(nny,one)))
                 endif
             endif
             i = wgrib2_get_reg_data(lon, ndata, 17)
@@ -925,17 +924,17 @@ contains
         endif
 
         if (present(lat)) then
-            if (max0(nnx,one)*max0(nny,one) .ne. ndata) then
+            if (max(nnx,one)*max(nny,one) .ne. ndata) then
                 write(*,*) '*** FATAL ERROR: ndata != nx*ny ', ndata, nnx, nny
                 grb2_inq = -1
                 return
             endif
             if (.not.allocated(lat)) then
-                allocate(lat(max0(nnx,one),max0(nny,one)))
+                allocate(lat(max(nnx,one),max(nny,one)))
             else
-                if (size(lat,1).ne.max0(nnx,one) .or. size(lat,2).ne.max0(nny,one)) then
+                if (size(lat,1).ne.max(nnx,one) .or. size(lat,2).ne.max(nny,one)) then
                     deallocate(lat)
-                    allocate(lat(max0(nnx,one),max0(nny,one)))
+                    allocate(lat(max(nnx,one),max(nny,one)))
                 endif
             endif
             i = wgrib2_get_reg_data(lat, ndata, 18)
@@ -977,7 +976,8 @@ contains
 	character (len=*), intent(inout) :: string
 	character (len=*), intent(in) :: substring
 	integer, intent(in) :: position
-	integer :: i, k, ilen, start
+	integer :: i, k, ilen
+        integer :: start = 0   ! silence compiler
 
 	grb2_set_substring = 8
 	if (position.lt.1) return
@@ -1011,7 +1011,8 @@ contains
 
         character (len=*), intent(in) :: string
         integer, intent(in) :: position
-        integer :: i, ilen, k, start
+        integer :: i, ilen, k
+        integer :: start = 0   ! silence compiler
 
         if (position.lt.1) then
             grb2_get_substring = ''
