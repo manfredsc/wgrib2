@@ -22,8 +22,7 @@ OPTS = $(CFLAGS)     \
 # modified, the module will be recompiled.
 #
 CINCFIL = \
-	$(SRCGCTP)/cproj.h   \
-	$(SRCGCTP)/proj.h
+	$(SRCGCTP)/cproj.h
 
 OBJLIB = \
 	$(LIBGCTP)/geolib.a
