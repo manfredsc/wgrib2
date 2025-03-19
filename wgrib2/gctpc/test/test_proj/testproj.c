@@ -36,7 +36,6 @@ ALGORITHM REFERENCES
 #include <string.h>
 #include <ctype.h>
 #include "cproj.h"
-#include "proj.h"
 
 #define CMLEN	256
 
