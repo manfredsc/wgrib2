@@ -82,7 +82,7 @@ endif()
 # If user wants to use NCEPLIBS-ip, find it and the sp library.
 message(STATUS "Checking if the user want to use NCEPLIBS-ip...")
 if(USE_IPOLATES)
-  find_package(ip 5.1.0 CONFIG REQUIRED)
+  find_package(ip 5.2.0 CONFIG REQUIRED)
   list(APPEND definitions_list -DIPOLATES_LIB="ipolates_lib_d")
 endif()
 
@@ -129,7 +129,7 @@ if(BUILD_LIB)
   message(STATUS "Adding wgrib2 library build...")
   ### Package config
   include(CMakePackageConfigHelpers)
-  set(CONFIG_INSTALL_DESTINATION lib/cmake/${PROJECT_NAME})
+  set(CONFIG_INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
   # No need for config file if library isn't built
   export(EXPORT wgrib2_exports

@@ -54,7 +54,7 @@ int f_ens(ARG0) {
 			if (center == NCEP) {
 			    sprintf(inv_out,"ENS=%d", pert); break;
 			}
-
+                        /* fall through */
 	        default:
 			sprintf(inv_out,"ENS=? table4.6=%d pert=%d",(int) *type,pert); break;
 	    }
