@@ -61,7 +61,6 @@ orthinv.c
 paksz.c
 polyfor.c
 polyinv.c
-proj.h
 psfor.c
 psinv.c
 report.c
