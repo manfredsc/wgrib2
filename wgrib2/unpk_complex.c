@@ -131,8 +131,9 @@ int unpk_complex(unsigned char **sec, float *data, unsigned int ndata) {
 
     // do a check for number of grid points and size
     clocation = offset = n_bytes = n_bits = j = 0;
-
+#ifdef USE_OPENMP
 #pragma omp parallel private (i, ii, k, di, thread_id, nthreads)
+#endif
 {
     nthreads = omp_get_num_threads();
     thread_id = omp_get_thread_num();
@@ -297,7 +298,9 @@ int unpk_complex(unsigned char **sec, float *data, unsigned int ndata) {
 
     if (d + clocation + (offset + 7)/8 - sec[7] != GB2_Sec7_size(sec)) fatal_error("complex unpacking size mismatch","");
 
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i) schedule(static)
+#endif
     for (i = 0; i < ngroups; i++) {
 	group_clocation[i] += (group_offset[i] / 8);
 	group_offset[i] = (group_offset[i] % 8);
@@ -308,7 +311,9 @@ int unpk_complex(unsigned char **sec, float *data, unsigned int ndata) {
 
     // handle substitute, missing values and reference value
     if (n_sub_missing == 0) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i,k,j)
+#endif
 	for (i = 0; i < ngroups; i++) {
 	    j = group_location[i];
 #ifdef IS_OPENMP_4_0
@@ -321,7 +326,9 @@ int unpk_complex(unsigned char **sec, float *data, unsigned int ndata) {
     }
     else if (n_sub_missing == 1) {
 
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i,m1,k,j)
+#endif
 	for (i = 0; i < ngroups; i++) {
 	    j = group_location[i];
 	    if (group_widths[i] == 0) {
@@ -353,7 +360,9 @@ int unpk_complex(unsigned char **sec, float *data, unsigned int ndata) {
 	}
     }
     else if (n_sub_missing == 2) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i,j,k,m1,m2)
+#endif
 	for (i = 0; i < ngroups; i++) {
 	    j = group_location[i];
 	    if (group_widths[i] == 0) {
@@ -440,7 +449,9 @@ int unpk_complex(unsigned char **sec, float *data, unsigned int ndata) {
 
 	if (bitmap_flag == 255) {
 	    // no bitmap
+#ifdef USE_OPENMP
 #pragma omp parallel for schedule(static) private(i)
+#endif
 	    for (i = 0; i < ndata; i++) {
 		data[i] = (udata[i] == INT_MAX) ? UNDEFINED : 
 			(ref_val0 + udata[i] * factor_2) * factor_10;

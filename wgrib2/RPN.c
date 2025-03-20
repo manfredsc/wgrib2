@@ -143,7 +143,9 @@ int f_rpn(ARG1) {
 	    if (mode == 98) fprintf(stderr," plus");
 	    if (top <= 0) fatal_error("rpn: bad + expression","");
 	    j = top-1;
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i) schedule(static)
+#endif
 	    for (i = 0; i < ndata; i++) {
 		if (DEFINED_VAL(stack[top][i]) && DEFINED_VAL(stack[j][i])) {
 		    stack[j][i] = stack[j][i] + stack[top][i];
@@ -156,7 +158,9 @@ int f_rpn(ARG1) {
 	    if (mode == 98) fprintf(stderr," minus");
 	    if (top <= 0) fatal_error("rpn: bad - expression","");
 	    j = top-1;
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i) schedule(static)
+#endif
 	    for (i = 0; i < ndata; i++) {
 		if (DEFINED_VAL(stack[top][i]) && DEFINED_VAL(stack[j][i])) {
 		    stack[j][i] = stack[j][i] - stack[top][i];
@@ -169,7 +173,9 @@ int f_rpn(ARG1) {
 	    if (mode == 98) fprintf(stderr," times");
 	    if (top <= 0) fatal_error("rpn: bad * expression","");
 	    j = top-1;
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i) schedule(static)
+#endif
 	    for (i = 0; i < ndata; i++) {
 		if (DEFINED_VAL(stack[top][i]) && DEFINED_VAL(stack[j][i])) {
 		    stack[j][i] = stack[j][i] * stack[top][i];
@@ -182,7 +188,9 @@ int f_rpn(ARG1) {
 	    if (mode == 98) fprintf(stderr," div");
 	    if (top <= 0) fatal_error("rpn: bad / expression","");
 	    j = top-1;
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i) schedule(static)
+#endif
 	    for (i = 0; i < ndata; i++) {
 		if (DEFINED_VAL(stack[top][i]) && DEFINED_VAL(stack[j][i]) && (stack[top][i] != 0.0)) {
 		    stack[j][i] = stack[j][i] / stack[top][i];
@@ -241,7 +249,9 @@ int f_rpn(ARG1) {
 	else if (strcmp(string,"sqrt") == 0) {
 	    if (mode == 98) fprintf(stderr," sqrt");
 	    if (top < 0) fatal_error("rpn: bad sqrt expression","");
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i) schedule(static)
+#endif
 	    for (i = 0; i < ndata; i++) {
 		if (DEFINED_VAL(stack[top][i]) && stack[top][i] >= 0.0) {
 		    stack[top][i] = sqrtf(stack[top][i]);
@@ -253,7 +263,9 @@ int f_rpn(ARG1) {
 	else if (strcmp(string,"sq") == 0) {
 	    if (mode == 98) fprintf(stderr," sq");
 	    if (top < 0) fatal_error("rpn: bad sq expression","");
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i) schedule(static)
+#endif
 	    for (i = 0; i < ndata; i++) {
 		if (DEFINED_VAL(stack[top][i])) {
 		    stack[top][i] *= stack[top][i];
@@ -264,7 +276,9 @@ int f_rpn(ARG1) {
 	else if (strcmp(string,"pow") == 0) {
 	    if (top <= 0) fatal_error("rpn: bad pow expression","");
 	    j = top-1;
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
 	    for (i = 0; i < ndata; i++) {
 		if (DEFINED_VAL(stack[top][i]) && DEFINED_VAL(stack[j][i])) {
 		    stack[j][i] = powf(stack[j][i], stack[top][i]);
@@ -276,7 +290,9 @@ int f_rpn(ARG1) {
         // ln - natural log
         else if (strcmp(string,"ln") == 0) {
             if (top < 0) fatal_error("rpn: bad log expression","");
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
             for (i = 0; i < ndata; i++) {
                 if (DEFINED_VAL(stack[top][i]) && stack[top][i] > 0.0) {
 // glib bug                    stack[top][i] = logf(stack[top][i]);
@@ -290,7 +306,9 @@ int f_rpn(ARG1) {
 	// exp
 	else if (strcmp(string,"exp") == 0) {
 	    if (top < 0) fatal_error("rpn: bad exp expression","");
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
 	    for (i = 0; i < ndata; i++) {
 		if (DEFINED_VAL(stack[top][i])) {
 		    stack[top][i] = expf(stack[top][i]);
@@ -313,7 +331,9 @@ int f_rpn(ARG1) {
 	else if (strcmp(string,"1/x") == 0) {
 	    if (mode == 98) fprintf(stderr," 1/x");
 	    if (top < 0) fatal_error("rpn: bad 1/x","");
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
 	    for (i = 0; i < ndata; i++) {
 		if (DEFINED_VAL(stack[top][i]) && stack[top][i] != 0.0) {
 		    stack[top][i] = 1.0 / stack[top][i];
@@ -347,7 +367,9 @@ int f_rpn(ARG1) {
 	// sin cos tan asin acos atan
 	else if (strcmp(string,"sin") == 0) {
 	    if (top < 0) fatal_error("rpn: bad sin","");
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
 	    for (i = 0; i < ndata; i++) {
 		if (DEFINED_VAL(stack[top][i])) {
 		    stack[top][i] = sinf(stack[top][i]);
@@ -356,7 +378,9 @@ int f_rpn(ARG1) {
 	}
 	else if (strcmp(string,"cos") == 0) {
 	    if (top < 0) fatal_error("rpn: bad cos","");
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
 	    for (i = 0; i < ndata; i++) {
 		if (DEFINED_VAL(stack[top][i])) {
 		    stack[top][i] = cosf(stack[top][i]);
@@ -365,7 +389,9 @@ int f_rpn(ARG1) {
 	}
 	else if (strcmp(string,"tan") == 0) {
 	    if (top < 0) fatal_error("rpn: bad tan","");
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
 	    for (i = 0; i < ndata; i++) {
 		if (DEFINED_VAL(stack[top][i])) {
 		    stack[top][i] = tanf(stack[top][i]);
@@ -374,7 +400,9 @@ int f_rpn(ARG1) {
 	}
 	else if (strcmp(string,"asin") == 0) {
 	    if (top < 0) fatal_error("rpn: bad asin","");
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
 	    for (i = 0; i < ndata; i++) {
 		if (DEFINED_VAL(stack[top][i])) {
 		    if (fabsf(stack[top][i]) > 1.0) stack[top][i] = UNDEFINED;
@@ -384,7 +412,9 @@ int f_rpn(ARG1) {
 	}
         else if (strcmp(string,"acos") == 0) {
             if (top < 0) fatal_error("rpn: bad acos","");
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
             for (i = 0; i < ndata; i++) {
                 if (DEFINED_VAL(stack[top][i])) {
                     if (fabsf(stack[top][i]) > 1.0) stack[top][i] = UNDEFINED;
@@ -394,7 +424,9 @@ int f_rpn(ARG1) {
         }
 	else if (strcmp(string,"atan") == 0) {
             if (top < 0) fatal_error("rpn: bad atan","");
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
             for (i = 0; i < ndata; i++) {
                 if (DEFINED_VAL(stack[top][i])) {
                     stack[top][i] = atanf(stack[top][i]);
@@ -404,7 +436,9 @@ int f_rpn(ARG1) {
         else if (strcmp(string,"atan2") == 0) {
             if (top <= 0) fatal_error("rpn: bad atan2 expression","");
             j = top-1;
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
             for (i = 0; i < ndata; i++) {
                 if (DEFINED_VAL(stack[top][i]) && DEFINED_VAL(stack[j][i])) {
                     stack[j][i] = atan2f(stack[j][i], stack[top][i]);
@@ -677,7 +711,9 @@ int f_rpn(ARG1) {
             if (top < 0) fatal_error("rpn: raw2 needs field","");
 	    if (translation != NULL) {
 		top = push(top,ndata,VECTOR,0.0,stack[top],NULL);
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
 	        for (i = 0; i < ndata; i++) {
                     stack[top-1][i] =  stack[top][translation[i]];
 		}
@@ -692,7 +728,9 @@ int f_rpn(ARG1) {
             if (top < 0) fatal_error("rpn: raw2 needs field","");
 	    if (translation != NULL) {
 		top = push(top,ndata,VECTOR,0.0,stack[top],NULL);
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
 	        for (i = 0; i < ndata; i++) {
                     stack[top-1][translation[i]] = stack[top][i];
 		}
@@ -864,7 +902,9 @@ int f_rpn(ARG1) {
                 }
 	    }
 	    else {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i) reduction(+:wt,sum1)
+#endif
                 for (i = 0; i < ndata; i++) {
                     if (DEFINED_VAL(stack[top][i]) && DEFINED_VAL(stack[j][i])) {
                         sum1 +=  (stack[j][i] - stack[top][i]);
@@ -888,7 +928,9 @@ int f_rpn(ARG1) {
 	    cos_lat = 1.0;
             sum1 = wt = 0.0;
 	    if (lat != NULL) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i) firstprivate(cos_lat,last_lat) reduction(+:wt,sum1) schedule(static)
+#endif
                 for (i = 0; i < ndata; i++) {
 		    if (DEFINED_VAL(stack[top][i]) && DEFINED_VAL(stack[j][i])) {
 		        if (last_lat != lat[i]) {
@@ -901,7 +943,9 @@ int f_rpn(ARG1) {
 	        }
             }
 	    else {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i) reduction(+:wt,sum1) schedule(static)
+#endif
                 for (i = 0; i < ndata; i++) {
 		    if (DEFINED_VAL(stack[top][i]) && DEFINED_VAL(stack[j][i])) {
 		        sum1 +=  (stack[top][i] - stack[j][i]) * (stack[top][i] - stack[j][i]);
@@ -935,7 +979,9 @@ int f_rpn(ARG1) {
                 }
             }
 	    else {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i) reduction(+:wt,sum1) schedule(static)
+#endif
                 for (i = 0; i < ndata; i++) {
                     if (DEFINED_VAL(stack[top][i])) {
                         sum1 +=  stack[top][i];
@@ -978,7 +1024,9 @@ int f_rpn(ARG1) {
 	    sq1 = sq2 = sq12 = 0.0;
 	    if (lat != NULL) {
 	        // find mean values
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i) firstprivate(last_lat, cos_lat) reduction(+:wt,sum1,sum2) schedule(static)
+#endif
                 for (i = 0; i < ndata; i++) {
                     if (DEFINED_VAL(stack[top][i]) && DEFINED_VAL(stack[j][i])) {
 	  	        if (last_lat != lat[i]) {
@@ -994,7 +1042,9 @@ int f_rpn(ARG1) {
 	        sum2 = sum2 / wt;
 	        last_lat = 0;
 	        cos_lat = 1.0;
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i) firstprivate(last_lat, cos_lat) reduction(+:sq1,sq2,sq12) schedule(static)
+#endif
                 for (i = 0; i < ndata; i++) {
                     if (DEFINED_VAL(stack[top][i]) && DEFINED_VAL(stack[j][i])) {
 		        if (last_lat != lat[i]) {
@@ -1009,7 +1059,9 @@ int f_rpn(ARG1) {
 	    }
 	    else {
 	        // find mean values
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i) reduction(+:wt,sum1,sum2) schedule(static)
+#endif
                 for (i = 0; i < ndata; i++) {
                     if (DEFINED_VAL(stack[top][i]) && DEFINED_VAL(stack[j][i])) {
 		        sum1 += stack[top][i];
@@ -1019,7 +1071,9 @@ int f_rpn(ARG1) {
 	        }
 	        sum1 = sum1 / wt;
 	        sum2 = sum2 / wt;
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i) reduction(+:sq1,sq2,sq12) schedule(static)
+#endif
                 for (i = 0; i < ndata; i++) {
                     if (DEFINED_VAL(stack[top][i]) && DEFINED_VAL(stack[j][i])) {
 		        sq1 += (stack[top][i]-sum1)*(stack[top][i]-sum1);
