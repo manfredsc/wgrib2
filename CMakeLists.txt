@@ -65,6 +65,12 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     CACHE PATH "default install path" FORCE)
 endif()
 
+if(USE_G2CLIB_HIGH AND NOT USE_G2CLIB_LOW)
+  message(FATAL_ERROR "USE_G2CLIB_LOW must be on when USE_G2CLIB_HIGH")
+endif()
+
+
+
 if (BUILD_SHARED_LIB AND NOT BUILD_LIB)
    message(FATAL_ERROR "BUILD_SHARED_LIB is on but BUILD_LIB is off")
 endif()

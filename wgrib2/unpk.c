@@ -12,7 +12,7 @@
 #include "wgrib2.h"
 #include "grb2.h"
 
-#if defined USE_G2CLIB_LOW || defined USE_G2CLIB_HIGH
+#ifdef USE_G2CLIB_LOW
     #include "grib2.h"
 #endif
 

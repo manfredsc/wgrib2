@@ -10,7 +10,7 @@
 #if defined USE_NETCDF
 #include <netcdf.h>
 #endif
-#if defined USE_G2CLIB_LOW || defined USE_G2CLIB_HIGH
+#ifdef USE_G2CLIB_LOW
 #include "grib2.h"
 #endif
 
@@ -47,7 +47,7 @@ int f_config(ARG0) {
 #else
     strcat(inv_out, "Netcdf package is not installed\n");
 #endif
-#if defined USE_G2CLIB_LOW || defined USE_G2CLIB_HIGH
+#ifdef USE_G2CLIB_LOW
     strcat(inv_out, "g2clib v" );
     strcat(inv_out, G2C_VERSION " is installed\n" );
 #endif
