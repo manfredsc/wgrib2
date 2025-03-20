@@ -21,6 +21,5 @@ if ! diff -w <(echo "$output") <(echo "$expected_output"); then
   exit 1
 fi
 
-../wgrib2/wgrib2 junk.grb -mysql host user password db table
 echo "*** SUCCESS!"
 exit 0
