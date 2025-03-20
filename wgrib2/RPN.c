@@ -206,7 +206,9 @@ int f_rpn(ARG1) {
 	    if (mode == 98) fprintf(stderr," merge");
 	    if (top <= 0) fatal_error("rpn: bad merge expression","");
 	    j = top-1;
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i) schedule(static)
+#endif
 	    for (i = 0; i < ndata; i++) {
 		if (DEFINED_VAL(stack[top][i])) {
 		    stack[j][i] = stack[top][i];
