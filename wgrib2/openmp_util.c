@@ -42,7 +42,9 @@ int min_max_array(float *data, unsigned int n, float *min, float *max) {
     }
 
     mn = mx = data[first];
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i) reduction(min:mn) reduction(max:mx)
+#endif
     for (i = first+1; i < n; i++) {
 	if (DEFINED_VAL(data[i])) {
 	    mn = (mn > data[i]) ? data[i] : mn;
@@ -73,7 +75,9 @@ int min_max_array_all_defined(float *data, unsigned int n, float *min, float *ma
     }
 
     mn = mx = data[0];
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i) reduction(min:mn) reduction(max:mx)
+#endif
     for (i = 1; i < n; i++) {
 	mx = data[i] > mx ? data[i] : mx;
 	mn = data[i] < mn ? data[i] : mn;
@@ -104,7 +108,9 @@ int int_min_max_array(int *data, unsigned int n, int *min, int *max) {
 
     mn = mx = data[first];
 
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i) reduction(min:mn) reduction(max:mx)
+#endif
     for (i = first + 1; i < n; i++) {
         if (data[i] != INT_MAX) {
 	    mx = data[i] > mx ? data[i] : mx;
@@ -136,7 +142,9 @@ int int_min_array(int *data, unsigned int n) {
     if (first >= n) return INT_MAX;
     mn = data[first];
 
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i) reduction(min:mn)
+#endif
     for (i = first+1; i < n; i++) {
 	if (data[i] != INT_MAX) {
 	    mn = data[i] < mn ? data[i] : mn;
@@ -165,7 +173,9 @@ int int_max_array(int *data, unsigned int n) {
     if (first >= n) return INT_MAX;
     mx = data[first];
 
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i) reduction(max:mx)
+#endif
     for (i = first+1; i < n; i++) {
 	if (data[i] != INT_MAX) {
 	    mx = data[i] > mx ? data[i] : mx;
