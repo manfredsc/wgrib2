@@ -18,6 +18,7 @@ variant_map_common = {
     "proj4": "USE_PROJ4",
     "aec": "USE_AEC",
     "g2c": "USE_G2CLIB_LOW",
+    "g2c_high": "USE_G2CLIB_HIGH",
     "openmp": "USE_OPENMP",
     "wmo_validation": "USE_WMO_VALIDATION",
     "ipolates": "USE_IPOLATES",
@@ -151,6 +152,13 @@ class Wgrib2(MakefilePackage, CMakePackage):
         when="@:3.1",
     )
     variant(
+        "g2c_high",
+        default=False,
+        description="Include NCEP g2clib (add -g2clib 2)",
+        when="@:3.1",
+    )
+
+    variant(
         "disable_timezone", default=False, description="Some machines do not support timezones"
     )
     variant(
@@ -167,6 +175,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
     conflicts("+netcdf3", when="+netcdf4")
     conflicts("+netcdf3", when="+netcdf")
     conflicts("+openmp", when="%apple-clang")
+    conflicts("-g2c", when="+g2c_high")
 
     depends_on("ip@5.2:", when="@develop +ipolates")
     depends_on("g2c@develop", when="@develop +g2c")
