@@ -10,8 +10,7 @@ echo "*** Checking BUILD_EXTRA=ON works correctly"
 echo "Checking that fnlist is updated with fnlist_extra..."
 n_extra_fns=3
 output=$(../wgrib2/wgrib2 -h all 2>&1 | tail -n "$n_extra_fns")
-expected_output="
--mysql           out   5 args H=[host] U=[user] P=[password] D=[db] T=[table]
+expected_output="-mysql           out   5 args H=[host] U=[user] P=[password] D=[db] T=[table]
 -mysql_dump      out   7 args H=[host] U=[user] P=[password] D=[db] T=[table] W=[western_lons:0|1] PV=[remove unlikely:0|1]
 -mysql_speed     out   7 args H=[host] U=[user] P=[password] D=[db] T=[table] W=[western_lons:0|1] PV=[remove unlikely:0|1]"
 
