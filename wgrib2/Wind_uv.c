@@ -141,7 +141,9 @@ int f_wind_uv(ARG1) {
             if ((data_tmp = (float *) malloc(sizeof(float) * (size_t) ndata)) == NULL)
                 fatal_error("wind_uv: memory allocation","");
 
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i,u,v)
+#endif
 	    for (i = 0; i < ndata; i++) {
                 if (!UNDEFINED_VAL(save->speed[i])) {
 		    if (save->speed[i] == 0.0) {

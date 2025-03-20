@@ -121,7 +121,9 @@ int f_wind_speed(ARG1) {
 	    // calculate wind speed
 
             d1 = save->val;
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
 	    for (i = 0; i < ndata; i++) {
                 if (!UNDEFINED_VAL(data[i]) && !UNDEFINED_VAL(d1[i])) {
 	            d1[i] = sqrt(data[i]*data[i] + d1[i] * d1[i]);

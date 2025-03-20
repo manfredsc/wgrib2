@@ -48,7 +48,9 @@ int wrtieee(float *array, unsigned int n, int header, struct seq_file *out) {
 	while (i < n) {
 		loop = (BSIZ - nbuf)/4;
 		loop  = (n-i) > loop ? loop : (n-i);
+#ifdef USE_OPENMP
 #pragma omp parallel for private(j) schedule(static)
+#endif
 		for (j = 0 ; j < loop; j++) {
 		    flt2ieee(array[i+j], buff + nbuf + j*4);
 		}

@@ -74,7 +74,9 @@ int unpk_grib(unsigned char **sec, float *data) {
 
         // ieee depacking -- simple no bitmap
         if (bitmap_flag == 255) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(ii) schedule(static)
+#endif
             for (ii = 0; ii < ndata; ii++) {
                 data[ii] = ieee2flt_nan(sec[7]+5+ii*4);
             }
@@ -116,7 +118,9 @@ int unpk_grib(unsigned char **sec, float *data) {
             tmp = reference*dec_scale;
 	    if (packing == 61) tmp = exp(tmp) - b;		// remove log prescaling
             if (bitmap_flag == 255) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(ii) schedule(static)
+#endif
                 for (ii = 0; ii < ndata; ii++) {
                     data[ii] = tmp;
                 }
@@ -140,7 +144,9 @@ int unpk_grib(unsigned char **sec, float *data) {
 		bin_scale,dec_scale);
 
 	if (packing == 61) {		// remove log prescaling
+#ifdef USE_OPENMP
 #pragma omp parallel for private(ii) schedule(static)
+#endif
             for (ii = 0; ii < ndata; ii++) {
                 if (DEFINED_VAL(data[ii])) data[ii] = exp(data[ii]) - b;
             }
@@ -166,7 +172,9 @@ int unpk_grib(unsigned char **sec, float *data) {
 	if (nbits == 0) {
 	    tmp = reference*dec_scale;
             if (bitmap_flag == 255) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(ii) schedule(static)
+#endif
 		for (ii = 0; ii < ndata; ii++) {
 		    data[ii] = tmp;
 		}
@@ -194,7 +202,9 @@ int unpk_grib(unsigned char **sec, float *data) {
 	if (err != 0) fatal_error_i("dec_jpeg2000, error %d",err);
 
     if (bitmap_flag == 255) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(ii)
+#endif
         for (ii = 0; ii < ndata; ii++) {
             data[ii] = ((ifld[ii]*bin_scale)+reference)*dec_scale;
         }
@@ -228,7 +238,9 @@ int unpk_grib(unsigned char **sec, float *data) {
         if (nbits == 0) {
             tmp = reference*dec_scale;
             if (bitmap_flag == 255) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(ii) schedule(static)
+#endif
                 for (ii = 0; ii < ndata; ii++) {
                     data[ii] = tmp;
                 }
@@ -285,7 +297,9 @@ int unpk_grib(unsigned char **sec, float *data) {
     	if (nbits == 0) {
     	    tmp = reference*dec_scale;
     	    if (bitmap_flag == 255) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(ii) schedule(static)
+#endif
     		for (ii = 0; ii < ndata; ii++) {
     		    data[ii] = tmp;
     		}
