@@ -110,7 +110,9 @@ int stagger(unsigned char **sec, unsigned int assumed_npnts, double *x, double *
     x0 = (dx > 0) ? 0.0 : 1.0 - (double) nx;
     y0 = (dy > 0) ? 0.0 : 1.0 - (double) ny;
 
+#ifdef USE_OPENMP
 #pragma omp parallel for private(ix,iy,even,i,dx_offset, nnx)
+#endif
     for (iy = 0; iy < ny; iy++) {
 	// even = iy % 2;		// first row is odd .. iy % 2 == 0
 	even = (iy & 1);		// first row is odd
@@ -128,7 +130,9 @@ int stagger(unsigned char **sec, unsigned int assumed_npnts, double *x, double *
 	if (GDS_Gnom_tile(sec[3]) == 0) {		/* global - 6 faces */
 	    /* calculated X, Y for one face, duplicate for all 8 faces */
 	    n = n / 6;
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
 	    for (i = 0; i < n; i++) {
 		x[i+n] = x[i+2*n] = x[i+3*n] = x[i+4*n] = x[i+5*n] = x[i];
 		y[i+n] = y[i+2*n] = y[i+3*n] = y[i+4*n] = y[i+5*n] = y[i];
