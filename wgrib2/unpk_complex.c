@@ -163,7 +163,9 @@ int unpk_complex(unsigned char **sec, float *data, unsigned int ndata) {
 	for (ii = 0; ii < k; ii++) group_widths[i+ii] += ref_group_width;
     }
 
+#ifdef USE_OPENMP	
 #pragma omp barrier
+#endif
 
     if (ctable_5_4 == 1) {
 
@@ -186,7 +188,9 @@ int unpk_complex(unsigned char **sec, float *data, unsigned int ndata) {
 		    group_lengths[i+ii] * group_length_factor + ref_group_length;
         }
 
+#ifdef USE_OPENMP
 #pragma omp single
+#endif
 	group_lengths[ngroups-1] = len_last;
     }
 
@@ -235,17 +239,23 @@ int unpk_complex(unsigned char **sec, float *data, unsigned int ndata) {
     }
 */
 
+#ifdef USE_OPENMP
 #pragma omp single
+#endif
     {
         d += (nbits*ngroups + 7)/8 +
              (ngroups * nbit_group_width + 7) / 8 +
              (ngroups * nbits_group_len + 7) / 8;
     }
 
+#ifdef USE_OPENMP
 #pragma omp sections
+#endif
     {
 
+#ifdef USE_OPENMP
 #pragma omp section
+#endif
         {
 	    unsigned int i;
             for (i = 0; i < ngroups; i++) {
@@ -254,7 +264,9 @@ int unpk_complex(unsigned char **sec, float *data, unsigned int ndata) {
 	    }
 	}
 
+#ifdef USE_OPENMP
 #pragma omp section
+#endif
         {
 	    unsigned int i;
             for (i = 0; i < ngroups; i++) {
@@ -268,7 +280,9 @@ int unpk_complex(unsigned char **sec, float *data, unsigned int ndata) {
             }
         }
 
+#ifdef USE_OPENMP
 #pragma omp section
+#endif
 	{
 	    unsigned int i;
             for (i = 0; i < ngroups; i++) {
@@ -278,7 +292,9 @@ int unpk_complex(unsigned char **sec, float *data, unsigned int ndata) {
             }
         }
 
+#ifdef USE_OPENMP
 #pragma omp section
+#endif
         {
 	    unsigned int i;
             for (i = 0; i < ngroups; i++) {
