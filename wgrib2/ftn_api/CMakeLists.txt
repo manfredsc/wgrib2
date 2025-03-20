@@ -29,7 +29,11 @@ target_include_directories(wgrib2_ftn_api
 
 target_link_libraries(wgrib2_ftn_api PUBLIC wgrib2_lib)  
 
-install(DIRECTORY ${module_dir} DESTINATION ${CMAKE_INSTALL_PREFIX})
+if(NOT DEFINED CMAKE_INSTALL_Fortran_MODULES)
+    set(CMAKE_INSTALL_Fortran_MODULES ${CMAKE_INSTALL_INCLUDEDIR})
+endif()
+
+install(DIRECTORY ${module_dir}/ DESTINATION ${CMAKE_INSTALL_Fortran_MODULES})
 
 install(
   TARGETS wgrib2_ftn_api
