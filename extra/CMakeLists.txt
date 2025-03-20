@@ -9,19 +9,21 @@ set(src Mysql.c Mysql_dump.c Mysql_speed.c)
 include_directories(../wgrib2/)
 
 add_library(wgrib2_extra OBJECT ${src})
-set_target_properties(wgrib2_extra PROPERTIES PUBLIC_HEADER "fnlist_extra.h")
 target_compile_definitions(wgrib2_extra PUBLIC ${definitions_list}) 
 
 if (BUILD_LIB)
   set_property(TARGET wgrib2_extra PROPERTY POSITION_INDEPENDENT_CODE ON)
 endif()
 
-target_include_directories(wgrib2_extra PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(wgrib2_extra PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}>)
+  
+#install(FILES "fnlist_extra.h" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 install(
   TARGETS wgrib2_extra
   EXPORT wgrib2_exports
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
