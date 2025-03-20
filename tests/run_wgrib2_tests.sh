@@ -3,9 +3,6 @@
 #
 # Ed Hartnett, Alyson Stahl 3/27/24
 
-echo "*** print all help options"
-../wgrib2/wgrib2 -h all
-
 set -e
 echo ""
 echo "*** Running wgrib2 tests"
