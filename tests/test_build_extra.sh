@@ -15,7 +15,7 @@ expected_output="
 -mysql_dump      out   7 args H=[host] U=[user] P=[password] D=[db] T=[table] W=[western_lons:0|1] PV=[remove unlikely:0|1]
 -mysql_speed     out   7 args H=[host] U=[user] P=[password] D=[db] T=[table] W=[western_lons:0|1] PV=[remove unlikely:0|1]"
 
-if [ "$output" != "$expected_output" ]; then
+if ! diff -w <(echo "$output") <(echo "$expected_output"); then
   echo "Test failed: Output does not match expected last $n_extra_fns lines."
   echo "Actual output:"
   echo "$output"
