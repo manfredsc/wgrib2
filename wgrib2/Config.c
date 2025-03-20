@@ -10,6 +10,10 @@
 #if defined USE_NETCDF
 #include <netcdf.h>
 #endif
+#if defined USE_G2CLIB_LOW || defined USE_G2CLIB_HIGH
+#include "grib2.h"
+#endif
+
 
 /*
  * Config.c  just prints out the configuration
@@ -43,16 +47,12 @@ int f_config(ARG0) {
 #else
     strcat(inv_out, "Netcdf package is not installed\n");
 #endif
+#if defined USE_G2CLIB_LOW || defined USE_G2CLIB_HIGH
+    strcat(inv_out, "g2clib v" );
+    strcat(inv_out, G2C_VERSION " is installed\n" );
+#endif
 #ifdef USE_AEC
-    strcat(inv_out, USE_AEC " is installed\n" );
-#endif
-#ifdef USE_JASPER
-    strcat(inv_out,USE_JASPER " is installed\n");
-    inv_out += strlen(inv_out);
-#endif
-#ifdef USE_OPENJPEG
-    strcat(inv_out,USE_OPENJPEG " is installed\n");
-    inv_out += strlen(inv_out);
+    strcat(inv_out, "AEC is installed\n" );
 #endif
 
 #ifdef USE_MYSQL
@@ -157,17 +157,17 @@ strcat(inv_out, "  spherical geolocation is enabled\n");
     strcat(inv_out, "default decoding: g2clib\n");
 #endif
 
-#ifdef USE_G2CLIB
-    strcat(inv_out, "g2clib decoders are installed\n");
+#ifdef USE_G2CLIB_HIGH
+    strcat(inv_out, "-g2clib 2 is available\n");
 #else
-    strcat(inv_out, "g2clib decoders are not installed\n");
+    strcat(inv_out, "-g2clib 2 is not available\n");
 #endif
 
     strcat(inv_out,"Supported decoding: simple, complex, rle, ieee");
-#ifdef USE_PNG
+#if G2_PNG_ENABLED == 1
     strcat(inv_out, ", png");
 #endif
-#if defined USE_JASPER || defined USE_OPENJPEG
+#if G2_JPEG2000_ENABLED == 1
     strcat(inv_out, ", jpeg2000");
 #endif
 #ifdef USE_AEC
@@ -176,7 +176,7 @@ strcat(inv_out, "  spherical geolocation is enabled\n");
     strcat(inv_out, "\n");
 
     strcat(inv_out,"Supported encoding: simple, complex, ieee");
-#if defined USE_JASPER || defined USE_OPENJPEG
+#if G2_JPEG2000_ENABLED == 1
     strcat(inv_out, ", jpeg2000");
 #endif
 #ifdef USE_AEC
