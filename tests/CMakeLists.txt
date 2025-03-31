@@ -115,9 +115,7 @@ copy_test_data(ref_c3_overflow.grib2)
 shell_test(run_wgrib2_tests)
 shell_test(run_wgrib2_rpn_tests)
 
-if (USE_PNG)
-  shell_test(run_wgrib2_png_tests)
-endif()
+shell_test(run_wgrib2_png_tests)
 
 if (USE_NETCDF)
   shell_test(run_wgrib2_netcdf4_tests)
@@ -173,15 +171,13 @@ if (USE_IPOLATES)
   copy_test_data(ref_new_grid_ncep_236.txt)
 endif()
 
-if (USE_AEC)
-  shell_test(run_wgrib2_aec_tests)
-endif()
-if (USE_JASPER OR USE_OPENJPEG)
-  shell_test(run_jpeg_tests)
-  copy_test_data(ref_jpeg2simple.txt)
-  copy_test_data(LARGECAT220250305_12_1443copy.grib2)
-  copy_test_data(ref_LARGECAT220250305_12_1443copy_stats.txt)
-endif()
+shell_test(run_wgrib2_aec_tests)
+
+shell_test(run_jpeg_tests)
+copy_test_data(ref_jpeg2simple.txt)
+copy_test_data(LARGECAT220250305_12_1443copy.grib2)
+copy_test_data(ref_LARGECAT220250305_12_1443copy_stats.txt)
+
 
 if (MAKE_FTN_API)
   shell_test(test_ftn_api)
