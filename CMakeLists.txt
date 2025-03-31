@@ -32,6 +32,7 @@ set(USE_NAMES "NCEP")
 option(USE_G2CLIB_HIGH "Use g2c high-level decoder (-g2clib 2)?" off)
 option(USE_G2CLIB_LOW "Use g2c low-level decoders (png,jpeg2000)?" off)
 option(USE_AEC "Use AEC to enable encoding/decoding of GRIB2 data with CCSDS packing (packing type 42)." off)
+option(BUILD_EXTRA "Build user-contributed code" OFF)
 option(FTP_TEST_FILES "Fetch and test with files on FTP site." OFF)
 option(FTP_LARGE_TEST_FILES "Fetch and test with very large files on FTP site." OFF)
 option(FTP_EXTRA_TEST_FILES "Fetch even more large files from FTP and test them." OFF)
@@ -112,6 +113,11 @@ configure_file("${PROJECT_SOURCE_DIR}/wgrib2/config.h.in" "${CMAKE_CURRENT_BINAR
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 message(STATUS "Adding wgrib2, aux_probs subdirectories...")
+
+if (BUILD_EXTRA)
+  add_subdirectory(extra)
+endif()
+
 add_subdirectory(wgrib2)
 add_subdirectory(aux_progs)
 
