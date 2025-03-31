@@ -257,7 +257,7 @@ int f_import_netcdf(ARG3) {
 #pragma omp for
 	    for (i = 0; i < ndata; i++) {
 	        if (DEFINED_VAL(ddata[i])) {
-		    data[i] = (float) ddata[i]*scale_factor + add_offset;
+		    data[i] = (float) (ddata[i]*scale_factor + add_offset);
 	        }
 		else {
 		    data[i] = UNDEFINED;
