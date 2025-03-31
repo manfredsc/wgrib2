@@ -3,6 +3,12 @@
 #
 # Alyson Stahl, 4/18/24
 
+n=`../wgrib2/wgrib2 -config | grep -c "Supported encoding:.*CCSDS AEC"`
+if [ "$n" -eq 0 ] ; then
+  echo "*** Not running aec tests"
+  exit 0
+fi
+
 set -e
 echo ""
 echo "*** Running wgrib2 tests"

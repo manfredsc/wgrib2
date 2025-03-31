@@ -3,6 +3,12 @@
 #
 # Alyson Stahl 5/7/2024
 
+n=`../wgrib2/wgrib2 -config | grep -c "Supported decoding:.*png"`
+if [ "$n" -eq 0 ] ; then
+  echo "*** Not running png tests"
+  exit 0
+fi
+
 set -e
 echo ""
 echo "*** Running wgrib2 png tests"
