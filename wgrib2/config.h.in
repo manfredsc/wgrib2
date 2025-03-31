@@ -19,6 +19,7 @@
 #cmakedefine USE_JASPER
 #cmakedefine USE_OPENJPEG
 #cmakedefine USE_AEC
+#cmakedefine BUILD_EXTRA
 #cmakedefine FTP_TEST_FILES
 #cmakedefine FTP_LARGE_TEST_FILES
 #cmakedefine FTP_EXTRA_TEST_FILES
