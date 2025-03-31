@@ -86,6 +86,47 @@ echo "var=$v $var $var1"
    done
 } < fnlist
 
+grep "^ \* HEADER:" ../extra/[A-Z]*.c | cut -f3- -d: | sort -t: -k3,3 -k2,2 >fnlist_extra
+
+echo "   #ifdef BUILD_EXTRA" >>fnlist.c
+
+{
+   read line
+   while [ "$line" != "" ]
+   do
+      sort="`echo $line | cut -f1 -d:`"
+      v="`echo $line | cut -f2 -d:`"
+#     check for alias
+      if [ `echo "$v" | grep -c =` -eq 0 ] ; then
+          var="$v";
+          var1="f_`echo "$v" | sed -e 's/\./_/g'`"
+      else
+          var=`echo "$v" | sed 's/=.*//'`
+          var1=`echo "$v" | sed 's/.*=//'`
+      fi
+echo "var=$v $var $var1"
+      type="`echo $line | cut -f3 -d:`"
+      nargs="`echo $line | cut -f4 -d:`"
+      desc="`echo $line | cut -f5- -d:`"
+#      echo " var=$var  type=$type  desc=($desc)"
+      echo "   {\"$var\",$var1, $type, $nargs, \"$desc\", $sort}," >>fnlist.c
+
+      t="int $var1(int mode, unsigned char **sec, float *data, unsigned int ndata, char *inv, void **local"
+
+      arg=1
+      while [ $nargs -gt 0 ] ; do
+          t="$t, const char *arg$arg"
+          nargs="`expr $nargs - 1`"
+          arg=`expr $arg + 1`
+      done
+      t="$t);"
+#       echo "$t"
+      echo "$t" >> fnlist.h
+      read line
+   done
+} < fnlist_extra
+
+echo "   #endif" >>fnlist.c
 echo "};" >>fnlist.c
 
 echo " " >> fnlist.c

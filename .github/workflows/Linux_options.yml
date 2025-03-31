@@ -37,7 +37,7 @@ jobs:
             options: "-DBUILD_WGRIB=ON"
           }
         - {
-            options: "-DUSE_OPENJPEG=ON"
+            options: "-DUSE_G2CLIB_LOW=ON"
           }
         gcc-version: [12]
         include:
