@@ -13,7 +13,7 @@
 #include "grb2.h"
 
 #if defined USE_JASPER  || defined USE_OPENJPEG || defined USE_PNG
-    #include "grib2.h"
+    #include <grib2.h>
 #endif
 
 #ifdef USE_AEC

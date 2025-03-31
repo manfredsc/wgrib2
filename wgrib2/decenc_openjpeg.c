@@ -15,7 +15,7 @@
 
 #ifdef USE_OPENJPEG
 
-#include "openjpeg.h"
+#include <openjpeg.h>
 
 #include <assert.h>
 #include <stdio.h>

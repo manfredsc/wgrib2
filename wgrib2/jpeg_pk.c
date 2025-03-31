@@ -11,7 +11,7 @@
 
 #if defined USE_JASPER  || defined USE_OPENJPEG
 
-    #include "grib2.h"
+    #include <grib2.h>
 /*
  *  writes out jpeg2000 compressed grib message
  */

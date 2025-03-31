@@ -12,7 +12,7 @@
 
 #ifdef USE_PROJ4
 
-#include "proj_api.h"
+#include <proj_api.h>
 #include "proj4_wgrib2.h"
 
 int proj4_initialize(unsigned char **sec, struct proj4_struct *projection) {
