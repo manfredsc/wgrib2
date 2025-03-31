@@ -17,16 +17,14 @@ variant_map_common = {
     "tigge": "USE_TIGGE",
     "proj4": "USE_PROJ4",
     "aec": "USE_AEC",
-    "g2c": "USE_G2CLIB",
-    "png": "USE_PNG",
-    "jasper": "USE_JASPER",
+    "g2c": "USE_G2CLIB_LOW",
+    "g2c_high": "USE_G2CLIB_HIGH",
     "openmp": "USE_OPENMP",
     "wmo_validation": "USE_WMO_VALIDATION",
     "ipolates": "USE_IPOLATES",
     "disable_alarm": "DISABLE_ALARM",
     "fortran_api": "MAKE_FTN_API",
     "disable_stat": "DISABLE_STAT",
-    "openjpeg": "USE_OPENJPEG",
     
 }
 
@@ -150,9 +148,16 @@ class Wgrib2(MakefilePackage, CMakePackage):
     variant(
         "g2c",
         default=False,
-        description="Include NCEP g2clib (mainly for testing purposes)",
+        description="Include NCEP g2clib (png,jpeg2000)",
         when="@:3.1",
     )
+    variant(
+        "g2c_high",
+        default=False,
+        description="Include NCEP g2clib (add -g2clib 2)",
+        when="@:3.1",
+    )
+
     variant(
         "disable_timezone", default=False, description="Some machines do not support timezones"
     )
@@ -161,30 +166,22 @@ class Wgrib2(MakefilePackage, CMakePackage):
         default=False,
         description="Some machines do not support the alarm to terminate wgrib2",
     )
-    variant("png", default=True, description="PNG encoding")
-    variant("jasper", default=True, description="JPEG compression using Jasper")
     variant("openmp", default=True, description="OpenMP parallelization")
     variant("wmo_validation", default=False, description="WMO validation")
     #    variant("shared", default=False, description="Enable shared library", when="+lib")
     variant("disable_stat", default=False, description="Disable POSIX feature", when="@:3.1")
-    variant("openjpeg", default=False, description="Enable OpenJPEG", when="@:3.1")
     variant("enable_docs", default=False, description="Build doxygen documentation", when="@3.4.0:")
 
     conflicts("+netcdf3", when="+netcdf4")
     conflicts("+netcdf3", when="+netcdf")
     conflicts("+openmp", when="%apple-clang")
+    conflicts("-g2c", when="+g2c_high")
 
-    depends_on("ip@5.1:", when="@develop +ipolates")
+    depends_on("ip@5.2:", when="@develop +ipolates")
+    depends_on("g2c@develop", when="@develop +g2c")
     depends_on("lapack", when="@develop +ipolates")
     depends_on("libaec@1.0.6:", when="@3.2: +aec")
     depends_on("netcdf-c", when="@3.2: +netcdf4")
-    depends_on("jasper@:2", when="@3.2:3.4 +jasper")
-    depends_on("g2c@develop +jasper", when="@develop +jasper")
-    depends_on("zlib-api", when="@3.2:3.4 +png")
-    depends_on("libpng", when="@3.2:3.4 +png")
-    depends_on("g2c@develop +png", when="@develop +png")
-    depends_on("openjpeg", when="@3.2:3.4 +openjpeg")
-    depends_on("g2c@develop +openjpeg", when="@develop +openjpeg")
 
     @when("@:2 ^gmake@4.2:")
 
