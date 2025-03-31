@@ -34,7 +34,7 @@ jobs:
             options: "-DUSE_NETCDF=ON"
           }
         - { 
-            options: "-DBUILD_WGRIB=ON -DBUILD_EXTRA=ON"
+            options: "-DBUILD_WGRIB=ON"
           }
         - {
             options: "-DUSE_G2CLIB_LOW=ON"
