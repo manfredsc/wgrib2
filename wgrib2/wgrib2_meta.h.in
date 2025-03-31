@@ -16,11 +16,9 @@
 #cmakedefine USE_WMO_VALIDATION
 #cmakedefine DISABLE_TIMEZONE
 #cmakedefine DISABLE_ALARM
-#cmakedefine USE_NAMES @USE_NAMES@
-#cmakedefine USE_G2CLIB
-#cmakedefine USE_PNG
-#cmakedefine USE_JASPER
-#cmakedefine USE_OPENJPEG
+#cmakedefine USE_NAMES NCEP
+#cmakedefine USE_G2CLIB_HIGH
+#cmakedefine USE_G2CLIB_LOW
 #cmakedefine USE_AEC
 #cmakedefine BUILD_EXTRA
 #cmakedefine MAKE_FTN_API

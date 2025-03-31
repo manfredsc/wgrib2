@@ -12,7 +12,7 @@
 #include "wgrib2.h"
 #include "grb2.h"
 
-#if defined USE_JASPER  || defined USE_OPENJPEG || defined USE_PNG
+#ifdef USE_G2CLIB_LOW
     #include "grib2.h"
 #endif
 
@@ -41,16 +41,16 @@ int unpk_grib(unsigned char **sec, float *data) {
     double reference;
     double bin_scale, dec_scale, b;
 
-#ifdef USE_PNG
+#if G2_PNG_ENABLED == 1
     int i, width, height;
 #endif
 
-#if (defined USE_JASPER || defined USE_OPENJPEG)
+#if G2_JPEG2000_ENABLED == 1
     int *ifld, err;
     unsigned int kk;
 #endif
 
-#if (defined USE_PNG || defined USE_AEC)
+#if (G2_PNG_ENABLED == 1 || defined USE_AEC)
     unsigned char *c;
 #endif
 
@@ -155,7 +155,7 @@ int unpk_grib(unsigned char **sec, float *data) {
 	return unpk_run_length(sec, data, ndata);
     }
 
-#if defined USE_JASPER || defined USE_OPENJPEG
+#if G2_JPEG2000_ENABLED == 1
     else if (packing == 40 ||  packing == 40000) {		// jpeg2000
 	p = sec[5];
 	reference = ieee2flt(p+11);
@@ -217,7 +217,7 @@ int unpk_grib(unsigned char **sec, float *data) {
     }
 #endif
 
-#ifdef USE_PNG
+#if G2_PNG_ENABLED == 1
     else if (packing == 41) {		// png
 	p = sec[5];
 	reference = ieee2flt(p+11);
