@@ -6,10 +6,13 @@
 #include "grb2.h"
 #include "wgrib2.h"
 #include "fnlist.h"
+#ifdef USE_G2CLIB_LOW
+#include <grib2.h>
+#endif
 
 /* 10/2024 Public Domain   Wesley Ebisuzaki */
 
-#if defined USE_JASPER  || defined USE_OPENJPEG
+#if G2_JPEG2000_ENABLED == 1
 
     #include <grib2.h>
 /*

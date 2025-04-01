@@ -5,7 +5,7 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-#ifdef USE_G2CLIB
+#ifdef USE_G2CLIB_HIGH
 
 #include <grib2.h>
 g2int g2_unpack3(unsigned char *,g2int *,g2int **,g2int **,

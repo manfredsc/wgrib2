@@ -9,7 +9,7 @@
 #cmakedefine USE_REGEX
 #cmakedefine USE_TIGGE
 #cmakedefine USE_MYSQL
-#define USE_IPOLATES @USE_IPOLATES@
+#cmakedefine USE_IPOLATES
 #cmakedefine USE_UDF
 #cmakedefine USE_OPENMP
 #cmakedefine USE_PROJ4
@@ -17,12 +17,15 @@
 #cmakedefine DISABLE_TIMEZONE
 #cmakedefine DISABLE_ALARM
 #cmakedefine USE_NAMES NCEP
-#cmakedefine USE_G2CLIB
-#cmakedefine USE_PNG
-#cmakedefine USE_JASPER
-#cmakedefine USE_OPENJPEG
-#cmakedefine MAKE_FTN_API
+#cmakedefine USE_G2CLIB_HIGH
+#cmakedefine USE_G2CLIB_LOW
 #cmakedefine USE_AEC
+#cmakedefine BUILD_EXTRA
+#cmakedefine MAKE_FTN_API
+#cmakedefine DISABLE_STAT
+#cmakedefine BUILD_LIB
+#cmakedefine BUILD_SHARED_LIB
+#cmakedefine BUILD_WGRIB
 
 #define WGRIB2_VERSION "@CMAKE_PROJECT_VERSION@"
 #define BUILD_COMMENTS "@BUILD_COMMENTS@"

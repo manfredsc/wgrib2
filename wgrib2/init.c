@@ -19,7 +19,7 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-#ifdef USE_G2CLIB
+#ifdef USE_G2CLIB_HIGH
 #include <grib2.h>
 extern gribfield *grib_data; extern int free_gribfield;			// flag for allocated gribfield
 #endif
@@ -155,7 +155,7 @@ extern int nc4;
 void init_globals(void) {
     int i;
 
-#ifdef USE_G2CLIB
+#ifdef USE_G2CLIB_HIGH
     free_gribfield = 0;			// flag for allocated gribfield
 #endif
 
