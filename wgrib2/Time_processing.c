@@ -192,7 +192,9 @@ static int add_to_ave_struct(struct ave_struct *save, unsigned char **sec, float
        do it now, translation[] may be different if called from finalized phase */
 
     if (save->code_table_4_10 == AVE) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i,ii)
+#endif
         for (i = 0; i < ndata; i++) {
             if (DEFINED_VAL(data[i])) {
 		ii = translation == NULL ? i : translation[i];
@@ -202,7 +204,9 @@ static int add_to_ave_struct(struct ave_struct *save, unsigned char **sec, float
 	}
     }
     else if (save->code_table_4_10 == MAX) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i,ii)
+#endif
         for (i = 0; i < ndata; i++) {
             if (DEFINED_VAL(data[i])) {
 		ii = translation == NULL ? i : translation[i];
@@ -216,7 +220,9 @@ static int add_to_ave_struct(struct ave_struct *save, unsigned char **sec, float
 	}
     }
     else if (save->code_table_4_10 == MIN) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i,ii)
+#endif
         for (i = 0; i < ndata; i++) {
             if (DEFINED_VAL(data[i])) {
 		ii = translation == NULL ? i : translation[i];
@@ -230,7 +236,9 @@ static int add_to_ave_struct(struct ave_struct *save, unsigned char **sec, float
 	}
     }
     else if (save->code_table_4_10 == RMS) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i,ii)
+#endif
         for (i = 0; i < ndata; i++) {
             if (DEFINED_VAL(data[i])) {
 		ii = translation == NULL ? i : translation[i];
@@ -240,7 +248,9 @@ static int add_to_ave_struct(struct ave_struct *save, unsigned char **sec, float
 	}
     }
     else if (save->code_table_4_10 == STD_DEV) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i,ii,x,oldM)
+#endif
         for (i = 0; i < ndata; i++) {
             if (DEFINED_VAL(data[i])) {
 		ii = translation == NULL ? i : translation[i];
@@ -254,13 +264,17 @@ static int add_to_ave_struct(struct ave_struct *save, unsigned char **sec, float
     }
     else if (save->code_table_4_10 == DIFF1 || save->code_table_4_10 == DIFF2) {
 	if (save->n_fields == 0) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i,ii)
+#endif
             for (i = 0; i < ndata; i++) {
 		ii = translation == NULL ? i : translation[i];
 		save->first[ii] = data[i];
 	    }
 	}
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i,ii)
+#endif
         for (i = 0; i < ndata; i++) {
 	    ii = translation == NULL ? i : translation[i];
 	    save->last[ii] = data[i];
@@ -315,21 +329,27 @@ static int do_ave(struct ave_struct *save) {
 
     if (save->code_table_4_10 == AVE) {
         factor = 1.0 / save->n_fields;
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
         for (i = 0; i < ndata; i++) {
     	    data[i] = (save->n[i] == save->n_fields) ? factor * save->sum[i] : UNDEFINED;
         }
     }
     else if (save->code_table_4_10 == RMS) {
         factor = 1.0 / save->n_fields;
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
         for (i = 0; i < ndata; i++) {
     	    data[i] = (save->n[i] == save->n_fields) ? sqrt(factor * save->sum[i]) : UNDEFINED;
         }
     }
     else if (save->code_table_4_10 == STD_DEV) {
 	if (save->n_fields > 1) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
             for (i = 0; i < ndata; i++) {
                 data[i] = (save->n[i] == save->n_fields) ?  sqrt(save->S[i]/(save->n_fields - 1)) 
 			: UNDEFINED;
@@ -342,7 +362,9 @@ static int do_ave(struct ave_struct *save) {
 	}
     }
     else if (save->code_table_4_10 == DIFF1) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
 	for (i = 0; i < ndata; i++) {
             if (DEFINED_VAL(save->first[i]) && DEFINED_VAL(save->last[i])) {
 		data[i] = save->last[i] - save->first[i];
@@ -351,7 +373,9 @@ static int do_ave(struct ave_struct *save) {
 	}
     }
     else if (save->code_table_4_10 == DIFF2) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
 	for (i = 0; i < ndata; i++) {
             if (DEFINED_VAL(save->first[i]) && DEFINED_VAL(save->last[i])) {
 		data[i] = save->first[i] - save->last[i];
@@ -360,7 +384,9 @@ static int do_ave(struct ave_struct *save) {
 	}
     }
     else {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
         for (i = 0; i < ndata; i++) {
     	    data[i] = (save->n[i] != save->n_fields) ? UNDEFINED : save->sum[i];
         }

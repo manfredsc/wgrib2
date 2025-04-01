@@ -81,7 +81,9 @@ int rot_regular2ij(unsigned char **sec, double **lat, double **lon, int n) {
     tlat = *lat;
     tlon = *lon;
 
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i,pr,gr,pm,gm,glat,glon)
+#endif
     for (i = 0; i < n; i++) {
         pr = (M_PI/180.0) * tlat[i];
         gr = -(M_PI/180.0) * tlon[i];
