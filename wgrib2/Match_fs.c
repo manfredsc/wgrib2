@@ -40,7 +40,9 @@ int is_match_fs(const char *s) {
     }
 
     /* process  if-tests */
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
     for (i = 0; i < match_count_fs; i++) {
         if (match_fs_type[i] == 2) match_fs_val[i] = (strstr(s, match_fs_store[i]) == NULL);
     }

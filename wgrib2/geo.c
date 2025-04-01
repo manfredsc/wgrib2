@@ -180,7 +180,9 @@ int regular2ll(unsigned char **sec, double **lat, double **lon) {
 	}
 	dy = fabs(dy);
 
+#ifdef USE_OPENMP
 #pragma omp parallel for private(j)
+#endif
 	for (j = 0; j < nnpnts; j++) {
             llon[j] = lon1 + llon[j]*dx;
 	    llon[j] = llon[j] >= 360.0 ? llon[j] - 360.0 : llon[j];
@@ -266,7 +268,9 @@ int rot_regular2ll(unsigned char **sec, double **lat, double **lon) {
     }
 */
 
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i,pr,gr,pm,gm,glat,glon)
+#endif
     for (i = 0; i < npnts; i++) {
 	pr = (M_PI/180.0) * tlat[i];
 	gr = -(M_PI/180.0) * tlon[i];
@@ -361,7 +365,9 @@ int polar2ll(unsigned char **sec, double **llat, double **llon) {
     }
 
     de2 = de*de;
+#ifdef USE_OPENMP
 #pragma omp parallel for private(iy,ix,di,dj,dr2,tmp)
+#endif
     for (iy = 0; iy < nny; iy++) {
         for (ix = 0; ix < nnx; ix++) {
             di = (ix - xp) * dx;
@@ -472,7 +478,9 @@ int lambert2ll(unsigned char **sec, double **llat, double **llon) {
     dx = fabs(dx);
     dy = fabs(dy);
 
+#ifdef USE_OPENMP
 #pragma omp parallel for private(j,x,y,tmp,theta,rho,lond,latd)
+#endif
     for (j = 0; j < nnpnts; j++) {
 	y = starty + lat[j]*dy;
         x = startx + lon[j]*dx;
@@ -592,7 +600,9 @@ int mercator2ll(unsigned char **sec, double **lat, double **lon) {
     n = log(tan((45+n/2)*M_PI/180));
     dy = (n - s) / (nny - 1);
 
+#ifdef USE_OPENMP
 #pragma omp parallel for private(j,tmp,i)
+#endif
     for (j = 0; j < nny; j++) {
         tmp = (atan(exp(s+j*dy))*180/M_PI-45)*2;
         for (i = 0; i < nnx; i++) {
@@ -675,8 +685,9 @@ double *gauss2lats(int nlat, double *ylat) {
 
     double g, gm, gp, gt, delta, d;
 
-
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i,g,gm,gp,gt,delta)
+#endif
   for (i = 1; i <= nzero; i++) {
     cosc[i] = sin((i - 0.5)*M_PI/nlat + M_PI*0.5);
   
@@ -722,7 +733,9 @@ double *gauss2lats(int nlat, double *ylat) {
     sinc[i]  = sinc[nlat + 1 - i];
   } /* end for(i) */
   
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
   for (i = 1; i <= nlat; i++) {
     ylat[i-1] = todegrees(acos(sinc[i]));
     if ( i > (nlat / 2) ) ylat[i-1] = -ylat[i-1];
@@ -831,7 +844,9 @@ int gauss2ll(unsigned char **sec, double **llat, double **llon) {
     n = 0;
     if (nnx_ > 0) {        /* regular grid */
 
+#ifdef USE_OPENMP
 #pragma omp parallel for private(ii,jj)
+#endif
 	for (jj = 0; jj < nny_; jj++) {
             for (ii = 0; ii < nnx_; ii++) {
                 lat[ii+jj*nnx_] = ylat[jj+isouth];
@@ -871,19 +886,25 @@ int gauss2ll(unsigned char **sec, double **llat, double **llon) {
     if (nnx >= 0) {
         dx = (w-e) / (nnx-1);
 
+#ifdef USE_OPENMP
 #pragma omp parallel
 {
 #pragma omp for private(i)
+#endif
 	for (i = 0; i < nnx; i++) {
             lon[i] = e + (dx * i) >= 360.0 ?  e + (dx * i) - 360.0 : e + (dx * i);  
 	}
+#ifdef USE_OPENMP
 #pragma omp for private(i,j)
+#endif
 	for (j = 1; j < nny; j++) {
 	    for (i = 0; i < nnx; i++) {
 		lon[i+j*nnx] = lon[i];
 	    }
 	}
+#ifdef USE_OPENMP
 }
+#endif
     }
     else {
         n = 0;
@@ -939,7 +960,9 @@ int closest_init(unsigned char **sec) {
         z = (double *) malloc(((size_t) nnpts) * sizeof(double));
         if (x == NULL || y == NULL || z == NULL) fatal_error("memory allocation closest_init","");
 
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i,s,c)
+#endif
         for (i = 0; i < nnpts; i++) {
 	    if (lat[i] >= 999.0 || lon[i] >= 999.0) {
 		/* x[i] = sin() .. cannot be bigger than 1 */
@@ -1006,7 +1029,9 @@ long int closest(unsigned char **sec, double plat, double plon) {
     if (j == -1) return j;
     i0 = j;
 
+#ifdef USE_OPENMP
 #pragma omp parallel private(i)
+#endif
 {
     double s, small_thread;
     long int j_thread;
@@ -1014,7 +1039,9 @@ long int closest(unsigned char **sec, double plat, double plon) {
     small_thread = small;
     j_thread = j;
 
-#pragma omp for nowait 
+#ifdef USE_OPENMP
+#pragma omp for nowait
+#endif
     for (i = i0+1; i < nnpts; i++) {
 	if (x[i] >= 999.0) continue;
         s = (x[i]-xx)*(x[i]-xx)+(y[i]-yy)*(y[i]-yy)+(z[i]-zz)*(z[i]-zz);
@@ -1023,7 +1050,9 @@ long int closest(unsigned char **sec, double plat, double plon) {
             j_thread = i;
 	}
     }
+#ifdef USE_OPENMP
 #pragma omp critical
+#endif
     {
 	if (small_thread < small) {
             small = small_thread;

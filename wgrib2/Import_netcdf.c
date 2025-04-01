@@ -237,24 +237,32 @@ int f_import_netcdf(ARG3) {
 
     if (status != NC_NOERR) fatal_error_i("import_netcdf: nc_get_vara_double rc=%d",status);
 
+#ifdef USE_OPENMP
 #pragma omp parallel private(i)
+#endif
     {
 	if (has_FillValue) {
 	    limits = 0.01 * fabs(FillValue);
+#ifdef USE_OPENMP
 #pragma omp for
+#endif
 	    for (i = 0; i < ndata; i++) {
 		if (fabs(ddata[i] - FillValue) < limits) ddata[i] = UNDEFINED;
 	    }
 	}
 	if (has_missing_value) {
 	   limits = 0.01 * fabs(missing_value);
+#ifdef USE_OPENMP
 #pragma omp for
+#endif
 	    for (i = 0; i < ndata; i++) {
 		if (fabs(ddata[i] - missing_value) < limits) ddata[i] = UNDEFINED;
 	    }
 	}
 	if (add_offset != 0.0 || scale_factor != 1.0) {
+#ifdef USE_OPENMP
 #pragma omp for
+#endif
 	    for (i = 0; i < ndata; i++) {
 	        if (DEFINED_VAL(ddata[i])) {
 		    data[i] = (float) ddata[i]*scale_factor + add_offset;
@@ -265,7 +273,9 @@ int f_import_netcdf(ARG3) {
 	    }
 	}
 	else {
+#ifdef USE_OPENMP
 #pragma omp for
+#endif
 	    for (i = 0; i < ndata; i++) {
 	        if (DEFINED_VAL(ddata[i])) {
 		    data[i] = (float) ddata[i];

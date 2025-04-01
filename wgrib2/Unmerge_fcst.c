@@ -247,7 +247,9 @@ int f_unmerge_fcst(ARG3) {
 
 	    /* update data[] */
 	    if (processing == acc) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
 		for (i = 0; i < ndata; i++) {
                     if (DEFINED_VAL(data[i]) && DEFINED_VAL(save->val[i])) {
 			save->val[i] = data_tmp[i] - save->val[i];
@@ -258,7 +260,9 @@ int f_unmerge_fcst(ARG3) {
 		}
 	    }
 	    else if (processing == ave) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
 		for (i = 0; i < ndata; i++) {
                     if (DEFINED_VAL(data[i]) && DEFINED_VAL(save->val[i])) {
 			save->val[i] = (data_tmp[i]*timea - save->val[i]*timeb)/(timea-timeb);

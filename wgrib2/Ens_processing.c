@@ -110,13 +110,17 @@ static int init_ens_proc_struct(struct ens_proc_struct *save,
 //       save->verf_date.day, save->verf_date.hour);
 
     if (translation == NULL) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
         for (i = 0; i < ndata; i++) {
 	    save->grids[i] = data[i];
 	}
     }
     else {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
         for (i = 0; i < ndata; i++) {
 	    save->grids[translation[i]] = data[i];
 	}
@@ -149,13 +153,17 @@ static int update_ens_proc_struct(struct ens_proc_struct *save,
        do it now because translation[] may be different in finalized phase */
 
     if (translation == NULL) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
         for (i = 0; i < ndata; i++) {
 	    save->grids[i+save->n_ens*ndata] = data[i];
 	}
     }
     else {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
         for (i = 0; i < ndata; i++) {
 	    save->grids[translation[i]+save->n_ens*ndata] = data[i];
 	}
@@ -314,7 +322,9 @@ static int wrt_ens_proc(unsigned char **sec, struct ens_proc_struct *save) {
     i95 = floor(x95);
     d95 = x95-i95;
 
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i,j,k,k2,sum,sq)
+#endif
     for (i = 0; i < ndata; i++) {
 	float ens[save->n_ens];
         

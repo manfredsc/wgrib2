@@ -133,7 +133,9 @@ int f_wind_dir(ARG1) {
 
             d1 = save->val;
 
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
 	    for (i = 0; i < ndata; i++) {
                 if (!UNDEFINED_VAL(data[i]) && !UNDEFINED_VAL(d1[i])) {
 		    d1[i] = (atan2(d1[i],data[i]) * 180.0 / 3.14159265359 + 180.0);
