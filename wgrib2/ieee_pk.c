@@ -69,7 +69,9 @@ int ieee_grib_out(unsigned char **sec, float *data, unsigned int ndata, struct s
     p = sec7 + 5;
     j = 0;
 
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i) schedule(static)
+#endif
     for (i = 0; i < n_defined; i++) {
 #ifdef IEEE_BITMAP
 	flt2ieee_nan(data_tmp[i], p + (i<<2) );

@@ -128,13 +128,17 @@ static int init_ens_qc_struct(struct ens_qc_struct *save,
 //       save->verf_date.day, save->verf_date.hour);
 
     if (translation == NULL) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
         for (i = 0; i < ndata; i++) {
 	    save->grids[i] = data[i];
 	}
     }
     else {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
         for (i = 0; i < ndata; i++) {
 	    save->grids[translation[i]] = data[i];
 	}
@@ -167,13 +171,17 @@ static int update_ens_qc_struct(struct ens_qc_struct *save,
        do it now because translation[] may be different in finalized phase */
 
     if (translation == NULL) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
         for (i = 0; i < ndata; i++) {
 	    save->grids[i+save->n_ens*ndata] = data[i];
 	}
     }
     else {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
         for (i = 0; i < ndata; i++) {
 	    save->grids[translation[i]+save->n_ens*ndata] = data[i];
 	}
@@ -253,7 +261,9 @@ static int wrt_ens_qc(unsigned char **sec, struct ens_qc_struct *save) {
     if (datamean == NULL || datavar == NULL || datamin == NULL || datamax == NULL || dataextreme == NULL)
             fatal_error("ens_qc: memory allocation","");
 
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i, k, sum, sq, k_0, n, minval, maxval), reduction (max:maxextreme)
+#endif
     for (i = 0; i < ndata; i++) {
 	sum = sq = 0;
 	minval = maxval = UNDEFINED;

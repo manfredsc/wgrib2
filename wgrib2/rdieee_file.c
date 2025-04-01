@@ -37,7 +37,9 @@ int rdieee_file(float *array, unsigned int n, int header, struct seq_file *input
 	j = n-i > BSIZ ? BSIZ : n-i;
 	if (fread_file(buff,1,4*j,input) != 4*j) fatal_error("rdieee: data read","");
 	if (ieee_little_endian) swap_buffer(buff, 4*j);
+#ifdef USE_OPENMP
 #pragma omp parallel for private(l) schedule(static)
+#endif
 	for (l = 0; l < j; l++) {
 	    array[i+l] = ieee2flt(buff + 4*l);
   	}

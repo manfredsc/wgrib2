@@ -487,7 +487,9 @@ int f_set(ARG2) {
 	    val = strtod(arg2, &endptr);
 	    if (*endptr == 0) {
 		if (decode == 1 && data != NULL) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(k)
+#endif
 		    for (k = 0; k < ndata; k++) {
 			if (DEFINED_VAL(data[k])) {
 			    data[k] *= val;
@@ -508,7 +510,9 @@ int f_set(ARG2) {
 	    val = strtod(arg2, &endptr);
 	    if (*endptr == 0) {
 		if (decode == 1 && data != NULL) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(k)
+#endif
 		    for (k = 0; k < ndata; k++) {
 			if (DEFINED_VAL(data[k])) {
 			    data[k] += val;
