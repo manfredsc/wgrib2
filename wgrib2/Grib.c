@@ -5,7 +5,7 @@
 #include <limits.h>
 #include "grb2.h"
 #ifdef USE_G2CLIB_LOW
-#include "grib2.h"
+#include <grib2.h>
 #endif
 #include "wgrib2.h"
 #include "fnlist.h"
