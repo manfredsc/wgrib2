@@ -20,7 +20,7 @@ int f_spectral_bands_extname(ARG0) {
     unsigned char *nb_location, *bandstart;
     double value;
     const char *instype=NULL, *shortname=NULL;
-    const char *agency=NULL, *longname=NULL;  /* unused, but set in include files */
+    const char *agency, *longname;    /* unused, but set in include files */
     const char *satellite=NULL, *pol=NULL;
     
     const char *shortname1=NULL, *satellite1=NULL, *pol1=NULL;
