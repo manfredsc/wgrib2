@@ -14,7 +14,6 @@
 
 #if G2_JPEG2000_ENABLED == 1
 
-    #include <grib2.h>
 /*
  *  writes out jpeg2000 compressed grib message
  */
