@@ -240,7 +240,9 @@ int Proj4_ll2xy(int n, double *lon, double *lat, double *x, double *y) {
     inv_dx = 1.0 / dx;
     inv_dy = 1.0 / dy;
 
+#ifdef USE_OPENMP
 #pragma omp parallel for schedule(static) private(i,rlon,rlat)
+#endif
     for (i = 0; i < n; i++) {
         rlon = lon[i] * DEG_TO_RAD;
         rlat = lat[i] * DEG_TO_RAD;
@@ -317,7 +319,9 @@ int Proj4_ij2ll(unsigned char **sec, int n, double *x, double *y, double *lon, d
 
     error = 0;
     if (gdt == 0) {
+#ifdef USE_OPENMP
 #pragma omp parallel for schedule(static)
+#endif
         for (i = 0; i < n; i++) {
             lon[i] = dx * x[i] + x_0;
             lat[i] = dy * y[i] + y_0;
@@ -327,7 +331,9 @@ int Proj4_ij2ll(unsigned char **sec, int n, double *x, double *y, double *lon, d
     }
     
 
+#ifdef USE_OPENMP
 #pragma omp parallel for schedule(static) private(i,xx,yy)
+#endif
     for (i = 0; i < n; i++) {
         xx = x[i] + x_0;
         yy = y[i] + y_0;
@@ -356,7 +362,9 @@ int Proj4_xy2ll(int n, double *x, double *y, double *lon, double *lat) {
     double xx, yy;
 
     if (gdt == 0) {
+#ifdef USE_OPENMP
 #pragma omp parallel for schedule(static)
+#endif
         for (i = 0; i < n; i++) {
             lon[i] = dx * x[i] + x_0;
             lat[i] = dy * y[i] + y_0;
@@ -375,7 +383,6 @@ int Proj4_xy2ll(int n, double *x, double *y, double *lon, double *lat) {
     }
     return error;
 }
-
 
 /*
  * HEADER:100:proj4_ij2ll:inv:2:X=x Y=y, converts to (i,j) to lon-lat using proj.4  (experimental) we:sn
@@ -469,7 +476,9 @@ int proj4_get_latlon(unsigned char **sec, double **lon, double **lat) {
 
     /* proj4 projections */
 
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
     for (i = 0; i < nnpnts; i++) {
         llon[i] = llon[i] * dx + x_0;
         llat[i] = llat[i] * dy + y_0;
@@ -477,7 +486,9 @@ int proj4_get_latlon(unsigned char **sec, double **lon, double **lat) {
 
     error = pj_transform(pj_grid, pj_latlon, (long) nnpnts, (long) 1, llon, llat, NULL);
 
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
     for (i = 0; i < nnpnts; i++) {
         llon[i] = llon[i] * RAD_TO_DEG;
         llat[i] = llat[i] * RAD_TO_DEG;

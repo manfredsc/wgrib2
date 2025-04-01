@@ -112,7 +112,9 @@ int cubed_sphere2ll(unsigned char **sec, double **llat, double **llon) {
     }
     if (stagger(sec, nnpnts, x, y)) fatal_error("cubed_sphere2ll: stagger problem","");
 
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
     for (i = 0; i < npnts_tile; i++) {
         /* want x[] to range from -1..1  y[] to range from -1..1 */
 	x[i] = (x[i] + i_offset) * 2.0 / ncell - 1.0;
@@ -139,7 +141,9 @@ int cubed_sphere2ll(unsigned char **sec, double **llat, double **llon) {
     } 
 
 
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i, dist, xn, yn, zn, pr, gr, pm, gm, sin_lat, tile)
+#endif
     for (i = 0; i < nnpnts; i++) {
 	if (nnpnts == npnts_tile) {
 	    tile = gds_tile;
@@ -221,7 +225,9 @@ int cubed_spherell2xy(unsigned char **sec, int n, double *lon, double *lat, doub
     sin_a = sin(a);
     cos_a = cos(a);
 
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i,x,y,z, xprime, yprime, zprime)
+#endif
     for (i = 0; i < n; i++) {
 	x = cos(lat[i]*M_PI/180.0) * cos(lon[i]*M_PI/180.0 - c);
 	y = cos(lat[i]*M_PI/180.0) * sin(lon[i]*M_PI/180 - c);

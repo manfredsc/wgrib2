@@ -253,7 +253,9 @@ int small_grib(unsigned char **sec, int mode, float *data, double *lon, double *
 	uint_char(new_ndata, sec3+6);
 	new_data = (float *) malloc(sizeof(float) * (size_t) new_ndata);
 
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i,j,k)
+#endif
 	for(j = iy0; j <= iy1; j++) {
             k = (j-iy0) * (size_t) (ix1-ix0+1);
 	    for(i = ix0; i <= ix1; i++) {
@@ -467,7 +469,9 @@ printf(">> small_domain: nx %d ny %d\n", nx, ny);
     Y1 = ny;
 
 //    time0 = omp_get_wtime();
+#ifdef USE_OPENMP
 #pragma omp parallel for private (i,j,k,flag,x0,x1,y0,y1,w,e,n,s,lat_pt,lon_pt)
+#endif
     for (j = 1; j <= ny; j++) {
         x0 = x1 = y0 = y1 = w = e = s = n = -1;
         flag = 0;				// initial point on latitude
@@ -507,7 +511,9 @@ printf(">> small_domain: nx %d ny %d\n", nx, ny);
 	}
 	if (flag) {		// found points
             if (x1 < x0 && cyclic(sec)) x1 += nx;
+#ifdef USE_OPENMP
 #pragma omp critical
+#endif
 	    {
 	    if (flag0 ==  0) {
 		X0 = x0;
