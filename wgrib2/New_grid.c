@@ -829,7 +829,9 @@ int f_new_grid(ARG4) {
 
 	ibi = 0;
         if (is_v) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i) reduction(|:ibi)
+#endif
             for (i = 0; i < ndata; i++) {
                 if (DEFINED_VAL(data[i]) && DEFINED_VAL(save->u_val[i])) {
                     data_in[i] = save->u_val[i];
@@ -845,7 +847,9 @@ int f_new_grid(ARG4) {
             if (mode == 98) fprintf(stderr," UV interpolation %s , %s\n", save->name, name);
         }
         else {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i) reduction(|:ibi)
+#endif
             for (i = 0; i < ndata; i++) {
                 if (DEFINED_VAL(data[i])) {
                     data_in[i] = data[i];
@@ -900,13 +904,17 @@ int f_new_grid(ARG4) {
         // save data to data_wrt[]
 
 	if (ibo == 1) {		// has a bitmap
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
             for (i = 0; i < n_out; i++) {
 	        save->data_wrt[i] = save->bitmap_out[i] == 0 ? UNDEFINED : save->data_out[i];
 	    }
 	}
 	else {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
             for (i = 0; i < n_out; i++) {
 	        save->data_wrt[i] = save->data_out[i];
 	    }
@@ -929,13 +937,17 @@ int f_new_grid(ARG4) {
             if (is_v == 1) {		// vector
                 GB2_ParmNum(new_sec) = GB2_ParmNum(new_sec) + 1;
 	        if (ibo == 1) {		// has a bitmap
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
                     for (i = 0; i < n_out; i++) {
 		        save->data_wrt[i] = save->bitmap_out[i] == 0 ? UNDEFINED : save->data_out[i+n_out];
 		    }
 	        }
 	        else {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
                     for (i = 0; i < n_out; i++) {
 	                save->data_wrt[i] = save->data_out[i+n_out];
 	            }
@@ -948,13 +960,17 @@ int f_new_grid(ARG4) {
             wrtieee(&(save->data_wrt[0]), n_out, header, &(save->out));
             if (is_v == 1) {		// vector
 	        if (ibo == 1) {		// has a bitmap
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
                     for (i = 0; i < n_out; i++) {
 		        save->data_wrt[i] = save->bitmap_out[i] == 0 ? UNDEFINED : save->data_out[i+n_out];
 		    }
 	        }
 	        else {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
                     for (i = 0; i < n_out; i++) {
 	                save->data_wrt[i] = save->data_out[i+n_out];
 	            }
@@ -975,13 +991,17 @@ int f_new_grid(ARG4) {
 
             if (is_v == 1) {		// vector
 	        if (ibo == 1) {		// has a bitmap
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
                     for (i = 0; i < n_out; i++) {
 		        save->data_wrt[i] = save->bitmap_out[i] == 0 ? UNDEFINED : save->data_out[i+n_out];
 		    }
 	        }
 	        else {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
                     for (i = 0; i < n_out; i++) {
 	                save->data_wrt[i] = save->data_out[i+n_out];
 	            }

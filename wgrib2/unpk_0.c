@@ -63,7 +63,9 @@ void unpk_0(float *flt, unsigned char *bits0, unsigned char *bitmap0,
 	// 1-cpu: rd_bitstream_flt(bits0, 0, flt+n_missing, n_bits, ndef);
 	// 1-cpu: for (j = 0; j < ndef; j++) flt[j+n_missing] = ref + scale*flt[j+n_missing];
 
+#ifdef USE_OPENMP
 #pragma omp parallel private(i,j,k, nthreads, thread_id)
+#endif
 	{
 	    nthreads = omp_get_num_threads();
 	    thread_id = omp_get_thread_num();

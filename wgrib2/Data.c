@@ -51,7 +51,9 @@ int f_stats(ARG0) {
     last_lat = 0.0;
     last_coslat = 1.0;
 
+#ifdef USE_OPENMP
 #pragma omp parallel for firstprivate(last_coslat, last_lat) private(i) reduction(+:n,sum,wt,sum_wt) reduction(min:mn) reduction(max:mx)
+#endif
     for (i = first; i <	ndata; i++) {
         if (DEFINED_VAL(data[i])) {
 	    n += 1;
