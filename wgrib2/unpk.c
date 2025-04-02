@@ -13,7 +13,7 @@
 #include "grb2.h"
 
 #ifdef USE_G2CLIB_LOW
-    #include "grib2.h"
+    #include <grib2.h>
 #endif
 
 #ifdef USE_AEC

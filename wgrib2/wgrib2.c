@@ -31,7 +31,7 @@ jmp_buf fatal_err;
 #include "fnlist.h"
 
 #ifdef USE_G2CLIB_HIGH
-#include "grib2.h"
+#include <grib2.h>
 gribfield *grib_data;
 int free_gribfield;			// flag for allocated gribfield
 #endif

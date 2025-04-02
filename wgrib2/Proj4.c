@@ -18,7 +18,7 @@
 
 #ifdef USE_PROJ4
 
-#include "proj_api.h"
+#include <proj_api.h>
 #include "proj4_wgrib2.h"
 
 extern int latlon;

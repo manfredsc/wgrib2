@@ -997,11 +997,11 @@ As an option, could get extended description from f_lev...
           /* Auto-packing, center near 0 as signed char or short are used.
              Try secure scaling for all next input fields: extend the range on +-10%... */
           range = (max-min)*1.2;
-          add_offset = (float) (min+max)*0.5;
+          add_offset = (float) ((min+max)*0.5);
           if ( var_pack == G2NC_PACK_BYTE )
-            scale_factor = (float) (range/(bfill_value - 2))*0.5;
+            scale_factor = (float) ((range/(bfill_value - 2))*0.5);
           else if ( var_pack == G2NC_PACK_SHORT )
-            scale_factor = (float) (range/(sfill_value - 2))*0.5;
+            scale_factor = (float) ((range/(sfill_value - 2))*0.5);
 #ifdef DEBUG_NC
 fprintf(stderr,"netcdf: auto-packing, min=%lf, max=%lf, offset=%f, scale=%f, var=%s\n",
 min, max, add_offset, scale_factor, varname_buf);
