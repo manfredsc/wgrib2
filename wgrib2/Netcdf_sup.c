@@ -234,11 +234,11 @@ int f_nc_pack(ARG1)
     /* Center near 0 as signed char or short are used. */
     if (nc_pack != G2NC_PACK_FLOAT)
     {
-      nc_pack_offset = (float)(nc_valid_max+nc_valid_min)*0.5;
+      nc_pack_offset = (float) ((nc_valid_max+nc_valid_min)*0.5);
       if ( nc_pack == G2NC_PACK_BYTE )
-        nc_pack_scale = (float) (range/(G2NC_FILL_VALUE_BYTE - 2))*0.5;
+        nc_pack_scale = (float) ((range/(G2NC_FILL_VALUE_BYTE - 2))*0.5);
       else if ( nc_pack == G2NC_PACK_SHORT )
-        nc_pack_scale = (float) (range/(G2NC_FILL_VALUE_SHORT - 2))*0.5;
+        nc_pack_scale = (float) ((range/(G2NC_FILL_VALUE_SHORT - 2))*0.5);
     }
     free(pack_to);
 
@@ -751,12 +751,12 @@ wgib2_name:wgrib2_level|*:nc_name|ignore[:ignore|no|float|deflate{0-9}|[short|by
       if (strcmp(pk,"byte")==0 || strcmp(pk,"BYTE")==0 || strcmp(pk,"Byte")==0)
       {
         nc_table->vc[i].nc_pack = G2NC_PACK_BYTE;
-        nc_table->vc[i].nc_scale = (float) (range/(G2NC_FILL_VALUE_BYTE - 2))*0.5;
+        nc_table->vc[i].nc_scale = (float) ((range/(G2NC_FILL_VALUE_BYTE - 2))*0.5);
       }
       else if (strcmp(pk,"short")==0 || strcmp(pk,"SHORT")==0 || strcmp(pk,"Short")==0)
       {
         nc_table->vc[i].nc_pack = G2NC_PACK_SHORT;
-        nc_table->vc[i].nc_scale = (float) (range/(G2NC_FILL_VALUE_SHORT - 2))*0.5;
+        nc_table->vc[i].nc_scale = (float) ((range/(G2NC_FILL_VALUE_SHORT - 2))*0.5);
       }
       else if (strcmp(pk,"float")==0 || strcmp(pk,"FLOAT")==0 || strcmp(pk,"Float")==0)
       {
@@ -798,7 +798,7 @@ wgib2_name:wgrib2_level|*:nc_name|ignore[:ignore|no|float|deflate{0-9}|[short|by
           break;
         }
       }
-      else  nc_table->vc[i].nc_offset = (float) (min+max)*0.5;
+      else  nc_table->vc[i].nc_offset = (float) ((min+max)*0.5);
 
       nc_table->vc[i].nc_valid_min=min;
       nc_table->vc[i].nc_valid_max=max;

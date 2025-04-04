@@ -246,7 +246,9 @@ int is_match(const char *s) {
     /* no need to process if-tests if no match */
 
     /* process  if-tests, regexec is thread safe by POSIX standard */
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
     for (i = 0; i < match_count; i++) {
         if (type[i] == 2) match_val[i] = regexec(&(preg[i]), s, (size_t) 0, NULL, 0);
     } 

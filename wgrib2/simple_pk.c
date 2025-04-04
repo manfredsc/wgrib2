@@ -103,7 +103,9 @@ int mk_sec5and7(float *data, unsigned int n, unsigned char **sec5, unsigned char
                 dec_factor = Int_Power(10.0, -dec_scale);
                 min_val *= dec_factor;
                 max_val *= dec_factor;
+#ifdef USE_OPENMP
 #pragma omp parallel for
+#endif
                 for (i = 0; i < n; i++) {
                     data[i] *= dec_factor;
                 }
@@ -122,13 +124,17 @@ int mk_sec5and7(float *data, unsigned int n, unsigned char **sec5, unsigned char
         /* scale data by ref, binary_scale and dec_scale */
         if (binary_scale) {
             scale = ldexp(1.0, -binary_scale);
+#ifdef USE_OPENMP
 #pragma omp parallel for
+#endif
             for (i = 0; i < n; i++) {
                 data[i] = (data[i] - ref)*scale;
             }
         }
         else {
+#ifdef USE_OPENMP
 #pragma omp parallel for
+#endif
             for (i = 0; i < n; i++) {
                 data[i] = data[i] - ref;
             }
@@ -157,7 +163,9 @@ int mk_sec5and7(float *data, unsigned int n, unsigned char **sec5, unsigned char
 	 * di should be long to reduce subroutine overhead
 	 */
 	di = 128;		/* multiple of 8 */
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i,k) schedule(static)
+#endif
  	for (i = 0; i < n; i+= di) {
 	     k  = n - i;
 	     if (k > di) k = di;

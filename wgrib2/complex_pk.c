@@ -436,7 +436,9 @@ int complex_grib_out(unsigned char **sec, float *data, unsigned int ndata,
      int LEN_BITS = 7;
 
     ndef = 0;
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i) reduction(+:ndef)
+#endif
     for (i = 0; i < ndata; i++) {
         if (DEFINED_VAL(data[i])) ndef = ndef + 1;
     }
@@ -562,13 +564,17 @@ int complex_grib_out(unsigned char **sec, float *data, unsigned int ndata,
             min_val *= dec_factor;
             max_val *= dec_factor;
 	    if (has_undef) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
                 for (i = 0; i < nndata; i++) {
 		    if (DEFINED_VAL(data[i])) data[i] *= dec_factor;
                 }
             }
 	    else {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
                 for (i = 0; i < nndata; i++) {
 		    data[i] *= dec_factor;
                 }
@@ -588,7 +594,9 @@ int complex_grib_out(unsigned char **sec, float *data, unsigned int ndata,
     if (binary_scale) {
         scale = ldexp(1.0, -binary_scale);
 	if (has_undef) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
             for (i = 0; i < nndata; i++) {
 	        if (DEFINED_VAL(data[i])) {
 		    v[i] = floor((data[i] - ref)*scale + 0.5);
@@ -598,7 +606,9 @@ int complex_grib_out(unsigned char **sec, float *data, unsigned int ndata,
             }
 	}
 	else {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
             for (i = 0; i < nndata; i++) {
 	        v[i] = floor((data[i] - ref)*scale + 0.5);
 		v[i] = v[i] >= 0 ? v[i] : 0;
@@ -608,7 +618,9 @@ int complex_grib_out(unsigned char **sec, float *data, unsigned int ndata,
     else {
 	scale = 1.0;
 	if (has_undef) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
             for (i = 0; i < nndata; i++) {
 	        if (DEFINED_VAL(data[i])) {
 		    v[i] = floor(data[i] - ref + 0.5);
@@ -618,7 +630,9 @@ int complex_grib_out(unsigned char **sec, float *data, unsigned int ndata,
             }
 	}
 	else {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
             for (i = 0; i < nndata; i++) {
 		v[i] = floor(data[i] - ref + 0.5);
 		v[i] = v[i] >= 0 ? v[i] : 0;
@@ -751,13 +765,17 @@ printf("2: vmx %d vmn %d nbits %d\n", vmx, vmn, find_nbits(vmx-vmn+has_undef));
     }
 
     if (has_undef) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
 	for (i = 0; i < nndata; i++) {
 	    v[i] = (v[i] != INT_MAX) ? v[i] - vmn : INT_MAX;
         }
     }
     else {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
 	for (i = 0; i < nndata; i++) {
 	    v[i] = v[i] - vmn;
         }
@@ -805,7 +823,9 @@ printf("2: vmx %d vmn %d nbits %d\n", vmx, vmn, find_nbits(vmx-vmn+has_undef));
 
     if (nstruct != ii+1) fatal_error_ii("complex_pk, nstruct=%d wanted %d",nstruct,ii+1);
 
+#ifdef USE_OPENMP
 #pragma omp parallel for private(k)
+#endif
     for (i = 1; i < nstruct; i++) {
         list[i].head = &list[i-1];
 	list[i-1].tail = &list[i];
@@ -926,7 +946,9 @@ fprintf(stderr,"complex_pk: linked list ngroups=%u\n", ngroups);
     }
     if (i != nndata) fatal_error("complex grib_out: program error 2","");
 
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
     for (i = 0; i < ngroups; i++) {
         if (refs[i] == INT_MAX) widths[i] = 0;
         else if (refs[i] == itmp[i]) widths[i] = itmp2[i];
@@ -940,7 +962,9 @@ fprintf(stderr,"complex_pk: linked list ngroups=%u\n", ngroups);
     gwidmx = gwidmn = widths[0];
     grefmx = refs[0] != INT_MAX ? refs[0] : 0;
 
+#ifdef USE_OPENMP
 #pragma omp parallel for private(ii) reduction(max:glenmx, gwidmx, grefmx) reduction(min:glenmn, gwidmn)
+#endif
     for (ii = 1; ii < ngroups; ii++) {
         glenmx = glenmx >= lens[ii] ? glenmx : lens[ii];
         glenmn = glenmn <= lens[ii] ? glenmn : lens[ii];
@@ -1017,10 +1041,14 @@ printf("group widthmn = %d, gwidmx %d, width bits max %d\n", gwidmn, gwidmx, sec
     size_sec7 += k ? 1 : 0;
 */
     k = 0;
+#ifdef USE_OPENMP
 #pragma omp parallel private(i,j)
+#endif
     {
 	j = 0;
+#ifdef USE_OPENMP
 #pragma omp for reduction(+:size_sec7)
+#endif
         for (i = 0; i < ngroups; i++) {
 	    j += lens[i] * widths[i];
             size_sec7 += (j >> 3);
@@ -1029,7 +1057,9 @@ printf("group widthmn = %d, gwidmx %d, width bits max %d\n", gwidmn, gwidmx, sec
             itmp[i] = widths[i] - gwidmn;
             itmp2[i] = lens[i] - glenmn;
         }
+#ifdef USE_OPENMP
 #pragma omp atomic
+#endif
 	k += j;
     }
     size_sec7 += (k >> 3) + ( (k & 7) ? 1 : 0);
@@ -1095,7 +1125,9 @@ fprintf(stderr,"complex_pk: ngroups=%u\n", ngroups);
 	uitmp[i] = s->i0;
 	refs[i] = s->mn;
     }
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i,j)
+#endif
     for (i = 0; i < ngroups; i++) {
 	if (widths[i]) {
 	    for (j = 0; j < lens[i]; j++) {
