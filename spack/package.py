@@ -195,8 +195,8 @@ class Wgrib2(MakefilePackage, CMakePackage):
     conflicts("-g2c", when="+g2c_high")
 
     depends_on("ip@5.2:", when="@develop +ipolates")
-    depends_on("g2c@2.2.0:", when="@develop +g2c")
-    depends_on("g2c@2.2.0:", when="@develop +g2c_high")
+    depends_on("g2c@2.2.0:", when="@3.7: +g2c")
+    depends_on("g2c@2.2.0:", when="@3.7: +g2c_high")
     depends_on("lapack", when="@develop +ipolates")
     depends_on("libaec@1.0.6:", when="@3.2: +aec")
     depends_on("netcdf-c", when="@3.2: +netcdf4")
