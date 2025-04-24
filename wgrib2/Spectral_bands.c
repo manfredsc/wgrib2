@@ -19,9 +19,9 @@ int f_spectral_bands_extname(ARG0) {
     int code1, code2, instrument, scale_factor, scaled_val;
     unsigned char *nb_location, *bandstart;
     double value;
-    const char *agency=NULL, *instype=NULL, *shortname=NULL, *longname=NULL;
+    const char *instype=NULL, *shortname=NULL;
+    const char *agency, *longname;    /* unused, but set in include files */
     const char *satellite=NULL, *pol=NULL;
-    const char *classification=NULL;
     
     const char *shortname1=NULL, *satellite1=NULL, *pol1=NULL;
     double c=299792458.;
@@ -54,15 +54,9 @@ int f_spectral_bands_extname(ARG0) {
         if(value<minwave) minwave=value;
         sumwave+=value;
 
-        classification=NULL;
-        agency=NULL;
         instype=NULL;
         shortname=NULL;
-        longname=NULL;
         satellite=NULL;
-        switch(code1&511) {
-#include "BUFRTable_0_02_020.dat"
-        }
         switch(code2) {
 #include "BUFRTable_0_01_007.dat"
         }

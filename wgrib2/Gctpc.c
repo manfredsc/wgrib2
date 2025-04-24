@@ -269,7 +269,9 @@ int gctpc_get_latlon(unsigned char **sec, double **lon, double **lat) {
     if (stagger(sec, nnpnts, llon, llat)) fatal_error("gctpc: stagger problem","");
 
 //    printf(">> stagger gctpc x00 %lf y00 %lf\n",llon[0], llat[0]);
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i)
+#endif
     for (i = 0; i < nnpnts; i++) {
         inv_fn(llon[i]*dx, llat[i]*dy, llon+i, llat+i);
 	llat[i] *= (180.0 / M_PI);

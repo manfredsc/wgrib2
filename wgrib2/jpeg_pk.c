@@ -7,14 +7,13 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 #ifdef USE_G2CLIB_LOW
-#include "grib2.h"
+#include <grib2.h>
 #endif
 
 /* 10/2024 Public Domain   Wesley Ebisuzaki */
 
 #if G2_JPEG2000_ENABLED == 1
 
-    #include "grib2.h"
 /*
  *  writes out jpeg2000 compressed grib message
  */
@@ -127,14 +126,18 @@ int jpeg2000_grib_out(unsigned char **sec, float *data, unsigned int ndata,
         cdata = (unsigned char *) malloc(nbytes * (size_t) n_defined);
         if (cdata == NULL) fatal_error("memory alloc jpeg encoding","");
         if (nbytes == 1) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i,j)
+#endif
             for (j = 0; j < n_defined; j++) {
     	        i = (int) floor(data[j]+0.5);
 	        cdata[j] = i & 255;
 	    }
         }
         else if (nbytes == 2) {
+#ifdef USE_OPENMP
 #pragma omp parallel for private(i,j)
+#endif
             for (j = 0; j < n_defined; j++) {
 	        i = (int) floor(data[j]+0.5);
 	        cdata[2*j] = (i >> 8) & 255;
