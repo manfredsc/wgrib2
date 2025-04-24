@@ -6,6 +6,8 @@
 import os
 import re
 
+import spack.build_systems.cmake
+import spack.build_systems.makefile
 from spack.package import *
 
 variant_map_common = {
@@ -186,7 +188,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
     @when("@:2 ^gmake@4.2:")
 
     def patch(self):
-        filter_file("\\\#define", "#define", "makefile")
+        filter_file(r"\\#define", "#define", "makefile")
 
     # Use Spack compiler wrapper flags
     def inject_flags(self, name, flags):
