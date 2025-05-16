@@ -147,6 +147,7 @@ static struct gribtable_s *search_gribtable(struct gribtable_s *p, unsigned char
     int discipline, center, mastertab, localtab, parmcat, parmnum;
     int use_local_table;
     static int count = 0;
+    struct gribtable_s *p_orig;
 
     if (p == NULL) return NULL;
 
@@ -162,8 +163,7 @@ static struct gribtable_s *search_gribtable(struct gribtable_s *p, unsigned char
 	|| (discipline >= 192 && discipline <= 254) ) use_local_table = 1;
    
     if (use_local_table == 1 && localtab == 0) {
-	if (count++ < 6 ) fprintf(stderr,"**** ERROR: local table = 0 is not allowed, set to 1 ***\n");
-	localtab = 1;
+	if (count++ < 6) fprintf(stderr,"**** WARNING: local table = 0 is not allowed, will try fallback value 1 as well ***\n");
     }
     if (use_local_table == 1 && localtab == 255) {
 	fatal_error("local gribtable is undefined (255)","");
@@ -179,12 +179,21 @@ static struct gribtable_s *search_gribtable(struct gribtable_s *p, unsigned char
     }
     else {
 //	printf(">> cname local find: disc %d center %d localtab %d pcat %d pnum %d\n", discipline, center, localtab, parmcat, parmnum);
+        p_orig = p;
+	/* look for entry with original localtab value as derived from grib message */
         for (; p->disc >= 0; p++) {
             if (discipline == p->disc && center == p->cntr && localtab == p->ltab && 
                 parmcat == p->pcat && parmnum == p->pnum) {
                 return p;
 	    }
 	}
+	/* fallback using localtab = 1 */
+	for (; p_orig->disc >= 0; p_orig++) {
+            if (discipline == p_orig->disc && center == p_orig->cntr && 1 == p_orig->ltab &&
+                parmcat == p_orig->pcat && parmnum == p_orig->pnum) {
+                return p_orig;
+            }
+        }
     }
     return NULL;
 }
