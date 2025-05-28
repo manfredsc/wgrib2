@@ -146,6 +146,11 @@ int f_subcenter(ARG0) {
 #include "ncep_tableC.dat"
 	   }
 	}
+        if (ctr == (USAF)) {
+            switch (subctr) {
+#include "usaf_tableC2.dat"
+            }
+        }
 	if (mode == 0 || string == NULL) {
 	    sprintf(inv_out,"subcenter=%d", subctr);
 	}

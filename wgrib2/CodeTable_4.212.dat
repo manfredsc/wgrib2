@@ -12,4 +12,14 @@ case    10: string="Tundra"; break;
 case    11: string="Ice"; break;
 case    12: string="Tropical forest"; break;
 case    13: string="Savannah"; break;
+/* 557WW extensions-- these are local, not WMO */
+case   192: if (center == USAF) string="Broadleaf Tree"; else string="undefined"; break
+case   193: if (center == USAF) string="Needleleaf Tree"; else string="undefined"; break
+case   194: if (center == USAF) string="C3 Grass"; else string="undefined"; break
+case   195: if (center == USAF) string="C4 Grass"; else string="undefined"; break
+case   196: if (center == USAF) string="Shrub"; else string="undefined"; break
+case   197: if (center == USAF) string="Urban"; else string="undefined"; break
+case   198: if (center == USAF) string="Water"; else string="undefined"; break
+case   199: if (center == USAF) string="Soil"; else string="undefined"; break
+case   200: if (center == USAF) string="Ice"; else string="undefined"; break
 case   255: string="Missing"; break;

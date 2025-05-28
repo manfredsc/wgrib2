@@ -255,3 +255,4 @@
 #define KMA 40
 #define DWD1 78
 #define DWD2 79
+#define USAF 57

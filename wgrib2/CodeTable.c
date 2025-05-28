@@ -17,6 +17,7 @@
  * 5/2013 W. Ebisuzaki fixed code table 0.0 in response to error report M. Foster
  * 7/2013 W. Ebisuzaki added more *_location() functions, needed by set_pdt()
  * 5/2013 G. Schnee add case for DRT 5.42
+ * 5/2025 E. Kemp Entries for 557WW use.
  */
 
 /*
@@ -272,9 +273,11 @@ int code_table_3_1(unsigned char **sec) {
 
 int f_code_table_3_2(ARG0) {
     int val;
+    int center;
     const char *string;
     if (mode >= 0) {
 	val = code_table_3_2(sec);
+        center = GB2_Center(sec);
         if (val >= 0) {
             string = NULL;
             switch(val) {
@@ -1787,13 +1790,21 @@ unsigned char *code_table_4_233_location(unsigned char **sec) {
  */
 int f_code_table_4_235(ARG0) {
     int val;
+    int center;
     const char *string;
     if (mode >= 0) {
 	val = code_table_4_235(sec);
+        center = GB2_Center(sec);
 	if (val >= 0) {
 	    string = NULL;
-	    switch(val) {
+            if (center == USAF) {
+                switch(val) {
+#include "CodeTable_4.235.USAF.dat"
+                }
+            } else {
+                switch(val) {
 #include "CodeTable_4.235.dat"
+                }
 	    }
             if (string == NULL) sprintf(inv_out,"code table 4.235=%d", val);
             else sprintf(inv_out,"code table 4.235=%d %s", val, string);

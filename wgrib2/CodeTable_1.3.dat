@@ -4,4 +4,9 @@
     case 3: string="Re-Analysis Products"; break;
     case 4: string="TIGGE operational Products"; break;
     case 5: string="TIGGE test Products"; break;
+/* From 557WW GRIB Edition 2 Reference Manual */
+    case 6: string="S2S operational products"; break;
+    case 7: string="S2S test products"; break;
+    case 8: string="UERRA"; break;
+    case 9: string="UERRA test"; break;
     case 255: string="Missing"; break;
