@@ -285,6 +285,7 @@ class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
         mkdir("install")
         mkdir(join_path("install", "bin"))
         move(join_path("wgrib2", "wgrib2"), join_path("install", "bin"))
+        move(join_path("aux_progs", "gmerge"), join_path("install", "bin"))
 
         # Build wgrib2 library by disabling all options
         # and enabling only MAKE_FTN_API=1
