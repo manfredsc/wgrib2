@@ -17,6 +17,6 @@ do
   i=`expr $i + 1`
 done
 
-../aux_progs/gmerge tmp.gmerge.grb $arg
+gmerge tmp.gmerge.grb $arg
 echo "*** SUCCESS!"
 exit 0
