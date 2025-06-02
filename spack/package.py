@@ -230,6 +230,9 @@ class Wgrib2(MakefilePackage, CMakePackage):
 
         return (flags, None, None)
 
+    def check(self):
+        with working_dir(self.build_directory):
+            make("test")
 
 class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
     # Disable parallel build
@@ -285,7 +288,6 @@ class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
         mkdir("install")
         mkdir(join_path("install", "bin"))
         move(join_path("wgrib2", "wgrib2"), join_path("install", "bin"))
-        move(join_path("aux_progs", "gmerge"), join_path("install", "bin"))
 
         # Build wgrib2 library by disabling all options
         # and enabling only MAKE_FTN_API=1
