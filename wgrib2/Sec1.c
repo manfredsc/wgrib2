@@ -148,7 +148,7 @@ int f_subcenter(ARG0) {
 	}
         if (ctr == (USAF)) {
             switch (subctr) {
-#include "usaf_tableC2.dat"
+#include "gribtables/usaf/usaf_tableC2.dat"
             }
         }
 	if (mode == 0 || string == NULL) {

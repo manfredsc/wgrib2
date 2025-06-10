@@ -280,9 +280,15 @@ int f_code_table_3_2(ARG0) {
         center = GB2_Center(sec);
         if (val >= 0) {
             string = NULL;
-            switch(val) {
+            if (center == USAF) {
+                switch(val) {
+#include "gribtables/usaf/CodeTable_3.2.USAF.dat"
+                }
+            } else {
+                switch(val) {
 #include "CodeTable_3.2.dat"
-	    }
+                }
+            }
 	    if (string == NULL) sprintf(inv_out,"code table 3.2=%d", val);
 	    else sprintf(inv_out,"code table 3.2=%d %s", val, string);
         }
@@ -1799,7 +1805,7 @@ int f_code_table_4_235(ARG0) {
 	    string = NULL;
             if (center == USAF) {
                 switch(val) {
-#include "CodeTable_4.235.USAF.dat"
+#include "gribtables/usaf/CodeTable_4.235.USAF.dat"
                 }
             } else {
                 switch(val) {
