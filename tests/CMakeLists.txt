@@ -24,7 +24,7 @@ endfunction()
 
 function(add_lib_test name)
   add_executable(${name} ${name}.c)
-  target_link_libraries(${name} PUBLIC wgrib2::wgrib2)
+  target_link_libraries(${name} PUBLIC wgrib2_lib)
   add_test(NAME ${name} COMMAND ${name})
 endfunction()
 
