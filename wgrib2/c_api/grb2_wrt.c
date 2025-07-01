@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <limits.h>
+#include <string.h>
 #include "c_wgrib2api.h"
 
 /* 3/2018 Public Domain, Wesley Ebisuzaki

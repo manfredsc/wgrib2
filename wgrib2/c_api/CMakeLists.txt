@@ -3,7 +3,7 @@
 #
 # Alyson Stahl
 
-set(src grb2_cmd.c grb2_inq.c grb2_mk_inv.c grb2_wrt.c read.c write.c)
+set(src grb2_cmd.c grb2_inq.c grb2_mk_inv.c grb2_wrt.c)
 
 include_directories(..)
 
