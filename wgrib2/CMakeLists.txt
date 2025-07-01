@@ -100,6 +100,7 @@ add_executable(wgrib2_exe wgrib2_main.c)
 set_target_properties(wgrib2_exe PROPERTIES OUTPUT_NAME wgrib2)
 
 if(BUILD_LIB)
+  add_subdirectory(c_api)
   if(BUILD_SHARED_LIB)
     add_library(wgrib2_lib SHARED ${lib_src})
     set_property(TARGET wgrib2_lib PROPERTY POSITION_INDEPENDENT_CODE ON)
