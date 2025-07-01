@@ -22,6 +22,11 @@ function(copy_test_data name)
     FILE_PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
 endfunction()
 
+function(add_c_api_test name)
+  add_executable(${name} ${name}.c)
+  target_link_libraries(${name} PUBLIC wgrib2_c_api)
+  add_test(NAME ${name} COMMAND ${name})
+endfunction()
 
 # Some test files are large and are kept on the NOAA EMC FTP
 # site. This function is used to download such test data. It takes two
@@ -185,6 +190,7 @@ if (MAKE_FTN_API)
 endif()
 if (BUILD_LIB)
   shell_test(test_lib)
+  add_c_api_test(test_c_api)
 endif()
 if (BUILD_SHARED_LIB)
   shell_test(test_shared_lib)
