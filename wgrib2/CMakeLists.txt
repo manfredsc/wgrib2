@@ -171,7 +171,6 @@ target_link_libraries(wgrib2_exe PRIVATE obj_lib)
 if(BUILD_LIB)
   set(headers wgrib2_api.h wgrib2.h ${CMAKE_BINARY_DIR}/wgrib2/wgrib2_meta.h)
   target_link_libraries(wgrib2_lib PUBLIC gctpc -lm)
-  target_link_libraries(wgrib2_lib PUBLIC wgrib2_c_api)
   set_target_properties(wgrib2_lib PROPERTIES PUBLIC_HEADER "${headers}")
   target_compile_definitions(wgrib2_lib PUBLIC ${definitions_list})
   
