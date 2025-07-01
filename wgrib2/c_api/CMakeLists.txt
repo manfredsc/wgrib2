@@ -3,7 +3,6 @@
 #
 # Alyson Stahl
 
-
 set(src grb2_cmd.c grb2_inq.c grb2_mk_inv.c grb2_wrt.c read.c write.c)
 
 if (BUILD_SHARED_LIB)
@@ -13,8 +12,8 @@ else()
    set_property(TARGET wgrib2_c_api PROPERTY POSITION_INDEPENDENT_CODE ON)
 endif()
 
-target_include_directories(wgrib2_c_api
-    PUBLIC $<BUILD_INTERFACE:${module_dir}>
+target_include_directories(wgrib2_c_api PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}>)
 
 target_link_libraries(wgrib2_c_api PUBLIC wgrib2_lib)  
