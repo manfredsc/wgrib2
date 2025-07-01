@@ -5,6 +5,8 @@
 
 set(src grb2_cmd.c grb2_inq.c grb2_mk_inv.c grb2_wrt.c read.c write.c)
 
+include_directories(..)
+
 if (BUILD_SHARED_LIB)
    add_library(wgrib2_c_api SHARED ${src})
 else()
