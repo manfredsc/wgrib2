@@ -18,12 +18,6 @@ target_include_directories(wgrib2_c_api PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}>)
 
-target_link_libraries(wgrib2_c_api PUBLIC wgrib2_lib)  
-
-if(NOT DEFINED CMAKE_INSTALL_Fortran_MODULES)
-    set(CMAKE_INSTALL_Fortran_MODULES ${CMAKE_INSTALL_INCLUDEDIR})
-endif()
-
 install(
   TARGETS wgrib2_c_api
   EXPORT wgrib2_exports
