@@ -14,10 +14,11 @@ else()
 endif()
 
 target_include_directories(wgrib2_c_api PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR};${CMAKE_CURRENT_SOURCE_DIR}>"
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}>)
 
 target_link_libraries(wgrib2_c_api PUBLIC wgrib2_lib)  
+target_include_directories(wgrib2_c_api PUBLIC )
 
 install(
   TARGETS wgrib2_c_api
@@ -26,4 +27,4 @@ install(
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
-install(FILES c_wgrib2api.h ../wgrib2_api.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(FILES c_wgrib2api.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
