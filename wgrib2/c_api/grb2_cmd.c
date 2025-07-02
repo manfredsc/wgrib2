@@ -6,6 +6,7 @@
  * handles arguments for wgrib2
  */
 
+int wgrib2(int argc, const char **argv);
 
 static int n_cmds = -1;
 char cmd[N_CMDS][CMD_LEN];

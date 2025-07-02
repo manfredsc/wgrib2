@@ -21,6 +21,8 @@
  * v0.99 3/2018
  */
 
+int wgrib2_set_reg(float *data, size_t size, int reg);
+
 int grb2_wrtVA(const char *grb, const char *template, int msgno, float *data, 
          unsigned int ndata, ...) {
     va_list valist;

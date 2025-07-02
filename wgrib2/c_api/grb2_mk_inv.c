@@ -4,6 +4,8 @@
 /* 10/2024  Public Domain  Wesley Ebisuzaki  */
 /* C transation of fortran grb2_mk_inv(..) */
 
+int wgrib2(int argc, const char **argv);
+
 int grb2_mk_inv(char *grb, char *inv) {
 
     char *argv[7];

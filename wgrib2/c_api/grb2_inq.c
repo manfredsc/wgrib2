@@ -22,6 +22,9 @@
  * v0.99 3/2018
  */
 
+size_t wgrib2_get_mem_buffer_size(int n);
+int wgrib2_get_mem_buffer(unsigned char *my_buffer, size_t size, int n);
+int wgrib2_get_reg_data(float *data, size_t size, int reg);
 
 static int last_options, good;
 static unsigned int npnts, nx_, ny_;
