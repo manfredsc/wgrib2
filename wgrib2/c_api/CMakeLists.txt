@@ -3,7 +3,7 @@
 #
 # Alyson Stahl
 
-set(src c_wgrib2api.h grb2_cmd.c grb2_inq.c grb2_mk_inv.c grb2_wrt.c)
+set(src grb2_cmd.c grb2_inq.c grb2_mk_inv.c grb2_wrt.c)
 
 include_directories(${CMAKE_SOURCE_DIR}/wgrib2)
 if (BUILD_SHARED_LIB)
@@ -17,13 +17,12 @@ target_include_directories(wgrib2_c_api PUBLIC
   "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/wgrib2/c_api>"
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}>)
 
+set_target_properties(wgrib2_lib PROPERTIES PUBLIC_HEADER c_wgrib2api.h)
 target_link_libraries(wgrib2_c_api PUBLIC wgrib2_lib)  
-
-#install(FILES c_wgrib2api.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 install(
   TARGETS wgrib2_c_api
   EXPORT wgrib2_exports
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
