@@ -24,7 +24,7 @@ endfunction()
 
 function(ftn_api_test name)
   add_executable(${name} ${name}.F90)
-  target_link_libraries(${name} PRIVATE wgrib2_ftn_api::wgrib2_ftn_api)
+  target_link_libraries(${name} PRIVATE wgrib2_ftn_api)
   add_test(NAME ${name} COMMAND ${name})
 endfunction(ftn_api_test name)
 
