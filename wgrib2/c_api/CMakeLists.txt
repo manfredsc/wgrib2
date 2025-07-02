@@ -13,12 +13,13 @@ else()
    set_property(TARGET wgrib2_c_api PROPERTY POSITION_INDEPENDENT_CODE ON)
 endif()
 
-target_include_directories(wgrib2_c_api PUBLIC
-  "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR};${CMAKE_CURRENT_SOURCE_DIR}>"
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}>)
+target_include_directories(wgrib2_c_api PUBLIC 
+  "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/wgrib2/c_api>"
+  $<INSTALL_INTERFACE:include>)
 
 target_link_libraries(wgrib2_c_api PUBLIC wgrib2_lib)  
-target_include_directories(wgrib2_c_api PUBLIC )
+
+install(FILES c_wgrib2api.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 install(
   TARGETS wgrib2_c_api
@@ -26,5 +27,3 @@ install(
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-
-install(FILES c_wgrib2api.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
