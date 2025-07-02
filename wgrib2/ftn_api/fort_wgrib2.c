@@ -23,19 +23,19 @@ int wgrib2c(int n, const char *lines, int len) {
     argv = (char **) malloc (argc * sizeof(char *));
 
     if (buf == NULL || argv == NULL) {
-	fprintf(stderr,"wgrib2c memory error-not enough free memory\n");
-	return 1;
+        fprintf(stderr,"wgrib2c memory error-not enough free memory\n");
+        return 1;
     }
 
     argv[0] = "wgrib2c";
 
     for (i = 1; i < argc; i++) {
-	argv[i] = buf + (i-1)*(len+1);
-	strncpy(argv[i], lines+(i-1)*len, len);
-	argv[i][len] = 0;
-	s = argv[i];
-	t = argv[i]+len-1;
-	while (t >= s && *t == ' ') *t-- = '\0';
+        argv[i] = buf + (i-1)*(len+1);
+        strncpy(argv[i], lines+(i-1)*len, len);
+        argv[i][len] = 0;
+        s = argv[i];
+        t = argv[i]+len-1;
+        while (t >= s && *t == ' ') *t-- = '\0';
     }
 //    for (i = 0; i < argc; i++) {
 //	fprintf(stderr,"wgrib2c: %d (%s)\n", i, argv[i]);
