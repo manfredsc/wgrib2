@@ -3,7 +3,7 @@
 #
 # Alyson Stahl
 
-set(src c_wgrib2api.h grb2_cmd.c grb2_inq.c grb2_mk_inv.c grb2_wrt.c)
+set(src grb2_cmd.c grb2_inq.c grb2_mk_inv.c grb2_wrt.c)
 
 include_directories(..)
 if (BUILD_SHARED_LIB)
@@ -25,3 +25,5 @@ install(
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
+install(FILES c_wgrib2api.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
