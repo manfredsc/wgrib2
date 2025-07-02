@@ -15,7 +15,7 @@ endif()
 
 target_include_directories(wgrib2_c_api PUBLIC 
   "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/wgrib2/c_api>"
-  $<INSTALL_INTERFACE:include>)
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
 target_link_libraries(wgrib2_c_api PUBLIC wgrib2_lib)  
 
