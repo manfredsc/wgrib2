@@ -3,7 +3,7 @@
  * Alyson Stahl
 */
 
-//#include "c_wgrib2api.h"
+#include "c_wgrib2api.h"
 
 #define GRB_FILE "data/gdaswave.t00z.wcoast.0p16.f000.grib2"
 #define GRB_INV "data/gdaswave.t00z.wcoast.0p16.f000.inv"
