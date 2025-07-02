@@ -17,7 +17,7 @@ target_include_directories(wgrib2_c_api PUBLIC
   "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/wgrib2/c_api>"
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}>)
 
-set_target_properties(wgrib2_lib PROPERTIES PUBLIC_HEADER c_wgrib2api.h)
+set_target_properties(wgrib2_c_api PROPERTIES PUBLIC_HEADER c_wgrib2api.h)
 target_link_libraries(wgrib2_c_api PUBLIC wgrib2_lib)  
 
 install(
