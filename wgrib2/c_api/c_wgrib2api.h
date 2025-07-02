@@ -4,7 +4,7 @@
  * this include file requires C99 because it uses __VA_ARGS__
  */
 
-#include "wgrib2_api.h"
+#include <wgrib2_api.h>
 
 /* these are based on wgrib2api */
 
