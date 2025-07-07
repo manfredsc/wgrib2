@@ -49,7 +49,35 @@ int f_ens(ARG0) {
 	        case 3: 
 			sprintf(inv_out,"ENS=+%d", pert); break;
 	        case 4: 
-			sprintf(inv_out,"MM-ENS=%d", pert); break;
+			if (mode == 0) {
+			    sprintf(inv_out,"MM-ENS=%d", pert); break;
+			}
+			sprintf(inv_out,"MultiModel-ENS=%d", pert); break;
+	        case 5: 
+			if (mode == 0) {
+			    sprintf(inv_out,"NP-ENS=%d", pert); break;
+			}
+			sprintf(inv_out,"NotPerturbed-ENS=%d", pert); break;
+	        case 6: 
+			if (mode == 0) {
+			    sprintf(inv_out,"P-ENS=%d", pert); break;
+			}
+			sprintf(inv_out,"Perturbed-ENS=%d", pert); break;
+	        case 7: 
+			if (mode == 0) {
+			    sprintf(inv_out,"IC-ENS=%d", pert); break;
+			}
+			sprintf(inv_out,"InitialConditionPerturbation-ENS=%d", pert); break;
+	        case 8: 
+			if (mode == 0) {
+			    sprintf(inv_out,"MP-ENS=%d", pert); break;
+			}
+			sprintf(inv_out,"ModelPhysicsPerturbation-ENS=%d", pert); break;
+	        case 9: 
+			if (mode == 0) {
+			    sprintf(inv_out,"ICMP-ENS=%d", pert); break;
+			}
+			sprintf(inv_out,"InitialCondition+ModelPhysicsPerturbation-ENS=%d", pert); break;
 		case 192:
 			if (center == NCEP) {
 			    sprintf(inv_out,"ENS=%d", pert); break;

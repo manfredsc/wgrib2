@@ -156,5 +156,11 @@ if [ "$line" != '1:0:d=2009060500:TMP:500 mb:180 hour fcst:prob >222.2:prob fcst
   exit 1
 fi
 
+echo '*** test new code table 4.6 entries ***'
+line=`../wgrib2/wgrib2 data/ref_simple_packing.grib2 -set table_4.6 6`
+if [ "`echo $line`" -ne "1:0:d=2009060500:TMP:500 mb:180 hour fcst:P-ENS=19" ] ; then
+  exit 1
+fi
+
 echo "*** SUCCESS!"
 exit 0
