@@ -67,11 +67,11 @@ int f_cluster_info(ARG0) {
     inv_out += strlen(inv_out);
 
     if (nc[1] != 255 || nc[2] != 255 || nc[3] != 255 || nc[4] != 255 || nc[5] != 255) {
-	sprintf(inv_out, "%sstd_dev_cluster_members=%lf", nl, scaled2flt(INT1(nc[1]), int4(nc+2)));
+        sprintf(inv_out, "%sstd_dev_cluster_members=%lf", nl, scaled2flt(INT1(nc[1]), int4(nc+2)));
         inv_out += strlen(inv_out);
     }
     if (nc[6] != 255 || nc[7] != 255 || nc[8] != 255 || nc[9] != 255 || nc[10] != 255) {
-	sprintf(inv_out, "%sdist_cluster_to_e.m.=%lf", nl, scaled2flt(INT1(nc[6]), int4(nc+7)));
+        sprintf(inv_out, "%sdist_cluster_to_e.m.=%lf", nl, scaled2flt(INT1(nc[6]), int4(nc+7)));
         inv_out += strlen(inv_out);
     }
     inv_out += strlen(inv_out);
