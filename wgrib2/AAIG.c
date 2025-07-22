@@ -71,23 +71,23 @@ int f_AAIG(ARG0) {
     f_lev(call_ARG0(level,NULL));
     f_ens(call_ARG0(ensinfo,NULL));
     if ((i = strlen(ensinfo)) > 0) {
-	if (strlen(level)+i+1  < STRING_SIZE) {
-	    strncat(level,".",2);
-	    strncat(level,ensinfo,STRING_SIZE-strlen(level)-1);
-	}
+        if (strlen(level)+i+1  < STRING_SIZE) {
+            strncat(level,".",2);
+            strncat(level,ensinfo,STRING_SIZE-strlen(level)-1);
+        }
     }
 
     save_inv_out = level;
     while (*save_inv_out) {
         if (*save_inv_out == ' ') *save_inv_out = '_';
-	save_inv_out++;
+	    save_inv_out++;
     }
 
     Ref_time(sec, &date_ref);
 
     if (Verf_time(sec, &date_verf) != 0) {
         fprintf(stderr,"f_AAIG no verf time\n");
-	date_verf = date_ref;
+        date_verf = date_ref;
     }
     if (date_verf.year == date_ref.year && date_verf.month == date_ref.month && 
         date_verf.day == date_ref.day && date_verf.hour == date_ref.hour) {
@@ -95,8 +95,8 @@ int f_AAIG(ARG0) {
     } 
     else {
         sprintf(file,"%s.%s.%4.4d%2.2d%2.2d%2.2d_%4.4d%2.2d%2.2d%2.2d.asc",
-		name,level, date_ref.year,date_ref.month,date_ref.day,date_ref.hour,
-	        date_verf.year,date_verf.month,date_verf.day,date_verf.hour);
+        name,level, date_ref.year,date_ref.month,date_ref.day,date_ref.hour,
+            date_verf.year,date_verf.month,date_verf.day,date_verf.hour);
     }
 
     if ((out = ffopen(file,"w")) == NULL) {
@@ -119,9 +119,9 @@ int f_AAIG(ARG0) {
     }
     fprintf(out,"NODATA_VALUE 9.999e20\n");
     for (j = 0; j < ny_; j++) {
-	for (i = 0; i < nx_; i++) {
-	    fprintf(out,"%f\n", data[i + (ny_ - 1 - j)*nx_]);
-	}
+        for (i = 0; i < nx_; i++) {
+            fprintf(out,"%f\n", data[i + (ny_ - 1 - j)*nx_]);
+        }
     }
     ffclose(out);
     return 0;

@@ -167,24 +167,24 @@ static int init_crctab(void)
 
 unsigned int cksum(unsigned char const *buf, size_t length)
 {
-  uint32_t crc = 0;
-  size_t bytes = length;
+    uint32_t crc = 0;
+    size_t bytes = length;
 
 #ifndef STATIC_CRCTAB
-  static short inited = 0;
-  if (!inited) inited = init_crctab();
+    static short inited = 0;
+    if (!inited) inited = init_crctab();
 #endif
 
-  while (bytes--) {
-    crc = (crc << 8) ^ crctab[((crc >> 24) ^ *buf++) & 0xFF];
-  }
+    while (bytes--) {
+        crc = (crc << 8) ^ crctab[((crc >> 24) ^ *buf++) & 0xFF];
+    }
 
-  for (; length; length >>= 8) {
-    crc = (crc << 8) ^ crctab[((crc >> 24) ^ length) & 0xFF];
-  }
+    for (; length; length >>= 8) {
+        crc = (crc << 8) ^ crctab[((crc >> 24) ^ length) & 0xFF];
+    }
 
-  crc = ~crc & 0xFFFFFFFF;
+    crc = ~crc & 0xFFFFFFFF;
 
-  return crc;
+    return crc;
 }
 

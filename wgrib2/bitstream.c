@@ -153,11 +153,12 @@ void add_bitstream(int t, int n_bits) {
     rbits += n_bits;
     reg = (reg << n_bits) | (t & jmask);
     while (rbits >= 8) {
-	*bitstream++ = (reg >> (rbits = rbits-8)) & 255;
-	n_bitstream++;
+        *bitstream++ = (reg >> (rbits = rbits-8)) & 255;
+        n_bitstream++;
     }
     return;
 }
+
 void add_many_bitstream(int *t, unsigned int n, int n_bits) {
     unsigned int jmask, tt;
     unsigned int i;
@@ -166,15 +167,15 @@ void add_many_bitstream(int *t, unsigned int n, int n_bits) {
     jmask = (1 << n_bits) - 1;
 
     for (i = 0; i < n; i++) {
-	tt = (unsigned int) *t++;
+        tt = (unsigned int) *t++;
         rbits += n_bits;
         reg = (reg << n_bits) | (tt & jmask);
 
         while (rbits >= 8) {
-	    rbits -= 8;
-	    *bitstream++ = (reg >> rbits) & 255;
+            rbits -= 8;
+            *bitstream++ = (reg >> rbits) & 255;
             n_bitstream++;
-	}
+        }
 
 /*
 
@@ -222,9 +223,9 @@ void init_bitstream(unsigned char *new_bitstream) {
 
 void finish_bitstream(void) {
     if (rbits) {
-	n_bitstream++;
+        n_bitstream++;
         *bitstream++ = (reg << (8-rbits)) & 255;
-	rbits = 0;
+        rbits = 0;
     }
     return;
 }

@@ -13,25 +13,25 @@ static int monthjday[13] = {
         0,31,59,90,120,151,181,212,243,273,304,334,365};
 
 static int leap(int year) {
-	if (year % 4 != 0) return 0;
-	if (year % 100 != 0) return 1;
-	return (year % 400 == 0);
+    if (year % 4 != 0) return 0;
+    if (year % 100 != 0) return 1;
+    return (year % 400 == 0);
 }
 
 /* see if date code is reasonable */
 
 int check_datecode(int year, int month, int day) {
-   int days_in_month;
+    int days_in_month;
 
-   if (year < 0) return 1;
-   if (month <= 0 || month > 12) return 2;
-   if (day < 1) return 3;
-   days_in_month = monthjday[month] - monthjday[month-1];
-   if (month == 2 && leap(year)) {
-         days_in_month++;
-   }
-   if (day <= days_in_month) return 0;
-   return 3;
+    if (year < 0) return 1;
+    if (month <= 0 || month > 12) return 2;
+    if (day < 1) return 3;
+    days_in_month = monthjday[month] - monthjday[month-1];
+    if (month == 2 && leap(year)) {
+        days_in_month++;
+    }
+    if (day <= days_in_month) return 0;
+    return 3;
 }
 
 /* see if time is reasonable */
@@ -55,21 +55,21 @@ int check_time(int year, int month, int day, int hour, int minute, int second) {
  */
 
 int add_time(int *year, int *month, int *day, int *hour, int *minute, int *second, 
-   int dtime, int unit) {
-     if (dtime == 0) return 0;
-     if (dtime > 0) return add_dt(year, month, day, hour, minute, second, dtime, unit);
-     return sub_dt(year, month, day, hour, minute, second, -dtime, unit);
+        int dtime, int unit) {
+    if (dtime == 0) return 0;
+    if (dtime > 0) return add_dt(year, month, day, hour, minute, second, dtime, unit);
+    return sub_dt(year, month, day, hour, minute, second, -dtime, unit);
 }
 
 int Add_time(struct full_date *date, int dtime, int unit) {
-     if (dtime == 0) return 0;
-     if (dtime > 0) 
-       return add_dt(&(date->year), &(date->month), &(date->day), &(date->hour), &(date->minute), &(date->second), dtime, unit);
-     return sub_dt(&(date->year), &(date->month), &(date->day), &(date->hour), &(date->minute), &(date->second), -dtime, unit);
+    if (dtime == 0) return 0;
+    if (dtime > 0) 
+        return add_dt(&(date->year), &(date->month), &(date->day), &(date->hour), &(date->minute), &(date->second), dtime, unit);
+    return sub_dt(&(date->year), &(date->month), &(date->day), &(date->hour), &(date->minute), &(date->second), -dtime, unit);
 }
 
 int add_dt(int *year, int *month, int *day, int *hour, int *minute, int *second, 
-   int dtime, int unit) {
+        int dtime, int unit) {
 
     int y, m, d, h, mm, s, jday, i, days_in_month;
 
@@ -84,20 +84,20 @@ int add_dt(int *year, int *month, int *day, int *hour, int *minute, int *second,
     if (dtime == 0xffffffff) return 0;		// missing dtime
 
     if (unit == YEAR) {
-	*year = y + dtime;
-	return 0;
+        *year = y + dtime;
+        return 0;
     }
     if (unit == DECADE) {
-	*year =  y + (10 * dtime);
-	return 0;
+        *year =  y + (10 * dtime);
+        return 0;
     }
     if (unit == CENTURY) {
-	*year = y + (100 * dtime);
-	return 0;
+        *year = y + (100 * dtime);
+        return 0;
     }
     if (unit == NORMAL) {
-	*year = y + (30 * dtime);
-	return 0;
+        *year = y + (30 * dtime);
+        return 0;
     }
     if (unit == MONTH) {
 /*
@@ -107,9 +107,9 @@ int add_dt(int *year, int *month, int *day, int *hour, int *minute, int *second,
            dtime += (i * 12);
         }
 */
-	dtime += (m - 1);
-	*year = y = y + (dtime / 12);
-	*month = m = 1 + (dtime % 12);
+        dtime += (m - 1);
+        *year = y = y + (dtime / 12);
+        *month = m = 1 + (dtime % 12);
 
         /* check if date code if valid */
         days_in_month = monthjday[m] - monthjday[m-1];
@@ -118,52 +118,52 @@ int add_dt(int *year, int *month, int *day, int *hour, int *minute, int *second,
         }
         if (days_in_month < d) *day = days_in_month;
 
-	return 0;
+        return 0;
     }
     if (unit == SECOND) {
-	s += dtime;
-	// dtime = floor(s/60.0);
-	dtime =  s / 60;
-	*second = s - dtime*60;
-	if (dtime == 0) return 0;
-	unit = MINUTE;
+        s += dtime;
+        // dtime = floor(s/60.0);
+        dtime =  s / 60;
+        *second = s - dtime*60;
+        if (dtime == 0) return 0;
+        unit = MINUTE;
     }
     if (unit == MINUTE) {
-	mm += dtime;
-	// dtime = floor(mm/60.0);
-	dtime = mm /60;
-	*minute = mm - dtime*60;
-	if (dtime == 0) return 0;
-	unit = HOUR;
+        mm += dtime;
+        // dtime = floor(mm/60.0);
+        dtime = mm /60;
+        *minute = mm - dtime*60;
+        if (dtime == 0) return 0;
+        unit = HOUR;
     }
     if (unit == HOUR3) {
-	dtime *= 3;
-	unit = HOUR;
+        dtime *= 3;
+        unit = HOUR;
     }
     if (unit == HOUR6) {
-	dtime *= 6;
-	unit = HOUR;
+        dtime *= 6;
+        unit = HOUR;
     }
     if (unit == HOUR12) {
-	dtime *= 12;
-	unit = HOUR;
+        dtime *= 12;
+        unit = HOUR;
     }
     if (unit == HOUR) {
-	h += dtime;
-	// dtime = floor(h/24.0);
-	dtime = h / 24;
-	*hour = h - dtime*24;
-	if (dtime == 0) return 0;
-	unit = DAY;
+        h += dtime;
+        // dtime = floor(h/24.0);
+        dtime = h / 24;
+        *hour = h - dtime*24;
+        if (dtime == 0) return 0;
+        unit = DAY;
     }
 
     /* this is the hard part */
 
     if (unit == DAY) {
-	/* set m and day to Jan 0, and readjust dtime */
-	jday = d + monthjday[m-1];
-	if (leap(y) && m > 2) jday++;
-        dtime += jday;
+        /* set m and day to Jan 0, and readjust dtime */
+        jday = d + monthjday[m-1];
+        if (leap(y) && m > 2) jday++;
+            dtime += jday;
 /*
         while (dtime < 0) {
             y--;
@@ -171,27 +171,27 @@ int add_dt(int *year, int *month, int *day, int *hour, int *minute, int *second,
         }
 */
 	/* one year chunks */
-	while (dtime > 365 + leap(y)) {
-	    dtime -= (365 + leap(y));
-	    y++;
-	}
+    while (dtime > 365 + leap(y)) {
+        dtime -= (365 + leap(y));
+        y++;
+    }
 
 	/* calculate the month and day */
 
-	if (leap(y) && dtime == FEB29) {
-	    m = 2;
-	    d = 29;
-	}
-	else {
-	    if (leap(y) && dtime > FEB29) dtime--;
-	    for (i = 11; monthjday[i] >= dtime; --i);
-	    m = i + 1;
-	    d = dtime - monthjday[i];
-	}
-	*year = y;
-	*month = m;
-	*day = d;
-	return 0;
+    if (leap(y) && dtime == FEB29) {
+        m = 2;
+        d = 29;
+    }
+    else {
+        if (leap(y) && dtime > FEB29) dtime--;
+        for (i = 11; monthjday[i] >= dtime; --i);
+        m = i + 1;
+        d = dtime - monthjday[i];
+    }
+    *year = y;
+    *month = m;
+    *day = d;
+    return 0;
    }
    fprintf(stderr,"add_time: undefined time unit %d\n", unit);
    return 1;
@@ -202,7 +202,7 @@ int add_dt(int *year, int *month, int *day, int *hour, int *minute, int *second,
  */
 
 int sub_dt(int *year, int *month, int *day, int *hour, int *minute, int *second, 
-	int dtime, int unit) {
+        int dtime, int unit) {
 
     int y, m, d, h, mm, s, jday, i, days_in_month;
 
@@ -232,7 +232,7 @@ int sub_dt(int *year, int *month, int *day, int *hour, int *minute, int *second,
     }
     if (unit == MONTH) {
         dtime += (12-m);
-	*year = y = y - (dtime / 12);
+        *year = y = y - (dtime / 12);
         *month = m = 12 - (dtime % 12);
         /* check if date code if valid */
         days_in_month = monthjday[m] - monthjday[m-1];
@@ -244,37 +244,37 @@ int sub_dt(int *year, int *month, int *day, int *hour, int *minute, int *second,
         return 0;
     }
     if (unit == SECOND) {
-	dtime += (59 - s);
-	*second = s = 59 - (dtime % 60);
-	dtime = dtime / 60;
-	if (dtime == 0) return 0;
-	unit = MINUTE;
+        dtime += (59 - s);
+        *second = s = 59 - (dtime % 60);
+        dtime = dtime / 60;
+        if (dtime == 0) return 0;
+        unit = MINUTE;
     }
     if (unit == MINUTE) {
-	dtime += (59 - mm);
-	*minute = mm = 59 - dtime % 60;
-	dtime = dtime / 60;
-	if (dtime == 0) return 0;
-	unit = HOUR;
+        dtime += (59 - mm);
+        *minute = mm = 59 - dtime % 60;
+        dtime = dtime / 60;
+        if (dtime == 0) return 0;
+        unit = HOUR;
     }
     if (unit == HOUR3) {
-	dtime *= 3;
-	unit = HOUR;
+        dtime *= 3;
+        unit = HOUR;
     }
     if (unit == HOUR6) {
-	dtime *= 6;
-	unit = HOUR;
+        dtime *= 6;
+        unit = HOUR;
     }
     if (unit == HOUR12) {
-	dtime *= 12;
-	unit = HOUR;
+        dtime *= 12;
+        unit = HOUR;
     }
     if (unit == HOUR) {
-	dtime += (23-h);
-	*hour = h = 23 - dtime%24;
-       	dtime = dtime / 24; 
-	if (dtime == 0) return 0;
-	unit = DAY;
+        dtime += (23-h);
+        *hour = h = 23 - dtime%24;
+        dtime = dtime / 24; 
+        if (dtime == 0) return 0;
+        unit = DAY;
     }
 
     /* this is the hard part */
@@ -284,16 +284,16 @@ int sub_dt(int *year, int *month, int *day, int *hour, int *minute, int *second,
         jday = d + monthjday[m-1];
         if (leap(y) && m > 2) jday++;
 
-	while (dtime >= jday) {
-	    // set date to dec 31 of previous year
-	    y = y - 1;
-	    m = 12;
-	    d = 31;
-	    dtime -= jday;
-	    jday = 365 + leap(y);
-	}
+        while (dtime >= jday) {
+            // set date to dec 31 of previous year
+            y = y - 1;
+            m = 12;
+            d = 31;
+            dtime -= jday;
+            jday = 365 + leap(y);
+        }
 
-	jday -= dtime;
+        jday -= dtime;
 
         /* calculate the month and day */
 
@@ -385,23 +385,22 @@ int Save_time(struct full_date *date, unsigned char *p) {
    compare two time codes: return -1 : 0 : 1
  */
 
-int cmp_time(
-int year0, int month0, int day0, int hour0, int minute0, int second0, 
-int year1, int month1, int day1, int hour1, int minute1, int second1) {
+int cmp_time(int year0, int month0, int day0, int hour0, int minute0, int second0, 
+        int year1, int month1, int day1, int hour1, int minute1, int second1) {
 
-	if (year0 < year1) return -1;
-	if (year0 > year1) return 1;
-	if (month0 < month1) return -1;
-	if (month0 > month1) return 1;
-	if (day0 < day1) return -1;
-	if (day0 > day1) return 1;
-	if (hour0 < hour1) return -1;
-	if (hour0 > hour1) return 1;
-	if (minute0 < minute1) return -1;
-	if (minute0 > minute1) return 1;
-	if (second0 < second1) return -1;
-	if (second0 > second1) return 1;
-	return 0;
+    if (year0 < year1) return -1;
+    if (year0 > year1) return 1;
+    if (month0 < month1) return -1;
+    if (month0 > month1) return 1;
+    if (day0 < day1) return -1;
+    if (day0 > day1) return 1;
+    if (hour0 < hour1) return -1;
+    if (hour0 > hour1) return 1;
+    if (minute0 < minute1) return -1;
+    if (minute0 > minute1) return 1;
+    if (second0 < second1) return -1;
+    if (second0 > second1) return 1;
+    return 0;
 }
 
 /*
@@ -409,23 +408,23 @@ int year1, int month1, int day1, int hour1, int minute1, int second1) {
  */
 int Cmp_time(struct full_date *date0, struct full_date *date1) {
 
-	if (date0->year < date1->year) return -1;
-	if (date0->year > date1->year) return  1;
+    if (date0->year < date1->year) return -1;
+    if (date0->year > date1->year) return  1;
 
-	if (date0->month < date1->month) return -1;
-	if (date0->month > date1->month) return  1;
+    if (date0->month < date1->month) return -1;
+    if (date0->month > date1->month) return  1;
 
-	if (date0->day < date1->day) return -1;
-	if (date0->day > date1->day) return  1;
+    if (date0->day < date1->day) return -1;
+    if (date0->day > date1->day) return  1;
 
-	if (date0->hour < date1->hour) return -1;
-	if (date0->hour > date1->hour) return  1;
+    if (date0->hour < date1->hour) return -1;
+    if (date0->hour > date1->hour) return  1;
 
-	if (date0->minute < date1->minute) return -1;
-	if (date0->minute > date1->minute) return  1;
+    if (date0->minute < date1->minute) return -1;
+    if (date0->minute > date1->minute) return  1;
 
-	if (date0->second < date1->second) return -1;
-	if (date0->second > date1->second) return  1;
+    if (date0->second < date1->second) return -1;
+    if (date0->second > date1->second) return  1;
 
-	return 0;
+    return 0;
 }
