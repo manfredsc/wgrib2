@@ -131,7 +131,7 @@ grid values have changed, you have to use the latter option.
 <p>
 The <font color=red>-set_date X</font> option changes the date code to X. 
 For time series, you want the date code to increment, and you use the
-<font color=red>-set_ts_dates X:Y:Z</font> option. Here, X is the date code,
+<font color=red>-set_ts_dates X Y Z</font> option. Here, X is the date code,
 Y is the time increment and Z is number of fields to have the same
 date code.
 
@@ -139,10 +139,10 @@ date code.
 <p>
 
 <pre>
--set_ts_dates  X:Y:Z
+-set_ts_dates  X Y Z
                     X = starting date
                     Y = time increment
-                    Z = block size
+                    Z = number of fields with same date code
 
                     X=YYYY, YYYYMM, YYYYMMDD, YYYYMMDDHH, YYYYMMDDHHmm, YYYYMMDDHHmmSS
                     YYYY=year, MM=month, DD=day, HH=hour, mm=minute, SS=second
@@ -152,9 +152,11 @@ date code.
                     mm=00 if mm is not specified
                     SS=00 if SS is not specified
 
-                    Y=IS
+                    Y=(I)(S)   
                       I = positive integer
-                      S = year, month, day, hour, minute, second
+                      S = time unit
+                      S =   yr, mo, dy, hr, mn (GrADS convention)
+                      S =   year, month, day, hour, minute, second (legacy)
 
                     Z=# fields / date code (must be one or greater)
 
@@ -163,7 +165,7 @@ date code.
 <h3>Example</h3>
 <pre>
 # date code increments by 1 hour
-<font color=brown>$ wgrib p.grb -set_ts_dates 2010020304:1hour:1</font>
+<font color=brown>$ wgrib p.grb -set_ts_dates 2010020304 1hr 1</font>
 1:0:d=2010020304:PRMSL:mean sea level:anl:
 2:17960:d=2010020305:PRSML:mean sea level:anl:
 3:34248:d=2010020306:PRMSL:mean sea level:anl:
@@ -174,6 +176,8 @@ See also:
 
 <a href="grib.html">-grib</a>,
 <a href="grib_out.html">-grib_out</a>,
+<a href="set_date.html">-set_date</a>,
+<a href="set_metadata.html">-set_metadata</a>,
 </td>
 </tr>
 
@@ -195,7 +199,7 @@ See also:
         5830 University Research Court<BR>
         College Park, Maryland 20740<BR>
       <A href="/comment-form.html" class="homepagelinks"><SPAN class="gray">Climate Prediction Center Web Team</SPAN></A><BR>
-        Page last modified: May 15, 2005
+        Page last modified: May 15, 2005, July 2025
      </TD>
      <TD>
       <A href="https://weather.gov/disclaimer.php" class="homepagelinks"><SPAN class="gray">Disclaimer</SPAN></A>
