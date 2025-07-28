@@ -88,14 +88,14 @@ int f_config(ARG0) {
 
     i = 0;
     while (default_vectors[i] != NULL) {
-	if ( (i % 15 == 14)) strcat(inv_out, "\n    ");
+        if ( (i % 15 == 14)) strcat(inv_out, "\n    ");
         strcat(inv_out, default_vectors[i]);
         strcat(inv_out, i & 1 ? " " : "/");
         i++;
     }
     strcat(inv_out, "\n");
 
-strcat(inv_out, "Geolocation library status (by search order)\n");
+    strcat(inv_out, "Geolocation library status (by search order)\n");
 
 #if (DEFAULT_GCTPC == 1)
     strcat(inv_out, "  gctpc geolocation (-lambert azimuthal equal area non-spherical) is enabled by default\n"); 
@@ -111,7 +111,7 @@ strcat(inv_out, "Geolocation library status (by search order)\n");
   #endif
 #endif
 
-strcat(inv_out, "  spherical geolocation is enabled\n"); 
+    strcat(inv_out, "  spherical geolocation is enabled\n"); 
 
 
 #ifdef USE_UDF
@@ -126,7 +126,7 @@ strcat(inv_out, "  spherical geolocation is enabled\n");
 #ifdef N_ARGLIST
     inv_out += strlen(inv_out);
     sprintf(inv_out, "maximum number of arguments on command line: %d\n",
-	N_ARGLIST);
+        N_ARGLIST);
 #else
     inv_out += strlen(inv_out);
     sprintf(inv_out, "maximum number of arguments on command line: limited by shell/OS\n");
@@ -232,5 +232,5 @@ strcat(inv_out, "  spherical geolocation is enabled\n");
 }
 
 const char *wgrib2api_info(void) {
-  return WGRIB2_VERSION "  " BUILD_COMMENTS " " CC;
+    return WGRIB2_VERSION "  " BUILD_COMMENTS " " CC;
 }
