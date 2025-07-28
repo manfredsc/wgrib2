@@ -33,14 +33,14 @@ int copy_sec(unsigned char **sec, unsigned char **clone_sec) {
 //  allocate and copy memory
 
     for (i = 0; i < 9; i++) {
-	if (size[i] > 0) {
-	    if ((clone_sec[i] = (unsigned char *) malloc(size[i])) == NULL) 
-	        fatal_error_i("memory allocation failed copy_sec %d",i);
-	    memcpy(clone_sec[i], sec[i], size[i]);
-	}
-	else {
-	    clone_sec[i] = NULL;
-	}
+        if (size[i] > 0) {
+            if ((clone_sec[i] = (unsigned char *) malloc(size[i])) == NULL) 
+                fatal_error_i("memory allocation failed copy_sec %d",i);
+            memcpy(clone_sec[i], sec[i], size[i]);
+        }
+        else {
+            clone_sec[i] = NULL;
+        }
     }	
 
     return 0;
@@ -49,8 +49,8 @@ int copy_sec(unsigned char **sec, unsigned char **clone_sec) {
 int free_sec(unsigned char **clone_sec) {
     int i;
     for (i = 0; i < 9; i++) {
-	if (clone_sec[i]) free(clone_sec[i]);
-	clone_sec[i] = NULL;
+        if (clone_sec[i]) free(clone_sec[i]);
+        clone_sec[i] = NULL;
     }
     return 0;
 }
@@ -58,7 +58,7 @@ int free_sec(unsigned char **clone_sec) {
 int init_sec(unsigned char **clone_sec) {
     int i;
     for (i = 0; i < 9; i++) {
-	clone_sec[i] = NULL;
+        clone_sec[i] = NULL;
     }
     return 0;
 }
