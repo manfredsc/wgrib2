@@ -1,0 +1,24 @@
+#!/bin/sh
+# 06/2025 Public Domain   Manfred Schwarb <schwarb@meteodat.ch>
+# This script updates wgrib2 with WMO code info.
+
+urlbase="https://github.com/wmo-im/GRIB2"
+
+outfile="CodeTable_1.3.dat"
+if [ -f "$outfile" ]; then mv "$outfile" "$outfile.old"; fi
+
+#---GRIB2 Code Table 1.3: Production status of data
+wget -nv "$urlbase/raw/master/GRIB2_CodeFlag_1_3_CodeTable_en.csv" -O- | sed '{
+    s/, /# /g
+    s/,/;/g
+    s/# /, /g
+    s/"//g
+  }' | env LC_ALL=en_US iconv -c -f UTF8 -t ASCII//TRANSLIT | awk -F";" '
+  {
+    num=$3; name=$5
+    if (num !="" && num !~ "-" && num !~ "Code") {
+      printf "case %5d: string=\"%s\"; break;\n",num,name
+    }
+  }' > "$outfile"
+
+exit
