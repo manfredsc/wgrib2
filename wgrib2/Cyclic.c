@@ -39,7 +39,7 @@ extern int *variable_dim, *raw_variable_dim;
 
 int f_cyclic(ARG0) {
     if (mode >= 0) {
-	sprintf(inv_out,cyclic(sec) ? "cyclic" : "not cyclic");
+        sprintf(inv_out,cyclic(sec) ? "cyclic" : "not cyclic");
     }
     return 0;
 }
@@ -69,13 +69,13 @@ int cyclic(unsigned char **sec) {
 
     if (nx_ == 0) {		// thinned or reduced grids
         if (grid_template == 40) {	// reduced Gaussian grid
-	    if (ny_ == 0) fatal_error("cyclic: bad grid definition","");
+            if (ny_ == 0) fatal_error("cyclic: bad grid definition","");
 
-	    max_nx = variable_dim[0];
-	    for (i = 1; i < n_variable_dim; i++) {
-		max_nx = variable_dim[i] > max_nx ? variable_dim[i] : max_nx;
-	    }
-	    nx_last = variable_dim[n_variable_dim-1];
+            max_nx = variable_dim[0];
+            for (i = 1; i < n_variable_dim; i++) {
+                max_nx = variable_dim[i] > max_nx ? variable_dim[i] : max_nx;
+            }
+            nx_last = variable_dim[n_variable_dim-1];
 
             basic_ang = GDS_Gaussian_basic_ang(gds);
             sub_ang = GDS_Gaussian_sub_ang(gds);
@@ -83,17 +83,17 @@ int cyclic(unsigned char **sec) {
 
             lon1 = units * GDS_Gaussian_lon1(gds);
             lon2 = units * GDS_Gaussian_lon2(gds);
-	    lon2 = (scan & 128) ?  lon1 - lon2 : lon2 - lon1;
-	    if (lon2 < 0) lon2 += 360.0;
-	    /* EMCWF version */
-	    if (fabs(lon2 * max_nx / (max_nx-1.0) - 360.0) < TOTAL_ERROR) {
-		return 1;
-	    }
-	    if (fabs(lon2 * nx_last / (nx_last-1.0) - 360.0) < TOTAL_ERROR) {
-		return 1;
-	    }
-	    return 1;
-	}
+            lon2 = (scan & 128) ?  lon1 - lon2 : lon2 - lon1;
+            if (lon2 < 0) lon2 += 360.0;
+            /* EMCWF version */
+            if (fabs(lon2 * max_nx / (max_nx-1.0) - 360.0) < TOTAL_ERROR) {
+                return 1;
+            }
+            if (fabs(lon2 * nx_last / (nx_last-1.0) - 360.0) < TOTAL_ERROR) {
+                return 1;
+            }
+            return 1;
+        }
         return 0;
     }
 
@@ -109,16 +109,16 @@ int cyclic(unsigned char **sec) {
         sub_ang = GDS_LatLon_sub_ang(gds);
         units = basic_ang == 0 ?  0.000001 : (double) basic_ang / (double) sub_ang;
 
-	/* dlon has to be defined */
+    /* dlon has to be defined */
         dlon = units * GDS_LatLon_dlon(gds);
-	return (fabs(nx_*dlon-360.0) < ERROR);
+        return (fabs(nx_*dlon-360.0) < ERROR);
     }
     if (grid_template == 10) {
-	if (output_order != wesn) return 0;		// only works with we:sn order
-	lon1 = GDS_Mercator_lon1(gds);
-	lon2 = GDS_Mercator_lon2(gds);
-	if (lon2 < lon1) lon2 += 360.0;
-	dlon = (lon2-lon1)*nx_/(nx_-1.0);
+        if (output_order != wesn) return 0;		// only works with we:sn order
+        lon1 = GDS_Mercator_lon1(gds);
+        lon2 = GDS_Mercator_lon2(gds);
+        if (lon2 < lon1) lon2 += 360.0;
+        dlon = (lon2-lon1)*nx_/(nx_-1.0);
         return (fabs(dlon-360.0) < TOTAL_ERROR);
     }
 
@@ -128,7 +128,7 @@ int cyclic(unsigned char **sec) {
         sub_ang = GDS_Gaussian_sub_ang(gds);
         units = basic_ang == 0 ?  0.000001 : (double) basic_ang / (double) sub_ang;
 
-	/* dlon has to be defined */
+        /* dlon has to be defined */
         dlon = units * GDS_Gaussian_dlon(gds);
         return (fabs(nx_*dlon-360.0) < ERROR);
     }

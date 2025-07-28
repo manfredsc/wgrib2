@@ -43,15 +43,17 @@ int f_pyinv(ARG0)
         char tmp[20];
         int ctr = GB2_Center(sec);
         int subctr = GB2_Subcenter(sec);
+        int ctrsubctr;
         switch (ctr) {
 #include "code_table0.dat"
         }
         inv_out += sprintf(inv_out, ",'centre':'%d - %s'", ctr, string);
         string = NULL;
-        if (ctr == 7) {
-            switch (subctr) {
-#include "ncep_tableC.dat"
-            }
+        if (subctr > 0) {  /* a lot of messages have no sub-centre declared */
+          ctrsubctr = (ctr<<16)+subctr;
+          switch (ctrsubctr) {
+#include "CommonCodeTable_12.dat"
+          }
         }
         if (string == NULL) {
             inv_out += sprintf(inv_out, ",'subcentre':'%d'", subctr);

@@ -133,19 +133,19 @@ int f_center(ARG0) {
  */
 
 int f_subcenter(ARG0) {
-    int ctr, subctr;
-    char tmp[20];
+    int ctr, subctr, ctrsubctr;
     const char *string;
     
     if (mode >= 0) {
         ctr = GB2_Center(sec);
         subctr = GB2_Subcenter(sec);
-	string = NULL;
-	if (ctr == 7) {
-           switch (subctr) {
-#include "ncep_tableC.dat"
-	   }
-	}
+        string = NULL;
+        if (subctr > 0) {  /* a lot of messages have no sub-centre declared */
+          ctrsubctr = (ctr<<16)+subctr;
+          switch (ctrsubctr) {
+#include "CommonCodeTable_12.dat"
+          }
+        }
 	if (mode == 0 || string == NULL) {
 	    sprintf(inv_out,"subcenter=%d", subctr);
 	}
