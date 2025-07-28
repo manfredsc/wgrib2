@@ -38,22 +38,22 @@ int f_csv_long(ARG1) {
     if (mode == -1) {
         WxText = decode = latlon = 1;
         if ((*local = (void *) ffopen(arg1,file_append ? "a" : "w")) == NULL)
-		fatal_error("csv_long could not open file %s", arg1);  
-	return 0;
+            fatal_error("csv_long could not open file %s", arg1);  
+        return 0;
     }
 
     /* cleanup phase */
 
     if (mode == -2) {
-	ffclose((FILE *) *local);
-	return 0;
+        ffclose((FILE *) *local);
+        return 0;
     }
 
     /* processing phase */
 
     if (lat == NULL || lon == NULL) {
-	fprintf(stderr,"csv_long: latitude/longitude not defined, record skipped\n");
-	return 0;
+        fprintf(stderr,"csv_long: latitude/longitude not defined, record skipped\n");
+        return 0;
     }
 
     out = (FILE *) *local;
@@ -94,18 +94,18 @@ int f_csv_long(ARG1) {
     if (WxNum > 0) {
         for (j = 0; j < ndata; j++) {
             if (!UNDEFINED_VAL(data[j])) {
-	        fprintf(out,"\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",%g,%g,\"%s\"\n",rt,st,vt,name,ftime,
-		    new_inv_out,lon[j] > 180.0 ? lon[j]-360.0 : lon[j],lat[j],WxLabel(data[j]));
-	    }
-	}
+                fprintf(out,"\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",%g,%g,\"%s\"\n",rt,st,vt,name,ftime,
+                    new_inv_out,lon[j] > 180.0 ? lon[j]-360.0 : lon[j],lat[j],WxLabel(data[j]));
+            }
+        }
     }
     else {
         for (j = 0; j < ndata; j++) {
             if (!UNDEFINED_VAL(data[j])) {
-	        fprintf(out,"\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",%g,%g,%lg\n",rt,st,vt,name,ftime,
-		    new_inv_out,lon[j] > 180.0 ? lon[j]-360.0 : lon[j],lat[j],data[j]);
-	    }
-	}
+                fprintf(out,"\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",%g,%g,%lg\n",rt,st,vt,name,ftime,
+                new_inv_out,lon[j] > 180.0 ? lon[j]-360.0 : lon[j],lat[j],data[j]);
+            }
+        }
     }
     if (flush_mode) fflush(out);
     return 0;

@@ -44,8 +44,9 @@ int code_table_0_0(unsigned char **sec) {
     if (p == NULL) return -1;
     return (int) *p;
 }
+
 unsigned char *code_table_0_0_location(unsigned char **sec) {
-   return sec[0] + 6;
+    return sec[0] + 6;
 }
 
 /*
@@ -66,7 +67,7 @@ int code_table_1_0(unsigned char **sec) {
     return (int) *p;
 }
 unsigned char *code_table_1_0_location(unsigned char **sec) {
-   return sec[1] + 9;
+    return sec[1] + 9;
 }
 
 /*
@@ -88,7 +89,7 @@ int code_table_1_1(unsigned char **sec) {
 }
 
 unsigned char *code_table_1_1_location(unsigned char **sec) {
-   return sec[1] + 10;
+    return sec[1] + 10;
 }
 
 
@@ -105,7 +106,7 @@ int f_code_table_1_2(ARG0) {
         switch(val) {
 #include "CodeTable_1.2.dat"
         }
-	if (string == NULL) sprintf(inv_out,"code table 1.2=%d", val);
+	    if (string == NULL) sprintf(inv_out,"code table 1.2=%d", val);
         else sprintf(inv_out,"code table 1.2=%d %s", val, string);
     }
     return 0;
@@ -119,7 +120,7 @@ int code_table_1_2(unsigned char **sec) {
 }
 
 unsigned char *code_table_1_2_location(unsigned char **sec) {
-   return sec[1] + 11;
+    return sec[1] + 11;
 }
 
 /*
@@ -133,7 +134,7 @@ int f_code_table_1_3(ARG0) {
     if (mode >= 0) {
         val = code_table_1_3(sec);
         string = NULL;
-	switch(val) {
+	    switch(val) {
 #include "CodeTable_1.3.dat"
         }
         if (string == NULL) sprintf(inv_out,"code table 1.3=%d", val);
@@ -141,16 +142,17 @@ int f_code_table_1_3(ARG0) {
     }
     return 0;
 }
+
 int code_table_1_3(unsigned char **sec) {
     unsigned char *p;
     p = code_table_1_3_location(sec);
     if (p == NULL) return -1;
     return (int) *p;
 }
-unsigned char *code_table_1_3_location(unsigned char **sec) {
-   return sec[1] + 19;
-}
 
+unsigned char *code_table_1_3_location(unsigned char **sec) {
+    return sec[1] + 19;
+}
 
 /*
  * HEADER:-1:code_table_1.4:inv:0:code table 1.4 type of processed data
@@ -161,25 +163,26 @@ int f_code_table_1_4(ARG0) {
     int val;
     if (mode >= 0) {
         val = code_table_1_4(sec);
-	string = NULL;
-	switch(val) {
+        string = NULL;
+	    switch(val) {
 #include "CodeTable_1.4.dat"
-	}
-	if (string == NULL) sprintf(inv_out,"code table 1.4=%d", val);
-	else sprintf(inv_out,"code table 1.4=%d %s", val, string);
+        }
+        if (string == NULL) sprintf(inv_out,"code table 1.4=%d", val);
+        else sprintf(inv_out,"code table 1.4=%d %s", val, string);
     }
     return 0;
 }
+
 int code_table_1_4(unsigned char **sec) {
     unsigned char *p;
     p = code_table_1_4_location(sec);
     if (p == NULL) return -1;
     return (int) *p;
 }
-unsigned char *code_table_1_4_location(unsigned char **sec) {
-   return sec[1] + 20;
-}
 
+unsigned char *code_table_1_4_location(unsigned char **sec) {
+    return sec[1] + 20;
+}
 
 /*
  * HEADER:-1:code_table_1.5:inv:0:Identification template number
@@ -226,7 +229,7 @@ int code_table_1_6(unsigned char **sec) {
 }
 unsigned char *code_table_1_6_location(unsigned char **sec) {
     return  (GB2_Sec1_size(sec) >= 24 && sec[1][21] == 0 && sec[1][22] == 0) 
-	?  sec[1] + 23 : NULL;
+        ?  sec[1] + 23 : NULL;
 }
 
 /*
@@ -240,6 +243,7 @@ int f_code_table_3_0(ARG0) {
     }
     return 0;
 }
+
 int code_table_3_0(unsigned char **sec) {
     return  (int) sec[3][5];
 }
@@ -253,15 +257,16 @@ int f_code_table_3_1(ARG0) {
     int val;
     if (mode >= 0) {
         val = code_table_3_1(sec);
-	string = NULL;
-	switch(val) {
+        string = NULL;
+        switch(val) {
 #include "CodeTable_3.1.dat"
-	}
-	if (string == NULL) sprintf(inv_out,"code table 3.1=%d", val);
-	else sprintf(inv_out,"code table 3.1=%d %s", val, string);
+        }
+        if (string == NULL) sprintf(inv_out,"code table 3.1=%d", val);
+        else sprintf(inv_out,"code table 3.1=%d %s", val, string);
     }
     return 0;
 }
+
 int code_table_3_1(unsigned char **sec) {
     return  (int) uint2(sec[3]+12);
 }
@@ -274,19 +279,19 @@ int f_code_table_3_2(ARG0) {
     int val;
     const char *string;
     if (mode >= 0) {
-	val = code_table_3_2(sec);
+        val = code_table_3_2(sec);
         if (val >= 0) {
             string = NULL;
             switch(val) {
 #include "CodeTable_3.2.dat"
-	    }
-	    if (string == NULL) sprintf(inv_out,"code table 3.2=%d", val);
-	    else sprintf(inv_out,"code table 3.2=%d %s", val, string);
+	        }
+            if (string == NULL) sprintf(inv_out,"code table 3.2=%d", val);
+            else sprintf(inv_out,"code table 3.2=%d %s", val, string);
         }
-	if (mode > 0) {
-	    inv_out += strlen(inv_out);
-	    sprintf(inv_out,", ave radius of earth=%lf km",radius_earth(sec)/1000.0);
-	}
+        if (mode > 0) {
+            inv_out += strlen(inv_out);
+            sprintf(inv_out,", ave radius of earth=%lf km",radius_earth(sec)/1000.0);
+        }
     }
     return 0;
 }
@@ -338,11 +343,12 @@ unsigned char *code_table_3_2_location(unsigned char **sec) {
 int f_code_table_3_6(ARG0) {
     int val;
     if (mode >= 0) {
-	val = code_table_3_6(sec);
-	if (val >= 0) sprintf(inv_out,"code table 3.6=%d", val);
+        val = code_table_3_6(sec);
+        if (val >= 0) sprintf(inv_out,"code table 3.6=%d", val);
     }
     return 0;
 }
+
 int code_table_3_6(unsigned char **sec) {
     int grid_def;
     grid_def = code_table_3_1(sec);
@@ -378,7 +384,7 @@ int f_code_table_3_8(ARG0) {
     const char *string;
     if (mode >= 0) {
         val = code_table_3_8(sec);
-	if (val >= 0) {
+        if (val >= 0) {
             string = NULL;
             switch(val) {
 #include "CodeTable_3.8.dat"
@@ -408,14 +414,14 @@ int f_code_table_3_11(ARG0) {
         if ((val = code_table_3_11(sec)) >= 0) {
             string = NULL;
             switch(val) {
-		case 0: string = "not used";
-			break;
-		case 1: string = "thinned global grid, nx specified";
-			break;
-		case 2: string = "thinned regional grid, nx specified";
-			break;
-		case 3: string = "latitudes of rows are specified";
-			break;
+                case 0: string = "not used";
+                    break;
+                case 1: string = "thinned global grid, nx specified";
+                    break;
+                case 2: string = "thinned regional grid, nx specified";
+                    break;
+                case 3: string = "latitudes of rows are specified";
+                    break;
             }
             if (string == NULL) sprintf(inv_out,"code table 3.11=%d", val);
             else sprintf(inv_out,"code table 3.11=%d %s", val, string);
@@ -457,10 +463,10 @@ unsigned char *code_table_3_15_location(unsigned char **sec) {
     int grid_def;
     grid_def = code_table_3_1(sec);
     switch(grid_def) {
-	case 1000:
-		return sec[3] + 62;
-	case 1200:
-		return sec[3] + 38;
+        case 1000:
+            return sec[3] + 62;
+        case 1200:
+            return sec[3] + 38;
     } 
     return NULL;
 }
@@ -556,8 +562,8 @@ int code_table_4_0(unsigned char **sec) {
 int f_code_table_4_1(ARG0) {
     int p;
     if (mode >= 0) {
-	p = code_table_4_1(sec);
-	if (p >= 0) sprintf(inv_out,"code table 4.1=%d", p);
+        p = code_table_4_1(sec);
+        if (p >= 0) sprintf(inv_out,"code table 4.1=%d", p);
     }
     return 0;
 }
@@ -572,14 +578,13 @@ unsigned char *code_table_4_1_location(unsigned char **sec) {
 
     p = GB2_ProdDefTemplateNo(sec);
     if (p <= 15 || p == 20 || (p >= 30 && p <= 35) || (p >= 40 && p <= 49) || p == 51 || 
-	   (p >= 53 && p <= 63) || p == 67 || p == 68 || (p >= 70 && p <= 74) || p == 91 || 
+        (p >= 53 && p <= 63) || p == 67 || p == 68 || (p >= 70 && p <= 74) || p == 91 || 
            p == 254 || (p >= 1000 && p <= 1002) || p == 1100 || p == 1101) return sec[4]+ 9;
     center = GB2_Center(sec);
     if ((center == JMA1) || (center == JMA2)) {
         if (p == 50000 || p == 50002 || p == 50008 || p == 50009 || p == 50010 || 
-	p == 50011 || p == 50012 || p == 50020 || p == 51020 || p == 51021 
-	|| p == 51022 || p == 52020 || p == 51122 || p == 51123)
-		return sec[4] + 9;
+            p == 50011 || p == 50012 || p == 50020 || p == 51020 || p == 51021 
+            || p == 51022 || p == 52020 || p == 51122 || p == 51123) return sec[4] + 9;
     }
     return NULL;
 }
@@ -591,11 +596,12 @@ unsigned char *code_table_4_1_location(unsigned char **sec) {
 int f_code_table_4_2(ARG0) {
     int p;
     if (mode >= 0) {
-	p = code_table_4_2(sec);
-	if (p >= 0) sprintf(inv_out,"code table 4.2=%d", p);
+        p = code_table_4_2(sec);
+        if (p >= 0) sprintf(inv_out,"code table 4.2=%d", p);
     }
     return 0;
 }
+
 int code_table_4_2(unsigned char **sec) {
     unsigned char *p;
     p = code_table_4_2_location(sec);
@@ -607,17 +613,15 @@ unsigned char *code_table_4_2_location(unsigned char **sec) {
 
     p = GB2_ProdDefTemplateNo(sec);
     if (p <= 15 || p == 20 || (p >= 30 && p <= 35) || (p >= 40 && p <= 49) || p == 51 || 
-	   (p >= 53 && p <= 63) || p == 67 || p == 68 || (p >= 70 && p <= 74) || p == 91 || 
+        (p >= 53 && p <= 63) || p == 67 || p == 68 || (p >= 70 && p <= 74) || p == 91 || 
            p == 254 || (p >= 1000 && p <= 1002) || p == 1100 || p == 1101) return sec[4] + 10;
 
     center = GB2_Center(sec);
     if ((center == JMA1) || (center == JMA2)) {
         if (p == 50000 || p == 50002 || p == 50008 || p == 50009 || p == 50010 || 
-	p == 50011 || p == 50012 || p == 50020 || p == 51020 || p == 51021 
-	|| p == 51022 || p == 52020 || p == 51122 || p == 51123)
-		return sec[4] + 10;
+            p == 50011 || p == 50012 || p == 50020 || p == 51020 || p == 51021 
+            || p == 51022 || p == 52020 || p == 51122 || p == 51123) return sec[4] + 10;
     }
-
     return NULL;
 }
 
@@ -630,7 +634,7 @@ int f_code_table_4_3(ARG0) {
     const char *string;
     if (mode >= 0) {
         val = code_table_4_3(sec);
-	center = GB2_Center(sec);
+        center = GB2_Center(sec);
         string = NULL;
         switch(val) {
 #include "CodeTable_4.3.dat"
@@ -653,91 +657,91 @@ unsigned char *code_table_4_3_location(unsigned char **sec) {
     pdt =  GB2_ProdDefTemplateNo(sec);
     center = GB2_Center(sec);
     switch(pdt) {
-    case 0:
-    case 1:
-    case 2:
-    case 3:
-    case 4:
-    case 5:
-    case 6:
-    case 7:
-    case 8:
-    case 9:
-    case 10:
-    case 11:
-    case 12:
-    case 13:
-    case 14:
-    case 15:
-    case 20:
-    case 30:
-    case 31:
-    case 32:
-    case 33:
-    case 34:
-    case 35:
-    case 47:
-    case 60:
-    case 61:
-    case 1000:
-    case 1001:
-    case 1002:
-    case 1100:
-    case 1101:
-        return sec[4]+11;
-    case 40:
-    case 41:
-    case 42:
-    case 43:
-    case 52:
-        return sec[4]+13;
-    case 44:
-    case 45:
-    case 46:
-        return sec[4]+24;
-    case 48:
-    case 49:
-        return sec[4]+35;
-    case 53:
-    case 54:
-	np = sec[4][12];
-	return sec[4] + 15 + 2*np;
-    case 56:
-    case 59:
-    case 62:
-    case 63:
-        return sec[4]+17;
-    case 57:
-    case 58:
-    case 67:
-    case 68:
-	np = sec[4][19];
-	if (np == 255) n = 0;
-	return sec[4]+20+5*n;
-    case 70:
-    case 71:
-    case 72:
-    case 73:
-	return sec[4]+16;
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+        case 9:
+        case 10:
+        case 11:
+        case 12:
+        case 13:
+        case 14:
+        case 15:
+        case 20:
+        case 30:
+        case 31:
+        case 32:
+        case 33:
+        case 34:
+        case 35:
+        case 47:
+        case 60:
+        case 61:
+        case 1000:
+        case 1001:
+        case 1002:
+        case 1100:
+        case 1101:
+            return sec[4]+11;
+        case 40:
+        case 41:
+        case 42:
+        case 43:
+        case 52:
+            return sec[4]+13;
+        case 44:
+        case 45:
+        case 46:
+            return sec[4]+24;
+        case 48:
+        case 49:
+            return sec[4]+35;
+        case 53:
+        case 54:
+            np = sec[4][12];
+            return sec[4] + 15 + 2*np;
+        case 56:
+        case 59:
+        case 62:
+        case 63:
+            return sec[4]+17;
+        case 57:
+        case 58:
+        case 67:
+        case 68:
+            np = sec[4][19];
+            if (np == 255) n = 0;
+            return sec[4]+20+5*n;
+        case 70:
+        case 71:
+        case 72:
+        case 73:
+            return sec[4]+16;
     }
     if (center == JMA1 || center == JMA2) {
         switch(pdt) {
-	    case 50000:
-	    case 50002:
-	    case 50008:
-	    case 50009:
-	    case 50010:
-	    case 50011:
-	    case 50012:
-	    case 50020:
-	    case 51020:
-	    case 51021:
-	    case 51022:
-	    case 51122:
-	    case 51123:
-	    case 52020:
-		return sec[4]+11;
-	}
+            case 50000:
+            case 50002:
+            case 50008:
+            case 50009:
+            case 50010:
+            case 50011:
+            case 50012:
+            case 50020:
+            case 51020:
+            case 51021:
+            case 51022:
+            case 51122:
+            case 51123:
+            case 52020:
+                return sec[4]+11;
+        }
     }
     return NULL;
 }
@@ -749,7 +753,7 @@ int f_code_table_4_4(ARG0) {
     int val;
     const char *string;
     if (mode >= 0) {
-	val = code_table_4_4(sec);
+        val = code_table_4_4(sec);
         string = NULL;
         switch(val) {
 #include "CodeTable_4.4.dat"
@@ -773,94 +777,95 @@ unsigned char *code_table_4_4_location(unsigned char **sec) {
     center = GB2_Center(sec);
 
     switch(pdt) {
-    case 0:
-    case 1:
-    case 2:
-    case 3:
-    case 4:
-    case 5:
-    case 6:
-    case 7:
-    case 8:
-    case 9:
-    case 10:
-    case 11:
-    case 12:
-    case 13:
-    case 14:
-    case 15:
-    case 32:
-    case 33:
-    case 34:
-    case 60:
-    case 61:
-    case 51:
-    case 91:
-    case 1000:
-    case 1001:
-    case 1002:
-	return sec[4] + 17;
-    case 40:
-    case 41:
-    case 42:
-    case 43:
-	return sec[4] + 19;
-    case 44:
-    case 45:
-    case 46:
-    case 47:
-	return sec[4] + 30;
-    case 48:
-    case 49:
-	return sec[4] + 41;
-    case 52:
-	return sec[4] + 20;
-    case 53:
-    case 54:
-	np = sec[4][12];
-	return sec[4] + 21 + 2*np;
-    case 55:
-    case 56:
-    case 59:
-    case 62:
-    case 63:
-	return sec[4] + 23;
-    case 57:
-    case 58:
-    case 67:
-    case 68:
-	np = sec[4][19];
-	if (np == 255) np = 0;
-	return sec[4]+26+5*np;
-    case 70:
-    case 71:
-    case 72:
-    case 73:
-	return sec[4]+22;
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+        case 9:
+        case 10:
+        case 11:
+        case 12:
+        case 13:
+        case 14:
+        case 15:
+        case 32:
+        case 33:
+        case 34:
+        case 60:
+        case 61:
+        case 51:
+        case 91:
+        case 1000:
+        case 1001:
+        case 1002:
+            return sec[4] + 17;
+        case 40:
+        case 41:
+        case 42:
+        case 43:
+            return sec[4] + 19;
+        case 44:
+        case 45:
+        case 46:
+        case 47:
+            return sec[4] + 30;
+        case 48:
+        case 49:
+            return sec[4] + 41;
+        case 52:
+            return sec[4] + 20;
+        case 53:
+        case 54:
+            np = sec[4][12];
+            return sec[4] + 21 + 2*np;
+        case 55:
+        case 56:
+        case 59:
+        case 62:
+        case 63:
+            return sec[4] + 23;
+        case 57:
+        case 58:
+        case 67:
+        case 68:
+            np = sec[4][19];
+            if (np == 255) np = 0;
+            return sec[4]+26+5*np;
+        case 70:
+        case 71:
+        case 72:
+        case 73:
+            return sec[4]+22;
     }
     if (center == JMA1 || center == JMA2) {
-	switch(pdt) {
-	    case 50000:
-	    case 50008:
-	    case 50009:
-	    case 50010:
-	    case 50011:
-	    case 50012:
-		    return sec[4]+17;
-	    case 50020: return sec[4]+29;	/* rain accum vs fcst */
+        switch(pdt) {
+            case 50000:
+            case 50008:
+            case 50009:
+            case 50010:
+            case 50011:
+            case 50012:
+                return sec[4]+17;
+            case 50020: 
+                return sec[4]+29;	/* rain accum vs fcst */
 
-	/* the follow code table 4.4 are not followed by forecast time
-	    case 51020:
-	    case 51021:
-	    case 51022:
-	    case 51122:
-			return sec[4]+13;			
-	    case 51123:
-			return sec[4]+12;			
-	    case 52020:
-			return sec[4]+14;
-	*/
-	}
+        /* the follow code table 4.4 are not followed by forecast time
+            case 51020:
+            case 51021:
+            case 51022:
+            case 51122:
+                return sec[4]+13;			
+            case 51123:
+                return sec[4]+12;			
+            case 52020:
+                return sec[4]+14;
+        */
+        }
     }
     return NULL;
 }
@@ -887,8 +892,8 @@ int code_table_4_4_not_used(unsigned char **sec) {
 int f_code_table_4_5a(ARG0) {
     int p;
     if (mode >= 0) {
-	p = code_table_4_5a(sec);
-	if (p >= 0) sprintf(inv_out,"code table 4.5a=%d", p);
+        p = code_table_4_5a(sec);
+        if (p >= 0) sprintf(inv_out,"code table 4.5a=%d", p);
     }
     return 0;
 }
@@ -903,100 +908,100 @@ unsigned char *code_table_4_5a_location(unsigned char **sec) {
     pdt = GB2_ProdDefTemplateNo(sec);
 
     switch (pdt) {
-    case 0:
-    case 1:
-    case 2:
-    case 3:
-    case 4:
-    case 5:
-    case 6:
-    case 7:
-    case 8:
-    case 9:
-    case 10:
-    case 11:
-    case 12:
-    case 13:
-    case 14:
-    case 15:
-    case 51:
-    case 60:
-    case 61:
-    case 91:
-    case 1100:
-    case 1101:
-         return sec[4]+22;
-    case 40:
-    case 41:
-    case 42:
-    case 43:
-        return sec[4]+24;
-    case 44:
-        return sec[4]+33;
-    case 45:
-    case 46:
-    case 47:
-        return sec[4]+35;
-    case 48:
-    case 49:
-        return sec[4]+46;
-    case 52: // validation
-        return sec[4]+25;
-    case 53:
-    case 54:
-	np = sec[4][12];
-	return sec[4] + 26 + 2*np;
-    case 55:
-    case 56:
-    case 59:
-    case 62:
-    case 63:
-        return sec[4]+28;
-    case 57:
-    case 58:
-    case 67:
-    case 68:
-	np = sec[4][19];
-	if (np == 255) np = 0;
-	return sec[4]+31+5*np;
-    case 70:
-    case 71:
-    case 72:
-    case 73:
-	return sec[4] + 27;
-    case 20:
-    case 30:
-    case 31:
-    case 32:
-    case 33:
-    case 34:
-    case 35:
-    case 1000:
-    case 1001:
-    case 1002:
-    case 254:
-        return NULL;
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+        case 9:
+        case 10:
+        case 11:
+        case 12:
+        case 13:
+        case 14:
+        case 15:
+        case 51:
+        case 60:
+        case 61:
+        case 91:
+        case 1100:
+        case 1101:
+            return sec[4]+22;
+        case 40:
+        case 41:
+        case 42:
+        case 43:
+            return sec[4]+24;
+        case 44:
+            return sec[4]+33;
+        case 45:
+        case 46:
+        case 47:
+            return sec[4]+35;
+        case 48:
+        case 49:
+            return sec[4]+46;
+        case 52: // validation
+            return sec[4]+25;
+        case 53:
+        case 54:
+            np = sec[4][12];
+            return sec[4] + 26 + 2*np;
+        case 55:
+        case 56:
+        case 59:
+        case 62:
+        case 63:
+            return sec[4]+28;
+        case 57:
+        case 58:
+        case 67:
+        case 68:
+            np = sec[4][19];
+            if (np == 255) np = 0;
+            return sec[4]+31+5*np;
+        case 70:
+        case 71:
+        case 72:
+        case 73:
+            return sec[4] + 27;
+        case 20:
+        case 30:
+        case 31:
+        case 32:
+        case 33:
+        case 34:
+        case 35:
+        case 1000:
+        case 1001:
+        case 1002:
+        case 254:
+            return NULL;
     }
 
     center = GB2_Center(sec);
     if (center == JMA1 || center == JMA2) {
         switch (pdt) {
-    	case 50000:
-    	case 50008:
-    	case 50009:
-    	case 50010:
-    	case 50011:
-	case 50012:
-		    return sec[4] + 22;
-    	case 50020: 
-    	case 51020: 
-    	case 51021: 
-    	case 51022: 
-    	case 51122: 
-    	case 51123: 
-    	case 52020: 
-		return NULL;
-	}
+            case 50000:
+            case 50008:
+            case 50009:
+            case 50010:
+            case 50011:
+            case 50012:
+                return sec[4] + 22;
+            case 50020: 
+            case 51020: 
+            case 51021: 
+            case 51022: 
+            case 51122: 
+            case 51123: 
+            case 52020: 
+                return NULL;
+        }
     }
 
     fprintf(stderr,"code_table_4.5a: product definition template #%d not supported\n", pdt);
@@ -1009,8 +1014,8 @@ unsigned char *code_table_4_5a_location(unsigned char **sec) {
 int f_code_table_4_5b(ARG0) {
     int p;
     if (mode >= 0) {
-	p = code_table_4_5b(sec);
-	if (p >= 0) sprintf(inv_out,"code table 4.5b=%d", p);
+        p = code_table_4_5b(sec);
+        if (p >= 0) sprintf(inv_out,"code table 4.5b=%d", p);
     }
     return 0;
 }
@@ -1020,105 +1025,106 @@ int code_table_4_5b(unsigned char **sec) {
     if (p == NULL) return -1;
     return *p;
 }
+
 unsigned char *code_table_4_5b_location(unsigned char **sec) {
     int pdt, center, np;
     pdt = GB2_ProdDefTemplateNo(sec);
 
     switch (pdt) {
-    case 0:
-    case 1:
-    case 2:
-    case 3:
-    case 4:
-    case 5:
-    case 6:
-    case 7:
-    case 8:
-    case 9:
-    case 10:
-    case 11:
-    case 12:
-    case 13:
-    case 14:
-    case 15:
-    case 51:
-    case 60:
-    case 61:
-    case 91:
-    case 1100:
-    case 1101:
-        return sec[4]+28;
-    case 40:
-    case 41:
-    case 42:
-    case 43:
-        return sec[4]+30;
-    case 44:
-        return sec[4]+39;
-    case 45:
-    case 46:
-    case 47:
-        return sec[4]+41;
-    case 48:
-    case 49:
-        return sec[4]+52;
-    case 33:	
-    case 34:	
-    case 35:	
-    case 52: 
-	return NULL;
-    case 53:
-    case 54:
-	np = sec[4][12];
-	return sec[4] + 32 + 2*np;
-    case 55:
-    case 56:
-    case 59:
-    case 62:
-    case 63:
-        return sec[4]+34;
-    case 57:
-    case 58:
-    case 67:
-    case 68:
-	np = sec[4][19];
-	if (np == 255) np = 0;
-	return sec[4]+37+5*np;
-    case 70:
-    case 71:
-    case 72:
-    case 73:
-	return sec[4]+33;
-    case 20:
-    case 30:
-    case 31:
-    case 32:
-    case 1000:
-    case 1001:
-    case 1002:
-    case 254:
-        return NULL;
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+        case 9:
+        case 10:
+        case 11:
+        case 12:
+        case 13:
+        case 14:
+        case 15:
+        case 51:
+        case 60:
+        case 61:
+        case 91:
+        case 1100:
+        case 1101:
+            return sec[4]+28;
+        case 40:
+        case 41:
+        case 42:
+        case 43:
+            return sec[4]+30;
+        case 44:
+            return sec[4]+39;
+        case 45:
+        case 46:
+        case 47:
+            return sec[4]+41;
+        case 48:
+        case 49:
+            return sec[4]+52;
+        case 33:	
+        case 34:	
+        case 35:	
+        case 52: 
+            return NULL;
+        case 53:
+        case 54:
+            np = sec[4][12];
+            return sec[4] + 32 + 2*np;
+        case 55:
+        case 56:
+        case 59:
+        case 62:
+        case 63:
+            return sec[4]+34;
+        case 57:
+        case 58:
+        case 67:
+        case 68:
+            np = sec[4][19];
+            if (np == 255) np = 0;
+            return sec[4]+37+5*np;
+        case 70:
+        case 71:
+        case 72:
+        case 73:
+            return sec[4]+33;
+        case 20:
+        case 30:
+        case 31:
+        case 32:
+        case 1000:
+        case 1001:
+        case 1002:
+        case 254:
+            return NULL;
     }
 
     center = GB2_Center(sec);
     if (center == JMA1 || center == JMA2) {
         switch (pdt) {
-    	case 50000:
-    	case 50008:
-    	case 50009:
-    	case 50010:
-    	case 50011:
-	case 50012:
-		    return sec[4] + 28;
-    	case 50020: 
-    	case 51020: 
-    	case 51021: 
-    	case 51022: 
-    	case 51122: 
-    	case 51123: 
-    	case 52020: 
-		return NULL;
-	}
+            case 50000:
+            case 50008:
+            case 50009:
+            case 50010:
+            case 50011:
+            case 50012:
+                return sec[4] + 28;
+            case 50020: 
+            case 51020: 
+            case 51021: 
+            case 51022: 
+            case 51122: 
+            case 51123: 
+            case 52020: 
+                return NULL;
+        }
     }
     fprintf(stderr,"code_table_4.5b: product definition template #%d not supported\n", pdt);
     return NULL;
@@ -1130,17 +1136,19 @@ unsigned char *code_table_4_5b_location(unsigned char **sec) {
 int f_code_table_4_6(ARG0) {
     int p;
     if (mode >= 0) {
-	p = code_table_4_6(sec);
-	if (p >= 0) sprintf(inv_out,"code table 4.6=%d", p);
+        p = code_table_4_6(sec);
+        if (p >= 0) sprintf(inv_out,"code table 4.6=%d", p);
     }
     return 0;
 }
+
 int code_table_4_6(unsigned char **sec) {
     unsigned char *p;
     p = code_table_4_6_location(sec);
     if (p == NULL) return -1;
     return *p;
 }
+
 unsigned char *code_table_4_6_location(unsigned char **sec) {
     int p, nb, np;
     p = GB2_ProdDefTemplateNo(sec);
@@ -1148,27 +1156,26 @@ unsigned char *code_table_4_6_location(unsigned char **sec) {
     // bad: if (p >= 40 && p <= 43) return sec[4]+36;
     if (p == 41 || p == 43) return sec[4]+36;
     if (p == 33 || p == 34) {		/* synthetic sat data */
-	nb = sec[4][22];
-	return sec[4]+23+11*nb;
+        nb = sec[4][22];
+        return sec[4]+23+11*nb;
     }
 
     switch(p) {
-	case 49:
-		return sec[4]+58; break;
-	case 58:
-	case 68:
-		np = sec[4][19];
-		return sec[4]+43+5*np;
-	case 59:
-	case 63:
-		return sec[4]+40;
-	case 71:
-	case 73:
-		return sec[4]+39; break;
+        case 49:
+            return sec[4]+58; break;
+        case 58:
+        case 68:
+            np = sec[4][19];
+            return sec[4]+43+5*np;
+        case 59:
+        case 63:
+            return sec[4]+40;
+        case 71:
+        case 73:
+            return sec[4]+39; break;
     }
     return NULL;
 }
-
 
 /*
  * HEADER:-1:code_table_4.7:inv:0:code table 4.7 derived forecast
@@ -1177,8 +1184,8 @@ int f_code_table_4_7(ARG0) {
     int val, center;
     const char *string;
     if (mode >= 0) {
-	val = code_table_4_7(sec);
-	center = GB2_Center(sec);
+        val = code_table_4_7(sec);
+        center = GB2_Center(sec);
         if (val >= 0) {
             string = NULL;
             switch(val) {
@@ -1190,6 +1197,7 @@ int f_code_table_4_7(ARG0) {
     }
     return 0;
 }
+
 int code_table_4_7(unsigned char **sec) {
     unsigned char *p;
     p = code_table_4_7_location(sec);
@@ -1201,13 +1209,13 @@ unsigned char *code_table_4_7_location(unsigned char **sec) {
     int pdt;
     pdt = GB2_ProdDefTemplateNo(sec);
     switch (pdt) {
-	case 2:
-	case 3:
-	case 4:
-	case 12:
-	case 13:
-	case 14:
-		return sec[4]+34;
+        case 2:
+        case 3:
+        case 4:
+        case 12:
+        case 13:
+        case 14:
+            return sec[4]+34;
     }
     return NULL;
 }
@@ -1238,15 +1246,16 @@ int code_table_4_8(unsigned char **sec) {
     if (p)  return (int) *p;
     return -1;
 }
+
 unsigned char *code_table_4_8_location(unsigned char **sec) {
     int pdt;
     pdt = GB2_ProdDefTemplateNo(sec);
     switch (pdt) {
-	case 3:
-	case 4:
-	case 13:
-	case 14:
-		return sec[4]+40;
+        case 3:
+        case 4:
+        case 13:
+        case 14:
+            return sec[4]+40;
     }
     return NULL;
 }
@@ -1283,9 +1292,9 @@ unsigned char *code_table_4_9_location(unsigned char **sec) {
     int val;
     val = GB2_ProdDefTemplateNo(sec);
     switch(val) {
-    case 5:
-    case 9:
-	return sec[4]+36;
+        case 5:
+        case 9:
+            return sec[4]+36;
     }
     return NULL;
 }
@@ -1298,15 +1307,15 @@ int f_code_table_4_10(ARG0) {
     int val;
     const char *string;
     if (mode >= 0) {
-	val = code_table_4_10(sec);
-	if (val >= 0) {
-	    string = NULL;
-	    switch(val) {
+        val = code_table_4_10(sec);
+        if (val >= 0) {
+            string = NULL;
+            switch(val) {
 #include "CodeTable_4.10.dat"
-	    }
-	    if (string == NULL) sprintf(inv_out,"code table 4.10=%d", val);
-	    else sprintf(inv_out,"code table 4.10=%d %s", val, string);
-	}
+            }
+            if (string == NULL) sprintf(inv_out,"code table 4.10=%d", val);
+            else sprintf(inv_out,"code table 4.10=%d %s", val, string);
+        }
     }
     return 0;
 }
@@ -1333,28 +1342,26 @@ unsigned char *code_table_4_10_location(unsigned char **sec) {
         case 13: i = 80; break;
         case 14: i = 76; break;
         case 15: i = 34; break;
-	case 34:
-		nb = sec[4][22];
-		i = 38 + 11*nb; break;
+        case 34:
+            nb = sec[4][22];
+            i = 38 + 11*nb; break;
         case 42: i = 48; break;
         case 43: i = 51; break;
-	case 67: 
-	case 68: 
-		np = sec[4][19];
-		i = 55 + 5*np; break;
+        case 67: 
+        case 68: 
+            np = sec[4][19];
+            i = 55 + 5*np; break;
         case 1001: i = 26; break;
         case 1002: i = 24; break;
         case 1101: i = 38; break;
-	case 50011:
-    		center = GB2_Center(sec);
-		if (center != JMA1 && center != JMA2) return NULL;
-		i = 46; break;
+        case 50011:
+            center = GB2_Center(sec);
+            if (center != JMA1 && center != JMA2) return NULL;
+            i = 46; break;
         default: return NULL;
     }
     return sec[4] + i;
 }
-
-
 
 /*
  * HEADER:-1:code_table_4.11:inv:0:code table 4.11 (first) type of time intervals
@@ -1389,10 +1396,10 @@ int f_code_table_4_11s(ARG0) {
     p = code_table_4_11_location(sec);
     if (p == NULL) return 0;
     for (i = 0; i < n; i++) {
-	val = (int) p[i*12];
-	if (i == 0) sprintf(inv_out,"code table 4.11=%d",val);
-	else sprintf(inv_out,",%d", val);
-	inv_out += strlen(inv_out);
+        val = (int) p[i*12];
+        if (i == 0) sprintf(inv_out,"code table 4.11=%d",val);
+        else sprintf(inv_out,",%d", val);
+        inv_out += strlen(inv_out);
     }
     return 0;
 }
@@ -1417,24 +1424,22 @@ unsigned char *code_table_4_11_location(unsigned char **sec) {
         case 12: p = sec[4] + 49; break;
         case 13: p = sec[4] + 81; break;
         case 14: p = sec[4] + 77; break;
-	case 34:
-		nb = sec[4][22];
-		p = sec[4] + 39 + 11*nb; break;
+        case 34:
+            nb = sec[4][22];
+            p = sec[4] + 39 + 11*nb; break;
         case 42: p = sec[4] + 49; break;
         case 43: p = sec[4] + 52; break;
         case 1001: p = sec[4] + 27; break;
         case 1101: p = sec[4] + 39; break;
-	case 50011:
-    		center = GB2_Center(sec);
-		if (center == JMA1 || center == JMA2) p = sec[4] + 47;
-		else p = NULL;
-		break;
+        case 50011:
+            center = GB2_Center(sec);
+        if (center == JMA1 || center == JMA2) p = sec[4] + 47;
+        else p = NULL;
+        break;
         default: p = NULL;
     }
     return p;
 }
-
-
 
 /*
  * HEADER:-1:code_table_4.15:inv:0:code table 4.15 type of areal statistical processing
@@ -1521,9 +1526,9 @@ int f_code_table_4_91(ARG0) {
     
     if (mode >= 0) {
         val = code_table_4_91(sec);
-	if (val >= 0) {
-	    string = NULL;
-	    switch(val) {
+        if (val >= 0) {
+            string = NULL;
+            switch(val) {
 #include "CodeTable_4.91.dat"
             }
             if (string == NULL) sprintf(inv_out,"code table 4.91=%d", val);
@@ -1549,9 +1554,8 @@ unsigned char *code_table_4_91_location(unsigned char **sec) {
         case 45:
         case 46:
         case 48: 
-	case 49: p = sec[4] + 13; break;
+        case 49: p = sec[4] + 13; break;
         case 47: p = sec[4] + 14; break;
-
         default: p = NULL; break;
     }
     return p;
@@ -1591,8 +1595,8 @@ unsigned char *code_table_4_91b_location(unsigned char **sec) {
     val = GB2_ProdDefTemplateNo(sec);
     switch (val) {
         case 48:
-	case 49:
-		p = sec[4] + 24; break;
+        case 49:
+            p = sec[4] + 24; break;
         default: p = NULL; break;
     }
     return p;
@@ -1632,43 +1636,43 @@ int scan_code_table_4_91(int *type_of_interval, double *val1, double *val2, cons
     *val1 = *val2 = UNDEFINED;
     i = sscanf(string, "<%lf%n", val1, &n);
     if (i == 1 && len == n) {
-	*type_of_interval = 0;
-	return 0;
+        *type_of_interval = 0;
+        return 0;
     }
     i = sscanf(string, ">%lf%n", val1, &n);
     if (i == 1 && len == n) {
-	*type_of_interval = 3;
-	return 0;
+        *type_of_interval = 3;
+        return 0;
     }
     i = sscanf(string, "=%lf%n", val1, &n);
     if (i == 1 && len == n) {
-	*type_of_interval = 11;
-	return 0;
+        *type_of_interval = 11;
+        return 0;
     }
     i = sscanf(string, "<=%lf%n", val1, &n);
     if (i == 1 && len == n) {
-	*type_of_interval = 5;
-	return 0;
+        *type_of_interval = 5;
+        return 0;
     }
     i = sscanf(string, ">=%lf%n", val1, &n);
     if (i == 1 && len == n) {
-	*type_of_interval = 8;
-	return 0;
+        *type_of_interval = 8;
+        return 0;
     }
     i = sscanf(string, ">=%lg,<%lg%n", val1, val2, &n);
     if (i == 2 && len == n) {
-	*type_of_interval = 2;
-	return 0;
+        *type_of_interval = 2;
+        return 0;
     }
     i = sscanf(string, ">=%lg,<=%lg%n", val1, val2, &n);
     if (i == 2 && len == n) {
-	*type_of_interval = 7;
-	return 0;
+        *type_of_interval = 7;
+        return 0;
     }
     i = sscanf(string, ">%lg,<=%lg%n", val1, val2, &n);
     if (i == 2 && len == n) {
-	*type_of_interval = 10;
-	return 0;
+        *type_of_interval = 10;
+        return 0;
     }
 
     return 1;
@@ -1686,18 +1690,18 @@ int f_code_table_4_230(ARG0) {
 
     if (mode >= 0) {
         val = code_table_4_230(sec);
-	if (val < 0) return 0;
+        if (val < 0) return 0;
 
-	i = 0;
-	string = NULL;
-	while (codetable_4_230_table[i].no != 65535) {
-	    if (codetable_4_230_table[i].no == val) {
-		string = codetable_4_230_table[i].name;
-		break;
-	    }
-	    i++;
-	}
-	if (GB2_MasterTable(sec) <= 4 && GB2_Center(sec) == ECMWF) string = NULL;
+        i = 0;
+        string = NULL;
+        while (codetable_4_230_table[i].no != 65535) {
+            if (codetable_4_230_table[i].no == val) {
+                string = codetable_4_230_table[i].name;
+                break;
+            }
+            i++;
+        }
+        if (GB2_MasterTable(sec) <= 4 && GB2_Center(sec) == ECMWF) string = NULL;
         if (string == NULL) sprintf(inv_out,"code table 4.230=%d", val);
         else sprintf(inv_out,"code table 4.230=%d %s", val, string);
     }
@@ -1716,15 +1720,15 @@ unsigned char *code_table_4_230_location(unsigned char **sec) {
     unsigned char *p;
     switch(pdt) {
         case 40: 
-	case 41:
-	case 42:
-	case 43:
-	case 57:
-	case 58:
-	case 67:
-	case 68:
-		p = sec[4]+11; break;
-	default: p = NULL; break;
+        case 41:
+        case 42:
+        case 43:
+        case 57:
+        case 58:
+        case 67:
+        case 68:
+            p = sec[4]+11; break;
+        default: p = NULL; break;
     }
     return  p;
 }
@@ -1739,11 +1743,11 @@ int f_code_table_4_233(ARG0) {
 
     if (mode >= 0) {
         val = code_table_4_233(sec);
-	if (val < 0) return 0;
+        if (val < 0) return 0;
 
-	i = 0;
+        i = 0;
         string = NULL;
-	/* aerosols use same table as 4.230 */
+        /* aerosols use same table as 4.230 */
         while (codetable_4_230_table[i].no != 65535) {
             if (codetable_4_230_table[i].no == val) {
                 string = codetable_4_230_table[i].name;
@@ -1770,14 +1774,14 @@ unsigned char *code_table_4_233_location(unsigned char **sec) {
     pdt = GB2_ProdDefTemplateNo(sec);
 
     switch(pdt) {
-	case 44:
-	case 45:
-	case 46: 
-	case 48:
-	case 49:
-		return sec[4]+11; break;
-	case 47: 
-		return sec[4]+12; break;
+        case 44:
+        case 45:
+        case 46: 
+        case 48:
+        case 49:
+            return sec[4]+11; break;
+        case 47: 
+            return sec[4]+12; break;
     }
     return  NULL;
 }
@@ -1789,18 +1793,19 @@ int f_code_table_4_235(ARG0) {
     int val;
     const char *string;
     if (mode >= 0) {
-	val = code_table_4_235(sec);
-	if (val >= 0) {
-	    string = NULL;
-	    switch(val) {
+        val = code_table_4_235(sec);
+        if (val >= 0) {
+            string = NULL;
+            switch(val) {
 #include "CodeTable_4.235.dat"
-	    }
+            }
             if (string == NULL) sprintf(inv_out,"code table 4.235=%d", val);
             else sprintf(inv_out,"code table 4.235=%d %s", val, string);
         }
     }
     return 0;
 }
+
 int code_table_4_235(unsigned char **sec) {
     int pdt;
     pdt = GB2_ProdDefTemplateNo(sec);
@@ -1840,13 +1845,13 @@ unsigned char *code_table_4_240_location(unsigned char **sec) {
 
     pdt = GB2_ProdDefTemplateNo(sec);
     switch(pdt) {
-	case 57: 
-	case 58: 
-	case 67: 
-	case 68: 
-	    p = sec[4]+17; break;
-	default:
-	    p = NULL; break;
+        case 57: 
+        case 58: 
+        case 67: 
+        case 68: 
+            p = sec[4]+17; break;
+        default:
+            p = NULL; break;
     }
     return  p;
 }
@@ -1857,8 +1862,8 @@ unsigned char *code_table_4_240_location(unsigned char **sec) {
 int f_code_table_4_241(ARG0) {
     int val;
     if (mode >= 0) {
-	val = code_table_4_241(sec);
-	if (val >= 0) sprintf(inv_out,"code table 4.241=%d", val);
+        val = code_table_4_241(sec);
+        if (val >= 0) sprintf(inv_out,"code table 4.241=%d", val);
     }
     return 0;
 }
@@ -1869,15 +1874,16 @@ int code_table_4_241(unsigned char **sec) {
     if (p == NULL) return -1;
     return (int) *p;
 }
+
 unsigned char *code_table_4_241_location(unsigned char **sec) {
     int pdt;
 
     pdt = GB2_ProdDefTemplateNo(sec);
     switch(pdt) {
-	case 59:
-	case 62:
-	case 63:
-		return sec[4]+16;
+        case 59:
+        case 62:
+        case 63:
+            return sec[4]+16;
     }
     return NULL;
 }
@@ -1889,8 +1895,8 @@ unsigned char *code_table_4_241_location(unsigned char **sec) {
 int f_code_table_4_242(ARG0) {
     int val;
     if (mode >= 0) {
-	val = code_table_4_242(sec);
-	if (val >= 0) sprintf(inv_out,"code table 4.242=%d", val);
+        val = code_table_4_242(sec);
+        if (val >= 0) sprintf(inv_out,"code table 4.242=%d", val);
     }
     return 0;
 }
@@ -1907,10 +1913,10 @@ unsigned char *code_table_4_242_location(unsigned char **sec) {
 
     pdt = GB2_ProdDefTemplateNo(sec);
     switch(pdt) {
-	case 59:
-	case 62:
-	case 63:
-		return sec[4]+11;
+        case 59:
+        case 62:
+        case 63:
+            return sec[4]+11;
     }
     return NULL;
 }
@@ -1922,15 +1928,15 @@ int f_code_table_5_0(ARG0) {
     int p;
     const char *string;
     if (mode >= 0) {
-	p = code_table_5_0(sec);
-	if (p >= 0) {
-	    string = NULL;
-	    switch(p) {
+        p = code_table_5_0(sec);
+        if (p >= 0) {
+            string = NULL;
+            switch(p) {
 #include "CodeTable_5.0.dat"
             }
-	    if (string == NULL) sprintf(inv_out,"code table 5.0=%d", p);
-	    else sprintf(inv_out,"code table 5.0=%d %s", p, string);
-	}
+            if (string == NULL) sprintf(inv_out,"code table 5.0=%d", p);
+            else sprintf(inv_out,"code table 5.0=%d %s", p, string);
+        }
     }
     return 0;
 }
@@ -1949,13 +1955,13 @@ int f_code_table_5_1(ARG0) {
     if (mode >= 0) {
         p = code_table_5_1(sec);
         if (p >= 0) {
-	    string = NULL;
-	    switch(p) {
+            string = NULL;
+            switch(p) {
 #include "CodeTable_5.1.dat"
             }
-	    if (string == NULL) sprintf(inv_out,"code table 5.1=%d", p);
-	    else sprintf(inv_out,"code table 5.1=%d %s", p, string);
-	}
+            if (string == NULL) sprintf(inv_out,"code table 5.1=%d", p);
+            else sprintf(inv_out,"code table 5.1=%d %s", p, string);
+        }
     }
     return 0;
 }
@@ -1963,16 +1969,16 @@ int f_code_table_5_1(ARG0) {
 int code_table_5_1(unsigned char **sec) {
 
     switch(code_table_5_0(sec)) {
-    case 0:
-    case 1:
-    case 2:
-    case 3:
-    case 40:
-    case 41:
-    case 42:
-        return (int) (sec[5][20]);
-    default:
-	return -1;
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 40:
+        case 41:
+        case 42:
+            return (int) (sec[5][20]);
+        default:
+            return -1;
     }
     return -1;
 }
@@ -2006,6 +2012,7 @@ int f_code_table_5_5(ARG0) {
     }
     return 0;
 }
+
 int code_table_5_5(unsigned char **sec) {
     if (code_table_5_0(sec) < 2 || code_table_5_0(sec) > 3) return -1;
     return (int) (sec[5][22]);
@@ -2044,9 +2051,6 @@ int code_table_5_7(unsigned char **sec) {
     return -1;
 }
 
-
-
-
 /*
  * HEADER:-1:code_table_6.0:inv:0:code table 6.0 Bitmap indicator
  */
@@ -2056,16 +2060,16 @@ int f_code_table_6_0(ARG0) {
     if (mode >= 0) {
         p = code_table_6_0(sec);
         if (p >= 0) {
-	    if (mode == 0) sprintf(inv_out,"code table 6.0=%d", p);
-	    else {
-	        string = NULL;
-	        switch(p) {
+            if (mode == 0) sprintf(inv_out,"code table 6.0=%d", p);
+            else {
+                string = NULL;
+                switch(p) {
 #include "CodeTable_6.0.dat"
                 }
-	        if (string == NULL) sprintf(inv_out,"code table 6.0=%d", p);
-	        else sprintf(inv_out,"code table 6.0=%d %s", p, string);
-	    }
-	}
+                if (string == NULL) sprintf(inv_out,"code table 6.0=%d", p);
+                else sprintf(inv_out,"code table 6.0=%d %s", p, string);
+            }
+        }
     }
     return 0;
 }
