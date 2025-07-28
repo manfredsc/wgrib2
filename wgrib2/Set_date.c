@@ -20,7 +20,7 @@
 
 
 /*
- * HEADER:100:set_date:misc:1:changes date code, X=(+|-)N(hr|dy|mo|yr), YYYYMMDDHHmmSS, u(UNIX TIME)
+ * HEADER:100:set_date:misc:1:changes date code, X=(+|-)N(mn|hr|dy|mo|yr), YYYYMMDDHHmmSS, u(UNIX TIME)
  */
 
 int f_set_date(ARG1) {
@@ -39,7 +39,7 @@ int f_set_date(ARG1) {
 
     if (arg1[0] == '+' || arg1[0] == '-') {
         i = sscanf(arg1+1, "%d%2s", &dtime, string);
-        if (i != 2 || dtime < 0) fatal_error("set_date: delta-time: (+|-)(int)(hr|dy|mo|yr)","");
+        if (i != 2 || dtime < 0) fatal_error("set_date: delta-time: (+|-)(int)(mn|hr|dy|mo|yr)","");
         dt_unit = string2time_unit(string);
         if (dt_unit == -1) fatal_error("set_date: unsupported time unit %s", string);
 	if (arg1[0] == '+')
