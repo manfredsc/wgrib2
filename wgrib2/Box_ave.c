@@ -45,23 +45,23 @@ int f_box_ave(ARG3) {
     double tmpsum, *xsum;
 
     if (mode == -1) {
-	decode = 1;
+        decode = 1;
     }
     if (mode < 0) return 0;
 
     /* processing mode */
 
     if (nx_ == 0  || ny_ == 0) {
-	fprintf(stderr,"box_ave: not done nx=%u, ny=%u\n", nx_, ny_);
-	return 0;
+        fprintf(stderr,"box_ave: not done nx=%u, ny=%u\n", nx_, ny_);
+        return 0;
     }
     if (GDS_Scan_staggered(scan)) {
-	fprintf(stderr,"box_ave: not done, staggered grid\n");
-	return 0;
+        fprintf(stderr,"box_ave: not done, staggered grid\n");
+        return 0;
     }
     if ((scan >> 4) != 0 && (scan >> 4) != 4) {
-	fprintf(stderr,"box_ave: not done, need we:sn or we:ns grids\n");
-	return 0;
+        fprintf(stderr,"box_ave: not done, need we:sn or we:ns grids\n");
+        return 0;
     }
 
     is_cyclic = cyclic(sec);
@@ -89,101 +89,101 @@ int f_box_ave(ARG3) {
 #endif
         for (j = 0; j < ny_; j++) {
 
-	    /* do ix == 0 */
+            /* do ix == 0 */
 
             tmpwt = 0;
             tmpsum = 0.0;
-	    k = j * nx_;
+            k = j * nx_;
             for (i=0; i <= nxx; i++) {
-	        if (DEFINED_VAL(data[i+k])) {
-		    tmpwt++;
-		    tmpsum += data[i+k];
+                if (DEFINED_VAL(data[i+k])) {
+                    tmpwt++;
+                    tmpsum += data[i+k];
+                }
 	        }
-	    }
-	    if (is_cyclic) {
+            if (is_cyclic) {
                 for (i=nx_ - nxx; i < nx_; i++) {
-	            if (DEFINED_VAL(data[i+k])) {
-		        tmpwt++;
-		        tmpsum += data[i+k];
-	            }
-	        }
+                    if (DEFINED_VAL(data[i+k])) {
+                        tmpwt++;
+                        tmpsum += data[i+k];
+                    }
+                }
             }
-	    xwt[k] = tmpwt;
-	    xsum[k] = tmpsum;
+            xwt[k] = tmpwt;
+            xsum[k] = tmpsum;
 
-	    /* do ix = 1 .. nx_-1 */
-	    
+            /* do ix = 1 .. nx_-1 */
+            
             for (i = 1; i < nx_; i++) {
 
-		/* remove old value data[k+i+1-nxx */
-		
-		if (i-1 >= nxx) {
-		    m = i - 1 - nxx;
-	            if (DEFINED_VAL(data[m+k])) {
-		       tmpwt--;
-		       tmpsum -= data[m+k];
-		    }
-		}
-		else if (is_cyclic) {
-		    m = nx_ - (nxx - i + 1);
-	            if (DEFINED_VAL(data[m+k])) {
-		       tmpwt--;
-		       tmpsum -= data[m+k];
-		    }
-		}
+                /* remove old value data[k+i+1-nxx */
+                    
+                if (i-1 >= nxx) {
+                    m = i - 1 - nxx;
+                    if (DEFINED_VAL(data[m+k])) {
+                        tmpwt--;
+                        tmpsum -= data[m+k];
+                    }
+                }
+                else if (is_cyclic) {
+                    m = nx_ - (nxx - i + 1);
+                    if (DEFINED_VAL(data[m+k])) {
+                        tmpwt--;
+                        tmpsum -= data[m+k];
+                    }
+                }
 
-		/* add new value data[k+i+nxx]*/
+                /* add new value data[k+i+nxx]*/
 
-		if (i < nx_ - nxx) {
-		    m = i + nxx;
-	            if (DEFINED_VAL(data[m+k])) {
-		       tmpwt++;
-		       tmpsum += data[m+k];
-		    }
-		}
-		else if (is_cyclic) {
-		    m = nxx - (nx_- i);
-	            if (DEFINED_VAL(data[m+k])) {
-		       tmpwt++;
-		       tmpsum += data[m+k];
-		    }
-		}
-	        xwt[k+i] = tmpwt;
-	        xsum[k+i] = tmpsum;
+                if (i < nx_ - nxx) {
+                    m = i + nxx;
+                    if (DEFINED_VAL(data[m+k])) {
+                        tmpwt++;
+                        tmpsum += data[m+k];
+                    }
+                }
+                else if (is_cyclic) {
+                    m = nxx - (nx_- i);
+                    if (DEFINED_VAL(data[m+k])) {
+                        tmpwt++;
+                        tmpsum += data[m+k];
+                    }
+                }
+                xwt[k+i] = tmpwt;
+                xsum[k+i] = tmpsum;
 
-	    }
-	}
-	/* at this point xsum, xwt is calculated for entire grid 
+            }
+        }
+            /* at this point xsum, xwt is calculated for entire grid 
 
-           could use the same technique to add up the xsum values but
-           1. probably not cache friendly for large ny_
-           2. probably have some false cache sharing
+            could use the same technique to add up the xsum values but
+            1. probably not cache friendly for large ny_
+            2. probably have some false cache sharing
 
-           To avoid 1 and 2, make j the outer loop variable */
+            To avoid 1 and 2, make j the outer loop variable */
 
 #ifdef USE_OPENMP
 #pragma omp for private(i,j,j0,j1,k,tmpwt,tmpsum) schedule(static)
 #endif
         for (j = 0; j < ny_; j++) {
-	    j0 = j > nyy ? j-nyy : 0;
-	    j1 = j < ny_ - nyy ? j + nyy : ny_-1;
-	    for (i = 0; i < nx_; i++) {
-	        tmpwt = 0;
-	        tmpsum = 0.0;
-		for (k = j0; k <= j1; k++) {
-	            if (xwt[i+k*nx_] > 0) {
-			tmpwt += xwt[i+k*nx_];
-			tmpsum += xsum[i+k*nx_];
-		    }
-		}
-		if (crit_wt == -1) {
-		    data[i+j*nx_] = DEFINED_VAL(data[i+j*nx_]) ? tmpsum / tmpwt : UNDEFINED;
-		}
-		else {
-		    data[i+j*nx_] = tmpwt > crit_wt ? tmpsum / tmpwt : UNDEFINED;
-		}
-	    }
-	}
+            j0 = j > nyy ? j-nyy : 0;
+            j1 = j < ny_ - nyy ? j + nyy : ny_-1;
+            for (i = 0; i < nx_; i++) {
+                tmpwt = 0;
+                tmpsum = 0.0;
+                for (k = j0; k <= j1; k++) {
+                    if (xwt[i+k*nx_] > 0) {
+                        tmpwt += xwt[i+k*nx_];
+                        tmpsum += xsum[i+k*nx_];
+                    }
+                }
+                if (crit_wt == -1) {
+                    data[i+j*nx_] = DEFINED_VAL(data[i+j*nx_]) ? tmpsum / tmpwt : UNDEFINED;
+                }
+                else {
+                    data[i+j*nx_] = tmpwt > crit_wt ? tmpsum / tmpwt : UNDEFINED;
+                }
+            }
+        }
 #ifdef USE_OPENMP
     }
 #endif

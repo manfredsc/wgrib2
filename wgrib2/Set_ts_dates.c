@@ -17,7 +17,7 @@
  */
 
 /*
- * HEADER:100:set_ts_dates:misc:3:changes date code for time series X=YYYYMMDDHH(mmss) Y=dtime Z=#msgs/date
+ * HEADER:100:set_ts_dates:misc:3:change date code for time series X=YYYYMMDDHH(mmss) Y=dtime Z=#msgs/date
  */
 
 int f_set_ts_dates(ARG3) {
@@ -42,7 +42,6 @@ int f_set_ts_dates(ARG3) {
 		&(save->day), &(save->hour), &(save->minute), &(save->second));
 
 	save->dtime = 0;
-	save->unit = -1;
 	save->count = -1;
 
         if (sscanf(arg2,"%i%n", &i, &n) != 1) fatal_error("set_ts_date: bad dt=%s",arg2);
@@ -50,13 +49,17 @@ int f_set_ts_dates(ARG3) {
 	save->dtime =  i;
 	arg2 += n;
 
-	if (strcmp(arg2,"second") == 0) save->unit = 13;
-	else if (strcmp(arg2,"minute") == 0) save->unit = 0;
-	else if (strcmp(arg2,"hour") == 0) save->unit = 1;
-	else if (strcmp(arg2,"day") == 0) save->unit = 2;
-	else if (strcmp(arg2,"month") == 0) save->unit = 3;
-	else if (strcmp(arg2,"year") == 0) save->unit = 4;
-	else fatal_error("set_ts_date: could not understand time unit %s", arg2);
+        save->unit = string2time_unit((char *)arg2);
+        if (save->unit == -1) {
+            /* keep the old units working */
+	    if (strcmp(arg2,"second") == 0) save->unit = 13;
+	    else if (strcmp(arg2,"minute") == 0) save->unit = 0;
+	    else if (strcmp(arg2,"hour") == 0) save->unit = 1;
+	    else if (strcmp(arg2,"day") == 0) save->unit = 2;
+            else if (strcmp(arg2,"month") == 0) save->unit = 3;
+	    else if (strcmp(arg2,"year") == 0) save->unit = 4;
+            else fatal_error("set_ts_date: could not understand time unit %s", arg2);
+        }
 
 	save->block_size = atoi(arg3);
 	if (save->block_size <= 0) fatal_error("set_ts_dates: #msgs/date code must be >= 1","");
