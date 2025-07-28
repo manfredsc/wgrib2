@@ -46,14 +46,14 @@ wget -nv "$urlbase/raw/master/GRIB2_CodeFlag_4_3_CodeTable_en.csv" -O- | sed '{
         default: { print "ERROR: missing switch statement for",num > "/dev/stderr"; exit 1 }
       }
       if (num==255) {  # prepend custom entries before case 255
-        print "case   192: if (center == NCEP) string=\"fcst confidence\"; else string=\"undefined\"; break;"
-        print "case   193: if (center == NCEP) string=\"probability-matched mean\"; else string=\"undefined\"; break;"
-        print "case   194: if (center == NCEP) string=\"neighborhood probability\"; else string=\"undefined\"; break;"
-        print "case   195: if (center == NCEP) string=\"bias-corrected and downscaled ensemble forecast\"; else string=\"undefined\"; break;"
-        print "case   196: if (center == NCEP) string=\"perturbed analysis for ensemble initialization\"; else string=\"undefined\"; break;"
-        print "case   197: if (center == NCEP) string=\"ensemble agreement scale probability\"; else string=\"undefined\"; break;"
-        print "case   198: if (center == NCEP) string=\"post-processed deterministic-expert-weighted forecast\"; else string=\"undefined\"; break;"
-        print "case   199: if (center == NCEP) string=\"ens fcst based on counting\"; else string=\"undefined\"; break;"
+        print "case   192: if (center == NCEP) string=\"fcst confidence\"; break;"
+        print "case   193: if (center == NCEP) string=\"probability-matched mean\"; break;"
+        print "case   194: if (center == NCEP) string=\"neighborhood probability\"; break;"
+        print "case   195: if (center == NCEP) string=\"bias-corrected and downscaled ensemble forecast\"; break;"
+        print "case   196: if (center == NCEP) string=\"perturbed analysis for ensemble initialization\"; break;"
+        print "case   197: if (center == NCEP) string=\"ensemble agreement scale probability\"; break;"
+        print "case   198: if (center == NCEP) string=\"post-processed deterministic-expert-weighted forecast\"; break;"
+        print "case   199: if (center == NCEP) string=\"ens fcst based on counting\"; break;"
       }
       printf "case %5d: string=\"%s\"; break;  // %s\n",num,wgrib2name,name
     }

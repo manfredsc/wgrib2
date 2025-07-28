@@ -22,12 +22,12 @@ case    20: string="analysis increment"; break;  // Analysis increment
 case    21: string="initialization increment for analysis"; break;  // Initialization increment for analysis
 case    22: string="blended forecast"; break;  // Blended forecast
 case    23: string="anomaly"; break;  // Anomaly
-case   192: if (center == NCEP) string="fcst confidence"; else string="undefined"; break;
-case   193: if (center == NCEP) string="probability-matched mean"; else string="undefined"; break;
-case   194: if (center == NCEP) string="neighborhood probability"; else string="undefined"; break;
-case   195: if (center == NCEP) string="bias-corrected and downscaled ensemble forecast"; else string="undefined"; break;
-case   196: if (center == NCEP) string="perturbed analysis for ensemble initialization"; else string="undefined"; break;
-case   197: if (center == NCEP) string="ensemble agreement scale probability"; else string="undefined"; break;
-case   198: if (center == NCEP) string="post-processed deterministic-expert-weighted forecast"; else string="undefined"; break;
-case   199: if (center == NCEP) string="ens fcst based on counting"; else string="undefined"; break;
+case   192: if (center == NCEP) string="fcst confidence"; break;
+case   193: if (center == NCEP) string="probability-matched mean"; break;
+case   194: if (center == NCEP) string="neighborhood probability"; break;
+case   195: if (center == NCEP) string="bias-corrected and downscaled ensemble forecast"; break;
+case   196: if (center == NCEP) string="perturbed analysis for ensemble initialization"; break;
+case   197: if (center == NCEP) string="ensemble agreement scale probability"; break;
+case   198: if (center == NCEP) string="post-processed deterministic-expert-weighted forecast"; break;
+case   199: if (center == NCEP) string="ens fcst based on counting"; break;
 case   255: string="missing"; break;  // Missing
