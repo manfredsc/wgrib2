@@ -1,6 +1,6 @@
 /** @file
  * 
- * @brief Converts lat-lon file to ArcInfo ASCII grid file.
+ * @brief Converts lat-lon file to ArcInfo ASCII grid file (alpha).
  * 
  * ### Program History Log
  * Date | Programmer | Comments
