@@ -1,14 +1,14 @@
 #!/bin/sh
-# 10/2024 Public Domain   Manfred Schwarb <schwarb@meteodat.ch>
+# 06/2025 Public Domain   Manfred Schwarb <schwarb@meteodat.ch>
 # This script updates wgrib2 with WMO code info.
 
 urlbase="https://github.com/wmo-im/GRIB2"
 
-outfile="CodeTable_3.1.dat"
+outfile="CodeTable_1.3.dat"
 if [ -f "$outfile" ]; then mv "$outfile" "$outfile.old"; fi
 
-#---GRIB2 Code Table 3.1: Grid definition template number
-wget -nv "$urlbase/raw/master/GRIB2_CodeFlag_3_1_CodeTable_en.csv" -O- | sed '{
+#---GRIB2 Code Table 1.3: Production status of data
+wget -nv "$urlbase/raw/master/GRIB2_CodeFlag_1_3_CodeTable_en.csv" -O- | sed '{
     s/, /# /g
     s/,/;/g
     s/# /, /g
@@ -17,10 +17,6 @@ wget -nv "$urlbase/raw/master/GRIB2_CodeFlag_3_1_CodeTable_en.csv" -O- | sed '{
   {
     num=$3; name=$5
     if (num !="" && num !~ "-" && num !~ "Code") {
-      if (num==65535) {  # prepend custom entries before case 65535
-        printf "case %5d: string=\"%s\"; break;\n",\
-          32768,"Rotated Latitude/Longitude (Arakawa Staggered E-Grid)"
-      }
       printf "case %5d: string=\"%s\"; break;\n",num,name
     }
   }' > "$outfile"
