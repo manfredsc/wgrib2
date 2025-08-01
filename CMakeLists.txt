@@ -47,7 +47,7 @@ option(BUILD_SHARED_LIB "Build shared library?" on)
 # To create libwgrib2.so for python, you have to build with BUILD_SHARED_LIB off
 # and manually create libwgrib2.so from the needed *.a files
 
-option(BUILD_WGRIB "Build wgrib code?" off)
+option(BUILD_WGRIB "Build wgrib code?" on)
 
 if (MAKE_FTN_API OR USE_IPOLATES)
   enable_language(Fortran)
