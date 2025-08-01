@@ -1,3 +1,18 @@
+/** @file
+ * 
+ * @brief Converts lat-lon file to ArcInfo ASCII grid file.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 07/2008 | Wesley Ebisuzaki | Initial 
+ * 10/2010 | H. Peifer | bug fix
+ * 07/2016 | Manfred Schwarb | allow dx != dy
+ * 01/2020 | Manfred Schwarb | output filename has ensemble info
+ * 
+ * @author Wesley Ebisuzaki @date 07/2008
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,26 +21,60 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/*
- * AAIG.c - converts lat-lon file to ArcInfo ASCII grid file
- *   each grid is written into its own file
- *
- * 7/2008 v0.9: Public Domain: Wesley Ebisuzaki
- * 10/2010 v0.99: bug fix H. Peifer
- * 7/2016  v1.0  Manfred Schwarb, allow dx != dy
- * 1/2020  v1.1  Manfred Schwarb, output filename has ensemble info
- */
+/**  ??? */
+extern int decode;
 
+/**  ??? */
+extern int latlon;
 
-extern int decode, latlon;
-extern double *lat, *lon;
-extern unsigned int nx_, ny_;
-extern enum output_order_type output_order, output_order_wanted;
+/** ??? */
+extern double *lat;
+
+/**  ??? */
+extern double *lon;
+
+/**  ??? */
+extern unsigned int nx_;
+
+/**  ??? */
+extern unsigned int ny_;
+
+/**  ??? */
+extern enum output_order_type output_order;
+
+/**  ??? */
+extern enum output_order_type output_order_wanted;
 
 /*
  * HEADER:100:AAIG:output:0:writes Ascii ArcInfo Grid file, lat-lon grid only (alpha)
  */
 
+ /**
+ * Converts a lat-lon file and writes the data into a Ascii ArcInfo Grid file. 
+ * This option is experimental and only supports equally spaced lat-lon grids.
+ * 
+ * Each field is written to a different file (*.asc) which is written to the current directory.
+ * 
+ * File name convention for *asc output:
+ *      NAME = grib name (-var), ex. TEMP, HGT 
+ *      LEVEL = level, ex. surface, 2_m_above_ground, 500_mb 
+ *      RT = reference time YYYYMMDDHH 
+ *      VT = verification time (end_ft) YYYYMMDDHH
+ * 
+ *      If RT is the same as VT 
+ *          output = NAME.LEVEL.RT.asc 
+ *      If RT is different than VT 
+ *          output = NAME.LEVEL.RT.VT.asc
+ * 
+ * The above file name convention works for a simple GFS forecast. However, life quickly gets 
+ * more complicated and a new file name convention was needed (-AAIGlong).
+ * 
+ * @param ARG0 ????
+ *
+ * @return ???
+ *
+ * @author Wesley Ebisuzaki @date 07/2008
+ */
 int f_AAIG(ARG0) {
 
     double cellsize, dlon, dlat;
