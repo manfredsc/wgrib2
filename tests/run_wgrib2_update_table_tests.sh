@@ -1,7 +1,7 @@
 #!/bin/sh
-# This script runs a series of tests using the RPN calculator
+# This script runs a series of tests for MRMS table update
 #
-# Alyson Stahl 5/7/2024
+# Wesley Ebisuzaki - 3/2025
 
 set -e
 echo ""
