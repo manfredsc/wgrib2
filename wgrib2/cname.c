@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "wgrib2.h"
 #include "grb2.h"
+#include "wgrib2.h"
 
 extern struct gribtable_s NCEP_gribtable[], ECMWF_gribtable[], DWD1_gribtable[], local_gribtable[];
 extern struct gribtable_s *user_gribtable;
@@ -61,7 +61,7 @@ int getName_all(unsigned char **sec, int mode, char *inv_out, char *name, char *
 
     /* check local tables */
     if (p == NULL) {
-	discipline = GB2_Discipline(sec);
+        discipline = GB2_Discipline(sec);
         center = GB2_Center(sec);
         mastertab = GB2_MasterTable(sec);
         localtab = GB2_LocalTable(sec);
@@ -72,34 +72,34 @@ int getName_all(unsigned char **sec, int mode, char *inv_out, char *name, char *
             || (discipline >= 192 && discipline <= 254) ) use_local_table = 1;
 
         if (use_local_table) {
-	   if (center == ECMWF && names != ECMWF) p = search_gribtable(ECMWF_gribtable, sec);
-	   else if (center == DWD1 && names != DWD1) p = search_gribtable(DWD1_gribtable, sec);
-	   else if (center == DWD2 && names != DWD1) p = search_gribtable(DWD1_gribtable, sec);
-	   else if (center == NCEP && names != NCEP) p = search_gribtable(NCEP_gribtable, sec);
-	   else p = search_gribtable(local_gribtable, sec);
-	}
+            if (center == ECMWF && names != ECMWF) p = search_gribtable(ECMWF_gribtable, sec);
+            else if (center == DWD1 && names != DWD1) p = search_gribtable(DWD1_gribtable, sec);
+            else if (center == DWD2 && names != DWD1) p = search_gribtable(DWD1_gribtable, sec);
+            else if (center == NCEP && names != NCEP) p = search_gribtable(NCEP_gribtable, sec);
+            else p = search_gribtable(local_gribtable, sec);
+        }
     }
 
     p_unit = "unit";
     if (p) {
         p_unit = p->unit;
         pdt = code_table_4_0(sec);
-	if (pdt == 5 || pdt == 9) p_unit = "prob";
+        if (pdt == 5 || pdt == 9) p_unit = "prob";
     }
 
     if (p) {
         if (name) strcpy(name, p->name);
-	if (desc) strcpy(desc, p->desc);
-	if (unit) strcpy(unit, p_unit);
+        if (desc) strcpy(desc, p->desc);
+        if (unit) strcpy(unit, p_unit);
 
-	if (inv_out) {
-	    sprintf(inv_out, "%s", p->name);
-	    inv_out += strlen(inv_out);
+        if (inv_out) {
+            sprintf(inv_out, "%s", p->name);
+            inv_out += strlen(inv_out);
             if (mode) sprintf(inv_out," %s [%s]", p->desc, p_unit);
         }
-	*mset = p->mtab_set;
-	*mlow = p->mtab_low;
-	*mhigh = p->mtab_high;
+        *mset = p->mtab_set;
+        *mlow = p->mtab_low;
+        *mhigh = p->mtab_high;
     }
     else {
         discipline = GB2_Discipline(sec);
@@ -108,34 +108,34 @@ int getName_all(unsigned char **sec, int mode, char *inv_out, char *name, char *
         localtab = GB2_LocalTable(sec);
         parmcat = GB2_ParmCat(sec);
         parmnum = GB2_ParmNum(sec);
-	*mset = 0;
-	*mlow = 0;
-	*mhigh = 255;
+        *mset = 0;
+        *mlow = 0;
+        *mhigh = 255;
 
         if (name) sprintf(name,"var%d_%d_%d",discipline,parmcat,parmnum);
-	if (desc) strcpy(desc,"desc");
-	if (unit) strcpy(unit,p_unit);
+        if (desc) strcpy(desc,"desc");
+        if (unit) strcpy(unit,p_unit);
 
-	if (inv_out) {
-	    if ((parmnum >= 192 && parmnum <= 254) || (parmcat >= 192 && parmcat <= 254)
-		      || (discipline >= 192 && discipline <= 254) ) {
-	        sprintf(inv_out,"var discipline=%d center=%d local_table=%d parmcat=%d parm=%d",
-                  discipline, center, localtab, parmcat, parmnum);
-	    }
-	    else {
-                sprintf(inv_out,"var discipline=%d master_table=%d parmcat=%d parm=%d", 
-                  discipline, mastertab, parmcat, parmnum);
+        if (inv_out) {
+            if ((parmnum >= 192 && parmnum <= 254) || (parmcat >= 192 && parmcat <= 254)
+                || (discipline >= 192 && discipline <= 254) ) {
+                sprintf(inv_out,"var discipline=%d center=%d local_table=%d parmcat=%d parm=%d",
+                    discipline, center, localtab, parmcat, parmnum);
             }
-	}
+            else {
+                sprintf(inv_out,"var discipline=%d master_table=%d parmcat=%d parm=%d", 
+                    discipline, mastertab, parmcat, parmnum);
+            }
+        }
     }
 
     return 0;
 }
 
 int getName(unsigned char **sec, int mode, char *inv_out, char *name, char *desc, char *unit) {
-   int mset, mlow, mhigh;
+        int mset, mlow, mhigh;
 
-   return getName_all(sec, mode, inv_out, name, desc, unit, &mset, &mlow, &mhigh);
+    return getName_all(sec, mode, inv_out, name, desc, unit, &mset, &mlow, &mhigh);
 }
 
 /*
@@ -147,6 +147,7 @@ static struct gribtable_s *search_gribtable(struct gribtable_s *p, unsigned char
     int discipline, center, mastertab, localtab, parmcat, parmnum;
     int use_local_table;
     static int count = 0;
+    struct gribtable_s *p_orig;
 
     if (p == NULL) return NULL;
 
@@ -159,32 +160,40 @@ static struct gribtable_s *search_gribtable(struct gribtable_s *p, unsigned char
 
     use_local_table = (mastertab == 255) ? 1 : 0;
     if ((parmnum >= 192 && parmnum <= 254) || (parmcat >= 192 && parmcat <= 254)
-	|| (discipline >= 192 && discipline <= 254) ) use_local_table = 1;
+        || (discipline >= 192 && discipline <= 254) ) use_local_table = 1;
    
     if (use_local_table == 1 && localtab == 0) {
-	if (count++ < 6 ) fprintf(stderr,"**** ERROR: local table = 0 is not allowed, set to 1 ***\n");
-	localtab = 1;
+        if (count++ < 6) fprintf(stderr,"**** WARNING: local table = 0 is not allowed, will try fallback value 1 as well ***\n");
     }
     if (use_local_table == 1 && localtab == 255) {
-	fatal_error("local gribtable is undefined (255)","");
+        fatal_error("local gribtable is undefined (255)","");
     }
 
     if (! use_local_table) {
         for (; p->disc >= 0; p++) {
             if (discipline == p->disc && (mastertab >= p->mtab_low) && (mastertab <= p->mtab_high) &&
-                parmcat == p->pcat && parmnum == p->pnum) {
+                    parmcat == p->pcat && parmnum == p->pnum) {
                 return p;
             }
         }
     }
     else {
 //	printf(">> cname local find: disc %d center %d localtab %d pcat %d pnum %d\n", discipline, center, localtab, parmcat, parmnum);
+        p_orig = p;
+    /* look for entry with original localtab value as derived from grib message */
         for (; p->disc >= 0; p++) {
             if (discipline == p->disc && center == p->cntr && localtab == p->ltab && 
-                parmcat == p->pcat && parmnum == p->pnum) {
+                    parmcat == p->pcat && parmnum == p->pnum) {
                 return p;
-	    }
-	}
+        }
+    }
+    /* fallback using localtab = 1 */
+    for (; p_orig->disc >= 0; p_orig++) {
+            if (discipline == p_orig->disc && center == p_orig->cntr && 1 == p_orig->ltab &&
+                    parmcat == p_orig->pcat && parmnum == p_orig->pnum) {
+                return p_orig;
+            }
+        }
     }
     return NULL;
 }
