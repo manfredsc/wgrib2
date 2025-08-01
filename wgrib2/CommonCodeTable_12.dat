@@ -1,0 +1,205 @@
+case    2228431: string="Syowa"; break;  // centre=34, subcentre=207
+case    2228464: string="Kiyose"; break;  // centre=34, subcentre=240
+case    2228465: string="Reanalysis project"; break;  // centre=34, subcentre=241
+case    2556129: string="Beijing"; break;  // centre=39, subcentre=225
+case    2556130: string="Guangzhou"; break;  // centre=39, subcentre=226
+case    2556132: string="Urumuqi"; break;  // centre=39, subcentre=228
+case    2621683: string="Seoul"; break;  // centre=40, subcentre=243
+case    2621685: string="Jincheon"; break;  // centre=40, subcentre=245
+case    7209189: string="Hong-Kong"; break;  // centre=110, subcentre=229
+case    3014666: string="Cachoeira Paulista (INPE)"; break;  // centre=46, subcentre=10
+case    3014667: string="Cuiaba (INPE)"; break;  // centre=46, subcentre=11
+case    3014668: string="Brasilia (SEPIS - INMET)"; break;  // centre=46, subcentre=12
+case    3014669: string="Fortaleza (FUNCEME)"; break;  // centre=46, subcentre=13
+case    3014670: string="Natal (Navy Hygrog. Centre)"; break;  // centre=46, subcentre=14
+case    3014671: string="Manaus (SIVAM)"; break;  // centre=46, subcentre=15
+case    3014672: string="Natal (INPE)"; break;  // centre=46, subcentre=16
+case    3014673: string="Boa Vista"; break;  // centre=46, subcentre=17
+case    3014674: string="SIPAM-Porto Velho-RO"; break;  // centre=46, subcentre=18
+case    3014675: string="SIPAM-Belem-PA"; break;  // centre=46, subcentre=19
+case    3014681: string="Sao Paulo University - USP"; break;  // centre=46, subcentre=25
+case    9502721: string="DBNet station of Cayenne (French Guiana)"; break;  // centre=145, subcentre=1
+case    9633802: string="Cordoba"; break;  // centre=147, subcentre=10
+case    9633807: string="Ushuaia"; break;  // centre=147, subcentre=15
+case    9633812: string="Marambio"; break;  // centre=147, subcentre=20
+case    9633822: string="Santiago de Chile"; break;  // centre=147, subcentre=30
+case    9633832: string="Punta Arenas"; break;  // centre=147, subcentre=40
+case    9633842: string="Base Presidente Frei"; break;  // centre=147, subcentre=50
+case    9633852: string="Cotopaxi"; break;  // centre=147, subcentre=60
+case    9699329: string="Integrated Centre of Aeronautical Meteorology - CIMAER"; break;  // centre=148, subcentre=1
+case     458753: string="NCEP Reanalysis Project"; break;  // centre=7, subcentre=1
+case     458754: string="NCEP Ensemble Products"; break;  // centre=7, subcentre=2
+case     458755: string="NCEP Central Operations"; break;  // centre=7, subcentre=3
+case     458756: string="Environmental Modeling Center"; break;  // centre=7, subcentre=4
+case     458757: string="Weather Prediction Center"; break;  // centre=7, subcentre=5
+case     458758: string="Ocean Prediction Center"; break;  // centre=7, subcentre=6
+case     458759: string="Climate Prediction Center"; break;  // centre=7, subcentre=7
+case     458760: string="Aviation Weather Center"; break;  // centre=7, subcentre=8
+case     458761: string="Storm Prediction Center"; break;  // centre=7, subcentre=9
+case     458762: string="National Hurricane Center"; break;  // centre=7, subcentre=10
+case     458763: string="NWS Techniques Development Laboratory"; break;  // centre=7, subcentre=11
+case     458764: string="NESDIS Office of Research and Applications"; break;  // centre=7, subcentre=12
+case     458765: string="Federal Aviation Administration"; break;  // centre=7, subcentre=13
+case     458766: string="NWS Meteorological Development Laboratory"; break;  // centre=7, subcentre=14
+case     458767: string="North American Regional Reanalysis Project"; break;  // centre=7, subcentre=15
+case     458768: string="Space Weather Prediction Center"; break;  // centre=7, subcentre=16
+case     458769: string="ESRL Global Systems Division"; break;  // centre=7, subcentre=17
+case   10485761: string="National Climatic Data Center"; break;  // centre=160, subcentre=1
+case   10485762: string="National Geophysical Data Center"; break;  // centre=160, subcentre=2
+case   10485763: string="National Oceanographic Data Center"; break;  // centre=160, subcentre=3
+case   10485764: string="Center for Satellite Applications and Research (STAR)"; break;  // centre=160, subcentre=4
+case   10485765: string="Joint Polar Satellite System"; break;  // centre=160, subcentre=5
+case   10485770: string="Tromso (Norway)"; break;  // centre=160, subcentre=10
+case   10485771: string="McMurdo (Antarctica)"; break;  // centre=160, subcentre=11
+case   10551297: string="Great Lakes Environmental Research Laboratory"; break;  // centre=161, subcentre=1
+case   10551298: string="Earth System Research Laboratory"; break;  // centre=161, subcentre=2
+case   10551299: string="Atlantic Oceanographic and Meteorological Laboratory"; break;  // centre=161, subcentre=3
+case   10551300: string="Pacific Marine Environmental Laboratory"; break;  // centre=161, subcentre=4
+case   10551301: string="Air Resources Laboratory"; break;  // centre=161, subcentre=5
+case   10551302: string="Geophysical Fluid Dynamics Laboratory"; break;  // centre=161, subcentre=6
+case   10551303: string="National Severe Storms Laboratory"; break;  // centre=161, subcentre=7
+case   11337729: string="Ames Research Center"; break;  // centre=173, subcentre=1
+case   11337730: string="Dryden Flight Research Center"; break;  // centre=173, subcentre=2
+case   11337731: string="Glenn Research Center"; break;  // centre=173, subcentre=3
+case   11337732: string="Goddard Space Flight Center"; break;  // centre=173, subcentre=4
+case   11337733: string="Jet Propulsion Laboratory"; break;  // centre=173, subcentre=5
+case   11337734: string="Johnson Space Center"; break;  // centre=173, subcentre=6
+case   11337735: string="Kennedy Space Center"; break;  // centre=173, subcentre=7
+case   11337736: string="Langley Research Center"; break;  // centre=173, subcentre=8
+case   11337737: string="Marshall Space Flight Center"; break;  // centre=173, subcentre=9
+case   11337738: string="Stennis Space Center"; break;  // centre=173, subcentre=10
+case   11337739: string="Goddard Institute for Space Studies"; break;  // centre=173, subcentre=11
+case   11337740: string="Independent Verification and Validation Facility"; break;  // centre=173, subcentre=12
+case   11337741: string="NASA Shared Service Center"; break;  // centre=173, subcentre=13
+case   11337742: string="Wallops Flight Facility"; break;  // centre=173, subcentre=14
+case   11534346: string="Tromso (Norway)"; break;  // centre=176, subcentre=10
+case   11534347: string="McMurdo (Antarctica)"; break;  // centre=176, subcentre=11
+case   11534348: string="Sodankyla (Finland)"; break;  // centre=176, subcentre=12
+case   11534349: string="Fairbanks (United States)"; break;  // centre=176, subcentre=13
+case   11534350: string="Barrow (United States)"; break;  // centre=176, subcentre=14
+case   11534351: string="Rothera (Antarctica)"; break;  // centre=176, subcentre=15
+case   11534356: string="Honolulu (United States)"; break;  // centre=176, subcentre=20
+case   11534357: string="Gilmore Creek (United States)"; break;  // centre=176, subcentre=21
+case   11534358: string="Madison (United States)"; break;  // centre=176, subcentre=22
+case   11534359: string="Miami (United States)"; break;  // centre=176, subcentre=23
+case   11534360: string="Mayaguez (Puerto Rico)"; break;  // centre=176, subcentre=24
+case   11534361: string="Monterey (United States)"; break;  // centre=176, subcentre=25
+case   11534362: string="Guam"; break;  // centre=176, subcentre=26
+case   11534363: string="Corvallis (United States)"; break;  // centre=176, subcentre=27
+case   11534364: string="Hampton (United States)"; break;  // centre=176, subcentre=28
+case   11534365: string="New York City (United States)"; break;  // centre=176, subcentre=29
+case   11599873: string="Center for Operational Oceanographic Products and Services"; break;  // centre=177, subcentre=1
+case   11599874: string="Coast Survey Development Laboratory"; break;  // centre=177, subcentre=2
+case   11993089: string="Center for Western Weather and Water Extremes"; break;  // centre=183, subcentre=1
+case   11993090: string="Global Drifter Program"; break;  // centre=183, subcentre=2
+case     131273: string="Casey"; break;  // centre=2, subcentre=201
+case     131275: string="Davis"; break;  // centre=2, subcentre=203
+case     131282: string="Alice Springs"; break;  // centre=2, subcentre=210
+case     131283: string="Melbourne Crib Point 1"; break;  // centre=2, subcentre=211
+case     131286: string="Darwin"; break;  // centre=2, subcentre=214
+case     131289: string="Perth"; break;  // centre=2, subcentre=217
+case     131291: string="Townsville"; break;  // centre=2, subcentre=219
+case     131304: string="Fiji"; break;  // centre=2, subcentre=232
+case     131307: string="Noumea"; break;  // centre=2, subcentre=235
+case     131309: string="Papeete"; break;  // centre=2, subcentre=237
+case     131322: string="Vladivostock"; break;  // centre=2, subcentre=250
+case     131323: string="Guam"; break;  // centre=2, subcentre=251
+case     131324: string="Honolulu"; break;  // centre=2, subcentre=252
+case    4522188: string="National Institute of Water and Atmospheric Research (NIWA - New Zealand)"; break;  // centre=69, subcentre=204
+case    4522189: string="Niue"; break;  // centre=69, subcentre=205
+case    4522190: string="Rarotonga (Cook Islands)"; break;  // centre=69, subcentre=206
+case    4522191: string="Apia (Samoa)"; break;  // centre=69, subcentre=207
+case    4522192: string="Tonga"; break;  // centre=69, subcentre=208
+case    4522193: string="Tuvalu"; break;  // centre=69, subcentre=209
+case    4522194: string="Kiribati"; break;  // centre=69, subcentre=210
+case    4522195: string="Tokelau"; break;  // centre=69, subcentre=211
+case    4522227: string="Kelburn"; break;  // centre=69, subcentre=243
+case    4718841: string="Singapore"; break;  // centre=72, subcentre=249
+case   12517377: string="RARS station of Tahiti (French Polynesia)"; break;  // centre=191, subcentre=1
+case   13369445: string="Maupuia"; break;  // centre=204, subcentre=101
+case   13369446: string="Lauder"; break;  // centre=204, subcentre=102
+case    4849665: string="Shanwick Oceanic Area Control Centre"; break;  // centre=74, subcentre=1
+case    4849666: string="Fucino"; break;  // centre=74, subcentre=2
+case    4849667: string="Gatineau"; break;  // centre=74, subcentre=3
+case    4849668: string="Maspalomas (Spain)"; break;  // centre=74, subcentre=4
+case    4849669: string="ESA ERS Central Facility"; break;  // centre=74, subcentre=5
+case    4849670: string="Prince Albert"; break;  // centre=74, subcentre=6
+case    4849671: string="West Freugh"; break;  // centre=74, subcentre=7
+case    4849677: string="Tromso"; break;  // centre=74, subcentre=13
+case    4849685: string="Agenzia Spaziale Italiana (Italy)"; break;  // centre=74, subcentre=21
+case    4849686: string="Centre National de la Recherche Scientifique (France)"; break;  // centre=74, subcentre=22
+case    4849687: string="GeoForschungs Zentrum (Germany)"; break;  // centre=74, subcentre=23
+case    4849688: string="Geodetic Observatory Pecny (Czechia)"; break;  // centre=74, subcentre=24
+case    4849689: string="Institut d'Estudis Espacials de Catalunya (Spain)"; break;  // centre=74, subcentre=25
+case    4849690: string="Federal Office of Topography (Switzerland)"; break;  // centre=74, subcentre=26
+case    4849691: string="Nordic Commission of Geodesy (Norway)"; break;  // centre=74, subcentre=27
+case    4849692: string="Nordic Commission of Geodesy (Sweden)"; break;  // centre=74, subcentre=28
+case    4849693: string="Institute Geographique National (France) - Service de geodesie"; break;  // centre=74, subcentre=29
+case    4849694: string="Bundesamt fuer Kartographie und Geodaesie (Germany)"; break;  // centre=74, subcentre=30
+case    4849695: string="Institute of Engineering Satellite Surveying and Geodesy (United Kingdom)"; break;  // centre=74, subcentre=31
+case    4849696: string="Joint Operational Meteorology and Oceanography Centre (JOMOC)"; break;  // centre=74, subcentre=32
+case    4849697: string="Koninklijk Nederlands Meteorologisch Institut (Netherlands)"; break;  // centre=74, subcentre=33
+case    4849698: string="Nordic GPS Atmospheric Analysis centre (Sweden)"; break;  // centre=74, subcentre=34
+case    4849699: string="Instituto Geografico Nacional de Espana (Spain)"; break;  // centre=74, subcentre=35
+case    4849700: string="Met Eireann (Ireland)"; break;  // centre=74, subcentre=36
+case    4849701: string="Royal Observatory of Belgium (Belgium)"; break;  // centre=74, subcentre=37
+case    5111818: string="POLARA (Polarimetric Radar Algorithms instance)"; break;  // centre=78, subcentre=10
+case    5111872: string="Bundeswehr Geoinformation Office (BGIO)"; break;  // centre=78, subcentre=64
+case    5111918: string="NowCast mobile (Lightning data)"; break;  // centre=78, subcentre=110
+case    5112029: string="Schleswig-Holstein, Traffic Operations Computing Centre (TOCC) Kiel/Neumuenster"; break;  // centre=78, subcentre=221
+case    5112030: string="Hamburg, TOCC Hamburg"; break;  // centre=78, subcentre=222
+case    5112031: string="Niedersachsen, TOCC Hannover"; break;  // centre=78, subcentre=223
+case    5112032: string="Austria (NMC)"; break;  // centre=78, subcentre=224
+case    5112033: string="Nordrhein-Westfalen, TOCC Kamen Leverkusen"; break;  // centre=78, subcentre=225
+case    5112034: string="Hessen, TOCC Ruesselsheim"; break;  // centre=78, subcentre=226
+case    5112035: string="Rheinland-Pfalz, TOCC Koblenz"; break;  // centre=78, subcentre=227
+case    5112036: string="Baden-Wuerttemberg, TOCC Ludwigsburg"; break;  // centre=78, subcentre=228
+case    5112037: string="Bayern, TOCC Freimann"; break;  // centre=78, subcentre=229
+case    5112038: string="Saarland, TOCC Rohrbach"; break;  // centre=78, subcentre=230
+case    5112039: string="Bayern, Autobahn directorate Nordbayern"; break;  // centre=78, subcentre=231
+case    5112040: string="Brandenburg, TOCC Stolpe"; break;  // centre=78, subcentre=232
+case    5112041: string="Mecklenburg-Vorpommern, TOCC Malchow"; break;  // centre=78, subcentre=233
+case    5112042: string="Sachsen, TOCC Dresden"; break;  // centre=78, subcentre=234
+case    5112043: string="Sachsen-Anhalt, TOCC Halle"; break;  // centre=78, subcentre=235
+case    5112044: string="Thueringen, TOCC Erfurt"; break;  // centre=78, subcentre=236
+case    5112045: string="EasyWay - Meteotrans"; break;  // centre=78, subcentre=237
+case    5112062: string="EUMETSAT"; break;  // centre=78, subcentre=254
+case    5242981: string="Albania (NMC)"; break;  // centre=80, subcentre=101
+case    5242982: string="National Research Council/Institute of Atmospheric Sciences and Climate (CNR-ISAC)"; break;  // centre=80, subcentre=102
+case    5570760: string="Institut National de l'Environnement Industriel et des Risques (France)"; break;  // centre=85, subcentre=200
+case    5570761: string="Rheinisches Institut fuer Umweltforschung an der Universitaet zu Koeln E.V. (Germany)"; break;  // centre=85, subcentre=201
+case    5570762: string="Institut Francais de Recherche pour l'Exploitation de la Mer"; break;  // centre=85, subcentre=202
+case    5570763: string="Aarhus University (Denmark)"; break;  // centre=85, subcentre=203
+case    5570764: string="Institute of Environmental Protection - National Research Institute (Poland)"; break;  // centre=85, subcentre=204
+case    5832705: string="Solar and Ozone Observatory Hradec Kralove"; break;  // centre=89, subcentre=1
+case    6291457: string="Cyprus (NMC)"; break;  // centre=96, subcentre=1
+case   13828106: string="Saint-Denis (La Reunion)"; break;  // centre=211, subcentre=10
+case   14876673: string="Luxembourg (NMC)"; break;  // centre=227, subcentre=1
+case   16384076: string="Roshydromet (Russian Federation)"; break;  // centre=250, subcentre=76
+case   16384078: string="Deutscher Wetterdienst (Germany)"; break;  // centre=250, subcentre=78
+case   16384080: string="Ufficio Generale Spazio Aereo e Meteorologia (Italy)"; break;  // centre=250, subcentre=80
+case   16384096: string="Hellenic National Meteorological Service (Greece)"; break;  // centre=250, subcentre=96
+case   16384215: string="MeteoSwiss (Switzerland)"; break;  // centre=250, subcentre=215
+case   16384220: string="Institute of Meteorology and Water Management (Poland)"; break;  // centre=250, subcentre=220
+case   16384242: string="National Meteorological Administration (Romania)"; break;  // centre=250, subcentre=242
+case   16646154: string="Tromso (Norway)"; break;  // centre=254, subcentre=10
+case   16646164: string="Maspalomas (Spain)"; break;  // centre=254, subcentre=20
+case   16646174: string="Kangerlussuaq (Greenland)"; break;  // centre=254, subcentre=30
+case   16646184: string="Edmonton (Canada)"; break;  // centre=254, subcentre=40
+case   16646194: string="Bedford (Canada)"; break;  // centre=254, subcentre=50
+case   16646204: string="Gander (Canada)"; break;  // centre=254, subcentre=60
+case   16646214: string="Monterey (United States)"; break;  // centre=254, subcentre=70
+case   16646224: string="Wallops Island (United States)"; break;  // centre=254, subcentre=80
+case   16646234: string="Gilmor Creek (United States)"; break;  // centre=254, subcentre=90
+case   16646244: string="Athens (Greece)"; break;  // centre=254, subcentre=100
+case   16646264: string="Ewa Beach, Hawaii"; break;  // centre=254, subcentre=120
+case   16646269: string="Ford Island, Hawaii"; break;  // centre=254, subcentre=125
+case   16646274: string="Miami, Florida"; break;  // centre=254, subcentre=130
+case   16646284: string="Lannion (France)"; break;  // centre=254, subcentre=140
+case   16646294: string="Svalbard (Norway)"; break;  // centre=254, subcentre=150
+case   16646314: string="Saint-Denis (La Reunion)"; break;  // centre=254, subcentre=170
+case   16646324: string="Moscow"; break;  // centre=254, subcentre=180
+case   16646334: string="Muscat"; break;  // centre=254, subcentre=190
+case   16646344: string="Khabarovsk"; break;  // centre=254, subcentre=200
+case   16646354: string="Novosibirsk"; break;  // centre=254, subcentre=210
+case   16646364: string="NOAA Satellite Operations Facility (NSOF)"; break;  // centre=254, subcentre=220

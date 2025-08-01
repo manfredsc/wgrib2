@@ -71,29 +71,29 @@ int f_AAIGlong(ARG0) {
 
     j = i = 0;
     while (name[i]) {
-	if (name[i] == '/') {
-	    file[j++] = ' ';
-	    file[j++] = 'D';
-	    file[j++] = 'I';
-	    file[j++] = 'V';
-	    file[j++] = ' ';
-	}
-	else if (name[i] == '\\') {
-	    file[j++] = ' ';
-	    file[j++] = 'B';
-	    file[j++] = 'S';
-	    file[j++] = ' ';
-	}
-	else if (name[i] == ':') {
-	    file[j++] = '_';
-	}
-	else if (name[i] == '"' || name[i] == '\'') {
-	    file[j++] = ' ';
-	    file[j++] = 'Q';
-	    file[j++] = ' ';
-	}
-	else file[j++] = name[i];
-	i++;
+        if (name[i] == '/') {
+            file[j++] = ' ';
+            file[j++] = 'D';
+            file[j++] = 'I';
+            file[j++] = 'V';
+            file[j++] = ' ';
+        }
+        else if (name[i] == '\\') {
+            file[j++] = ' ';
+            file[j++] = 'B';
+            file[j++] = 'S';
+            file[j++] = ' ';
+        }
+        else if (name[i] == ':') {
+            file[j++] = '_';
+        }
+        else if (name[i] == '"' || name[i] == '\'') {
+            file[j++] = ' ';
+            file[j++] = 'Q';
+            file[j++] = ' ';
+        }
+        else file[j++] = name[i];
+        i++;
     }
     file[j++] = '.';
     file[j++] = 'a';
@@ -121,9 +121,9 @@ int f_AAIGlong(ARG0) {
     }
     fprintf(out,"NODATA_VALUE 9.999e20\n");
     for (j = 0; j < ny_; j++) {
-	for (i = 0; i < nx_; i++) {
-	    fprintf(out,"%f\n", data[i+(ny_ - 1 - j)*nx_]);
-	}
+        for (i = 0; i < nx_; i++) {
+            fprintf(out,"%f\n", data[i+(ny_ - 1 - j)*nx_]);
+        }
     }
     ffclose(out);
     return 0;
