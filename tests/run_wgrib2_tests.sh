@@ -156,5 +156,22 @@ if [ "$line" != '1:0:d=2009060500:TMP:500 mb:180 hour fcst:prob >222.2:prob fcst
   exit 1
 fi
 
+
+echo '*** test new code table 4.6 entries ***'
+line=`../wgrib2/wgrib2 data/ref_simple_packing.grib2 -set table_4.6 6`
+if [ "`echo $line`" -ne "1:0:d=2009060500:TMP:500 mb:180 hour fcst:P-ENS=19" ] ; then
+  exit 1
+fi
+
+echo "*** test set_ts_dates ***"
+dates=`../wgrib2/wgrib2 data/gdaswave.t00z.wcoast.0p16.f000.grib2 -set_ts_dates 200001 1dy 1 | cut -f3 -d:`
+
+if [ "`echo "$dates" | head -n 1`" != "d=2000010100" ] ; then
+  exit 1
+fi
+if [ "`echo "$dates" | tail -n 1`" != "d=2000011900" ] ; then
+  exit 1
+fi
+
 echo "*** SUCCESS!"
 exit 0
