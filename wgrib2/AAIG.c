@@ -66,13 +66,20 @@ extern enum output_order_type output_order_wanted;
  *      If RT is different than VT 
  *          output = NAME.LEVEL.RT.VT.asc
  * 
- * The above file name convention works for a simple GFS forecast. However, life quickly gets 
- * more complicated and a new file name convention was needed (-AAIGlong).
- * 
  * @param ARG0 Arguments and context for the wgrib2 function macro.
  *
  * @return 0 on success, does not return error codes.
  *
+ * @note The above file name convention works for a simple GFS forecast. However, life quickly gets 
+ * more complicated and a new file name convention was needed (-AAIGlong).
+ * 
+ * ## Example Usage:
+ * @code{.sh}
+ * wgrib2 in_file -match "HGT:500 mb" -AAIG
+ * @endcode
+ * 
+ * The above line converts all the 500 mb HGT fields into an arcinfo ascii grid file. 
+ * 
  * @author Wesley Ebisuzaki @date 07/2008
  */
 int f_AAIG(ARG0) {
