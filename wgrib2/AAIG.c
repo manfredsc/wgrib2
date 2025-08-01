@@ -21,28 +21,28 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/**  ??? */
+/** Flag to indicate decoding mode. */
 extern int decode;
 
-/**  ??? */
+/** Flag to indicate lat-lon grid processing. */
 extern int latlon;
 
-/** ??? */
+/** Pointer to array of latitude values. */
 extern double *lat;
 
-/**  ??? */
+/** Pointer to array of longitude values. */
 extern double *lon;
 
-/**  ??? */
+/** Number of grid points in x-direction. */
 extern unsigned int nx_;
 
-/**  ??? */
+/** Number of grid points in y-direction. */
 extern unsigned int ny_;
 
-/**  ??? */
+/** Current output order type. */
 extern enum output_order_type output_order;
 
-/**  ??? */
+/** Desired output order type. */
 extern enum output_order_type output_order_wanted;
 
 /*
@@ -69,9 +69,9 @@ extern enum output_order_type output_order_wanted;
  * The above file name convention works for a simple GFS forecast. However, life quickly gets 
  * more complicated and a new file name convention was needed (-AAIGlong).
  * 
- * @param ARG0 ????
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
  *
- * @return ???
+ * @return 0 on success, does not return error codes.
  *
  * @author Wesley Ebisuzaki @date 07/2008
  */
