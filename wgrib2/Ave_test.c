@@ -426,6 +426,9 @@ static int do_ave(struct ave_struct *save) {
   * 
   * @return 0 for success, error code otherwise.
   * 
+ * ## Usage:
+ * -ave0 (time interval) (output grib file)
+ * 
   * @author Wesley Ebisuzaki @date 04/2009
   */
 int f_ave0(ARG2) {

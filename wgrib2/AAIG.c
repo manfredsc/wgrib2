@@ -71,8 +71,10 @@ extern enum output_order_type output_order_wanted;
  * @note The above file name convention works for a simple GFS forecast. However, life quickly gets 
  * more complicated and a new file name convention was needed (-AAIGlong).
  * 
- * ## Example Usage: 
+ * ## Usage:
+ * -AAIG
  * 
+ * ## Example: 
  * ???
  *
  * @author Wesley Ebisuzaki @date 07/2008

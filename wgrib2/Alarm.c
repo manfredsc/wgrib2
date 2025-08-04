@@ -20,7 +20,8 @@
  * Terminates wgrib2 after N seconds (real time). The alarm is activated in the 
  * setup phase and removed in the finalize phase.
  * 
- * @param ARG1 Arguments and context for the wgrib2 function macro. Requires a single argument which is the number of seconds to wait before terminating.
+ * @param ARG1 Arguments and context for the wgrib2 function macro. Requires a 
+ * single argument which is the number of seconds to wait before terminating.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -37,7 +38,7 @@
  * processed. Jobs on web servers may hang because of problems with the network connections which will 
  * never trigger the -limit option. 
  * 
- * ## Example Usage:
+ * ## Usage:
  *  -alarm N
  * 
  * N is an integer from 0..65536 (ISO C Standard). N = 0 will remove any pending alarm.

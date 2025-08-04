@@ -69,8 +69,10 @@ extern enum output_order_type output_order_wanted;
  * In rare cases, the format of the metadata has been updated.
  * If you need to format of the NAME to be unchanging, please freeze the version of wgrib2.
  *
- * ## Example Usage:
+ * ## Usage:
+ * -AAIGlong
  * 
+ * ## Example: 
  * ???
  * 
  * @author Wesley Ebisuzaki @date 10/2015

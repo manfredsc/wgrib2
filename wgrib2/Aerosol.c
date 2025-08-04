@@ -27,8 +27,10 @@
  *
  * @return 0 for success, does not return error codes.
  * 
- * ## Example Usage:
+ * ## Usage:
+ * -aerosol_size
  * 
+ * ## Example: 
  * ???
  * 
  * @author Wesley Ebisuzaki @date 02/2012
@@ -61,8 +63,10 @@ int f_aerosol_size(ARG0) {
  *
  * @return 0 for success, does not return error codes.
  * 
- * ## Example Usage:
+ * ## Usage:
+ * -aerosol_wavelength
  * 
+ * ## Example: 
  * ???
  * 
  * @author Wesley Ebisuzaki @date 02/2012
