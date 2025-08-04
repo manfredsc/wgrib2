@@ -22,7 +22,7 @@
  * 
  * @param ARG1 Arguments and context for the wgrib2 function macro. Requires a single argument which is the number of seconds to wait before terminating.
  * 
- * @return 0 on success, does not return error codes.
+ * @return 0 for success, error code otherwise.
  * 
  * @note The code for -alarm is SVr4, BSD, POSIX-1-2001 and IEEE Std 1003.1-2001 compatible. 
  * The code is also supported by the Cygwin system for Windows systems. The -alarm will need 

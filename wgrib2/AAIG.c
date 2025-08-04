@@ -66,7 +66,7 @@ extern enum output_order_type output_order_wanted;
  * 
  * @param ARG0 Arguments and context for the wgrib2 function macro.
  *
- * @return 0 on success, does not return error codes.
+ * @return 0 for success, error code otherwise.
  *
  * @note The above file name convention works for a simple GFS forecast. However, life quickly gets 
  * more complicated and a new file name convention was needed (-AAIGlong).

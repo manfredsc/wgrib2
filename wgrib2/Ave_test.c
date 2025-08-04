@@ -134,7 +134,7 @@ static int free_ave_struct(struct ave_struct *save) {
  * @param save Pointer to the ave_struct.
  * @param ndata Number of data points.
  * 
- * @return 0 on success, does not return error codes.
+ * @return 0 for success, error code otherwise.
  * 
  * @author Wesley Ebisuzaki @date 04/2009
  */
@@ -173,7 +173,7 @@ static int init_ave_struct(struct ave_struct *save, unsigned int ndata) {
  * @param ndata Number of data points.
  * @param missing Number of missing data points.
  * 
- * @return 0 on success, does not return error codes.
+ * @return 0 for success, error code otherwise.
  * 
  * @author Wesley Ebisuzaki @date 04/2009
  */
@@ -230,7 +230,7 @@ static int add_to_ave_struct(struct ave_struct *save, unsigned char **sec, float
  * 
  * @param save Pointer to the ave_struct containing the data.
  * 
- * @return 0 on success, does not return error codes.
+ * @return 0 for success, error code otherwise.
  * 
  * @author Wesley Ebisuzaki @date 04/2009
  */
@@ -424,7 +424,7 @@ static int do_ave(struct ave_struct *save) {
   * - arg1: Delta time for averaging (e.g., "6hr", "1dy").
   * - arg2: Output file name where the averaged data will be written.
   * 
-  * @return 0 on success, does not return error codes.
+  * @return 0 for success, error code otherwise.
   * 
   * @author Wesley Ebisuzaki @date 04/2009
   */

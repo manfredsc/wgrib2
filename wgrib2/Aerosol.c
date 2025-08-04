@@ -25,7 +25,7 @@
  * 
  * @param ARG0 Arguments and context for the wgrib2 function macro.
  *
- * @return 0 on success, does not return error codes.
+ * @return 0 for success, does not return error codes.
  * 
  * ## Example Usage:
  * 
@@ -59,7 +59,7 @@ int f_aerosol_size(ARG0) {
  * 
  * @param ARG0 Arguments and context for the wgrib2 function macro.
  *
- * @return 0 on success, does not return error codes.
+ * @return 0 for success, does not return error codes.
  * 
  * ## Example Usage:
  * 
