@@ -64,19 +64,43 @@ extern enum output_grib_type grib_type;
 
 /** Structure to hold average calculation data. */
 struct ave_struct {
-    double *sum;
-    int *n;
-    unsigned int n_sum;      
-    int has_val, n_fields, n_missing;
-    int dt, dt_unit, nx, ny;
-    unsigned char *first_sec[9];
-    unsigned char *next_sec[9];
-    int use_scale, dec_scale, bin_scale, wanted_bits, max_bits;
-    enum output_grib_type grib_type;
-    int year0, month0, day0, hour0, minute0, second0;
-    int year1, month1, day1, hour1, minute1, second1;
-    int year2, month2, day2, hour2, minute2, second2;  // verification time
-    struct seq_file out;
+    double *sum; /**< Sum of values. */
+    int *n; /**< Count of values. */
+    unsigned int n_sum; /**< Total number of values. */
+    int has_val; /**< Flag to indicate if values are present. */
+    int n_fields; /**< Number of fields. */
+    int n_missing; /**< Number of missing values. */
+    int dt; /**< Time interval. */
+    int dt_unit; /**< Time unit. */
+    int nx; /**< Number of grid points in the x direction. */
+    int ny; /**< Number of grid points in the y direction. */
+    unsigned char *first_sec[9]; /**< First section data. */
+    unsigned char *next_sec[9]; /**< Next section data. */
+    int use_scale; /**< Flag to indicate whether to use scaling. */
+    int dec_scale; /**< Flag to indicate the decoding scale. */
+    int bin_scale; /**< Flag to indicate the binary scale. */
+    int wanted_bits; /**< Flag to indicate the number of bits wanted. */
+    int max_bits; /**< Flag to indicate the maximum number of bits. */
+    enum output_grib_type grib_type; /**< Flag to indicate the output GRIB type. */
+    int year0; /**< Year of the first time step. */
+    int month0; /**< Month of the first time step. */
+    int day0; /**< Day of the first time step. */
+    int hour0; /**< Hour of the first time step. */
+    int minute0; /**< Minute of the first time step. */
+    int second0; /**< Second of the first time step. */
+    int year1; /**< Year of the current time step. */
+    int month1; /**< Month of the current time step. */
+    int day1; /**< Day of the current time step. */
+    int hour1; /**< Hour of the current time step. */
+    int minute1; /**< Minute of the current time step. */
+    int second1; /**< Second of the current time step. */
+    int year2; /**< Year of the verification time. */
+    int month2; /**< Month of the verification time. */
+    int day2; /**< Day of the verification time. */
+    int hour2; /**< Hour of the verification time. */
+    int minute2; /**< Minute of the verification time. */
+    int second2; /**< Second of the verification time. */
+    struct seq_file out; /**< Output file structure. */
 };
 
 static int do_ave(struct ave_struct *save);
