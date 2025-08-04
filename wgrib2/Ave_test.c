@@ -82,18 +82,18 @@ struct ave_struct {
     int wanted_bits; /**< Flag to indicate the number of bits wanted. */
     int max_bits; /**< Flag to indicate the maximum number of bits. */
     enum output_grib_type grib_type; /**< Flag to indicate the output GRIB type. */
-    int year0; /**< Year of the first time step. */
-    int month0; /**< Month of the first time step. */
-    int day0; /**< Day of the first time step. */
-    int hour0; /**< Hour of the first time step. */
-    int minute0; /**< Minute of the first time step. */
-    int second0; /**< Second of the first time step. */
-    int year1; /**< Year of the current time step. */
-    int month1; /**< Month of the current time step. */
-    int day1; /**< Day of the current time step. */
-    int hour1; /**< Hour of the current time step. */
-    int minute1; /**< Minute of the current time step. */
-    int second1; /**< Second of the current time step. */
+    int year0; /**< Year of the lowest reference time. */
+    int month0; /**< Month of the lowest reference time. */
+    int day0; /**< Day of the lowest reference time. */
+    int hour0; /**< Hour of the lowest reference time. */
+    int minute0; /**< Minute of the lowest reference time. */
+    int second0; /**< Second of the lowest reference time. */
+    int year1; /**< Year of the current reference time. */
+    int month1; /**< Month of the current reference time. */
+    int day1; /**< Day of the current reference time. */
+    int hour1; /**< Hour of the current reference time. */
+    int minute1; /**< Minute of the current reference time. */
+    int second1; /**< Second of the current reference time. */
     int year2; /**< Year of the verification time. */
     int month2; /**< Month of the verification time. */
     int day2; /**< Day of the verification time. */
