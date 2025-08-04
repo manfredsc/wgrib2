@@ -1,13 +1,6 @@
 /** @file
- * 
  * @brief Converts lat-lon file to ArcInfo ASCII grid file.
- *
- * ### Program History Log
- * Date | Programmer | Comments
- * -----|------------|---------
- * 10/2015 | Wesley Ebisuzaki | Initial 
- * 
- * @author Wesley Ebisuzaki @date 10/2015
+ * @author Public Domain: Wesley Ebisuzaki @date 10/2015
  */
 
 #include <stdio.h>
@@ -85,7 +78,6 @@ extern enum output_order_type output_order_wanted;
  * 
  * @author Wesley Ebisuzaki @date 10/2015
  */
-
 int f_AAIGlong(ARG0) {
 
     size_t i, j;

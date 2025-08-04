@@ -1,18 +1,17 @@
 /** @file
- * 
  * @brief Converts lat-lon file to ArcInfo ASCII grid file (alpha).
+ * @author Public Domain: Wesley Ebisuzaki @date 07/2008
  * 
  * ### Program History Log
  * Date | Programmer | Comments
  * -----|------------|---------
- * 07/2008 | Wesley Ebisuzaki | Initial 
- * 10/2010 | H. Peifer | bug fix
- * 07/2016 | Manfred Schwarb | allow dx != dy
- * 01/2020 | Manfred Schwarb | output filename has ensemble info
- * 
- * @author Wesley Ebisuzaki @date 07/2008
+ * 07/2008 | W. Ebisuzaki | v0.9 - Initial
+ * 10/2010 | H. Peifer | v0.99 - bug fix
+ * 07/2016 | M. Schwarb | v1.0 - allow dx != dy
+ * 01/2020 | M. Schwarb | v1.1 - output filename has ensemble info
  */
 
+/* Public Domain */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
