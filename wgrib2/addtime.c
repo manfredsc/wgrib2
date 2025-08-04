@@ -1,3 +1,8 @@
+/** @file
+ * @brief Utility functions for manipulating GRIB time codes.
+ * @author Public Domain: Wesley Ebisuzaki @date 01/2006
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -6,20 +11,44 @@
 #include "wgrib2.h"
 #include "CodeTable4_4.h"
 
-/* addtime.c   10/2024 Public Domain   Wesley Ebisuzaki */
-
+/** February 29th day of the year */
 #define  FEB29   (31+29)
-static int monthjday[13] = {
-        0,31,59,90,120,151,181,212,243,273,304,334,365};
 
+/** Array of cumulative days at the start of each month (non-leap year). */
+static int monthjday[13] = {
+    0,31,59,90,120,151,181,212,243,273,304,334,365
+};
+
+/**
+ * Determines if a year is a leap year.
+ * 
+ * @param year Year to check.
+ * 
+ * @return 1 if leap year, 0 otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 01/2006
+ */
 static int leap(int year) {
     if (year % 4 != 0) return 0;
     if (year % 100 != 0) return 1;
     return (year % 400 == 0);
 }
 
-/* see if date code is reasonable */
-
+/**
+ * Checks if a date code is valid.
+ * 
+ * @param year Year.
+ * @param month Month (1-12).
+ * @param day Day of month.
+ * 
+ * @return
+ * - 0 Date code is valid.
+ * - 1 Invalid year.
+ * - 2 Invalid month.
+ * - 3 Invalid day.
+ * 
+ * @author Wesley Ebisuzaki @date 01/2006
+ */
 int check_datecode(int year, int month, int day) {
     int days_in_month;
 
@@ -34,7 +63,27 @@ int check_datecode(int year, int month, int day) {
     return 3;
 }
 
-/* see if time is reasonable */
+/**
+ * Checks if a time code is valid.
+ * 
+ * @param year Year.
+ * @param month Month (1-12).
+ * @param day Day of month.
+ * @param hour Hour (0-23).
+ * @param minute Minute (0-59).
+ * @param second Second (0-59).
+ * 
+ * @return
+ * - 0 Time code is valid.
+ * - 1 Invalid year.
+ * - 2 Invalid month.
+ * - 3 Invalid day.
+ * - 4 Invalid hour.
+ * - 5 Invalid minute.
+ * - 6 Invalid second.
+ * 
+ * @author Wesley Ebisuzaki @date 01/2006
+ */
 
 int check_time(int year, int month, int day, int hour, int minute, int second) {
 
@@ -44,23 +93,53 @@ int check_time(int year, int month, int day, int hour, int minute, int second) {
     return check_datecode(year, month, day);
 }
 
-/*
-    add_time:  adds a positive value to a time code
-    public domain 2006: wesley ebisuzaki
-    1/2007 cleanup M. Schwarb, W. Ebisuzaki
-    1/2006 removed floor(), case where floor(24/24.0) == 0
-    some day should allow +/- dtime (not needed for this application
-    when adding 1 month, make sure day of month is legal
-    4/2015: dtime is now integer
+/**
+ * Adds or subtracts a time interval to a time code.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 01/2006 | W. Ebisuzaki | Initial
+ * 01/2006 | W. Ebisuzaki | removed floor(), case where floor(24/24.0) == 0
+ *                          some day should allow +/- dtime (not needed for this application
+ *                          when adding 1 month, make sure day of month is legal)
+ * 01/2007 | M. Schwarb, W. Ebisuzaki | Cleanup
+ * 04/2015 | M. Schwarb, W. Ebisuzaki | dtime is now integer
+ * 
+ * @param year Pointer to year.
+ * @param month Pointer to month.
+ * @param day Pointer to day.
+ * @param hour Pointer to hour.
+ * @param minute Pointer to minute.
+ * @param second Pointer to second.
+ * @param dtime Time interval.
+ * @param unit Time unit (YEAR, MONTH, DAY, etc).
+ * 
+ * @return
+ * - 0 Success.
+ * - 1 Invalid time unit.
+ * 
+ * @author Wesley Ebisuzaki @date 01/2006
  */
-
-int add_time(int *year, int *month, int *day, int *hour, int *minute, int *second, 
-        int dtime, int unit) {
+int add_time(int *year, int *month, int *day, int *hour, int *minute, int *second, int dtime, int unit) {
     if (dtime == 0) return 0;
     if (dtime > 0) return add_dt(year, month, day, hour, minute, second, dtime, unit);
     return sub_dt(year, month, day, hour, minute, second, -dtime, unit);
 }
 
+/**
+ * Adds or subtracts a time interval to a full_date struct.
+ * 
+ * @param date Pointer to full_date struct.
+ * @param dtime Time interval.
+ * @param unit Time unit.
+ * 
+ * @return
+ * - 0 Success.
+ * - 1 Invalid time unit.
+ * 
+ * @author Wesley Ebisuzaki @date 01/2006
+ */
 int Add_time(struct full_date *date, int dtime, int unit) {
     if (dtime == 0) return 0;
     if (dtime > 0) 
@@ -68,8 +147,25 @@ int Add_time(struct full_date *date, int dtime, int unit) {
     return sub_dt(&(date->year), &(date->month), &(date->day), &(date->hour), &(date->minute), &(date->second), -dtime, unit);
 }
 
-int add_dt(int *year, int *month, int *day, int *hour, int *minute, int *second, 
-        int dtime, int unit) {
+/**
+ * Adds a time interval to a time code.
+ * 
+ * @param year Pointer to year.
+ * @param month Pointer to month.
+ * @param day Pointer to day.
+ * @param hour Pointer to hour.
+ * @param minute Pointer to minute.
+ * @param second Pointer to second.
+ * @param dtime Time interval.
+ * @param unit Time unit.
+ * 
+ * @return
+ * - 0 Success.
+ * - 1 Invalid time unit.
+ * 
+ * @author Wesley Ebisuzaki @date 01/2006
+ */
+int add_dt(int *year, int *month, int *day, int *hour, int *minute, int *second, int dtime, int unit) {
 
     int y, m, d, h, mm, s, jday, i, days_in_month;
 
@@ -197,12 +293,26 @@ int add_dt(int *year, int *month, int *day, int *hour, int *minute, int *second,
    return 1;
 }
 
-/*
- * figures out (date) - dt
+/**
+ * Subtracts a time interval from a time code.
+ * 
+ * @param year Pointer to year.
+ * @param month Pointer to month.
+ * @param day Pointer to day.
+ * @param hour Pointer to hour.
+ * @param minute Pointer to minute.
+ * @param second Pointer to second.
+ * @param dtime Time interval.
+ * @param unit Time unit.
+ * 
+ * @return
+ * - 0 Success.
+ * - 1 Invalid time unit.
+ * 
+ * @author Wesley Ebisuzaki @date 01/2006
  */
 
-int sub_dt(int *year, int *month, int *day, int *hour, int *minute, int *second, 
-        int dtime, int unit) {
+int sub_dt(int *year, int *month, int *day, int *hour, int *minute, int *second, int dtime, int unit) {
 
     int y, m, d, h, mm, s, jday, i, days_in_month;
 
@@ -316,11 +426,21 @@ int sub_dt(int *year, int *month, int *day, int *hour, int *minute, int *second,
    return 1;
 }
 
-
-/*
-   This routine reads year/month/day.../second byte code and saves it in variables
+/**
+ * Reads a GRIB time code (year/month/day.../second) into separate variables.
+ * 
+ * @param p Pointer to GRIB time code bytes.
+ * @param year Pointer to year.
+ * @param month Pointer to month.
+ * @param day Pointer to day.
+ * @param hour Pointer to hour.
+ * @param minute Pointer to minute.
+ * @param second Pointer to second.
+ * 
+ * @return 0 on success.
+ * 
+ * @author Wesley Ebisuzaki @date 01/2006
  */
-
 int get_time(unsigned char *p, int *year, int *month, int *day, int *hour, int *minute, int *second) {
     *year = (p[0] << 8) | p[1];
     p += 2;
@@ -332,10 +452,16 @@ int get_time(unsigned char *p, int *year, int *month, int *day, int *hour, int *
     return 0;
 }
 
-/*
-   This routine reads year/month/day.../second byte code and saves it in struct full_date
+/**
+ * Reads a GRIB time code (year/month/day.../second) into a full_date struct.
+ * 
+ * @param p Pointer to GRIB time code bytes.
+ * @param date Pointer to full_date struct.
+ * 
+ * @return 0 on success.
+ * 
+ * @author Wesley Ebisuzaki @date 01/2006
  */
-
 int Get_time(unsigned char *p, struct full_date *date) {
     date->year = (p[0] << 8) | p[1];
     date->month = p[2];
@@ -346,12 +472,23 @@ int Get_time(unsigned char *p, struct full_date *date) {
     return 0;
 }
 
-
-
-/*
-   inverse of get_time .. save time code in PDS
+/**
+ * Saves time code variables into GRIB time code bytes.
+ * 
+ * Inverse of get_time (saves time code in PDS).
+ * 
+ * @param year Year.
+ * @param month Month.
+ * @param day Day.
+ * @param hour Hour.
+ * @param minute Minute.
+ * @param second Second.
+ * @param p Pointer to output GRIB time code bytes.
+ * 
+ * @return 0 on success.
+ * 
+ * @author Wesley Ebisuzaki @date 01/2006
  */
-
 int save_time(int year, int month, int day, int hour, int minute, int second, unsigned char *p) {
 
     *p++ = (unsigned char) (year >> 8) & 255;
@@ -368,6 +505,18 @@ int save_time(int year, int month, int day, int hour, int minute, int second, un
    inverse of get_time .. save struct *full_date  in PDS
  */
 
+/**
+ * Saves a full_date struct into GRIB time code bytes.
+ * 
+ * Inverse of get_time (saves time code in PDS).
+ * 
+ * @param date Pointer to full_date struct.
+ * @param p Pointer to output GRIB time code bytes.
+ * 
+ * @return 0 on success.
+ * 
+ * @author Wesley Ebisuzaki @date 01/2006
+ */
 int Save_time(struct full_date *date, unsigned char *p) {
 
     *p++ = (unsigned char) (date->year >> 8) & 255;
@@ -380,13 +529,30 @@ int Save_time(struct full_date *date, unsigned char *p) {
     return 0;
 }
 
-
-/*
-   compare two time codes: return -1 : 0 : 1
+/**
+ * Compares two time codes.
+ * 
+ * @param year0 First year.
+ * @param month0 First month.
+ * @param day0 First day.
+ * @param hour0 First hour.
+ * @param minute0 First minute.
+ * @param second0 First second.
+ * @param year1 Second year.
+ * @param month1 Second month.
+ * @param day1 Second day.
+ * @param hour1 Second hour.
+ * @param minute1 Second minute.
+ * @param second1 Second second.
+ * 
+ * @return 
+ * - First < Second: -1
+ * - First == Second: 0
+ * - First > Second: 1
+ *
+ * @author Wesley Ebisuzaki @date 01/2006
  */
-
-int cmp_time(int year0, int month0, int day0, int hour0, int minute0, int second0, 
-        int year1, int month1, int day1, int hour1, int minute1, int second1) {
+int cmp_time(int year0, int month0, int day0, int hour0, int minute0, int second0, int year1, int month1, int day1, int hour1, int minute1, int second1) {
 
     if (year0 < year1) return -1;
     if (year0 > year1) return 1;
@@ -403,8 +569,18 @@ int cmp_time(int year0, int month0, int day0, int hour0, int minute0, int second
     return 0;
 }
 
-/*
-   compare two time codes: return -1 : 0 : 1
+/**
+ * Compares two full_date structs.
+ * 
+ * @param date0 Pointer to the first full_date struct.
+ * @param date1 Pointer to the second full_date struct.
+ * 
+ * @return 
+ * - First < Second: -1
+ * - First == Second: 0
+ * - First > Second: 1
+ *
+ * @author Wesley Ebisuzaki @date 01/2006
  */
 int Cmp_time(struct full_date *date0, struct full_date *date1) {
 
