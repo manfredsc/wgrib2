@@ -70,9 +70,11 @@ extern enum output_order_type output_order_wanted;
  * If you need to format of the NAME to be unchanging, please freeze the version of wgrib2.
  *
  * ## Example Usage:
- * @code{.sh}
- * wgrib2 in_file -match "HGT:500 mb" -AAIGlong
- * @endcode
+ * $ wgrib2 gep19.t00z.pgrb2af180 -match "HGT:500 mb" -AAIGlong
+ * > raster file: D=20090605000000_HGT_500 mb_180 hour fcst_ENS=+19.asc
+ * > 9:280952:d=2009060500:HGT:500 mb:180 hour fcst:ENS=+19
+ * $ ls *asc
+ * > D=20090605000000_HGT_500 mb_180 hour fcst_ENS=+19.asc
  * 
  * The above line converts all the 500 mb HGT fields into an arcinfo ascii grid file. 
  * 

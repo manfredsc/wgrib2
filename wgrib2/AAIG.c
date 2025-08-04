@@ -11,7 +11,6 @@
  * 01/2020 | M. Schwarb | v1.1 - output filename has ensemble info
  */
 
-/* Public Domain */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -73,12 +72,10 @@ extern enum output_order_type output_order_wanted;
  * more complicated and a new file name convention was needed (-AAIGlong).
  * 
  * ## Example Usage:
- * @code{.sh}
- * wgrib2 in_file -match "HGT:500 mb" -AAIG
- * @endcode
- * 
- * The above line converts all the 500 mb HGT fields into an arcinfo ascii grid file. 
- * 
+ * $ wgrib2 in_file -match "HGT:500 mb" -AAIG
+ *
+ * The above line converts all the 500 mb HGT fields into an arcinfo ascii grid file.
+ *
  * @author Wesley Ebisuzaki @date 07/2008
  */
 int f_AAIG(ARG0) {
