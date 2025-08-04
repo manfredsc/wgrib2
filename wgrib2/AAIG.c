@@ -71,10 +71,9 @@ extern enum output_order_type output_order_wanted;
  * @note The above file name convention works for a simple GFS forecast. However, life quickly gets 
  * more complicated and a new file name convention was needed (-AAIGlong).
  * 
- * ## Example Usage:
- * $ wgrib2 in_file -match "HGT:500 mb" -AAIG
- *
- * The above line converts all the 500 mb HGT fields into an arcinfo ascii grid file.
+ * ## Example Usage: 
+ * 
+ * ???
  *
  * @author Wesley Ebisuzaki @date 07/2008
  */
