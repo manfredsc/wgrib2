@@ -1,6 +1,6 @@
 /** @file
  * @brief Options for showing cluster information.
- * @author Public Domain: Wesley Ebisuzaki 
+ * @author Public Domain: Wesley Ebisuzaki @date 2006
  */
 
 #include <stdio.h>
@@ -24,7 +24,7 @@
  * ## Usage:
  * -cluster
  * 
- * @author Wesley Ebisuzaki
+ * @author Wesley Ebisuzaki @date 2006
  */
 int f_cluster(ARG0) {
     int i;
@@ -50,7 +50,7 @@ int f_cluster(ARG0) {
  * ## Usage:
  * -N_clusters
  * 
- * @author Wesley Ebisuzaki
+ * @author Wesley Ebisuzaki @date 2006
  */
 int f_N_clusters(ARG0) {
     int i;
@@ -80,7 +80,7 @@ extern char *nl;
  * ## Usage:
  * -cluster_info
  * 
- * @author Wesley Ebisuzaki
+ * @author Wesley Ebisuzaki @date 2006
  */
 int f_cluster_info(ARG0) {
 
