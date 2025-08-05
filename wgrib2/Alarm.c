@@ -45,6 +45,8 @@
  * 
  * For Posix systems, the system generates a SIGALRM signal to the process after N seconds. The default 
  * action is to terminate the process (wgrib2). 
+ * 
+ * @author Wesley Ebisuzaki @date 04/2017
 */
 int f_alarm(ARG1) {
     int i;
