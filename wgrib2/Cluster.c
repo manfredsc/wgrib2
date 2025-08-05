@@ -1,3 +1,8 @@
+/** @file
+ * @brief Options for showing cluster information.
+ * @author Public Domain: Wesley Ebisuzaki 
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,16 +10,22 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/* Cluster.c    10/2024  Public Domain  Wesley Ebisuzaki
- *
- * options for showing cluster information
- *
- */
-
 /*
  * HEADER:-1:cluster:inv:0:cluster identifier
  */
 
+/**
+ * Display the cluster identifier.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, does not return an error code.
+ * 
+ * ## Usage:
+ * -cluster
+ * 
+ * @author Wesley Ebisuzaki
+ */
 int f_cluster(ARG0) {
     int i;
 
@@ -29,7 +40,18 @@ int f_cluster(ARG0) {
  * HEADER:-1:N_clusters:inv:0:number of clusters
  */
 
-
+/**
+ * Display the number of clusters.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, does not return an error code.
+ * 
+ * ## Usage:
+ * -N_clusters
+ * 
+ * @author Wesley Ebisuzaki
+ */
 int f_N_clusters(ARG0) {
     int i;
 
@@ -43,7 +65,23 @@ int f_N_clusters(ARG0) {
 /*
  * HEADER:-1:cluster_info:inv:0:cluster information
  */
+
+/** Newline character */
 extern char *nl;
+
+/**
+ * Display information about the cluster, including the cluster identifier,
+ * number of forecasts in the cluster, and other related data.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, does not return an error code.
+ * 
+ * ## Usage:
+ * -cluster_info
+ * 
+ * @author Wesley Ebisuzaki
+ */
 int f_cluster_info(ARG0) {
 
     unsigned char *nc, *cluster;
