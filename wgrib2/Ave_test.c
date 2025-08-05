@@ -416,21 +416,24 @@ static int do_ave(struct ave_struct *save) {
  * HEADER:000:ave0:output:2:average X=time step, Y=output grib file needs file is special order
  */
 
- /**
-  * Calculates temporal averages of grib data and writes the results to a specified output file.
-  * This is the old version (v2.0.6) of the -ave option.
-  * 
-  * @param ARG2 Arguments and context for the wgrib2 function macro. Requires two arguments:
-  * - arg1: Delta time for averaging (e.g., "6hr", "1dy").
-  * - arg2: Output file name where the averaged data will be written.
-  * 
-  * @return 0 for success, error code otherwise.
-  * 
+/**
+ * Calculates temporal averages of grib data and writes the results to a specified output file.
+ * This is the old version (v2.0.6) of the -ave option.
+ * 
+ * @param ARG2 Arguments and context for the wgrib2 function macro. Requires two arguments:
+ * - arg1: Delta time for averaging (e.g., "6hr", "1dy").
+ * - arg2: Output file name where the averaged data will be written.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
  * ## Usage:
  * -ave0 (time interval) (output grib file)
  * 
-  * @author Wesley Ebisuzaki @date 04/2009
-  */
+ * ## Example: 
+ * ???
+ * 
+ * @author Wesley Ebisuzaki @date 04/2009
+ */
 int f_ave0(ARG2) {
 
     struct ave_struct *save;
