@@ -1,35 +1,70 @@
+/** @file
+ * @brief GRIB table names.
+ * @author Public Domain: Wesley Ebisuzaki @date 2006
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 2006 | W. Ebisuzaki | Initial
+ * 4/2007 | W. Ebisuzaki | Added netCDF support
+ * 6/2011 | W. Ebisuzaki | Made parameter category >= 192 local
+ * 2/2012 | W. Ebisuzaki | Fixed search_gribtab for local tables
+ * 4/2013 | W. Ebisuzaki | gribtab -> gribtable, added user_gribtable
+ * 1/2021 | W. Ebisuzaki | Use NCEP or ECMWF names as default, local table handled epar
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include "grb2.h"
 #include "wgrib2.h"
 
-extern struct gribtable_s NCEP_gribtable[], ECMWF_gribtable[], DWD1_gribtable[], local_gribtable[];
+/** NCEP Grib Table */
+extern struct gribtable_s NCEP_gribtable[];
+/** ECMWF Grib Table */
+extern struct gribtable_s ECMWF_gribtable[];
+/** DWD1 Grib Table */
+extern struct gribtable_s DWD1_gribtable[];
+/** Local Grib Table */
+extern struct gribtable_s local_gribtable[];
+/** User-defined Grib Table */
 extern struct gribtable_s *user_gribtable;
 
 static struct gribtable_s *search_gribtable(struct gribtable_s *gribtable, unsigned char **sec);
 
 #ifdef USE_TIGGE
+/** Flag to use TIGGE */
 extern int tigge;
+/** TIGGE Grib Table */
 extern struct gribtable_s tigge_gribtable[];
 #endif
 /*
  * get the name information    2006 Public Domain  Wesley Ebisuzaki
  *
  * if inv_out, name, desc, unit == NULL, not used
- *
- * v1.0 Wesley Ebisuzaki 2006
- * v1.1 Wesley Ebisuzaki 4/2007 netcdf support
- * v1.2 Wesley Ebisuzaki 4/2007 multiple table support
- * v1.3 Wesley Ebisuzaki 6/2011 make parameter cat >= 192 local
- * v1.4 Wesley Ebisuzaki 2/2012 fixed search_gribtab for local tables
- * v1.5 Wesley Ebisuzaki 4/2013 gribtab -> gribtable, added user_gribtable
- * v1.6 Wesley Ebisuzaki 1/2021 use NCEP or ECMWF names as default, local table handled epar
+
  */
 
+/** Indicates the GRIB table name to use */
 extern int names;
 
+/**
+ * Get the name information. 
+ * 
+ * @param sec Pointer to the GRIB section.
+ * @param mode Mode of operation (0 for normal, -1 for initialization).
+ * @param inv_out Pointer to the output string for the name. Ignored if NULL.
+ * @param name Pointer to store the name. Ignored if NULL.
+ * @param desc Pointer to store the description. Ignored if NULL.
+ * @param unit Pointer to store the unit. Ignored if NULL.
+ * @param mset Pointer to store the master table version number used by set_var.
+ * @param mlow Pointer to store the low range of master tables.
+ * @param mhigh Pointer to store the high range of master tables.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 2006
+ */
 int getName_all(unsigned char **sec, int mode, char *inv_out, char *name, char *desc, char *unit, int *mset, int *mlow, int *mhigh) {
 
     int discipline, center, mastertab, localtab, parmcat, parmnum;
@@ -132,16 +167,36 @@ int getName_all(unsigned char **sec, int mode, char *inv_out, char *name, char *
     return 0;
 }
 
+/**
+ * Get the name information. 
+ * 
+ * @param sec Pointer to the GRIB section.
+ * @param mode Mode of operation (0 for normal, -1 for initialization).
+ * @param inv_out Pointer to the output string for the name. Ignored if NULL.
+ * @param name Pointer to store the name. Ignored if NULL.
+ * @param desc Pointer to store the description. Ignored if NULL.
+ * @param unit Pointer to store the unit. Ignored if NULL.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 2006
+ */
 int getName(unsigned char **sec, int mode, char *inv_out, char *name, char *desc, char *unit) {
-        int mset, mlow, mhigh;
+    int mset, mlow, mhigh;
 
     return getName_all(sec, mode, inv_out, name, desc, unit, &mset, &mlow, &mhigh);
 }
 
-/*
- * search the grib table
- */
-
+ /**
+  * Searches the GRIB table for a matching entry based on the GRIB section.
+  * 
+  * @param p Pointer to the start of the GRIB table.
+  * @param sec Pointer to the GRIB section.
+  * 
+  * @return Pointer to the matching entry in the GRIB table, or NULL if not found.
+  * 
+  * @author Wesley Ebisuzaki @date 2006
+  */
 static struct gribtable_s *search_gribtable(struct gribtable_s *p, unsigned char **sec) {
 
     int discipline, center, mastertab, localtab, parmcat, parmnum;
