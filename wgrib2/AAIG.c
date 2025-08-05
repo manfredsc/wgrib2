@@ -47,7 +47,7 @@ extern enum output_order_type output_order_wanted;
  * HEADER:100:AAIG:output:0:writes Ascii ArcInfo Grid file, lat-lon grid only (alpha)
  */
 
- /**
+/**
  * Converts a lat-lon file and writes the data into a Ascii ArcInfo Grid file. 
  * This option is experimental and only supports equally spaced lat-lon grids.
  * 
