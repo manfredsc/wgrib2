@@ -1,3 +1,10 @@
+/** @file
+ * @brief Calculate CRC32 checksum for sections and the whole message. The checksum
+ * algorithm is the same as the POSIX 'cksum' utility uses.
+ * @author Public Domain: R.N. Bokhorst, reinoud.bokhorst@bmtargoss.com 
+ * @date 06/2009
+ */
+
 /*
  * Checksum.c
  *   Calculate CRC32 checksum for sections and the whole message. The checksum
@@ -14,10 +21,40 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
+/** Flag to indicate decoding mode. */
 extern int decode;
 
 /*
  * HEADER:400:checksum:inv:1:CRC checksum of section X (0..8), whole message (X = -1/message) or (X=data)
+ */
+
+/**
+ * Writes the checksum (32 bit CRC) for the entire grib message, the decoded grid-point 
+ * data or any specified section.
+ * 
+ * @param ARG1 Arguments and context for the wgrib2 function macro. 
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * @note Two sections or messages with the same checksum are very probably the same. If the grid-point 
+ * data has the same checksum, they are very probably bitwise identical. This option can be used to check 
+ * the integrity of a grib message or to check for for identical sections. Note that decoded grid-point 
+ * values may not be unique. Wgrib2 is compiled with the "fast" option which may sacrifice some precision 
+ * for speed or uniqueness. For example, A*B*C should be calculated by (A*B)*C. However A*(B*C) will be faster 
+ * if B*C was previously calculated. While mathematically the expressions are the same, the final results may 
+ * be slightly different. 
+ * 
+ * ## Usage:
+ * -checksum N
+ * where N is:
+ *   -1: whole message
+ *   1-8: section number
+ *   data: grid-point data
+ * 
+ * ## Example:
+ * ???
+ * 
+ * @author R.N. Bokhorst @date 06/2009
  */
 int f_checksum(ARG1) {
     unsigned int crc;
