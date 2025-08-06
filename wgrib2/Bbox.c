@@ -87,9 +87,6 @@ struct Bbox {
     int last_GDS_change_no; /**< Last GDS change number. */
 };
 
-/* return c-style index, with wrapping; on input i is a fortran-style
-   index and nx is the */
-
 /**
  * Get the C-style index with wrapping.
  * 
