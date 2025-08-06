@@ -1,5 +1,15 @@
-#include <stdio.h>
+/** @file
+ * @brief Some routines that examine the data.
+ * @author Wesley Ebisuzaki @date 2006
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 2006 | W. Ebisuzaki | Initial
+ * 1/2007 | M. Schwarb | Cleanup
+ */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
@@ -7,24 +17,44 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/*
- * Data.c
- *
- *  Some routines that examine the data
- *
- * 2006: Public Domain: Wesley Ebisuzaki
- * 1/2007 cleanup M. Schwarb
- *
- */
+/** Decode grib file flag. */
+extern int decode;
 
-extern int decode, latlon;
-extern double *lat, *lon;
+/** Flag to indicate lat-lon grid processing. */
+extern int latlon;
 
+/** Pointer to array of latitude values. */
+extern double *lat;
+
+/** Pointer to array of longitude values. */
+extern double *lon;
+
+/** Conversion factor from degrees to radians. */
 #define CONV (3.14159265/180.0)
+
 /*
  * HEADER:100:stats:inv:0:statistical summary of data values
  */
 
+/**
+ * Writes a statistical summary of the field into the inventory.
+ * 
+ * Summary includes the number of defined values, undefined values, mean, minimum, 
+ * and maximum values. If latitude information is available, it also computes a 
+ * cosine-weighted mean.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 on success, error code otherwise.
+ * 
+ * ## Usage:
+ * -stats
+ * 
+ * ## Example:
+ * ???
+ * 
+ * @author Wesley Ebisuzaki @date 2006
+ */
 int f_stats(ARG0) {
     double sum, sum_wt, wt, last_coslat, last_lat;
     int do_wt;
@@ -84,6 +114,21 @@ int f_stats(ARG0) {
  * HEADER:100:max:inv:0:print maximum value
  */
 
+/**
+ * Prints the maximum value of the field.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 on success, error code otherwise.
+ * 
+ * ## Usage:
+ * -max
+ * 
+ * ## Example:
+ * ???
+ * 
+ * @author Wesley Ebisuzaki @date 2006
+ */
 int f_max(ARG0) {
     float mn, mx;
     int ok;
@@ -103,6 +148,21 @@ int f_max(ARG0) {
  * HEADER:100:min:inv:0:print minimum value
  */
 
+/**
+ * Prints the minimum value of the field.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 on success, error code otherwise.
+ * 
+ * ## Usage:
+ * -min
+ * 
+ * ## Example:
+ * ???
+ * 
+ * @author Wesley Ebisuzaki @date 2006
+ */
 int f_min(ARG0) {
     float mx, mn;
     int ok;
