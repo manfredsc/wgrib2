@@ -24,7 +24,6 @@
 /** Decode grib file flag. */
 extern int decode;
 
-
 /*
  * HEADER:400:checksum:inv:1:CRC checksum of section X (0..8), whole message (X = -1/message) or (X=data)
  */

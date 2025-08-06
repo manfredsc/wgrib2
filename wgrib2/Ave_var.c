@@ -40,19 +40,19 @@ extern int ny;
 /** Flag to indicate whether to save translation information. */
 extern int save_translation;
 
-/** Flag to indicate whether to flush output buffers. */
+/** Flush of output flag. */
 extern int flush_mode;
 
 /** Pointer to the translation array. */
 extern unsigned int *translation;
 
-/** Flag to indicate whether to use scaling. */
+/** Use scaling flag. */
 extern int use_scale;
 
-/** Flag to indicate the decoding scale. */
+/** Decoding scale flag. */
 extern int dec_scale;
 
-/** Flag to indicate the binary scale. */
+/** Binary scale flag. */
 extern int bin_scale;
 
 /** Number of bits wanted. */
