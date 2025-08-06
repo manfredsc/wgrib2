@@ -18,6 +18,9 @@
 /** Decode grib file flag. */
 extern int decode;
 
+/** Flush output flag. */
+extern int flush_mode;
+
 /** Append grib file flag. */
 extern int file_append;
 
