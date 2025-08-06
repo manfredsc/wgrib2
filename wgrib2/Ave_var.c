@@ -55,13 +55,13 @@ extern int dec_scale;
 /** Flag to indicate the binary scale. */
 extern int bin_scale;
 
-/** Flag to indicate the number of bits wanted. */
+/** Number of bits wanted. */
 extern int wanted_bits;
 
-/** Flag to indicate the maximum number of bits. */
+/** Maximum number of bits. */
 extern int max_bits;
 
-/** Flag to indicate the output GRIB type. */
+/** Output GRIB type. */
 extern enum output_grib_type grib_type;
 
 /** Structure to hold average calculation data. */
