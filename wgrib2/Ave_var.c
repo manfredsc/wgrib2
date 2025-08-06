@@ -25,10 +25,10 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/** Flag to indicate decoding mode. */
+/** Decode grib file flag. */
 extern int decode;
 
-/** Flag to indicate file append mode. */
+/** Append grib file flag. */
 extern int file_append;
 
 /** Number of grid points in the x direction. */

@@ -35,16 +35,16 @@
  *             
  */
 
-/** Flag to indicate decoding mode. */
+/** Decode grib file flag. */
 extern int decode;
 
-/** Flag to indicate file append mode. */
+/** Append grib file flag. */
 extern int file_append;
 
 /** Flag to indicate whether to save translation information. */
 extern int save_translation;
 
-/** Flag to indicate scan mode. */
+/** Scan mode flag. */
 extern int scan;
 
 /** Number of grid points in the x-direction. */

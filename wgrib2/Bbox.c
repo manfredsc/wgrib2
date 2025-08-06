@@ -42,13 +42,13 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/** Flag to indicate decoding mode. */
+/** Decode grib file flag. */
 extern int decode;
 
-/** Flag to indicate flushing mode. */
+/** Flush of output flag. */
 extern int flush_mode;
 
-/** Flag to indicate file append mode. */
+/** Append grib file flag. */
 extern int file_append;
 
 /** Number of grid points in the x direction. */
@@ -57,10 +57,10 @@ extern int nx;
 /** Number of grid points in the y direction. */
 extern int ny;
 
-/** Flag to indicate GDS change number. */
+/** GDS change number flag. */
 extern int GDS_change_no;
 
-/** Flag to indicate scan mode. */
+/** Scan mode flag. */
 extern int scan;
 
 /** File header flag. */
