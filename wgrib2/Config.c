@@ -1,3 +1,7 @@
+/** @file
+ * @brief This file contains configuration information for the wgrib2 tool.
+ * @author Public Domain: Wesley Ebisuzaki @date 3/2009
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,19 +18,33 @@
 #include <grib2.h>
 #endif
 
-
-/*
- * Config.c  just prints out the configuration
- *
- * 3/2009 public domain Wesley Ebisuzaki
- */
-
+/** Default vectors for interpolation */
 extern const char *default_vectors[];
+
+/** Version of the ftime library */
 extern int version_ftime;
+
+/** Number of names in the names array */
 extern int names;
+
+/** Set options for the wgrib2 tool */
 extern const char *set_options;
+
 /*
  * HEADER:100:config:misc:0:shows the configuration
+ */
+
+/**
+ * Prints out the current configuration of the wgrib2 tool.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -config
+ * 
+ * @author Wesley Ebisuzaki @date 3/2009
  */
 int f_config(ARG0) {
 
@@ -231,6 +249,13 @@ int f_config(ARG0) {
     return 1;
 }
 
+/**
+ * Returns the wgrib2 API information.
+ * 
+ * @return A string containing the wgrib2 version and build comments.
+ * 
+ * @author Wesley Ebisuzaki @date 12/2017
+ */
 const char *wgrib2api_info(void) {
     return WGRIB2_VERSION "  " BUILD_COMMENTS " " CC;
 }
