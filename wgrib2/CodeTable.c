@@ -3226,7 +3226,6 @@ int f_code_table_5_1(ARG0) {
  * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return Type of original field values as an integer, or -1 if not found.
- */
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
