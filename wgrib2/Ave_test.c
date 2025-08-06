@@ -26,7 +26,7 @@
 /** Decode grib file flag  */
 extern int decode;
 
-/** Flag to indicate file append mode. */
+/** Append grib file flag. */
 extern int file_append;
 
 /** Number of grid points in the x direction. */
@@ -38,28 +38,28 @@ extern int ny;
 /** Flag to indicate whether to save translation information. */
 extern int save_translation;
 
-/** Flag to indicate whether to flush output buffers. */
+/** Flush of output flag. */
 extern int flush_mode;
 
 /** Pointer to the translation array. */
 extern unsigned int *translation;
 
-/** Flag to indicate whether to use scaling. */
+/** Use scaling flag. */
 extern int use_scale;
 
-/** Flag to indicate the decoding scale. */
+/** Decoding scale flag. */
 extern int dec_scale;
 
-/** Flag to indicate the binary scale. */
+/** Binary scale flag. */
 extern int bin_scale;
 
-/** Flag to indicate the number of bits wanted. */
+/** Number of bits wanted. */
 extern int wanted_bits;
 
-/** Flag to indicate the maximum number of bits. */
+/** Maximum number of bits. */
 extern int max_bits;
 
-/** Flag to indicate the output GRIB type. */
+/** Output GRIB type. */
 extern enum output_grib_type grib_type;
 
 /** Structure to hold average calculation data. */
