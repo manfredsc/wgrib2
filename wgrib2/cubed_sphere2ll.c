@@ -1,3 +1,7 @@
+/** @file
+ * @brief Validate and convert cubed sphere grid to lat/lon coordinates.
+ * @author Public Domain: Wesley Ebisuzaki @date 2/2019
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -8,27 +12,33 @@
 
 #ifdef WMO_VALIDATION
 
-/*
- *2/2019: public domain W. Ebisuzaki
- * 
- *
- */
-
 #ifndef M_PI
-#define M_PI           3.14159265358979323846  /* pi */
+#define M_PI           3.14159265358979323846  /**< pi */
 #endif
 #ifndef M_PI_2
-#define M_PI_2         1.57079632679489661923  /* pi/2 */
+#define M_PI_2         1.57079632679489661923  /**< pi/2 */
 #endif
 #ifndef M_PI_4
-#define M_PI_4         0.78539816339744830962  /* pi/4 */
+#define M_PI_4         0.78539816339744830962  /**< pi/4 */
 #endif
 #ifndef M_SQRT2
-#define M_SQRT2        1.41421356237309504880  /* sqrt(2) */
+#define M_SQRT2        1.41421356237309504880  /**< sqrt(2) */
 #endif
 
+/** Output order type. */
 extern enum output_order_type output_order;
 
+/**
+ * Convert cubed sphere grid to lat/lon coordinates.
+ * 
+ * @param sec Pointer to the section array.
+ * @param llat Pointer to the latitude array to be filled.
+ * @param llon Pointer to the longitude array to be filled.
+ *
+ * @return 0 on success, error code otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 2/2019
+ */
 int cubed_sphere2ll(unsigned char **sec, double **llat, double **llon) {
     double *x, *y;
     int nres, nscan;
@@ -208,6 +218,21 @@ int cubed_sphere2ll(unsigned char **sec, double **llat, double **llon) {
     return 0;
 }
 
+/**
+ * Convert cubed sphere grid to xy coordinates.
+ * 
+ * @param sec Pointer to the section array.
+ * @param n Number of points.
+ * @param lon Pointer to the longitude array.
+ * @param lat Pointer to the latitude array.
+ * @param xx Pointer to the x coordinate array to be filled.
+ * @param yy Pointer to the y coordinate array to be filled.
+ * @param face Pointer to the face array to be filled.
+ * 
+ * @return 0 on success, error code otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 2/2019
+ */
 int cubed_spherell2xy(unsigned char **sec, int n, double *lon, double *lat, double *xx, double *yy, int *face) {
     unsigned int i, j;
     double sp_lat, sp_lon, angle_rot, a, c, r, sin_a, cos_a;
