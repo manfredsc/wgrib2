@@ -38,12 +38,6 @@ extern int tigge;
 /** TIGGE Grib Table */
 extern struct gribtable_s tigge_gribtable[];
 #endif
-/*
- * get the name information    2006 Public Domain  Wesley Ebisuzaki
- *
- * if inv_out, name, desc, unit == NULL, not used
-
- */
 
 /** Indicates the GRIB table name to use */
 extern int names;
