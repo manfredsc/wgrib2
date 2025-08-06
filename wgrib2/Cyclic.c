@@ -78,6 +78,8 @@ extern int *raw_variable_dim;
  * ## Usage:
  * -cyclic
  * 
+ * ## Example:
+ * ???
  * @author Wesley Ebisuzaki @date 2009
  */
 int f_cyclic(ARG0) {
