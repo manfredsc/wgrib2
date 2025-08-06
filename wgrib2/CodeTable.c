@@ -1,3 +1,18 @@
+/** @file
+ * @brief This file contains code table values for GRIB2 messages. Use this routine instead of .h files.
+ * @author Public Domain: Wesley Ebisuzaki @date 12/2006
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 12/2006 | W. Ebisuzaki | Initial
+ * 1/2007 | M. Schwarb | Cleanup
+ * 1/2008 | S. Varlamov | Fixed to code_table_5.5
+ * 5/2013 | W. Ebisuzaki | Fixed code table 0.0 in response to error report M. Foster
+ * 7/2013 | W. Ebisuzaki | Added more *_location() functions, needed by set_pdt()
+ * 5/2013 | G. Schnee | Added case for DRT 5.42
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,23 +21,21 @@
 #include "fnlist.h"
 
 /*
- * CodeTable.c
- *
- * returns values of various code tables
- *  use this routine instead of .h files
- *
- * 12/2006 Public Domain Wesley Ebisuzaki
- * 1/2007 M. Schwarb
- * 1/2008 S. Varlamov fixed to code_table_5.5
- * 5/2013 W. Ebisuzaki fixed code table 0.0 in response to error report M. Foster
- * 7/2013 W. Ebisuzaki added more *_location() functions, needed by set_pdt()
- * 5/2013 G. Schnee add case for DRT 5.42
- */
-
-/*
  * HEADER:-1:code_table_0.0:inv:0:code table 0.0 discipline
  */
 
+/**
+ * Prints the discipline (Code Table 0.0) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_0.0
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_0_0(ARG0) {
     int val;
     const char *string;
@@ -38,6 +51,16 @@ int f_code_table_0_0(ARG0) {
     }
     return 0;
 }
+
+/**
+ * Returns the discipline (Code Table 0.0) from the GRIB2 message.
+ * 
+ * @param sec Pointer to section 0 of the GRIB2 message.
+ * 
+ * @return The discipline as an integer, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_0_0(unsigned char **sec) {
     unsigned char *p;
     p = code_table_0_0_location(sec);
@@ -45,6 +68,15 @@ int code_table_0_0(unsigned char **sec) {
     return (int) *p;
 }
 
+/**
+ * Returns the location of the discipline (Code Table 0.0) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the byte in section 0 that contains the discipline.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_0_0_location(unsigned char **sec) {
     return sec[0] + 6;
 }
@@ -53,6 +85,18 @@ unsigned char *code_table_0_0_location(unsigned char **sec) {
  * HEADER:-1:code_table_1.0:inv:0:code table 1.0 master table version
  */
 
+/**
+ * Prints the master table version (Code Table 1.0) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_1.0
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_1_0(ARG0) {
 
     if (mode >= 0) {
@@ -60,12 +104,32 @@ int f_code_table_1_0(ARG0) {
     }
     return 0;
 }
+
+/**
+ * Returns the master table version (Code Table 1.0) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return The master table version as an integer, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_1_0(unsigned char **sec) {
     unsigned char *p;
     p = code_table_1_0_location(sec);
     if (p == NULL) return -1;
     return (int) *p;
 }
+
+/**
+ * Returns the location of the master table version (Code Table 1.0) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the byte in section 1 that contains the master table version.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_1_0_location(unsigned char **sec) {
     return sec[1] + 9;
 }
@@ -74,6 +138,18 @@ unsigned char *code_table_1_0_location(unsigned char **sec) {
  * HEADER:-1:code_table_1.1:inv:0:code table 1.1 local table version
  */
 
+/**
+ * Prints the local table version (Code Table 1.1) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_1.1
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_1_1(ARG0) {
 
     if (mode >= 0) {
@@ -81,6 +157,16 @@ int f_code_table_1_1(ARG0) {
     }
     return 0;
 }
+
+/**
+ * Returns the local table version (Code Table 1.1) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return The local table version as an integer, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_1_1(unsigned char **sec) {
     unsigned char *p;
     p = code_table_1_1_location(sec);
@@ -88,15 +174,35 @@ int code_table_1_1(unsigned char **sec) {
     return (int) *p;
 }
 
+/**
+ * Returns the location of the local table version (Code Table 1.1) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the byte in section 1 that contains the local table version.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_1_1_location(unsigned char **sec) {
     return sec[1] + 10;
 }
-
 
 /*
  * HEADER:-1:code_table_1.2:inv:0:code table 1.2 significance of reference time
  */
 
+/**
+ * Prints the significance of reference time (Code Table 1.2) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_1.2
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_1_2(ARG0) {
     const char *string;
     int val;
@@ -112,6 +218,15 @@ int f_code_table_1_2(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the significance of reference time (Code Table 1.2) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return The significance of reference time as an integer, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_1_2(unsigned char **sec) {
     unsigned char *p;
     p = code_table_1_2_location(sec);
@@ -119,6 +234,15 @@ int code_table_1_2(unsigned char **sec) {
     return (int) *p;
 }
 
+/**
+ * Returns the location of the significance of reference time (Code Table 1.2) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the byte in section 1 that contains the significance of reference time.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_1_2_location(unsigned char **sec) {
     return sec[1] + 11;
 }
@@ -127,6 +251,18 @@ unsigned char *code_table_1_2_location(unsigned char **sec) {
  * HEADER:-1:code_table_1.3:inv:0:code table 1.3 production status of processed data
  */
 
+/**
+ * Prints the production status of processed data (Code Table 1.3) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_1.3
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_1_3(ARG0) {
     const char *string;
     int val;
@@ -143,6 +279,15 @@ int f_code_table_1_3(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the production status of processed data (Code Table 1.3) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return The production status as an integer, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_1_3(unsigned char **sec) {
     unsigned char *p;
     p = code_table_1_3_location(sec);
@@ -150,6 +295,15 @@ int code_table_1_3(unsigned char **sec) {
     return (int) *p;
 }
 
+/**
+ * Returns the location of the production status of processed data (Code Table 1.3) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.    
+ * 
+ * @return Pointer to the byte in section 1 that contains the production status of processed data.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_1_3_location(unsigned char **sec) {
     return sec[1] + 19;
 }
@@ -158,6 +312,18 @@ unsigned char *code_table_1_3_location(unsigned char **sec) {
  * HEADER:-1:code_table_1.4:inv:0:code table 1.4 type of processed data
  */
 
+/**
+ * Prints the type of processed data (Code Table 1.4) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_1.4
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_1_4(ARG0) {
     const char *string;
     int val;
@@ -173,6 +339,15 @@ int f_code_table_1_4(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the type of processed data (Code Table 1.4) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return The type of processed data as an integer, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_1_4(unsigned char **sec) {
     unsigned char *p;
     p = code_table_1_4_location(sec);
@@ -180,6 +355,15 @@ int code_table_1_4(unsigned char **sec) {
     return (int) *p;
 }
 
+/**
+ * Returns the location of the type of processed data (Code Table 1.4) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the byte in section 1 that contains the type of processed data.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_1_4_location(unsigned char **sec) {
     return sec[1] + 20;
 }
@@ -188,6 +372,18 @@ unsigned char *code_table_1_4_location(unsigned char **sec) {
  * HEADER:-1:code_table_1.5:inv:0:Identification template number
  */
 
+/**
+ * Prints the identification template number (Code Table 1.5) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_1.5
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_1_5(ARG0) {
     int val;
     if (mode >= 0) {
@@ -197,6 +393,15 @@ int f_code_table_1_5(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the identification template number (Code Table 1.5) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return The identification template number as an integer, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_1_5(unsigned char **sec) {
     unsigned char *p;
     p = code_table_1_5_location(sec);
@@ -204,6 +409,15 @@ int code_table_1_5(unsigned char **sec) {
     return (int) uint2(p);
 }
 
+/**
+ * Returns the location of the identification template number (Code Table 1.5) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the byte in section 1 that contains the identification template number, or NULL if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_1_5_location(unsigned char **sec) {
     return  (GB2_Sec1_size(sec) >= 23) ?  sec[1] + 21 : NULL;
 }
@@ -212,6 +426,18 @@ unsigned char *code_table_1_5_location(unsigned char **sec) {
  * HEADER:-1:code_table_1.6:inv:0:calendar
  */
 
+/**
+ * Prints the calendar (Code Table 1.6) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_1.6
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_1_6(ARG0) {
     int val;
     if (mode >= 0) {
@@ -221,12 +447,31 @@ int f_code_table_1_6(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the calendar (Code Table 1.6) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return The calendar as an integer, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_1_6(unsigned char **sec) {
     unsigned char *p;
     p = code_table_1_6_location(sec);
     if (p == NULL) return -1;
     return (int) *p;
 }
+
+/**
+ * Returns the location of the calendar (Code Table 1.6) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the byte in section 1 that contains the calendar, or NULL if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_1_6_location(unsigned char **sec) {
     return  (GB2_Sec1_size(sec) >= 24 && sec[1][21] == 0 && sec[1][22] == 0) 
         ?  sec[1] + 23 : NULL;
@@ -236,6 +481,18 @@ unsigned char *code_table_1_6_location(unsigned char **sec) {
  * HEADER:-1:code_table_3.0:inv:0:code table 3.0 Source of grid definition
  */
 
+/**
+ * Prints the source of grid definition (Code Table 3.0) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_3.0
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_3_0(ARG0) {
 
     if (mode >= 0) {
@@ -244,6 +501,15 @@ int f_code_table_3_0(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the source of grid definition (Code Table 3.0) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return The source of grid definition as an integer.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_3_0(unsigned char **sec) {
     return  (int) sec[3][5];
 }
@@ -252,6 +518,18 @@ int code_table_3_0(unsigned char **sec) {
  * HEADER:-1:code_table_3.1:inv:0:code table 3.1 Grid definition template number
  */
 
+/**
+ * Prints the grid definition template number (Code Table 3.1) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_3.1
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_3_1(ARG0) {
     const char *string;
     int val;
@@ -267,6 +545,15 @@ int f_code_table_3_1(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the grid definition template number (Code Table 3.1) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return The grid definition template number as an integer.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_3_1(unsigned char **sec) {
     return  (int) uint2(sec[3]+12);
 }
@@ -275,6 +562,18 @@ int code_table_3_1(unsigned char **sec) {
  * HEADER:-1:code_table_3.2:inv:0:code table 3.2 Size (radius) and Shape of Earth
  */
 
+/**
+ * Prints the size (radius) and shape of the Earth (Code Table 3.2) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_3.2
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_3_2(ARG0) {
     int val;
     const char *string;
@@ -296,6 +595,15 @@ int f_code_table_3_2(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the size (radius) and shape of the Earth (Code Table 3.2) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return The size (radius) and shape of the Earth as a string, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_3_2(unsigned char **sec) {
     unsigned char *p;
     p = code_table_3_2_location(sec);
@@ -303,6 +611,15 @@ int code_table_3_2(unsigned char **sec) {
     return (int) *p;
 }
 
+/**
+ * Returns the location of the size (radius) and shape of the Earth (Code Table 3.2) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the location of the size (radius) and shape of the Earth, or NULL if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_3_2_location(unsigned char **sec) {
     int grid_def, center;
     grid_def = code_table_3_1(sec);
@@ -335,11 +652,22 @@ unsigned char *code_table_3_2_location(unsigned char **sec) {
     return  NULL;
 }
 
-
 /*
  * HEADER:-1:code_table_3.6:inv:0:code table 3.6 Spectral data representation type
  */
 
+/**
+ * Prints the spectral data representation type (Code Table 3.6) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_3.6
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_3_6(ARG0) {
     int val;
     if (mode >= 0) {
@@ -349,6 +677,15 @@ int f_code_table_3_6(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the spectral data representation type (Code Table 3.6) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return The spectral data representation type as an integer, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_3_6(unsigned char **sec) {
     int grid_def;
     grid_def = code_table_3_1(sec);
@@ -360,6 +697,18 @@ int code_table_3_6(unsigned char **sec) {
  * HEADER:-1:code_table_3.7:inv:0:code table 3.7 Spectral data representation mode
  */
 
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_3_7(ARG0) {
     int val;
     if (mode >= 0) {
@@ -368,6 +717,16 @@ int f_code_table_3_7(ARG0) {
     }
     return 0;
 }
+
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_3_7(unsigned char **sec) {
     int grid_def;
     grid_def = code_table_3_1(sec);
@@ -379,6 +738,18 @@ int code_table_3_7(unsigned char **sec) {
  * HEADER:-1:code_table_3.8:inv:0:code table 3.8 Grid point position
  */
 
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_3_8(ARG0) {
     int val;
     const char *string;
@@ -396,6 +767,15 @@ int f_code_table_3_8(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_3_8(unsigned char **sec) {
     int grid_def;
     grid_def = code_table_3_1(sec);
@@ -406,6 +786,19 @@ int code_table_3_8(unsigned char **sec) {
 /*
  * HEADER:-1:code_table_3.11:inv:0:code table 3.11 regional/global thinned/reduced grid
 
+ */
+
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
  */
 int f_code_table_3_11(ARG0) {
     int val;
@@ -430,12 +823,34 @@ int f_code_table_3_11(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_3_11(unsigned char **sec) {
     return sec[3][11];
 }
 
 /*
  * HEADER:-1:code_table_3.15:inv:0:code table 3.15 Physical meaning of vertical coordinate
+ */
+
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
  */
 int f_code_table_3_15(ARG0) {
     int val;
@@ -453,6 +868,15 @@ int f_code_table_3_15(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_3_15(unsigned char **sec) {
     unsigned char *p;
     p = code_table_3_15_location(sec);
@@ -474,6 +898,19 @@ unsigned char *code_table_3_15_location(unsigned char **sec) {
 /*
  * HEADER:-1:code_table_3.20:inv:0:code table 3.20 Type of Horizontal line
  */
+
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_3_20(ARG0) {
     int val;
     const char *string;
@@ -491,6 +928,15 @@ int f_code_table_3_20(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_3_20(unsigned char **sec) {
     unsigned char *p;
     p = code_table_3_20_location(sec);
@@ -498,6 +944,15 @@ int code_table_3_20(unsigned char **sec) {
     return (int) *p;
 }
 
+/**
+ * Returns the location of the ??? (Code Table ???) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the location of ???, or NULL if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_3_20_location(unsigned char **sec) {
     int grid_def;
     grid_def = code_table_3_1(sec);
@@ -508,6 +963,19 @@ unsigned char *code_table_3_20_location(unsigned char **sec) {
 
 /*
  * HEADER:-1:code_table_3.21:inv:0:code table 3.21 Vertical Dimension coordinate values defn
+ */
+
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
  */
 int f_code_table_3_21(ARG0) {
     int val;
@@ -525,6 +993,16 @@ int f_code_table_3_21(ARG0) {
     }
     return 0;
 }
+
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_3_21(unsigned char **sec) {
     int grid_def;
     grid_def = code_table_3_1(sec);
@@ -537,6 +1015,18 @@ int code_table_3_21(unsigned char **sec) {
  * HEADER:-1:code_table_4.0:inv:0:code table 4.0 Product Definition Template Number
  */
 
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_4_0(ARG0) {
     int val;
     const char *string;
@@ -551,6 +1041,16 @@ int f_code_table_4_0(ARG0) {
     }
     return 0;
 }
+
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_4_0(unsigned char **sec) {
     return  GB2_ProdDefTemplateNo(sec);
 }
@@ -559,6 +1059,18 @@ int code_table_4_0(unsigned char **sec) {
  * HEADER:-1:code_table_4.1:inv:0:code table 4.1
  */
 
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_4_1(ARG0) {
     int p;
     if (mode >= 0) {
@@ -567,12 +1079,31 @@ int f_code_table_4_1(ARG0) {
     }
     return 0;
 }
+
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_4_1(unsigned char **sec) {
     unsigned char *p;
     p = code_table_4_1_location(sec);
     return (p != NULL) ? (int) *p : -1;
 }
 
+/**
+ * Returns the location of the ??? (Code Table ???) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the location of ???, or NULL if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_4_1_location(unsigned char **sec) {
     int p, center;
 
@@ -593,6 +1124,18 @@ unsigned char *code_table_4_1_location(unsigned char **sec) {
  * HEADER:-1:code_table_4.2:inv:0:code table 4.2
  */
 
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_4_2(ARG0) {
     int p;
     if (mode >= 0) {
@@ -602,12 +1145,30 @@ int f_code_table_4_2(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_4_2(unsigned char **sec) {
     unsigned char *p;
     p = code_table_4_2_location(sec);
     return (p != NULL) ? (int) *p : -1;
 }
 
+/**
+ * Returns the location of the ??? (Code Table ???) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the location of ???, or NULL if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_4_2_location(unsigned char **sec) {
     int p, center;
 
@@ -625,9 +1186,21 @@ unsigned char *code_table_4_2_location(unsigned char **sec) {
     return NULL;
 }
 
-
 /*
  * HEADER:-1:code_table_4.3:inv:0:code table 4.3 Type of Generating Process
+ */
+
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
  */
 int f_code_table_4_3(ARG0) {
     int val, center;
@@ -645,12 +1218,30 @@ int f_code_table_4_3(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_4_3(unsigned char **sec) {
     unsigned char *p;
     p = code_table_4_3_location(sec);
     return (p != NULL) ? (int) *p : -1;
 }
 
+/**
+ * Returns the location of the ??? (Code Table ???) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the location of ???, or NULL if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_4_3_location(unsigned char **sec) {
     int pdt, center, n, np;
 
@@ -749,6 +1340,19 @@ unsigned char *code_table_4_3_location(unsigned char **sec) {
 /*
  * HEADER:-1:code_table_4.4:inv:0:code table 4.4  (first)
  */
+
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_4_4(ARG0) {
     int val;
     const char *string;
@@ -764,6 +1368,15 @@ int f_code_table_4_4(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_4_4(unsigned char **sec) {
     unsigned char *p;
     p = code_table_4_4_location(sec);
@@ -771,6 +1384,15 @@ int code_table_4_4(unsigned char **sec) {
     return (int) *p;
 }
 
+/**
+ * Returns the location of the ??? (Code Table ???) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the location of ???, or NULL if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_4_4_location(unsigned char **sec) {
     int pdt, center, np;
     pdt = GB2_ProdDefTemplateNo(sec);
@@ -870,15 +1492,16 @@ unsigned char *code_table_4_4_location(unsigned char **sec) {
     return NULL;
 }
 
-/*
- * code table 4.4 can be
- *   1. defined
- *   2. to be defined
- *   3. not used (example radar or satellite images)
- *
- *   returns 1 if code table 4.4 is not used
- */ 
-
+ /**
+ * Checks if Code Table 4.4 be defined, to be defined, or not used 
+ * (for example: radar or satellite images).
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return 1 if not used, 0 otherwise
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_4_4_not_used(unsigned char **sec) {
     int pdt;
     pdt = GB2_ProdDefTemplateNo(sec);
@@ -889,6 +1512,19 @@ int code_table_4_4_not_used(unsigned char **sec) {
 /*
  * HEADER:-1:code_table_4.5a:inv:0:code table 4.5 (1st value)
  */
+
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_4_5a(ARG0) {
     int p;
     if (mode >= 0) {
@@ -897,12 +1533,32 @@ int f_code_table_4_5a(ARG0) {
     }
     return 0;
 }
+
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_4_5a(unsigned char **sec) {
     unsigned char *p;
     p = code_table_4_5a_location(sec);
     if (p == NULL) return -1;
     return (int) *p;
 }
+
+/**
+ * Returns the location of the ??? (Code Table ???) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the location of ???, or NULL if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_4_5a_location(unsigned char **sec) {
     int pdt, center, np;
     pdt = GB2_ProdDefTemplateNo(sec);
@@ -1011,6 +1667,19 @@ unsigned char *code_table_4_5a_location(unsigned char **sec) {
 /*
  * HEADER:-1:code_table_4.5b:inv:0:code table 4.5 (2nd value)
  */
+
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_4_5b(ARG0) {
     int p;
     if (mode >= 0) {
@@ -1019,6 +1688,16 @@ int f_code_table_4_5b(ARG0) {
     }
     return 0;
 }
+
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_4_5b(unsigned char **sec) {
     unsigned char *p;
     p = code_table_4_5b_location(sec);
@@ -1026,6 +1705,15 @@ int code_table_4_5b(unsigned char **sec) {
     return *p;
 }
 
+/**
+ * Returns the location of the ??? (Code Table ???) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the location of ???, or NULL if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_4_5b_location(unsigned char **sec) {
     int pdt, center, np;
     pdt = GB2_ProdDefTemplateNo(sec);
@@ -1133,6 +1821,19 @@ unsigned char *code_table_4_5b_location(unsigned char **sec) {
 /*
  * HEADER:-1:code_table_4.6:inv:0:code table 4.6 ensemble type
  */
+
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_4_6(ARG0) {
     int p;
     if (mode >= 0) {
@@ -1142,6 +1843,15 @@ int f_code_table_4_6(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_4_6(unsigned char **sec) {
     unsigned char *p;
     p = code_table_4_6_location(sec);
@@ -1180,6 +1890,19 @@ unsigned char *code_table_4_6_location(unsigned char **sec) {
 /*
  * HEADER:-1:code_table_4.7:inv:0:code table 4.7 derived forecast
  */
+
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_4_7(ARG0) {
     int val, center;
     const char *string;
@@ -1198,6 +1921,15 @@ int f_code_table_4_7(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_4_7(unsigned char **sec) {
     unsigned char *p;
     p = code_table_4_7_location(sec);
@@ -1205,6 +1937,15 @@ int code_table_4_7(unsigned char **sec) {
     return -1;
 }
 
+/**
+ * Returns the location of the ??? (Code Table ???) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the location of ???, or NULL if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_4_7_location(unsigned char **sec) {
     int pdt;
     pdt = GB2_ProdDefTemplateNo(sec);
@@ -1223,6 +1964,19 @@ unsigned char *code_table_4_7_location(unsigned char **sec) {
 /*
  * HEADER:-1:code_table_4.8:inv:0:code table 4.7 derived forecast
  */
+
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_4_8(ARG0) {
     int val;
     const char *string;
@@ -1240,6 +1994,15 @@ int f_code_table_4_8(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_4_8(unsigned char **sec) {
     unsigned char *p;
     p = code_table_4_8_location(sec);
@@ -1260,9 +2023,21 @@ unsigned char *code_table_4_8_location(unsigned char **sec) {
     return NULL;
 }
 
-
 /*
  * HEADER:-1:code_table_4.9:inv:0:code table 4.9 Probability Type
+ */
+
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
  */
 int f_code_table_4_9(ARG0) {
     int val;
@@ -1281,6 +2056,15 @@ int f_code_table_4_9(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_4_9(unsigned char **sec) {
     unsigned char *p;
     p = code_table_4_9_location(sec);
@@ -1288,6 +2072,15 @@ int code_table_4_9(unsigned char **sec) {
     return *p;
 }
 
+/**
+ * Returns the location of the ??? (Code Table ???) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the location of ???, or NULL if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_4_9_location(unsigned char **sec) {
     int val;
     val = GB2_ProdDefTemplateNo(sec);
@@ -1299,9 +2092,21 @@ unsigned char *code_table_4_9_location(unsigned char **sec) {
     return NULL;
 }
 
-
 /*
  * HEADER:-1:code_table_4.10:inv:0:code table 4.10 statistical processing .. first occurence
+ */
+
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
  */
 int f_code_table_4_10(ARG0) {
     int val;
@@ -1320,6 +2125,15 @@ int f_code_table_4_10(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_4_10(unsigned char **sec) {
     unsigned char *p;
     p = code_table_4_10_location(sec);
@@ -1327,6 +2141,15 @@ int code_table_4_10(unsigned char **sec) {
     return (int) *p;
 }
 
+/**
+ * Returns the location of the ??? (Code Table ???) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the location of ???, or NULL if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_4_10_location(unsigned char **sec) {
     int pdt, i, center, np, nb;
 
@@ -1366,6 +2189,19 @@ unsigned char *code_table_4_10_location(unsigned char **sec) {
 /*
  * HEADER:-1:code_table_4.11:inv:0:code table 4.11 (first) type of time intervals
  */
+
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_4_11(ARG0) {
     int val;
     const char *string;
@@ -1387,6 +2223,18 @@ int f_code_table_4_11(ARG0) {
  * HEADER:-1:code_table_4.11s:inv:0:code table 4.11 (all) type of time intervals
  */
 
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_4_11s(ARG0) {
     int n, i, val;
     unsigned char *p;
@@ -1404,7 +2252,15 @@ int f_code_table_4_11s(ARG0) {
     return 0;
 }
 
-
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_4_11(unsigned char **sec) {
     unsigned char *p;
     p = code_table_4_11_location(sec);
@@ -1412,6 +2268,15 @@ int code_table_4_11(unsigned char **sec) {
     return (int) *p;
 }
 
+/**
+ * Returns the location of the ??? (Code Table ???) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the location of ???, or NULL if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_4_11_location(unsigned char **sec) {
     int val, center, nb;
     unsigned char *p;
@@ -1444,6 +2309,19 @@ unsigned char *code_table_4_11_location(unsigned char **sec) {
 /*
  * HEADER:-1:code_table_4.15:inv:0:code table 4.15 type of areal statistical processing
  */
+
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_4_15(ARG0) {
     int val;
     const char *string;
@@ -1461,6 +2339,15 @@ int f_code_table_4_15(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_4_15(unsigned char **sec) {
     unsigned char *p;
     p = code_table_4_15_location(sec);
@@ -1468,6 +2355,15 @@ int code_table_4_15(unsigned char **sec) {
     return (int) *p;
 }
 
+/**
+ * Returns the location of the ??? (Code Table ???) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the location of ???, or NULL if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_4_15_location(unsigned char **sec) {
     int val;
     unsigned char *p;
@@ -1481,6 +2377,18 @@ unsigned char *code_table_4_15_location(unsigned char **sec) {
 
 /*
  * HEADER:-1:code_table_4.16:inv:0:code table 4.16 quality control value
+ */
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
  */
 int f_code_table_4_16(ARG0) {
     int val;
@@ -1499,6 +2407,15 @@ int f_code_table_4_16(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_4_16(unsigned char **sec) {
     unsigned char *p;
     p = code_table_4_16_location(sec);
@@ -1506,6 +2423,15 @@ int code_table_4_16(unsigned char **sec) {
     return (int) *p;
 }
 
+/**
+ * Returns the location of the ??? (Code Table ???) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the location of ???, or NULL if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_4_16_location(unsigned char **sec) {
     int pdt;
     unsigned char *p;
@@ -1519,6 +2445,18 @@ unsigned char *code_table_4_16_location(unsigned char **sec) {
 
 /*
  * HEADER:-1:code_table_4.91:inv:0:code table 4.91 type of interval
+ */
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
  */
 int f_code_table_4_91(ARG0) {
     int val;
@@ -1538,6 +2476,15 @@ int f_code_table_4_91(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_4_91(unsigned char **sec) {
     unsigned char *p;
     p = code_table_4_91_location(sec);
@@ -1545,6 +2492,15 @@ int code_table_4_91(unsigned char **sec) {
     return (int) *p;
 }
 
+/**
+ * Returns the location of the ??? (Code Table ???) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the location of ???, or NULL if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_4_91_location(unsigned char **sec) {
     int val;
     unsigned char *p;
@@ -1564,6 +2520,19 @@ unsigned char *code_table_4_91_location(unsigned char **sec) {
 /*
  * HEADER:-1:code_table_4.91b:inv:0:code table 4.91 type of interval (2nd copy)
  */
+
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_4_91b(ARG0) {
     int val;
     const char *string;
@@ -1582,6 +2551,15 @@ int f_code_table_4_91b(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_4_91b(unsigned char **sec) {
     unsigned char *p;
     p = code_table_4_91b_location(sec);
@@ -1589,6 +2567,15 @@ int code_table_4_91b(unsigned char **sec) {
     return (int) *p;
 }
 
+/**
+ * Returns the location of the ??? (Code Table ???) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the location of ???, or NULL if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_4_91b_location(unsigned char **sec) {
     int val;
     unsigned char *p;
@@ -1602,6 +2589,18 @@ unsigned char *code_table_4_91b_location(unsigned char **sec) {
     return p;
 }
 
+/**
+ * ???
+ * 
+ * @param type_of_interval ???
+ * @param val1 ???
+ * @param val2 ???
+ * @param inv_out ???
+ * 
+ * @return 0 for success
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int prt_code_table_4_91(int type_of_interval, double val1, double val2, char *inv_out) {
 
     switch (type_of_interval) {
@@ -1627,6 +2626,18 @@ int prt_code_table_4_91(int type_of_interval, double val1, double val2, char *in
 
 /* does the inverse of prt_code_table_4_91(..) */
 
+/**
+ * ???
+ * 
+ * @param type_of_interval ???
+ * @param val1 ???
+ * @param val2 ???
+ * @param string ???
+ * 
+ * @return 0 for success
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int scan_code_table_4_91(int *type_of_interval, double *val1, double *val2, const char *string) {
 
     int len, n, i;
@@ -1682,8 +2693,21 @@ int scan_code_table_4_91(int *type_of_interval, double *val1, double *val2, cons
  * HEADER:-1:code_table_4.230:inv:0:code table 4.230 chemical constituent type
  */
 
+/** Struct for codetable 4.230 */
 extern struct codetable_4_230  codetable_4_230_table[];
 
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_4_230(ARG0) {
     int val, i;
     const char *string;
@@ -1708,12 +2732,30 @@ int f_code_table_4_230(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_4_230(unsigned char **sec) {
     unsigned char *p;
     p = code_table_4_230_location(sec);
     return  (p == NULL) ? -1 : uint2(p);
 }
 
+/**
+ * Returns the location of the ??? (Code Table ???) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the location of ???, or NULL if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_4_230_location(unsigned char **sec) {
     int pdt;
     pdt = GB2_ProdDefTemplateNo(sec);
@@ -1737,6 +2779,18 @@ unsigned char *code_table_4_230_location(unsigned char **sec) {
  * HEADER:-1:code_table_4.233:inv:0:code table 4.233 aerosol type
  */
 
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_4_233(ARG0) {
     int val, i;
     const char *string;
@@ -1762,6 +2816,15 @@ int f_code_table_4_233(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_4_233(unsigned char **sec) {
     unsigned char *p;
     p = code_table_4_233_location(sec);
@@ -1769,6 +2832,15 @@ int code_table_4_233(unsigned char **sec) {
     return (int) uint2(p);
 }
 
+/**
+ * Returns the location of the ??? (Code Table ???) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the location of ???, or NULL if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_4_233_location(unsigned char **sec) {
     int pdt;
     pdt = GB2_ProdDefTemplateNo(sec);
@@ -1789,6 +2861,19 @@ unsigned char *code_table_4_233_location(unsigned char **sec) {
 /*
  * HEADER:-1:code_table_4.235:inv:0:code table 4.235 Wind-generated wave spectral description
  */
+
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_4_235(ARG0) {
     int val;
     const char *string;
@@ -1806,14 +2891,36 @@ int f_code_table_4_235(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_4_235(unsigned char **sec) {
     int pdt;
     pdt = GB2_ProdDefTemplateNo(sec);
     if (pdt == 52) return sec[4][11];
     return -1;
 }
+
 /*
  * HEADER:-1:code_table_4.240:inv:0:code table 4.240 Type of distribution function
+ */
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
  */
 int f_code_table_4_240(ARG0) {
     int val;
@@ -1832,6 +2939,15 @@ int f_code_table_4_240(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_4_240(unsigned char **sec) {
     unsigned char *p;
     p = code_table_4_240_location(sec);
@@ -1839,6 +2955,15 @@ int code_table_4_240(unsigned char **sec) {
     return (int) uint2(p);
 }
 
+/**
+ * Returns the location of the ??? (Code Table ???) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the location of ???, or NULL if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_4_240_location(unsigned char **sec) {
     int pdt;
     unsigned char *p;
@@ -1859,6 +2984,19 @@ unsigned char *code_table_4_240_location(unsigned char **sec) {
 /*
  * HEADER:-1:code_table_4.241:inv:0:code table 4.241 coverage attributes
  */
+
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_4_241(ARG0) {
     int val;
     if (mode >= 0) {
@@ -1868,6 +3006,15 @@ int f_code_table_4_241(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_4_241(unsigned char **sec) {
     unsigned char *p;
     p = code_table_4_241_location(sec);
@@ -1875,6 +3022,15 @@ int code_table_4_241(unsigned char **sec) {
     return (int) *p;
 }
 
+/**
+ * Returns the location of the ??? (Code Table ???) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the location of ???, or NULL if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_4_241_location(unsigned char **sec) {
     int pdt;
 
@@ -1888,9 +3044,21 @@ unsigned char *code_table_4_241_location(unsigned char **sec) {
     return NULL;
 }
 
-
 /*
  * HEADER:-1:code_table_4.242:inv:0:code table 4.242 tile classification
+ */
+
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
  */
 int f_code_table_4_242(ARG0) {
     int val;
@@ -1901,6 +3069,15 @@ int f_code_table_4_242(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_4_242(unsigned char **sec) {
     unsigned char *p;
     p = code_table_4_242_location(sec);
@@ -1908,6 +3085,15 @@ int code_table_4_242(unsigned char **sec) {
     return (int) *p;
 }
 
+/**
+ * Returns the location of the ??? (Code Table ???) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return Pointer to the location of ???, or NULL if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 unsigned char *code_table_4_242_location(unsigned char **sec) {
     int pdt;
 
@@ -1923,6 +3109,19 @@ unsigned char *code_table_4_242_location(unsigned char **sec) {
 
 /*
  * HEADER:-1:code_table_5.0:inv:0:code table 5.0 data representation number
+ */
+
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
  */
 int f_code_table_5_0(ARG0) {
     int p;
@@ -1941,12 +3140,34 @@ int f_code_table_5_0(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_5_0(unsigned char **sec) {
     return (int) uint2(sec[5]+9);
 }
 
 /*
  * HEADER:-1:code_table_5.1:inv:0:code table 5.1 type of original field values
+ */
+
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
  */
 int f_code_table_5_1(ARG0) {
     int p;
@@ -1966,6 +3187,15 @@ int f_code_table_5_1(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_5_1(unsigned char **sec) {
 
     switch(code_table_5_0(sec)) {
@@ -1987,6 +3217,18 @@ int code_table_5_1(unsigned char **sec) {
  * HEADER:-1:code_table_5.4:inv:0:code table 5.4 group splitting method
  */
 
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int f_code_table_5_4(ARG0) {
     int p;
     if (mode >= 0) {
@@ -1995,14 +3237,36 @@ int f_code_table_5_4(ARG0) {
     }
     return 0;
 }
+
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_5_4(unsigned char **sec) {
     if (code_table_5_0(sec) < 2 || code_table_5_0(sec) > 3) return -1;
     return (int) (sec[5][21]);
 }
 
-
 /*
  * HEADER:-1:code_table_5.5:inv:0:code table 5.5 missing value management for complex packing
+ */
+
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
  */
 int f_code_table_5_5(ARG0) {
     int p;
@@ -2013,6 +3277,15 @@ int f_code_table_5_5(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_5_5(unsigned char **sec) {
     if (code_table_5_0(sec) < 2 || code_table_5_0(sec) > 3) return -1;
     return (int) (sec[5][22]);
@@ -2020,6 +3293,19 @@ int code_table_5_5(unsigned char **sec) {
 
 /*
  * HEADER:-1:code_table_5.6:inv:0:code table 5.5 complex packing spatial differencing
+ */
+
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
  */
 int f_code_table_5_6(ARG0) {
     int p;
@@ -2029,6 +3315,16 @@ int f_code_table_5_6(ARG0) {
     }
     return 0;
 }
+
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_5_6(unsigned char **sec) {
     if (code_table_5_0(sec) != 3) return -1;
     return (int) (sec[5][47]);
@@ -2036,6 +3332,19 @@ int code_table_5_6(unsigned char **sec) {
 
 /*
  * HEADER:-1:code_table_5.7:inv:0:code table 5.7 precision in IEEE packing
+ */
+
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
  */
 int f_code_table_5_7(ARG0) {
     int p;
@@ -2046,6 +3355,15 @@ int f_code_table_5_7(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_5_7(unsigned char **sec) {
     if (code_table_5_0(sec) ==  4) return (int) (sec[5][11]);
     return -1;
@@ -2053,6 +3371,19 @@ int code_table_5_7(unsigned char **sec) {
 
 /*
  * HEADER:-1:code_table_6.0:inv:0:code table 6.0 Bitmap indicator
+ */
+
+/**
+ * Prints the ??? (Code Table ???) from the GRIB2 message.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Usage:
+ * -code_table_???
+ * 
+ * @author Wesley Ebisuzaki @date 2009
  */
 int f_code_table_6_0(ARG0) {
     int p;
@@ -2074,6 +3405,15 @@ int f_code_table_6_0(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the ??? (Code Table ??) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * 
+ * @return ???, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int code_table_6_0(unsigned char **sec) {
     return (int) (sec[6][5]);
 }
