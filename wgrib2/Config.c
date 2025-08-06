@@ -24,7 +24,7 @@ extern const char *default_vectors[];
 /** Version of the ftime library */
 extern int version_ftime;
 
-/** Number of names in the names array */
+/** Indicates the GRIB table name to use */
 extern int names;
 
 /** Set options for the wgrib2 tool */
