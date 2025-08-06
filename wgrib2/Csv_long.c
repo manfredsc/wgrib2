@@ -130,9 +130,9 @@ extern int latlon;
  * ## Usage:
  * -csv_long output_file_name
  * 
- * The CSV is written to output_file_name, note output_file_name cannot be a memory file.
+ * The CSV is written to output_file_name (cannot be a memory file)
  * 
- * -set_ext_name 1 -csv output_file_name
+ * -set_ext_name 1 -csv_long output_file_name
  * 
  * The field is the extended grib name.
  * @author Niklas Sondell @date 2008
