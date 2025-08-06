@@ -57,7 +57,7 @@ extern int nx;
 /** Number of grid points in the y direction. */
 extern int ny;
 
-/** GDS change number flag. */
+/** GDS change number. */
 extern int GDS_change_no;
 
 /** Scan mode flag. */
