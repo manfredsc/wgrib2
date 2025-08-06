@@ -53,7 +53,7 @@ int f_number_of_coordinate_values_after_template(ARG0) {
 /**
  * Returns the number of coordinate values (4 byte) after the template in section 4.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return The number of coordinate values after the template.
  * 
@@ -116,7 +116,7 @@ int f_pds_fcst_time(ARG0) {
 /**
  * Returns the number of forecasts in the ensemble.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return The number of forecasts in the ensemble. Returns -1 if the PDT does not specify
  * a number of forecasts.
@@ -133,7 +133,7 @@ int number_of_forecasts_in_the_ensemble(unsigned char **sec) {
 /**
  * Returns the location of the number of forecasts (NP)in the ensemble in the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return Pointer to the byte in section 4 that contains the number of forecasts in the ensemble.
  * 
@@ -192,7 +192,7 @@ unsigned char *number_of_forecasts_in_the_ensemble_location(unsigned char **sec)
 /**
  * Returns the perturbation number from the GRIB2 message.
  *
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  *
  * @return The perturbation number. Returns -1 if the PDT does not specify a perturbation number.
  *
@@ -208,7 +208,7 @@ int perturbation_number(unsigned char **sec) {
 /**
  * Returns the location of the perturbation number in the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return Pointer to the byte in section 4 that contains the perturbation number.
  * 
@@ -268,7 +268,7 @@ unsigned char *perturbation_number_location(unsigned char **sec) {
  *                             Old: return unsigned value, ! code_4_4, return 0xffffffff;
  *                             New: return signed value    ! code_4_4, return 0
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return The forecast time in the units specified by the PDT. Returns -1 if the PDT does not specify
  * a forecast time.
@@ -294,7 +294,7 @@ int forecast_time_in_units(unsigned char **sec) {
 /**
  * Returns the location of the forecast time in units specified by the Product Definition Template (PDT).
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * @param size Pointer to the size of the forecast time value (2 or 4 bytes).
  * 
  * @return Pointer to the byte in section 4 that contains the forecast time in units specified by the PDT.
@@ -317,7 +317,7 @@ unsigned char *forecast_time_in_units_location(unsigned char **sec, int *size) {
 /**
  * Returns the values of fixed surfaces from the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * @param type1 Pointer to the type of the first surface.
  * @param surface1 Pointer to the value of the first surface.
  * @param undef_val1 Pointer to the undefined value flag of the first surface.
@@ -362,7 +362,7 @@ void fixed_surfaces(unsigned char **sec, int *type1, float *surface1,
 /**
  * Returns the background generating process identifier from the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return The background generating process identifier, or -1 if not found.
  * 
@@ -379,7 +379,7 @@ int background_generating_process_identifier(unsigned char **sec) {
 /**
  * Returns the location of the background generating process identifier in the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return Pointer to the byte in section 4 that contains the background generating process identifier.
  * 
@@ -427,7 +427,7 @@ unsigned char *background_generating_process_identifier_location(unsigned char *
 /**
  * Returns the analysis or forecast generating process identifier from the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return The analysis or forecast generating process identifier, or -1 if not found.
  * 
@@ -443,7 +443,7 @@ int analysis_or_forecast_generating_process_identifier(unsigned char **sec) {
 /**
  * Returns the location of the analysis or forecast generating process identifier in the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return Pointer to the byte in section 4 that contains the analysis or forecast generating process identifier.
  * 
@@ -487,7 +487,7 @@ unsigned char *analysis_or_forecast_generating_process_identifier_location(unsig
 /**
  * Returns the number of hours of observational data cutoff after reference time.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return The number of hours of observational data cutoff after reference time, or -1 if not found.
  * 
@@ -503,7 +503,7 @@ int hours_of_observational_data_cutoff_after_reference_time(unsigned char **sec)
 /**
  * Returns the location of the hours of observational data cutoff after reference time in the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return Pointer to the byte in section 4 that contains the hours of observational data cutoff after reference time.
  * 
@@ -529,7 +529,7 @@ unsigned char *hours_of_observational_data_cutoff_after_reference_time_location(
 /**
  * Returns the number of minutes of observational data cutoff after reference time.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return The number of minutes of observational data cutoff after reference time, or -1 if not found.
  * 
@@ -545,7 +545,7 @@ int minutes_of_observational_data_cutoff_after_reference_time(unsigned char **se
 /**
  * Returns the location of the minutes of observational data cutoff after reference time in the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return Pointer to the byte in section 4 that contains the minutes of observational data cutoff after reference time.
  * 
@@ -570,7 +570,7 @@ unsigned char *minutes_of_observational_data_cutoff_after_reference_time_locatio
 /**
  * Returns the observation generating process identifier from the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return The observation generating process identifier, or -1 if not found.
  * 
@@ -586,7 +586,7 @@ int observation_generating_process_identifier(unsigned char **sec) {
 /**
  * Returns the location of the observation generating process identifier in the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return Pointer to the byte in section 4 that contains the observation generating process identifier.
  * 
@@ -602,7 +602,7 @@ unsigned char *observation_generating_process_identifier_location(unsigned char 
 /**
  * Retrieves substitute missing values from the GRIB2 message.
  * 
- * @param sec Pointer to the section 5 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * @param missing1 Pointer to store the first missing value.
  * @param missing2 Pointer to store the second missing value (if applicable).
  * 
@@ -641,7 +641,7 @@ int sub_missing_values(unsigned char **sec, float *missing1, float *missing2) {
  * Returns the location of the statistical time processing section in the GRIB2 message. 
  * (ie location of overall time)
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return Pointer to the byte in section 4 that contains the statistical time processing information.
  * 
@@ -715,7 +715,7 @@ unsigned char *stat_proc_verf_time_location(unsigned char **sec) {
 /**
  * Returns index of n - number of time range specifications in the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return The index of n - number of time range specifications, or -1 if not applicable.
  * 
@@ -739,7 +739,7 @@ int stat_proc_n_time_ranges_index(unsigned char **sec) {
 /**
  * Returns the statistical time processing section from the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * @param year Pointer to store the year of the statistical time processing.
  * @param month Pointer to store the month of the statistical time processing.
  * @param day Pointer to store the day of the statistical time processing.
@@ -770,7 +770,7 @@ int stat_proc_verf_time(unsigned char **sec, int *year, int *month, int *day, in
 /**
  * Returns the location of the year of the model version date in the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return Pointer to the byte in section 4 that contains the year of the model version date, or NULL if not applicable.
  * 
@@ -822,7 +822,7 @@ int f_percent(ARG0) {
 /**
  * Returns the percentile value from the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return The percentile value as an integer, or -1 if not found.
  * 
@@ -838,7 +838,7 @@ int percentile_value(unsigned char **sec) {
 /**
  * Returns the location of the percentile value in the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return Pointer to the byte in section 4 that contains the percentile value, or NULL if not applicable.
  * 
@@ -864,7 +864,7 @@ unsigned char *percentile_value_location(unsigned char **sec) {
 /**
  * Returns reference value, binary scaling, decimal scaling, and number of bits from the GRIB2 message.
  * 
- * @param sec Pointer to the section 5 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * @param ref_value Pointer to store the reference value.
  * @param decimal_scaling Pointer to store the decimal scaling factor.
  * @param binary_scaling Pointer to store the binary scaling factor.
@@ -896,7 +896,7 @@ int scaling(unsigned char **sec, double *ref_value, int *decimal_scaling, int *b
 /**
  * Returns the number of particle size distributions used by templates 4.57, 4.58, 4.67, and 4.68.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return The number of particle size distributions, or -1 if the PDT number is not valid.
  * 
@@ -916,7 +916,7 @@ int number_of_mode(unsigned char **sec) {
 /**
  * Returns particle size distribution (mode) number for templates 4.57, 4.58, 4.67, and 4.68.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return The mode number as an integer, or -1 if the PDT number is not valid.
  * 
@@ -932,7 +932,7 @@ int mode_number(unsigned char **sec) {
 /**
  * Returns the number of following function parameters (NP) for templates 4.57, 4.58, 4.67, and 4.68.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return The number of following distribution parameters (NP), or -1 if the PDT number is not valid.
  * 
@@ -950,7 +950,7 @@ int number_of_following_distribution_parameters_np(unsigned char **sec) {
 /**
  * Returns the location of the number of following distribution parameters (Np) for templates 4.57, 4.58, 4.67, and 4.68.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return Pointer to the byte in section 4 that contains the number of following distribution parameters (Np), or 
  * NULL if the PDT number is not valid.
@@ -1002,7 +1002,7 @@ int f_post_processing(ARG0) {
 /**
  * Returns the type of post-processing applied to the data for templates 4.70 to 4.73.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return The type of post-processing as an integer, or -1 if the PDT number is not valid.
  * 
@@ -1019,7 +1019,7 @@ int type_of_post_processing(unsigned char **sec) {
 /**
  * Returns the value of cluster identifier for templates 4.3, 4.4, 4.13, and 4.14 from the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message. (assumes unsigned char)
+ * @param sec Pointer to the section of the GRIB2 message. (assumes unsigned char)
  * 
  * @return The cluster identifier as an integer, or -1 if the PDT number is not valid.
  * 
@@ -1037,7 +1037,7 @@ int cluster_identifier(unsigned char **sec) {
 /**
  * Returns the location of the cluster identifier templates 4.3, 4.4, 4.13, and 4.14 from the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return Pointer to the byte in section 4 that contains the cluster identifier, or NULL if the 
  * PDT number is not valid.
@@ -1065,7 +1065,7 @@ unsigned char *cluster_identifier_location(unsigned char **sec) {
 /**
  * Returns the number of clusters for templates 4.3, 4.4, 4.13, and 4.14 from the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return The number of clusters as an integer, or -1 if the PDT number is not valid.
  * 
@@ -1083,7 +1083,7 @@ int number_of_clusters(unsigned char **sec) {
 /**
  * Returns the location of the number of clusters in the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return Pointer to the byte in section 4 that contains the number of clusters, or NULL if the 
  * PDT number is not valid.
@@ -1110,7 +1110,7 @@ unsigned char *number_of_clusters_location(unsigned char **sec) {
 /**
  * Returns the number of forecasts in the cluster for templates 4.3, 4.4, 4.13, and 4.14 from the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return The number of forecasts in the cluster as an integer, or -1 if the PDT number is not valid.
  * 
@@ -1128,7 +1128,7 @@ int number_of_forecasts_in_the_cluster(unsigned char **sec) {
 /**
  * Returns the location of the number of forecasts in the cluster in the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return Pointer to the byte in section 4 that contains the number of forecasts in the cluster, or NULL if the
  * PDT number is not valid.
@@ -1156,7 +1156,7 @@ unsigned char *number_of_forecasts_in_the_cluster_location(unsigned char **sec) 
 /**
  * Returns the location of the list of ensemble forecast numbers (NC) in the GRIB2 message.
  *
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  *
  * @return Pointer to the byte in section 4 that contains the list of ensemble forecast numbers, or NULL if 
  * the PDT number is not valid.
@@ -1186,7 +1186,7 @@ unsigned char *list_of_nc_ensemble_forecast_numbers_location(unsigned char **sec
 /**
  * Returns the number of contributing spectral bands (NB) for templates 4.31 to 4.35 from the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return The number of contributing spectral bands as an integer, or -1 if the PDT number is not valid.
  * 
@@ -1204,7 +1204,7 @@ int number_of_contributing_spectral_bands(unsigned char **sec) {
  * Returns the location of the number of contributing spectral bands (NB) for templates 4.31 to 4.35 
  * from the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return Pointer to the byte in section 4 that contains the number of contributing spectral bands, or NULL 
  * if the PDT number is not valid.
@@ -1232,7 +1232,7 @@ unsigned char *number_of_contributing_spectral_bands_location(unsigned char **se
 /**
  * Returns the number of categories for template 4.91 from the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return The number of categories as an integer, or -1 if the PDT number is not valid.
  * 
@@ -1247,7 +1247,7 @@ int number_of_categories(unsigned char **sec) {
 /**
  * Returns the location of the number of categories for template 4.91 from the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return Pointer to the byte in section 4 that contains the number of categories, or NULL 
  * if the PDT number is not valid.
@@ -1263,7 +1263,7 @@ unsigned char *number_of_categories_location(unsigned char **sec) {
 /** 
  * Returns the number of partitions for templates 4.53 and 4.54 from the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return The number of partitions as an integer, or -1 if the PDT number is not valid.
  * 
@@ -1280,7 +1280,7 @@ int number_of_partitions(unsigned char **sec) {
 /**
  * Returns the location of the number of partitions for templates 4.53 and 4.54 from the GRIB2 message.
  * 
- * @param sec Pointer to the section 4 of the GRIB2 message.
+ * @param sec Pointer to the section of the GRIB2 message.
  * 
  * @return Pointer to the byte in section 4 that contains the number of partitions, or NULL if 
  * the PDT number is not valid.
