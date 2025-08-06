@@ -11,7 +11,7 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/** Flag to indicate decoding mode. */
+/** Decode grib file flag  */
 extern int decode;
 
 /** Flag to indicate lat-lon grid processing. */
