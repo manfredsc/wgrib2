@@ -82,7 +82,7 @@ int f_d(ARG1) {
     const char *s;
 
     if (mode == -1) {
-	if (input != all_mode) fprintf(stderr,"*** Warning -d %s overrides earlier -i, -d options\n", arg1);
+        if (input != all_mode) fprintf(stderr,"*** Warning -d %s overrides earlier -i, -d options\n", arg1);
         input = dump_mode;
         s = arg1;
 
@@ -98,17 +98,17 @@ int f_d(ARG1) {
         }
         if (*s == '.') {
             s++;
-	    dump_submsg = 0;
+            dump_submsg = 0;
             while (isdigit((unsigned char) *s)) {
                 dump_submsg = 10*dump_submsg + *s++ - '0';
             }
         }
 
         /*
- 	 * dump_offset:  0       not being used
- 	 *               n > 0   skip (n-1) bytes
- 	 * note: offset starts at 0
- 	 */
+        * dump_offset:  0       not being used
+        *               n > 0   skip (n-1) bytes
+        * note: offset starts at 0
+        */
 
         /* get :offset */
 
@@ -117,7 +117,7 @@ int f_d(ARG1) {
             while (isdigit((unsigned char) *s)) {
                 dump_offset = 10*dump_offset + *s++ - '0';
             }
-	    dump_offset++;
+            dump_offset++;
         }
     }
     return 0;

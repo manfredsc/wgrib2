@@ -72,7 +72,7 @@ int f_stats(ARG0) {
     }
     if (first >= ndata) {
         sprintf(inv_out,"ndata=%u:undef=%u:mean=%lg:min=%lg:max=%lg", ndata, ndata, sum, sum, sum);
-	return 0;
+        return 0;
     }
 
     mn = mx = data[first];
@@ -86,25 +86,25 @@ int f_stats(ARG0) {
 #endif
     for (i = first; i <	ndata; i++) {
         if (DEFINED_VAL(data[i])) {
-	    n += 1;
-	    sum += data[i];
-	    mx = data[i] > mx ? data[i] : mx;
-	    mn = data[i] < mn ? data[i] : mn;
-	    if (do_wt) {
-		if (lat[i] != last_lat) {
-		    last_coslat = cosf((float) CONV*lat[i]);
-		    last_lat = lat[i];
-		}
-		wt += last_coslat;
-		sum_wt += last_coslat * data[i];
-	    }
-	}
+            n += 1;
+            sum += data[i];
+            mx = data[i] > mx ? data[i] : mx;
+            mn = data[i] < mn ? data[i] : mn;
+            if (do_wt) {
+                if (lat[i] != last_lat) {
+                    last_coslat = cosf((float) CONV*lat[i]);
+                    last_lat = lat[i];
+                }
+                wt += last_coslat;
+                sum_wt += last_coslat * data[i];
+            }
+        }
     }
     sum /= n;
     sprintf(inv_out,"ndata=%u:undef=%u:mean=%lg:min=%g:max=%g", ndata, ndata-n, sum, mn, mx);
     if (wt > 0) {
-	sum_wt = sum_wt/wt;
-	inv_out += strlen(inv_out);
+        sum_wt = sum_wt/wt;
+        inv_out += strlen(inv_out);
         sprintf(inv_out,":cos_wt_mean=%lg", sum_wt);
     }
     return 0;
@@ -137,7 +137,7 @@ int f_max(ARG0) {
         decode = 1;
     }
     else if (mode >= 0) {
-	ok = min_max_array(data, ndata, &mn, &mx);
+	    ok = min_max_array(data, ndata, &mn, &mx);
         if (ok == 0) sprintf(inv_out,"max=%g", (double) mx);
         else sprintf(inv_out,"max=undefined");
     }
