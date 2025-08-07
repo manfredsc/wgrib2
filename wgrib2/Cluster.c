@@ -17,7 +17,7 @@
 /**
  * Display the cluster identifier.
  * 
- * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * @param ARG0 ???
  * 
  * @return 0 for success, does not return an error code.
  * 
@@ -43,7 +43,7 @@ int f_cluster(ARG0) {
 /**
  * Display the number of clusters.
  * 
- * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * @param ARG0 ???
  * 
  * @return 0 for success, does not return an error code.
  * 
@@ -73,7 +73,7 @@ extern char *nl;
  * Display information about the cluster, including the cluster identifier,
  * number of forecasts in the cluster, and other related data.
  * 
- * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * @param ARG0 ???
  * 
  * @return 0 for success, does not return an error code.
  * 

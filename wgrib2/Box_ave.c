@@ -62,10 +62,7 @@ extern unsigned int ny_;
  * Amount of smoothing can be controlled by the size of the box. Can be used on regional
  * and global fields. To identify global fields, you can use the option -cyclic.
  * 
- * @param ARG3 Arguments and context for the wgrib2 function macro. Requires three arguments:
- * - arg1: Size of the box in the x-direction (must be an odd integer).
- * - arg2: Size of the box in the y-direction (must be an odd integer).
- * - arg3: Critical weight for averaging. If set to -1, all defined values are averaged.
+ * @param ARG3 ???
  * 
  * @return 0 for success, error code otherwise.
  * 

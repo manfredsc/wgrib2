@@ -111,16 +111,16 @@ static int get_cindex (int i, int nx) {
  * Takes a rectangular box of data from a rectangular grid and writes it out in either text, bin, 
  * or spread (sheet) format. The extracted box can have every point or every n-th point. 
  * 
- * @param ARG4 Arguments and context for the wgrib2 function macro. Requires four arguments:
- * - arg1: A string specifying the x-dimension (e.g., "i1:i2:di").
- * - arg2: A string specifying the y-dimension (e.g., "j1:j2:dj").
- * - arg3: The output file name where the results will be written.
- * - arg4: The format to write the data in (e.g., "bin", "text", "spread").
+ * @param ARG4 ???
  * 
  * @return 0 for success, error code otherwise.
  * 
  * ##Usage:
  * -ijbox i1:i2:di j1:j2:dj output_file format
+ * 
+ * i1:i2:di specifies the x-dimension
+ * j1:j2:dj specifies the y-dimension
+ * output_file is written in the specified format (e.g., "bin", "text", "spread").
  * 
  * ## Example: 
  * ???

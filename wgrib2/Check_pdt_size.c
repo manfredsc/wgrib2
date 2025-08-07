@@ -42,8 +42,7 @@ int warn_check_pdt = 1;
  * 
  * You may skip this check by using the -check_pdt_size 0 option.
  * 
- * @param ARG1 Arguments and context for the wgrib2 function macro. Requires a single 
- * argument which is 0 or 1 to disable or enable the check.
+ * @param ARG1 ???
  * 
  * @return 0 for success.
  * 

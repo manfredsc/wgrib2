@@ -32,7 +32,7 @@ extern int decode;
  * Writes the checksum (32 bit CRC) for the entire grib message, the decoded grid-point 
  * data or any specified section.
  * 
- * @param ARG1 Arguments and context for the wgrib2 function macro. 
+ * @param ARG1 ???
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -46,6 +46,7 @@ extern int decode;
  * 
  * ## Usage:
  * -checksum N
+ * 
  * where N is:
  *   -1: whole message
  *   1-8: section number

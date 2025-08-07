@@ -483,9 +483,7 @@ static int write_ave_var(struct ave_var_struct *save) {
  * 
  * The options and expected sequence of fields is the same as with the -ave option. 
  * 
- * @param ARG2 ARG2 Arguments and context for the wgrib2 function macro. Requires two arguments:
- * - arg1: A string specifying the time interval and unit (e.g., "6hr", "1dy").
- * - arg2: The output file name where the results will be written.
+ * @param ARG2 ???
  * 
  * @return 0 for success, error code otherwise.
  * 
