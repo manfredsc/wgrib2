@@ -1,6 +1,6 @@
 /** @file
  * @brief Convert single faces of a cubed sphere to a 6-face format.
- * @author Wesley Ebisuzaki @date 4/2019
+ * @author Public Domain: Wesley Ebisuzaki @date 4/2019
  */
 #include <stdio.h>
 #include <stdlib.h>

@@ -1,6 +1,6 @@
 /** @file
  * @brief Write data to a CSV file with extended time and metadata.
- * @author Niklas Sondell @date 2008
+ * @author Niklas Sondell, Storm Weather Center @date 2008
  * 
  * ### Program History Log
  * Date | Programmer | Comments

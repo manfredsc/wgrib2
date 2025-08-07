@@ -1,7 +1,7 @@
 /** @file
  * @brief Routine for determining whether grid is cyclic. Needed to determine whether
  * a grid has an E or W boundary.
- * @author Wesley Ebisuzaki @date 2009
+ * @author Public Domain: Wesley Ebisuzaki @date 2009
  */
 #include <stdio.h>
 #include <stdlib.h>

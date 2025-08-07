@@ -1,6 +1,6 @@
 /** @file
  * @brief Specifies the grib message number to process.
- * @author Wesley Ebisuzaki @date 2004
+ * @author Public Domain: Wesley Ebisuzaki @date 2004
  * 
  * ### Program History Log
  * Date | Programmer | Comments
