@@ -1,6 +1,6 @@
 /** @file
  * @brief Some routines that examine the data.
- * @author Wesley Ebisuzaki @date 2006
+ * @author Public Domain: Wesley Ebisuzaki @date 2006
  * 
  * ### Program History Log
  * Date | Programmer | Comments
