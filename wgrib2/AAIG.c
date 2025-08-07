@@ -64,7 +64,7 @@ extern enum output_order_type output_order_wanted;
  *      If RT is different than VT 
  *          output = NAME.LEVEL.RT.VT.asc
  * 
- * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * @param ARG0 ???
  *
  * @return 0 for success, error code otherwise.
  *

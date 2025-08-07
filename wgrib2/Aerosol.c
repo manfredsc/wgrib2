@@ -23,7 +23,7 @@
  * Prints the size of the aerosol particle if applicable. This product applies to Product Definition 
  * Template 4.44-4.48. This option is part of the standard inventory.
  * 
- * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * @param ARG0 ???
  *
  * @return 0 for success, does not return error codes.
  * 
@@ -59,7 +59,7 @@ int f_aerosol_size(ARG0) {
 /**
  * Prints the optical properties of the aerosol particle. This option is part of the standard inventory.
  * 
- * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * @param ARG0 ???
  *
  * @return 0 for success, does not return error codes.
  * 

@@ -20,8 +20,7 @@
  * Terminates wgrib2 after N seconds (real time). The alarm is activated in the 
  * setup phase and removed in the finalize phase.
  * 
- * @param ARG1 Arguments and context for the wgrib2 function macro. Requires a 
- * single argument which is the number of seconds to wait before terminating.
+ * @param ARG1 ???
  * 
  * @return 0 for success, error code otherwise.
  * 
