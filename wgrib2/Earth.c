@@ -1,6 +1,12 @@
-/*
- * Public Domain: Wesley Ebisuzaki 2010, 2017
- *  6/2017: print out semi major/minor axes
+/** @file
+ * @brief Set or print the shape and radius of the Earth.
+ * @author Public Domain: Wesley Ebisuzaki @date 2010
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 2010 | W. Ebisuzaki | Initial
+ * 06/2017 | W. Ebisuzaki | Print semi-major/minor axes
  */
 
 #include <stdio.h>
@@ -13,6 +19,24 @@
  * HEADER:100:radius:inv:0:radius of Earth
  */
 
+/**
+ * Prints the shape and size of Earth according to Code Table 3.2.
+ * 
+ * Such information is necessary for finding the latitude and longitude of the grid 
+ * points in various projections.
+ * 
+ * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * 
+ * @return 0 on success, error code otherwise.
+ * 
+ * ## Usage:
+ * -radius
+ * 
+ * ## Example:
+ * ???
+ * 
+ * @author Wesley Ebisuzaki @date 2010
+ */
 int f_radius(ARG0) {
     int table_3_2, is_spherical;
     double major, minor;
@@ -33,6 +57,39 @@ int f_radius(ARG0) {
 
 /*
  * HEADER:100:set_radius:misc:1:set radius of Earth  X= 0,2,4,5,6,8,9 (Code Table 3.2), X=1:radius , X=7:major:minor
+ */
+
+/**
+ * Sets the shape and size of Earth according to Code Table 3.2.
+ * 
+ * The geolocation of the grid points is done prior to the execution of the run-time 
+ * options. So the -set_radius will not affect calculations of the lat-lon of the grid 
+ * points. To get the correction locations after using the -set_radius option, you must 
+ * write the file with the new shape of the Earth. Then you can use this new file. 
+ * 
+ * @param ARG1 Arguments and context for the wgrib2 function macro. Requires one argument
+ * which is the new radius in a form defined by Code Table 3.2.
+ * 
+ * @return 0 on success, error code otherwise.
+ * 
+ * ## Usage:
+ * -set_radius N 
+ *      N=0,2,4,5,6,8,9
+ *      Code Table 3.2 is set to N
+ * -set_radius 1:R
+ *      R=radius in meters (spherical)
+ *      Code Table 3.2 is set to 1
+ * -set_radius 3:X:Y
+ *      X=major axis Y=minor axis (oblate spheroid), X, Y in km
+ *      Code Table 3.2 is set to 3
+ * -set_radius 7:X:Y 
+ *      X=major axis Y=minor axis (oblate spheroid), X, Y in m
+ *      Code Table 3.2 is set to 7
+ * 
+ * ## Example:
+ * ???
+ * 
+ * @author Wesley Ebisuzaki @date 2010
  */
 int f_set_radius(ARG1) {
     unsigned char *p;
@@ -91,9 +148,18 @@ int f_set_radius(ARG1) {
     return 0;
 }
 
-
-/* routine returns length of major and minor axis  */
-
+/**
+ * Returns the length of the major and minor axes.
+ * 
+ * @param sec Pointer to the section array.
+ * @param major Pointer to store the length of the major axis in meters.
+ * @param minor Pointer to store the length of the minor axis in meters.
+ * @param is_spherical Pointer to store whether the Earth is spherical (1) or not (0).
+ * 
+ * @return 0 on success, error code otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 2010
+ */
 int axes_earth(unsigned char **sec, double *major, double *minor, int *is_spherical) {
     int table_3_2;
     unsigned char *p;
@@ -161,8 +227,15 @@ int axes_earth(unsigned char **sec, double *major, double *minor, int *is_spheri
     return 0;
 }
 
-/* function to return the size of the earth */
-
+/** 
+ * Returns the radius of the Earth in meters.
+ * 
+ * @param sec Pointer to the section array.
+ * 
+ * @return The average radius of the Earth in meters.
+ * 
+ * @author Wesley Ebisuzaki @date 2010
+*/
 double radius_earth(unsigned char **sec) {
    double radius_major, radius_minor, radius;
    int is_spherical;
