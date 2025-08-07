@@ -237,14 +237,14 @@ int axes_earth(unsigned char **sec, double *major, double *minor, int *is_spheri
  * @author Wesley Ebisuzaki @date 2010
 */
 double radius_earth(unsigned char **sec) {
-   double radius_major, radius_minor, radius;
-   int is_spherical;
+    double radius_major, radius_minor, radius;
+    int is_spherical;
 
-   axes_earth(sec, &radius_major, &radius_minor, &is_spherical);
-   radius = 0.5 * (radius_major + radius_minor);
+    axes_earth(sec, &radius_major, &radius_minor, &is_spherical);
+    radius = 0.5 * (radius_major + radius_minor);
 
-   if (radius < 6300000.0 || radius > 6400000.0) 
-	   fatal_error_i("radius of earth is %d m", (int) radius);
+    if (radius < 6300000.0 || radius > 6400000.0) 
+        fatal_error_i("radius of earth is %d m", (int) radius);
 
-   return radius;
+    return radius;
 }
