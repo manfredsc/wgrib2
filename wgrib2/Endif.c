@@ -19,7 +19,7 @@
  * -endif structure for conditional execution of wgrib2 options. More details are in
  * the -if documentation.
  * 
- * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * @param ARG0 ???
  * 
  * @return 0 on success
  * 
