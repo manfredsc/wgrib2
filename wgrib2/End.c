@@ -2,6 +2,7 @@
  * @brief Stops the processing of the grib file.
  * @author Public Domain: Wesley Ebisuzaki @date 02/2008
  */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,13 +10,11 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/* 2/2008 in public domain Wesley Ebisuzaki */
-
 /*
  * HEADER:100:end:misc:0:stop after first (sub)message (save time)
  */
 
-/* Last message to process. */
+/** Last message to process. */
 extern unsigned int last_message;
 
 /**
