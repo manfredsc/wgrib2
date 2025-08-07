@@ -37,7 +37,7 @@ extern const char *set_options;
 /**
  * Prints out the current configuration of the wgrib2 tool.
  * 
- * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
  * 

@@ -78,11 +78,7 @@ extern enum output_grib_type grib_type;
   * You need to specify the lower left corner of the grid, the number of points in the zonal and meridional directions 
   * and the latitude/longitude increments. Finally you need to specify the output file and the format. 
   * 
-  * @param ARG4 Arguments and context for the wgrib2 function macro. Requires four arguments:
-  * - arg1: Longitude parameters in the format lon0:nlon:dlon
-  * - arg2: Latitude parameters in the format lat0:nlat:dlat
-  * - arg3: Output file name
-  * - arg4: Radius parameters in the format radius1:radius2:...:radiusN
+  * @param ARG4 ???
   * 
   * @return 0 for success, error code otherwise.
   * 

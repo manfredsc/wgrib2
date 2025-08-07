@@ -17,7 +17,7 @@
 /**
  * Prints the number of values (4 byte) in the "optional list of coordinate values". 
  * 
- * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -73,7 +73,7 @@ int number_of_coordinate_values_after_template(unsigned char **sec) {
 /**
  * Prints out the value of the forecast time.
  * 
- * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -797,7 +797,7 @@ unsigned char *year_of_model_version_date_location(unsigned char **sec) {
 /**
  * Prints the percentile value.
  * 
- * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -980,7 +980,7 @@ unsigned char *number_of_following_distribution_parameters_np_location(unsigned 
 /**
  * Prints the type of post-processing applied to the data for templates 4.70 to 4.73.
  * 
- * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
  * 
