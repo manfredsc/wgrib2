@@ -104,8 +104,7 @@ extern int latlon;
  * A better field name may be "HGT.ENS=+19". You enable the extended variable name by adding the 
  * option -set_ext_name 1.
  * 
- * @param ARG1 Arguments and context for the wgrib2 function macro. Requires one argument
- * which is the output file name.
+ * @param ARG1 ???
  * 
  * @return 0 on success, error code otherwise.
  * 

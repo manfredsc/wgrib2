@@ -60,8 +60,7 @@ extern enum input_type input;
  * I use -d interactively but this option should not be used in scripts unless you are 100% 
  * certain of the order of the records. 
  * 
- * @param ARG1 Arguments and context for the wgrib2 function macro. Requires one argument in the
- * form of N, N.M, N:OFFSET, or N.M:OFFSET.
+ * @param ARG1 ???
  * 
  * @return 0 on success, error code otherwise.
  * 

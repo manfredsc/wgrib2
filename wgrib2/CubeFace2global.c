@@ -58,11 +58,14 @@ extern enum output_grib_type grib_type;
  * This routine converts single faces to a 6-face format. Can use to merge 1-6 faces 
  * to global cubed sphere format.
  * 
- * @param ARG2 Arguments and context for the wgrib2 function macro. Requires two arguments:
- * - arg1: List of faces to exclude (0-6).
- * - arg2: Output file name.
+ * @param ARG2 ???
  * 
  * @return 0 on success, error code otherwise.
+ * 
+ * ## Usage:
+ * -cubeface2global faces output_file_name
+ * 
+ * Where faces is the list of faces to exclude (0-6)
  * 
  * @author Wesley Ebisuzaki @date 4/2019
  */

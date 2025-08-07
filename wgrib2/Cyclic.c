@@ -71,7 +71,7 @@ extern int *raw_variable_dim;
  * (Reason 1: grib1 only stored the lon and dlon to the nearest millidegree. Reason 2: 
  * most NCEP codes use single precision for the longitudes and latitudes.) 
  * 
- * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * @param ARG0 ???
  * 
  * @return 0 on success, error code otherwise.
  * 

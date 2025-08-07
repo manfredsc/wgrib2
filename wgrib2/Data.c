@@ -43,7 +43,7 @@ extern double *lon;
  * and maximum values. If latitude information is available, it also computes a 
  * cosine-weighted mean.
  * 
- * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * @param ARG0 ???
  * 
  * @return 0 on success, error code otherwise.
  * 
@@ -117,7 +117,7 @@ int f_stats(ARG0) {
 /**
  * Prints the maximum value of the field.
  * 
- * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * @param ARG0???
  * 
  * @return 0 on success, error code otherwise.
  * 
@@ -151,7 +151,7 @@ int f_max(ARG0) {
 /**
  * Prints the minimum value of the field.
  * 
- * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * @param ARG0 ???
  * 
  * @return 0 on success, error code otherwise.
  * 

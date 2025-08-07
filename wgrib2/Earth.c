@@ -25,7 +25,7 @@
  * Such information is necessary for finding the latitude and longitude of the grid 
  * points in various projections.
  * 
- * @param ARG0 Arguments and context for the wgrib2 function macro.
+ * @param ARG0 ???
  * 
  * @return 0 on success, error code otherwise.
  * 
@@ -67,8 +67,7 @@ int f_radius(ARG0) {
  * points. To get the correction locations after using the -set_radius option, you must 
  * write the file with the new shape of the Earth. Then you can use this new file. 
  * 
- * @param ARG1 Arguments and context for the wgrib2 function macro. Requires one argument
- * which is the new radius in a form defined by Code Table 3.2.
+ * @param ARG1 ???
  * 
  * @return 0 on success, error code otherwise.
  * 
