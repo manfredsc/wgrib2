@@ -1,5 +1,5 @@
 /** @file
- * @brief Functions for ensemble processing in wgrib2. Experimental. Base on 
+ * @brief Functions for ensemble processing in wgrib2. Experimental. Based on 
  * time_processing.c.
  * @author Public Domain: Wesley Ebisuzaki @date 01/2018
  */
