@@ -1,3 +1,14 @@
+/** @file
+ * @brief Functions for Ensemble Quality Control (QC) processing in wgrib2.
+ * @author Public Domain: Wesley Ebisuzaki @date 01/2020
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 01/2020 | W. Ebisuzaki | Initial public release
+ * 09/2023 | W. Ebisuzaki | Faster by using SIMD
+ */
+
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -45,32 +56,81 @@
  *  9/2023: faster by using SIMD
  */
 
-/* code table 4.7 */
+/** Code Figure for Average in Code Table 4.7 */
 #define AVE	0
+
+/** Code Figure for Spread in Code Table 4.7 */
 #define SPREAD	4
+
+/** Code Figure for Maximum in Code Table 4.7 */
 #define MAX	9
+
+/** Code Figure for Minimum in Code Table 4.7 */
 #define MIN	8
-/* this is only for NCEP files */
+
+/** Extreme Forecast Index (only for NCEP files) */
 #define EXTREME_FORECAST_INDEX 199
 
-extern int decode, file_append, nx, ny, save_translation;
+/** Decode grib file flag. */
+extern int decode;
 
+/** Append grib file flag. */
+extern int file_append;
+
+/** Grid size in x direction. */
+extern int nx;
+
+/** Grid size in y direction. */
+extern int ny;
+
+/** Save translation flag. */
+extern int save_translation;
+
+/** Flush output flag. */
 extern int flush_mode;
+
+/** Translation array for grid points. */
 extern unsigned int *translation;
-extern int use_scale, dec_scale, bin_scale, wanted_bits, max_bits;
+
+/** Use scaling flag. */
+extern int use_scale;
+
+/** Decoding scale flag. */
+extern int dec_scale;
+
+/** Binary scale flag. */
+extern int bin_scale;
+
+/** Number of bits wanted. */
+extern int wanted_bits;
+
+/** Maximum number of bits. */
+extern int max_bits;
+
+/** Output GRIB type. */
 extern enum output_grib_type grib_type;
 
+/** Struct for ensemble quality control */
 struct ens_qc_struct {
-    unsigned int npnts, nx, ny;
-    int has_val, n_ens;
-    unsigned char *first_sec[9];
-    struct full_date verf_date;
-    int use_scale, dec_scale, bin_scale, wanted_bits, max_bits;
-    enum output_grib_type grib_type;
-    struct seq_file out, extreme_grb, extreme_txt;
-    float *grids;		/* hold grids for median-type calculations */
-    int ngrids;
-    double max_err;
+    unsigned int npnts;                 /**< Number of points in the grid. */
+    unsigned int nx;                    /**< Grid size in x direction. */
+    unsigned int ny;                    /**< Grid size in y direction. */
+    int has_val;                        /**< Flag indicating if values are present. */
+    int n_ens;                          /**< Number of ensemble members. */
+    unsigned char *first_sec[9];        /**< Array containting first section. */
+    struct full_date verf_date;         /**< Verification date. */
+    int use_scale;                      /**< Use scaling flag. */
+    int dec_scale;                      /**< Decoding scale flag. */
+    int bin_scale;                      /**< Binary scale flag. */
+    int wanted_bits;                    /**< Number of bits wanted. */
+    int max_bits;                       /**< Maximum number of bits. */
+    enum output_grib_type grib_type;    /**< Output GRIB type. */
+    struct seq_file out;                /**< Output sequence file. */
+    struct seq_file extreme_grb;        /**< Output sequence file for extreme GRIB. */
+    struct seq_file extreme_txt;        /**< Output sequence file for extreme TXT. */
+    float *grids;                       /**< Array holding grids for median-type calculations. */
+    int ngrids;                         /**< Number of grids allocated. */
+    double max_err;                     /**< Maximum error. */
 };
 
 static int wrt_ens_qc(unsigned char **sec, struct ens_qc_struct *save);
@@ -78,8 +138,15 @@ static int free_ens_qc_struct(struct ens_qc_struct *save);
 static int init_ens_qc_struct(struct ens_qc_struct *save, unsigned char **sec, float *data, unsigned int ndata);
 static int update_ens_qc_struct(struct ens_qc_struct *save, unsigned char **sec, float *data, unsigned int ndata);
 
-/* routines to initialized and free ens_qc_struct */
-
+/**
+ * Free memory allocated for ensemble quality control structure.
+ * 
+ * @param save Pointer to the ensemble quality control structure to be freed.
+ * 
+ * @return 0 on success.
+ * 
+ * @author Wesley Ebisuzaki @date 01/2020
+ */
 static int free_ens_qc_struct(struct ens_qc_struct *save) {
     free_sec(save->first_sec);
     if (save->has_val == 1) {
@@ -91,8 +158,20 @@ static int free_ens_qc_struct(struct ens_qc_struct *save) {
     return 0;
 }
 
-static int init_ens_qc_struct(struct ens_qc_struct *save, 
-    unsigned char **sec, float *data, unsigned int ndata) {
+/**
+ * Initialize ensemble quality control structure with given parameters.
+ *
+ * @param save Pointer to the ensemble quality control structure to be initialized.
+ * @param sec Pointer to the section data.
+ * @param data Pointer to the data array.
+ * @param ndata Number of data points.
+ * 
+ * @return 0 on success.
+ * 
+ * @author Wesley Ebisuzaki @date 01/2020
+ */
+static int init_ens_qc_struct(struct ens_qc_struct *save, unsigned char **sec, 
+            float *data, unsigned int ndata) {
     unsigned int i;
 
     /* if allocated but wrong size, free all */
@@ -147,10 +226,20 @@ static int init_ens_qc_struct(struct ens_qc_struct *save,
     return 0;
 }
 
-/* update_ens_qc_struct: save grid in memory */
-
-static int update_ens_qc_struct(struct ens_qc_struct *save, 
-    unsigned char **sec, float *data, unsigned int ndata) {
+/**
+ * Save grid in memory.
+ * 
+ * @param save Pointer to the ensemble quality control structure.
+ * @param sec Pointer to the section data.
+ * @param data Pointer to the data array.
+ * @param ndata Number of data points.
+ *
+ * @return 0 on success.
+ *
+ * @author Wesley Ebisuzaki @date 01/2020
+ */
+static int update_ens_qc_struct(struct ens_qc_struct *save, unsigned char **sec, 
+        float *data, unsigned int ndata) {
 
     unsigned int i;
 
@@ -190,8 +279,16 @@ static int update_ens_qc_struct(struct ens_qc_struct *save,
     return 0;
 }
 
-/* routine is called when you want to write the ensemble statistics */
-
+/**
+ * Write ensemble statistics to output.
+ *
+ * @param sec Pointer to the section data.
+ * @param save Pointer to the ensemble quality control structure.
+ *
+ * @return 0 on success.
+ *
+ * @author Wesley Ebisuzaki @date 01/2020
+ */
 static int wrt_ens_qc(unsigned char **sec, struct ens_qc_struct *save) {
     int pdt, pdt_ens, k, k_0;
     unsigned int i, ndata;
@@ -357,6 +454,86 @@ static int wrt_ens_qc(unsigned char **sec, struct ens_qc_struct *save) {
  * HEADER:000:ens_qc:output:4:simple qc ensemble members X=stats.grb Y=extreme.grb  Z=extreme.txt A=1 (qc_version)
  */
 
+/**
+ * Tests the ensemble members looking for extreme values (values that are extreme 
+ * relative the spread of the ensemble members).  This test is done for each grid 
+ * point. An unreasonable scaled extreme value provides a simple quality control 
+ * for an egregiously bad ensemble member. 
+ * 
+ * During the production of the Conventional Observations REanalsyis (CORe), a 
+ * glitch was found where the upper-level ozone was two orders of magnitude larger 
+ * than expected. The problem was caused by a single ensemble member which had an 
+ * irreproducible problem which showed up in a single layer of a tracer. The -ens_qc 
+ * option was written to detect extreme values of the ensemble members for quality 
+ * control. In addition, -ens_qc can be used to calculate the ensemble mean and 
+ * spread faster than -ens_processing. 
+ * 
+ * This option will QC ensemble members which limits this option to PDTs of 0, 1, 
+ * 8, and 11. PDTs of 1 and 11 are explicity ensemble members. PDTs of 0 and 8 are 
+ * often used by the control runs. The code should be updated to include other 
+ * ensemble PDTs. 
+ * 
+ * The contents of the output files will vary depending the qc_version. As of 1/2022, 
+ * only qc_version 1 has been defined. 
+ * 
+ * 1) ens_mean,  sum(x(i))/n,  i=1..n where n is the number of ensemble members
+ * 2) ens_spread, sqrt(sum((x(i)-em)**2)/n)  note: n is used rather than n-1
+ * 3) ens_min = minimum value over all ensemble members (for each grid point)
+ * 4) ens_max = maximum value over all ensemble members (for each grid point)
+ * 5) scaled extreme value, max((ens_max-ens_mean),(ens_mean-ens_min))/ens_spread
+ * 6) grid maximum of the scaled extreme value (single number)
+ * 
+ * (1)-(4) are written to arg1, order: (3), (4), (1), (2)
+ * (5) is written to arg2
+ * (6) is written to arg3
+ * 
+ * This option is unlike most wgrib2 options in that this option can use large amounts 
+ * of memory. Suppose that you have an 80 member ensemble and are processing the tmp500 
+ * field. This option stores all 80 tmp500 fields in memory. As the size of the grid 
+ * and the number of ensemble member increases, the required memory will increase. 
+ * 
+ * @param ARG4 ???
+ * 
+ * @return 0 for success, error code otherwise
+ * 
+ * @note the calculations are done grid point by grid point. If all the members have 
+ * UNDEFINED values for a particular grid point, then variables 1-5 are set to UNDEFINED 
+ * for that grid point.  If the ensemble spread is zero, then the scaled extreme value 
+ * is set to zero.  The calculation differs from -ens_processing which requires no missing 
+ * values for all the ensemble members before calculating the various products. This
+ * will affect the calculation of the mean cloud top temperature some ensemble members 
+ * are missing clouds.
+ * 
+ * ## Code Table 4.7
+ * Grib Code Table 4.7 is used to specify whether the field is the ensemble mean, spread, 
+ * min, max or scaled extreme value. The ensemble mean, spread, min and max are WMO defined 
+ * values. For the scaled extreme value, wgrib2 is using the locally defined NCEP "extreme 
+ * forecast index". Since the NCEP documentation doesn't define the index, wgrib2 will be 
+ * using the scaled extreme value. So other uses of the "extreme forecast index" will differ.
+ * The scaled extreme values are stored in 8 bits precision (two digits), and can only be 
+ * written if the original file is from NCEP because there is no equivalent WMO code for 
+ * extreme value (1/2022). 
+ * 
+ * ## Order of Fields
+ * The -ens_qc requires fields to be in a specific order, the same order as in -ens_processing. 
+ * Please see the documentation for -ens_processing. 
+ * 
+ * ## Usage:
+ * -ens_qc FILE1 FILE2 FILE3 QC_VERSION
+ *      FILE1 = ensemble min, ensemble max, ensemble mean, ensemble spread 
+ *              output in grib2 format
+ *      FILE2 = if center == NCEP, (ensemble) scaled extreme value
+ *              output in grib2 format
+ *      FILE3 = grid maximum of the (ensemble) scaled extreme value
+ *              text, single line per field
+ *      QC_VERSION = the type of QC to be run
+ *              1  only acceptable value (1/2021)
+ * 
+ * ## Example
+ * ???
+ * 
+ * @author Wesley Ebisuzaki @date 01/2020
+ */
 int f_ens_qc(ARG4) {
     struct ens_qc_struct *save;
     struct full_date verf_date;

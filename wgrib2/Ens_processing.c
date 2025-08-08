@@ -84,31 +84,29 @@ extern enum output_grib_type grib_type;
 
 /** Struct for ensemble processing */
 struct ens_proc_struct {
-    unsigned int npnts; /**< Number of points in the grid. */
-    unsigned int nx; /**< Grid size in x direction. */
-    unsigned int ny; /**< Grid size in y direction. */
-    int has_val; /**< Flag indicating if values are present. */
-    int n_ens; /**< Number of ensemble members. */
-    unsigned char *first_sec[9]; /**< Array containting first section. */
-    struct full_date verf_date; /**< Verification date. */
-    int use_scale; /**< Use scaling flag. */
-    int dec_scale; /**< Decoding scale flag. */
-    int bin_scale; /**< Binary scale flag. */
-    int wanted_bits; /**< Number of bits wanted. */
-    int max_bits; /**< Maximum number of bits. */
+    unsigned int npnts;             /**< Number of points in the grid. */
+    unsigned int nx;                /**< Grid size in x direction. */
+    unsigned int ny;                /**< Grid size in y direction. */
+    int has_val;                    /**< Flag indicating if values are present. */
+    int n_ens;                      /**< Number of ensemble members. */
+    unsigned char *first_sec[9];    /**< Array containting first section. */
+    struct full_date verf_date;     /**< Verification date. */
+    int use_scale;                  /**< Use scaling flag. */
+    int dec_scale;                  /**< Decoding scale flag. */
+    int bin_scale;                  /**< Binary scale flag. */
+    int wanted_bits;                /**< Number of bits wanted. */
+    int max_bits;                   /**< Maximum number of bits. */
     enum output_grib_type grib_type; /**< Output GRIB type. */
-    struct seq_file out; /**< Output sequence file. */
-    float *grids;		/**< Array holding grids for median-type calculations. */
-    int ngrids; /**< Number of grids allocated. */
-    int option; /**< Processing option. */
+    struct seq_file out;            /**< Output sequence file. */
+    float *grids;                   /**< Array holding grids for median-type calculations. */
+    int ngrids;                     /**< Number of grids allocated. */
+    int option;                     /**< Processing option. */
 };
 
 static int wrt_ens_proc(unsigned char **sec, struct ens_proc_struct *save);
 static int free_ens_proc_struct(struct ens_proc_struct *save);
 static int init_ens_proc_struct(struct ens_proc_struct *save, unsigned char **sec, float *data, unsigned int ndata);
 static int update_ens_proc_struct(struct ens_proc_struct *save, unsigned char **sec, float *data, unsigned int ndata);
-
-/* routines to initialized and free ens_proc_struct */
 
 /**
  * Free memory allocated for ensemble processing structure.
@@ -198,8 +196,6 @@ static int init_ens_proc_struct(struct ens_proc_struct *save, unsigned char **se
     return 0;
 }
 
-/* update_ens_proc_struct: save grid in memory */
-
 /**
  * Save grid in memory.
  * 
@@ -252,8 +248,6 @@ static int update_ens_proc_struct(struct ens_proc_struct *save, unsigned char **
     save->n_ens++;
     return 0;
 }
-
-/* routine is called when you want to write the ensemble statistics */
 
 /**
  * Write ensemble statistics to output.
