@@ -1,3 +1,17 @@
+/** @file
+ * @brief Retrieve ensemble information.
+ * @author Public Domain: Wesley Ebisuzaki @date 2/2007
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 2/2007 | W. Ebisuzaki | Initial
+ * 1/2016 | W. Ebisuzaki | for PDT=2 and 12 (derived fcst based on ALL ensemble members) 
+ *                         changed the descriptions to remove mention of clusters
+ * 2/2022 | M. Schwarb | ECMWF ensemble forecasts have missing typeOfEnsembleForecast 
+ *                       code table 4.7 to 0 (ctl) or 3 (ens member)
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include "grb2.h"
@@ -5,17 +19,38 @@
 #include "fnlist.h"
 
 /*
- * 2/2007 Public Domain: Wesley Ebisuzaki
- * 1/2016 Wesley Ebisuzaki: for PDT=2 and 12 (derived fcst based on ALL ensemble members)
- *               changed the descriptions to remove mention of clusters
- * 2/2022: Manfred Schwarb: ECMWF enemble forecasts have missing typeOfEnsembleForecast
- *              code table 4.7 to 0 (ctl) or 3 (ens member)
- */
-
-/*
  * HEADER:200:ens:inv:0:ensemble information
  */
 
+/**
+ * Prints the ensemble information.
+ * 
+ * @param ARG0 ???
+ * 
+ * @return 0 for success, error code otherwise
+ * 
+ * ## Definitions
+ * Code Table 4.6 | Text | Definition
+ * ---------------|------|-----------
+ * 0 | ENS=hi-res ctl | high resolution control forecast
+ * 1 | ENS=low-res ctl | low resolution control forecast
+ * 2 | ENS=-N | negative perturbed forecast N
+ * 3 | ENS=+N | positive perturbed forecast N
+ * 4 | MM-ENS=N | Multi-Model forecast N
+ * 5 | NP-ENS=N | Not Perturbed forecast N
+ * 6 | P-ENS=N | Perturbed forecast N
+ * 7 | IC-ENS=N | Initial Condition perturbation forecast N
+ * 8 | MP-ENS=N | Model Physics perturbation forecast N
+ * 9 | ICMP-ENS=N | Initial Condition+Model Physics perturbation forecast N
+ * 
+ * ## Usage:
+ * -ens
+ * 
+ * ## Example
+ * ???
+ * 
+ * @author Wesley Ebisuzaki @date 2/2007
+ */
 int f_ens(ARG0) {
     int n, pert, typefcst, pdt, center;
     static int ecmwf_warning_count = 0;
@@ -144,6 +179,22 @@ int f_ens(ARG0) {
 
 /*
  * HEADER:200:N_ens:inv:0:number of ensemble members
+ */
+
+/**
+ * Prints the number of ensemble members (ensemble forecasts only).
+ * 
+ * @param ARG0 ???
+ * 
+ * @return 0 on success
+ * 
+ * ## Usage:
+ * -N_ens
+ * 
+ * ## Example
+ * ???
+ * 
+ * @author Wesley Ebisuzaki @date 2/2007
  */
 int f_N_ens(ARG0) {
     int n;
