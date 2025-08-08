@@ -150,9 +150,9 @@ static int update_ens_qc_struct(struct ens_qc_struct *save, unsigned char **sec,
 static int free_ens_qc_struct(struct ens_qc_struct *save) {
     free_sec(save->first_sec);
     if (save->has_val == 1) {
-	if (save->ngrids) {
-	    free(save->grids);
-	}
+        if (save->ngrids) {
+            free(save->grids);
+        }
     }
     free(save);
     return 0;
@@ -176,18 +176,18 @@ static int init_ens_qc_struct(struct ens_qc_struct *save, unsigned char **sec,
 
     /* if allocated but wrong size, free all */
     if (save->has_val == 1 && save->npnts != ndata) {
-	if (save->ngrids) {
-	    free(save->grids);
-	    save->ngrids=0;
-	}
-	save->has_val = 0;
+        if (save->ngrids) {
+            free(save->grids);
+            save->ngrids=0;
+        }
+        save->has_val = 0;
     }
 
     /* if not allocated, allocate */
     if (save->has_val == 0) {
-	save->grids = malloc(((size_t) ndata) * ENS_PROCESSING_NGRID0 * sizeof(float));
-	if (save->grids == NULL) fatal_error("ens_qc: memory allocation problem","");
-	save->ngrids = ENS_PROCESSING_NGRID0;
+        save->grids = malloc(((size_t) ndata) * ENS_PROCESSING_NGRID0 * sizeof(float));
+        if (save->grids == NULL) fatal_error("ens_qc: memory allocation problem","");
+        save->ngrids = ENS_PROCESSING_NGRID0;
     }
 
     save->npnts = ndata;
@@ -211,16 +211,16 @@ static int init_ens_qc_struct(struct ens_qc_struct *save, unsigned char **sec,
 #pragma omp parallel for private(i)
 #endif
         for (i = 0; i < ndata; i++) {
-	    save->grids[i] = data[i];
-	}
+            save->grids[i] = data[i];
+        }
     }
     else {
 #ifdef USE_OPENMP
 #pragma omp parallel for private(i)
 #endif
         for (i = 0; i < ndata; i++) {
-	    save->grids[translation[i]] = data[i];
-	}
+            save->grids[translation[i]] = data[i];
+        }
     }
     save->n_ens = 1;
     return 0;
@@ -246,14 +246,14 @@ static int update_ens_qc_struct(struct ens_qc_struct *save, unsigned char **sec,
     if (save->npnts != ndata) fatal_error("ens_qc: size mismatch in update","");
 
     if (save->n_ens == save->ngrids) {		/* need to make save->grids bigger */
-	save->ngrids *= ENS_PROCESSING_NGRID_FACTOR;
-	save->grids = realloc(save->grids, ((size_t) save->ngrids) * save->npnts * sizeof (float));
-	if (save->grids == NULL) {
-	    /* if realloc fails, original memory is retained .. some memory is lost here, don't care */
-	    save->ngrids = 0;
-	    save->has_val = 0;
-	    fatal_error("ens_qc: memory allocation in update","");
-	}
+        save->ngrids *= ENS_PROCESSING_NGRID_FACTOR;
+        save->grids = realloc(save->grids, ((size_t) save->ngrids) * save->npnts * sizeof (float));
+        if (save->grids == NULL) {
+            /* if realloc fails, original memory is retained .. some memory is lost here, don't care */
+            save->ngrids = 0;
+            save->has_val = 0;
+            fatal_error("ens_qc: memory allocation in update","");
+        }
     }
 
     /* the data needs to be translated from we:sn to raw, need to 
@@ -264,16 +264,16 @@ static int update_ens_qc_struct(struct ens_qc_struct *save, unsigned char **sec,
 #pragma omp parallel for private(i)
 #endif
         for (i = 0; i < ndata; i++) {
-	    save->grids[i+save->n_ens*ndata] = data[i];
-	}
+            save->grids[i+save->n_ens*ndata] = data[i];
+        }
     }
     else {
 #ifdef USE_OPENMP
 #pragma omp parallel for private(i)
 #endif
-        for (i = 0; i < ndata; i++) {
-	    save->grids[translation[i]+save->n_ens*ndata] = data[i];
-	}
+    for (i = 0; i < ndata; i++) {
+        save->grids[translation[i]+save->n_ens*ndata] = data[i];
+    }
     }
     save->n_ens++;
     return 0;
@@ -362,82 +362,82 @@ static int wrt_ens_qc(unsigned char **sec, struct ens_qc_struct *save) {
 #pragma omp parallel for private(i, k, sum, sq, k_0, n, minval, maxval), reduction (max:maxextreme)
 #endif
     for (i = 0; i < ndata; i++) {
-	sum = sq = 0;
-	minval = maxval = UNDEFINED;
-	datamean[i] = datamax[i] = datamin[i] = dataextreme[i] = UNDEFINED;
+        sum = sq = 0;
+        minval = maxval = UNDEFINED;
+        datamean[i] = datamax[i] = datamin[i] = dataextreme[i] = UNDEFINED;
 
-	/* find first defined value */
+        /* find first defined value */
         for (k_0 = 0; k_0 < n_grids; k_0++) {
-	    if (DEFINED_VAL(save->grids[i+k_0*ndata])) break;
-	}
-	if (k_0 < n_grids) {
-	   minval = maxval = sum = save->grids[i+k_0*ndata];
-	   n = 1;
+            if (DEFINED_VAL(save->grids[i+k_0*ndata])) break;
+        }
+        if (k_0 < n_grids) {
+            minval = maxval = sum = save->grids[i+k_0*ndata];
+            n = 1;
 
-	   /* calculate sum, min and max */
-	   for (k = k_0 + 1; k < n_grids; k++) {
-		tmp = save->grids[i+k*ndata];
-		if (DEFINED_VAL(tmp)) {
-		    maxval = maxval > tmp ? maxval : tmp;
-		    minval = minval < tmp ? minval : tmp;
-		    sum += tmp;
-		    n++;
-		}
-	    }
-	    datamean[i] = sum = sum / n;
-	    datamin[i] = minval;
-	    datamax[i] = maxval;
+            /* calculate sum, min and max */
+            for (k = k_0 + 1; k < n_grids; k++) {
+                tmp = save->grids[i+k*ndata];
+                if (DEFINED_VAL(tmp)) {
+                    maxval = maxval > tmp ? maxval : tmp;
+                    minval = minval < tmp ? minval : tmp;
+                    sum += tmp;
+                    n++;
+                }
+            }
+            datamean[i] = sum = sum / n;
+            datamin[i] = minval;
+            datamax[i] = maxval;
 
-	    /* calculate variance */
+            /* calculate variance */
 
-	    sq = 0;
+            sq = 0;
 #ifdef IS_OPENMP_4_0
 #pragma omp simd private(tmp) reduction(+:sq)
 #endif
             for (k = k_0; k < n_grids; k++) {
-	        tmp = save->grids[i+k*ndata];
+                tmp = save->grids[i+k*ndata];
                 if (DEFINED_VAL(tmp)) {
-		    sq += (tmp - sum)*(tmp - sum);
-	        }
+                    sq += (tmp - sum)*(tmp - sum);
+                }
             }
-	    datavar[i] = sq = sqrt(sq/n);
-	    if (sq > 0) {
-	        tmp = (datamax[i] - sum) >= -(datamin[i] - sum) ? datamax[i] - sum : -(datamin[i] - sum);
-		dataextreme[i] = tmp/sq;
-		maxextreme = maxextreme >= tmp/sq ? maxextreme : tmp/sq;
-	    }
-	    else {
-		dataextreme[i] = UNDEFINED;
-	    }
-	}
+            datavar[i] = sq = sqrt(sq/n);
+            if (sq > 0) {
+                tmp = (datamax[i] - sum) >= -(datamin[i] - sum) ? datamax[i] - sum : -(datamin[i] - sum);
+                dataextreme[i] = tmp/sq;
+                maxextreme = maxextreme >= tmp/sq ? maxextreme : tmp/sq;
+            }
+            else {
+                dataextreme[i] = UNDEFINED;
+            }
+        }
     } 
 
     *table_4_7 = MIN;
     grib_wrt(new_sec, datamin, ndata, save->nx, save->ny, 
-	    save->use_scale, save->dec_scale, save->bin_scale, 
-	    save->wanted_bits, save->max_bits, save->grib_type, &(save->out));
+            save->use_scale, save->dec_scale, save->bin_scale, 
+            save->wanted_bits, save->max_bits, save->grib_type, &(save->out));
 
     *table_4_7 = MAX;
     grib_wrt(new_sec, datamax, ndata, save->nx, save->ny, 
-	    save->use_scale, save->dec_scale, save->bin_scale, 
-	    save->wanted_bits, save->max_bits, save->grib_type, &(save->out));
+            save->use_scale, save->dec_scale, save->bin_scale, 
+            save->wanted_bits, save->max_bits, save->grib_type, &(save->out));
 
     *table_4_7 = AVE;
     grib_wrt(new_sec, datamean, ndata, save->nx, save->ny, 
-	    save->use_scale, save->dec_scale, save->bin_scale, 
-	    save->wanted_bits, save->max_bits, save->grib_type, &(save->out));
+            save->use_scale, save->dec_scale, save->bin_scale, 
+            save->wanted_bits, save->max_bits, save->grib_type, &(save->out));
 
     *table_4_7 = SPREAD;
     grib_wrt(new_sec, datavar, ndata, save->nx, save->ny, 
-	save->use_scale, save->dec_scale, save->bin_scale, 
-	save->wanted_bits, save->max_bits, save->grib_type, &(save->out));
+            save->use_scale, save->dec_scale, save->bin_scale, 
+            save->wanted_bits, save->max_bits, save->grib_type, &(save->out));
 
     if (GB2_Center(new_sec) == NCEP) {
-	/* EXTREME_FORECAST_INDEX has no WMO equivalent */
+        /* EXTREME_FORECAST_INDEX has no WMO equivalent */
         *table_4_7 = EXTREME_FORECAST_INDEX;
         grib_wrt(new_sec, dataextreme, ndata, save->nx, save->ny, 
-	    0, 0, 0,
-	    8, 8, save->grib_type, &(save->extreme_grb));
+        0, 0, 0,
+        8, 8, save->grib_type, &(save->extreme_grb));
     }
     sprintf(string,"%s:%s:max scaled extreme=%f\n", name, level, maxextreme);
     fwrite_file(string,1,strlen(string), &(save->extreme_txt));
@@ -542,35 +542,35 @@ int f_ens_qc(ARG4) {
     if (mode == -1) {
         save_translation = decode = 1;
 
-	if (atoi(arg4) != 1) fatal_error("ens_qc: this version wgrib2 does not supported qc_version=%s",arg4);
-	
+        if (atoi(arg4) != 1) fatal_error("ens_qc: this version wgrib2 does not supported qc_version=%s",arg4);
+        
         // allocate static structure
 
         *local = save = (struct ens_qc_struct *) malloc( sizeof(struct ens_qc_struct));
 
         if (fopen_file(&(save->out), arg1, file_append ? "ab" : "wb") != 0) {
-	    free(save);
+            free(save);
             fatal_error("ens_qc: Could not open arg1 %s", arg1);
         }
         if (fopen_file(&(save->extreme_grb), arg2, file_append ? "ab" : "wb") != 0) {
             fclose_file(&(save->out));
-	    free(save);
+            free(save);
             fatal_error("ens_qc: Could not open arg2 %s", arg2);
         }
         if (fopen_file(&(save->extreme_txt), arg3, file_append ? "ab" : "wb") != 0) {
             fclose_file(&(save->out));
             fclose_file(&(save->extreme_grb));
-	    free(save);
+            free(save);
             fatal_error("ens_qc: Could not open arg3 %s", arg3);
         }
 
         save->has_val = 0;
-	save->n_ens = 0;
+        save->n_ens = 0;
         save->grids = NULL;
         save->ngrids = 0;
-	init_sec(save->first_sec);
+        init_sec(save->first_sec);
     
-	return 0;
+        return 0;
     }
     save = (struct ens_qc_struct *) *local;
     if (mode == -2) {    /* cleanup */
@@ -596,24 +596,24 @@ int f_ens_qc(ARG4) {
     if (new_type == 0) {
         Verf_time(sec, &(verf_date));
         if (Cmp_time(&(verf_date), &(save->verf_date)) != 0) {
-	    new_type = 1;
+            new_type = 1;
 // fprintf(stderr,"failed verf date %d-%d %d %d\n", verf_date.year, verf_date.month, verf_date.day, verf_date.hour);
-	}
+        }
     }
 
     if (new_type == 0) {
-	if (same_sec4_but_ensemble(mode, sec, save->first_sec) == 0) new_type = 1;
+        if (same_sec4_but_ensemble(mode, sec, save->first_sec) == 0) new_type = 1;
     }
 
-if (mode == 98) fprintf(stderr,": pdt=%d, new_type=%d\n",pdt, new_type);
+    if (mode == 98) fprintf(stderr,": pdt=%d, new_type=%d\n",pdt, new_type);
     if (new_type == 1) {
-if (mode == 98) fprintf(stderr,": >> wrt a\n");
+        if (mode == 98) fprintf(stderr,": >> wrt a\n");
         wrt_ens_qc(save->first_sec, save);
-if (mode == 98) fprintf(stderr,": << wrt a\n");
+        if (mode == 98) fprintf(stderr,": << wrt a\n");
         init_ens_qc_struct(save, sec, data, ndata);
     }
     else {
-if (mode == 98) fprintf(stderr,": >> update\n");
+        if (mode == 98) fprintf(stderr,": >> update\n");
         update_ens_qc_struct(save, sec, data, ndata);
     }
     return 0;
