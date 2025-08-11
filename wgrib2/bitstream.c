@@ -14,12 +14,11 @@ static unsigned int ones[]={0, 1,3,7,15, 31,63,127,255};
 /**
  * Reads a bitstream and converts it to an array of unsigned integers.
  * 
- * @param p Pointer to the start of the bitstream.
- * @param offset Bit offset to start reading from (0-7).
- * @param u Pointer to the output array of unsigned integers.
- * @param n_bits Number of bits to read for each integer. 
- * @param n Number of integers to read.
- *
+ * The function assumes that the bitstream starts on a byte boundary. 
+ * For 32-bit machines, n_bits should be less than or equal to 25.
+ * 
+ * bitstream (n_bits/uint) -> u[0..n-1]
+ * 
  * ### Program History Log
  * Date | Programmer | Comments
  * -----|------------|---------
@@ -27,11 +26,12 @@ static unsigned int ones[]={0, 1,3,7,15, 31,63,127,255};
  * 04/2022 | W. Ebisuzaki | limit to nbits is now 32 (32 bit integer), 
  *                          rd_bitstream_offset -> rd_bitstream
  * 
- * @note The function assumes that the bitstream starts on a byte boundary. 
- * For 32-bit machines, n_bits should be less than or equal to 25.
- * 
- * bitstream (n_bits/uint) -> u[0..n-1]
- * 
+ * @param p Pointer to the start of the bitstream.
+ * @param offset Bit offset to start reading from (0-7).
+ * @param u Pointer to the output array of unsigned integers.
+ * @param n_bits Number of bits to read for each integer. 
+ * @param n Number of integers to read.
+ *
  * @author Wesley Ebisuzaki @date 6/2009
  */
 void rd_bitstream(unsigned char *p, int offset, int *u, int n_bits, unsigned int n) {
@@ -88,18 +88,18 @@ void rd_bitstream(unsigned char *p, int offset, int *u, int n_bits, unsigned int
 /**
  * Reads a bitstream and converts it to an array of floats.
  * 
- * @param p Pointer to the start of the bitstream.
- * @param offset Bit offset to start reading from (0-7).
- * @param u Pointer to the output array of floats.
- * @param n_bits Number of bits to read for each float.
- * @param n Number of floats to read.
- * 
  * ### Program History Log
  * Date | Programmer | Comments
  * -----|------------|---------
  * 6/2009 | W. Ebisuzaki | Initial
  * 04/2022 | W. Ebisuzaki | limit to nbits is now 32 (32 bit integer), 
  *                          rd_bitstream_offset -> rd_bitstream
+ * 
+ * @param p Pointer to the start of the bitstream.
+ * @param offset Bit offset to start reading from (0-7).
+ * @param u Pointer to the output array of floats.
+ * @param n_bits Number of bits to read for each float.
+ * @param n Number of floats to read.
  * 
  * @author Wesley Ebisuzaki @date 6/2009
  */
@@ -168,10 +168,10 @@ static int n_bitstream;
 /** 
  * Write integer to the bitstream with a specified number of bits.
  * 
+ * Bitstream is initialized with init_bitstream(). To close the bitstream, call finish_bitstream().
+ * 
  * @param t Integer to add to the bitstream.
  * @param n_bits Number of bits to represent the integer. Should be less than or equal to 25.
- * 
- * @note Bitstream is initialized with init_bitstream(). To close the bitstream, call finish_bitstream().
  * 
  * @author Wesley Ebisuzaki @date 6/2009
 */
@@ -196,11 +196,11 @@ void add_bitstream(int t, int n_bits) {
 /**
  * Write multiple integers to the bitstream with a specified number of bits.
  * 
+ * Bitstream is initialized with init_bitstream(). To close the bitstream, call finish_bitstream().
+ * 
  * @param t Pointer to the array of integers to add to the bitstream.
  * @param n Number of integers to write.
  * @param n_bits Number of bits to represent each integer. Should be less than or equal to 25.
- * 
- * @note Bitstream is initialized with init_bitstream(). To close the bitstream, call finish_bitstream().
  * 
  * @author Wesley Ebisuzaki @date 6/2009
  */
@@ -264,10 +264,10 @@ void add_many_bitstream(int *t, unsigned int n, int n_bits) {
 /**
  * Initialize the bitstream with a given buffer.
  * 
- * @param new_bitstream Pointer to the buffer where the bitstream will be stored.
+ * This function should be called before adding any bits to the bitstream. To close the bitstream, 
+ * call finish_bitstream().
  * 
- * @note This function should be called before adding any bits to the bitstream. 
- * To close the bitstream, call finish_bitstream().
+ * @param new_bitstream Pointer to the buffer where the bitstream will be stored.
  * 
  * @author Wesley Ebisuzaki @date 6/2009
  */
@@ -280,7 +280,7 @@ void init_bitstream(unsigned char *new_bitstream) {
 /**
  * Close the bitstream by writing any remaining bits to the buffer. Last byte is zero packed.
  * 
- * @note This function should be called after all bits have been added to the bitstream.
+ * This function should be called after all bits have been added to the bitstream.
  * 
  * @author Wesley Ebisuzaki @date 6/2009
  */

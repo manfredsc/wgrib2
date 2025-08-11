@@ -62,14 +62,7 @@ extern unsigned int ny_;
  * Amount of smoothing can be controlled by the size of the box. Can be used on regional
  * and global fields. To identify global fields, you can use the option -cyclic.
  * 
- * @param ARG3 ???
- * 
- * @return 0 for success, error code otherwise.
- * 
- * @note The speed of -box_ave is O(NX*NY*DY). The O(NX*NY) method was slower because of 
- * poor cache utilization and false sharing.
- * 
- * ##Usage:
+ * ## Usage
  * -box_ave DX DY CRITICAL_WEIGHT
  * 
  * DX=width of box (in grid points), DX has to be an odd positive integer
@@ -83,6 +76,13 @@ extern unsigned int ny_;
  *    not -1: let wt = number of grid points that are defined in the box
  *        grid(i,j) = UNDEFINED     if wt <= WT
  *          = box average   if wt > WT
+ * 
+ * @param ARG3 ???
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * @note The speed of -box_ave is O(NX*NY*DY). The O(NX*NY) method was slower because of 
+ * poor cache utilization and false sharing.
  * 
  * ## Example:
  * ???

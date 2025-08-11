@@ -483,17 +483,18 @@ static int write_ave_var(struct ave_var_struct *save) {
  * 
  * The options and expected sequence of fields is the same as with the -ave option. 
  * 
+ * ## Usage
+ * -ave_var (time interval)  (output grib file)
+ * 
+ * The time interval is the delta time for averaging in the form (integer)(units) 
+ * (e.g., "6hr", "1dy"). Units are hr, dy, mo, yr.
+ * 
  * @param ARG2 ???
  * 
  * @return 0 for success, error code otherwise.
  * 
  * @note Welford's method for computing the mean and variance was used because it is a 
  * one-pass scheme with the accuracy of a two-pass algorithm. 
- * 
- * ## Usage:
- * -ave_var (time interval)  (output grib file)
- *      time interval = (integer)(units)
- *      (units) = hr, dy, mo, yr
  * 
  * ## Example: 
  * ???

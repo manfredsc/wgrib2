@@ -111,16 +111,16 @@ static int get_cindex (int i, int nx) {
  * Takes a rectangular box of data from a rectangular grid and writes it out in either text, bin, 
  * or spread (sheet) format. The extracted box can have every point or every n-th point. 
  * 
+ * ## Usage
+ * -ijbox i1:i2:di j1:j2:dj output_file format
+ * 
+ * i1:i2:di specifies the x-dimension, where i1 is the starting index, i2 is the ending index, and di is the increment.
+ * j1:j2:dj specifies the y-dimension, where j1 is the starting index, j2 is the ending index, and dj is the increment.
+ * output_file is written in the specified format (e.g., "bin", "text", "spread").
+ * 
  * @param ARG4 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ##Usage:
- * -ijbox i1:i2:di j1:j2:dj output_file format
- * 
- * i1:i2:di specifies the x-dimension
- * j1:j2:dj specifies the y-dimension
- * output_file is written in the specified format (e.g., "bin", "text", "spread").
  * 
  * ## Example: 
  * ???

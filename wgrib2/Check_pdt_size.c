@@ -26,7 +26,7 @@
  * HEADER:100:check_pdt_size:misc:1:check pdt size X=1 enable/default, X=0 disable
  */
 
- /** Flag to indicate whether to check PDT size. */
+/** Flag to indicate whether to check PDT size. */
 int check_pdt_size_flag = 1;
 
 /** Flag to indicate whether to issue warnings for PDT size checks. */
@@ -42,17 +42,18 @@ int warn_check_pdt = 1;
  * 
  * You may skip this check by using the -check_pdt_size 0 option.
  * 
+ * ## Usage
+ * -check_pdt_size X
+ *
+ * Where X is 0 (disable) or 1 (enable, default).
+ * 
  * @param ARG1 ???
  * 
  * @return 0 for success.
  * 
- * @note In theory, the pdt can be bigger than expected with no ill consequences,
- *  however, if the pdt is smaller than expectations, then any routine that
- *  uses the pdt could be reading outside of the pdt.
- * 
- * ## Usage:
- * - check_pdt_size     0 (disable)
- *                      1 (enable, default)
+ * @note In theory, the pdt can be bigger than expected with no ill consequences, 
+ * however, if the pdt is smaller than expectations, then any routine that uses the 
+ * pdt could be reading outside of the pdt.
  * 
  * @author Wesley Ebisuzaki @date 09/2020
  */

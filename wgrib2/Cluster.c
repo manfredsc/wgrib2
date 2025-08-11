@@ -17,13 +17,13 @@
 /**
  * Display the cluster identifier.
  * 
- * @param ARG0 ???
- * 
- * @return 0 for success, does not return an error code.
- * 
  * ## Usage:
  * -cluster
  * 
+ * @param ARG0 ???
+ * 
+ * @return 0 for success, does not return an error code.
+ *
  * @author Wesley Ebisuzaki @date 2006
  */
 int f_cluster(ARG0) {
@@ -43,13 +43,13 @@ int f_cluster(ARG0) {
 /**
  * Display the number of clusters.
  * 
- * @param ARG0 ???
- * 
- * @return 0 for success, does not return an error code.
- * 
  * ## Usage:
  * -N_clusters
  * 
+ * @param ARG0 ???
+ * 
+ * @return 0 for success, does not return an error code.
+ *
  * @author Wesley Ebisuzaki @date 2006
  */
 int f_N_clusters(ARG0) {
@@ -73,12 +73,12 @@ extern char *nl;
  * Display information about the cluster, including the cluster identifier,
  * number of forecasts in the cluster, and other related data.
  * 
+ * ## Usage:
+ * -cluster_info
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, does not return an error code.
- * 
- * ## Usage:
- * -cluster_info
  * 
  * @author Wesley Ebisuzaki @date 2006
  */
