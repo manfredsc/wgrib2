@@ -20,8 +20,8 @@
  * Terminates wgrib2 after N seconds (real time). The alarm is activated in the 
  * setup phase and removed in the finalize phase.
  * 
- * ## Usage:
- *  -alarm N
+ * ## Usage
+ * -alarm N
  * 
  * N is an integer from 0..65536 (ISO C Standard). N = 0 will remove any pending alarm.
  * 

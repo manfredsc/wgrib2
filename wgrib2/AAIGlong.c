@@ -48,7 +48,7 @@ extern enum output_order_type output_order_wanted;
  * 
  * Each field is written to a different file (*.asc) which is written to the current directory.
  * 
- * ## Usage:
+ * ## Usage
  * -AAIGlong
  * 
  * ## File name convention for *asc output

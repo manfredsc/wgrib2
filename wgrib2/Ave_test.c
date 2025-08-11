@@ -420,7 +420,7 @@ static int do_ave(struct ave_struct *save) {
  * Calculates temporal averages of grib data and writes the results to a specified output file.
  * This is the old version (v2.0.6) of the -ave option.
  * 
- * ## Usage:
+ * ## Usage
  * -ave0 (time interval) (output grib file)
  * 
  * The time interval is the delta time for averaging (e.g., "6hr", "1dy").

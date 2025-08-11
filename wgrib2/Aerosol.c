@@ -23,7 +23,7 @@
  * Prints the size of the aerosol particle if applicable. This product applies to Product Definition 
  * Template 4.44-4.48. This option is part of the standard inventory.
  * 
- * ## Usage:
+ * ## Usage
  * -aerosol_size
  * 
  * @param ARG0 ???
