@@ -47,7 +47,7 @@ extern int names;
  * 
  * @param sec Pointer to the GRIB section.
  * @param mode Mode of operation (0 for normal, -1 for initialization).
- * @param inv_out Pointer to the output string for the name. Ignored if NULL.
+ * @param inv_out Pointer to the inventory output. Ignored if NULL.
  * @param name Pointer to store the name. Ignored if NULL.
  * @param desc Pointer to store the description. Ignored if NULL.
  * @param unit Pointer to store the unit. Ignored if NULL.
@@ -166,7 +166,7 @@ int getName_all(unsigned char **sec, int mode, char *inv_out, char *name, char *
  * 
  * @param sec Pointer to the GRIB section.
  * @param mode Mode of operation (0 for normal, -1 for initialization).
- * @param inv_out Pointer to the output string for the name. Ignored if NULL.
+ * @param inv_out Pointer to the inventory output. Ignored if NULL.
  * @param name Pointer to store the name. Ignored if NULL.
  * @param desc Pointer to store the description. Ignored if NULL.
  * @param unit Pointer to store the unit. Ignored if NULL.
