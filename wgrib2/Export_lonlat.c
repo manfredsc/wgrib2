@@ -33,7 +33,7 @@ extern double *lon;
  * is single precision, so it cannot be use for angles without losing precision. The 
  * -export_lonlat option allows you to write double-precision longitude and latitudes. 
  * 
- *  This option writes the longitudes and latitudes in the following format.
+ * This option writes the longitudes and latitudes in the following format:
  *
  * 8 bytes:                        'wgrib2ll'       text
  * (sizeof unsigned int) bytes      ndata           unsigned integer with number of grid points
@@ -44,14 +44,14 @@ extern double *lon;
  * (sizeof unsigned int) is usually 4. By wgrib2 requirements, the value must be 4 or greater.
  * (sizeof double) is usually 8.
  *
- * @param ARG1 ???
- * 
- * @return 0 on success, error code on failure
- * 
- * ## Usage:
+ * ## Usage
  * -export_lonlat FILE
  * 
  * FILE = file that is written with the binary data
+ * 
+ * @param ARG1 ???
+ * 
+ * @return 0 on success, error code on failure
  * 
  * ## Example 
  * ???

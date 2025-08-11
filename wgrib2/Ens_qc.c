@@ -487,22 +487,19 @@ static int wrt_ens_qc(unsigned char **sec, struct ens_qc_struct *save) {
  * (5) is written to arg2
  * (6) is written to arg3
  * 
- * This option is unlike most wgrib2 options in that this option can use large amounts 
- * of memory. Suppose that you have an 80 member ensemble and are processing the tmp500 
- * field. This option stores all 80 tmp500 fields in memory. As the size of the grid 
- * and the number of ensemble member increases, the required memory will increase. 
- * 
- * @param ARG4 ???
- * 
- * @return 0 for success, error code otherwise
- * 
- * @note the calculations are done grid point by grid point. If all the members have 
+ * The calculations are done grid point by grid point. If all the members have 
  * UNDEFINED values for a particular grid point, then variables 1-5 are set to UNDEFINED 
  * for that grid point.  If the ensemble spread is zero, then the scaled extreme value 
  * is set to zero.  The calculation differs from -ens_processing which requires no missing 
  * values for all the ensemble members before calculating the various products. This
  * will affect the calculation of the mean cloud top temperature some ensemble members 
  * are missing clouds.
+ * 
+ * ## Memory Usage
+ * This option is unlike most wgrib2 options in that this option can use large amounts 
+ * of memory. Suppose that you have an 80 member ensemble and are processing the tmp500 
+ * field. This option stores all 80 tmp500 fields in memory. As the size of the grid 
+ * and the number of ensemble member increases, the required memory will increase. 
  * 
  * ## Code Table 4.7
  * Grib Code Table 4.7 is used to specify whether the field is the ensemble mean, spread, 
@@ -514,20 +511,33 @@ static int wrt_ens_qc(unsigned char **sec, struct ens_qc_struct *save) {
  * written if the original file is from NCEP because there is no equivalent WMO code for 
  * extreme value (1/2022). 
  * 
+ * ## Definition of an Ensemble Member
+ * The -ens_qc option uses the same definition of ensemble member as -ens_processing. Any grib 
+ * message which is not identified as an ensemble member is ignored by -ens_qc. So you cannot 
+ * use -ens_qc on the ensemble-mean. The wgrib2 code [ed. written 3/2022 v3.1.1] that identifies 
+ * ensemble member is unreasonably simplistic. Ensemble members are identified by having a PDT of 
+ * 0, 1, 8 and 11. As a result, aerosols, chemical tracers, simulated satellite data, and 
+ * post-processing of ensemble members are ignored.
+ * 
  * ## Order of Fields
  * The -ens_qc requires fields to be in a specific order, the same order as in -ens_processing. 
  * Please see the documentation for -ens_processing. 
  * 
- * ## Usage:
+ * ## Usage
  * -ens_qc FILE1 FILE2 FILE3 QC_VERSION
- *      FILE1 = ensemble min, ensemble max, ensemble mean, ensemble spread 
- *              output in grib2 format
- *      FILE2 = if center == NCEP, (ensemble) scaled extreme value
- *              output in grib2 format
- *      FILE3 = grid maximum of the (ensemble) scaled extreme value
- *              text, single line per field
- *      QC_VERSION = the type of QC to be run
- *              1  only acceptable value (1/2021)
+ * 
+ * FILE1 = ensemble min, ensemble max, ensemble mean, ensemble spread
+ *      output in grib2 format
+ * FILE2 = if center == NCEP, (ensemble) scaled extreme value
+ *      output in grib2 format
+ * FILE3 = grid maximum of the (ensemble) scaled extreme value
+ *      text, single line per field
+ * QC_VERSION = the type of QC to be run
+ *      1  only acceptable value (1/2021)
+ * 
+ * @param ARG4 ???
+ * 
+ * @return 0 for success, error code otherwise
  * 
  * ## Example
  * ???

@@ -58,13 +58,13 @@ extern int file_append;
  * of the integer will be determined by the size of the native integer (often a compile 
  * option on 64 bit machines). The endian properties will depend whether the code is 
  * compiled a big or little endian machine. 
+ *
+ * ## Usage
+ * -err_bin file integer
  * 
  * @param ARG2 ???
  * 
  * @return 0 for success, 1 if err_file can't be opened
- *
- * ## Usage:
- * -err_bin file integer
  * 
  * @author Wesley Ebisuzaki @date 11/2012
  */
@@ -106,12 +106,12 @@ void err_bin(int error) {
 /**
  * Sends string to file upon error exit (if fatal error is triggered).
  * 
+ * ## Usage
+ * -err_string file string
+ * 
  * @param ARG2 ???
  * 
  * @return 0 for success, 1 if err_str_file can't be opened
- * 
- * ## Usage:
- * -err_string file string
  * 
  * @author Wesley Ebisuzaki @date 11/2012
  */
@@ -156,12 +156,12 @@ void err_string(int error) {
 /**
  * Sends (binary) integer to file upon EOF (if fatal error is not triggered).
  * 
+ * ## Usage
+ * -eof_bin file integer
+ * 
  * @param ARG2 ???
  * 
  * @return 0 for success, 1 if err_file can't be opened
- * 
- * ## Usage:
- * -eof_bin file integer
  * 
  * @author Wesley Ebisuzaki @date 11/2012
  */
@@ -189,12 +189,12 @@ int f_eof_bin(ARG2) {
 /**
  * Sends string to file upon EOF (if fatal error is not triggered).
  * 
+ * ## Usage
+ * -eof_string file string
+ * 
  * @param ARG2 ???
  * 
  * @return 0 for success, 1 if err_file can't be opened
- * 
- * ## Usage:
- * -eof_string file string
  * 
  * @author Wesley Ebisuzaki @date 11/2012
  */

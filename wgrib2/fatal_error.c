@@ -41,7 +41,8 @@ void fatal_error(const char *fmt, ...)
     fprintf(stderr," ***\n\n");
     va_end(arg);
 
-    err_bin(1); err_string(1);
+    err_bin(1);
+    err_string(1);
 
     longjmp(fatal_err,1);
 

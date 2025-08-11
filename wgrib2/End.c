@@ -21,12 +21,12 @@ extern unsigned int last_message;
  * Stops the processing of the grib file after one line of the inventory has been written. 
  * This option is designed to improve speed when used with the -match option.
  * 
+ * ## Usage:
+ * -end
+ * 
  * @param ARG0 Arguments and context for the wgrib2 function macro.
  * 
  * @return 0 on success.
- * 
- * ## Usage:
- * -end
  * 
  * ## Example:
  * ???

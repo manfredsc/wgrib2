@@ -621,9 +621,9 @@ static int wrt_ens_proc(unsigned char **sec, struct ens_proc_struct *save) {
  * algorithms used. (The exception will be the future climate reanalysis produced by CPC/NCEP.) 
  * 
  * The percentiles values were chosen because the future CPC/NCEP climate reanalysis (CORe) 
- * will be using 80 ensemble members. 
- * 
- *  The calculated variables are
+ * will be using 80 ensemble members.
+ *
+ * ## Calculated Variables
  *
  * 1) ensemble mean,  em = sum(x(i))/n,  i=1..n
  * 2) ensemble spread, RMSE = sqrt(sum((x(i)-em)**2)/n)  note: n is used rather than n-1
@@ -634,6 +634,18 @@ static int wrt_ens_proc(unsigned char **sec, struct ens_proc_struct *save) {
  * 7) 50 percentile (median)
  * 8) 75 percentile
  * 9) 90 percentile
+ * 
+ * These calculations are done when all the ensemble members have values.  This will affect 
+ * parameters like the cloud-top temperature when some of the ensemble members are cloud free 
+ * and have no cloud- top temperatures. The -enq_qc calculates the ensemble mean and spread 
+ * ignoring the undefined values.
+ * 
+ * There are a few common ways to compute the percentile, [wgrib2 uses a method recommended 
+ * by NIST](https://www.itl.nist.gov/div898/handbook/prc/section2/prc262.htm). For the probabilities, 
+ * a count is used to determine them. 
+ * 
+ * As previously mentioned, the above calculations may differ from those used in deriving the 
+ * operational products.
  * 
  * This option was developed for the future CORe reanalysis. For this reanalysis, additional 
  * fields are enabled by the second parameter set to "1". However, users are warned that these 
@@ -648,24 +660,12 @@ static int wrt_ens_proc(unsigned char **sec, struct ens_proc_struct *save) {
  * (*) Optional, the definition of trace of precipitation is ad hoc. For wgrib2, trace is the 
  * accumulated precip < 0.xxx mm, or a rate < 0.xxx mm/day.
  * 
+ * ## Memory Usage
  * The -ens_processing is unlike most wgrib2 options in that this option can use large amounts 
  * of memory. Suppose that you have an 80 member ensemble and are processing the tmp500 field. 
  * In order to calculate the percentiles of the tmp500, you need keep all 80 tmp500 fields in 
  * memory. As the size of the grid and the number of ensemble member increases, the required 
  * memory will increase. 
- * 
- * @param ARG2 ???
- * 
- * @return 0 for success, error code otherwise
- * 
- * @note These calculations done when all the ensemble members have values.  This will affect 
- * parameters like the cloud-top temperature when some of the ensemble members are cloud free 
- * and have no cloud- top temperatures. The -enq_qc calculates the ensemble mean and spread 
- * ignoring the undefined values.
- * 
- * @note There are a few common ways to compute the percentile, [wgrib2 uses a method recommended 
- * by NIST](https://www.itl.nist.gov/div898/handbook/prc/section2/prc262.htm). For the probabilities, 
- * a count is used to determine them.
  * 
  * ## Code Table 4.3, Type of Generating Process
  * Grib contains metadata, and one piece is the "generating process". Wgrib2 tries its best to describe 
@@ -726,7 +726,7 @@ static int wrt_ens_proc(unsigned char **sec, struct ens_proc_struct *save) {
  * Now that "output" has the data in the correct order, the option -ens_processing can be used to create the 
  * min/max/ave/spread of the ensemble. 
  * 
- * ## Usage:
+ * ## Usage
  * -ens_processing FILE Option
  *
  *      FILE = output file, grib2 format
@@ -735,6 +735,10 @@ static int wrt_ens_proc(unsigned char **sec, struct ens_proc_struct *save) {
  *                  note: option 1 is intended for use by the future Conventional Observation REanalysis
  *                  (CORe).  The output will be determined the needs of this reanalysis.
  *              2   for future use or different output.
+ * 
+ * @param ARG2 ???
+ * 
+ * @return 0 for success, error code otherwise
  * 
  * ## Example 
  * ???

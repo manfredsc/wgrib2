@@ -25,10 +25,6 @@
 /**
  * Prints the ensemble information.
  * 
- * @param ARG0 ???
- * 
- * @return 0 for success, error code otherwise
- * 
  * ## Definitions
  * Code Table 4.6 | Text | Definition
  * ---------------|------|-----------
@@ -43,8 +39,12 @@
  * 8 | MP-ENS=N | Model Physics perturbation forecast N
  * 9 | ICMP-ENS=N | Initial Condition+Model Physics perturbation forecast N
  * 
- * ## Usage:
+ * ## Usage
  * -ens
+ * 
+ * @param ARG0 ???
+ * 
+ * @return 0 for success, error code otherwise
  * 
  * ## Example
  * ???
@@ -184,12 +184,12 @@ int f_ens(ARG0) {
 /**
  * Prints the number of ensemble members (ensemble forecasts only).
  * 
+ * ## Usage
+ * -N_ens
+ * 
  * @param ARG0 ???
  * 
  * @return 0 on success
- * 
- * ## Usage:
- * -N_ens
  * 
  * ## Example
  * ???
