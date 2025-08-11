@@ -17,6 +17,12 @@
 /**
  * Prints the number of values (4 byte) in the "optional list of coordinate values". 
  * 
+ * ## Usage
+ * -number_of_coordinate_values_after_template
+ * 
+ * Prints section 4, octets 6-7 as an unsigned integer. It is expected that each value uses 4 
+ * octets of storage at the end of Section 4.
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
@@ -30,12 +36,6 @@
  * 
  * @note The WMO documentation only specifies the hybrid coordinate values should be in 
  * pairs of IEEE single precision floats. 
- * 
- * ## Usage:
- * -number_of_coordinate_values_after_template
- * 
- * Prints section 4, octets 6-7 as an unsigned integer. It is expected that each value uses 4 
- * octets of storage at the end of Section 4.
  * 
  * ## Example:
  * ???
@@ -73,11 +73,7 @@ int number_of_coordinate_values_after_template(unsigned char **sec) {
 /**
  * Prints out the value of the forecast time.
  * 
- * @param ARG0 ???
- * 
- * @return 0 for success, error code otherwise.
- * 
- * @note Most grib messages include a forecast time which is stored in the Product 
+ * Most grib messages include a forecast time which is stored in the Product 
  * Definition Templates (PDT). When the PDT has a forecast time, it stores the number 
  * as a 4 byte integer and the units in Code Table 4.4. For example, a 12 hour forecast 
  * could be stored with the number 12 and the units of 1 which corresponds hour. Note 
@@ -95,8 +91,12 @@ int number_of_coordinate_values_after_template(unsigned char **sec) {
  * Note that the value is a signed integer because the grib standard allows negative forecast 
  * hours which can make sense in data assimilation. 
  * 
- * ## Usage:
+ * ## Usage
  * -pds_fcst_time
+ * 
+ * @param ARG0 ???
+ * 
+ * @return 0 for success, error code otherwise.
  * 
  * ## Example:
  * ???
@@ -374,7 +374,6 @@ int background_generating_process_identifier(unsigned char **sec) {
     if (p) return (int) *p;
     return -1;
 }
-
 
 /**
  * Returns the location of the background generating process identifier in the GRIB2 message.
@@ -797,12 +796,12 @@ unsigned char *year_of_model_version_date_location(unsigned char **sec) {
 /**
  * Prints the percentile value.
  * 
+ * ## Usage:
+ * -percent
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -percent
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -814,10 +813,6 @@ int f_percent(ARG0) {
     }
     return 0;
 }
-
-/*
- * returns the percentile value
- */
 
 /**
  * Returns the percentile value from the GRIB2 message.
@@ -856,10 +851,6 @@ unsigned char *percentile_value_location(unsigned char **sec) {
     }
     return p;
 }
-
-/*
- *  returns reference value, binary and decimal scaling and number of bits
- */
 
 /**
  * Returns reference value, binary scaling, decimal scaling, and number of bits from the GRIB2 message.
@@ -908,10 +899,6 @@ int number_of_mode(unsigned char **sec) {
     if (pdt == 57 || pdt == 58 || pdt == 67 || pdt == 68) return (int) uint2(sec[4]+13);
     return -1;
 }
-
-/*
- * returns partical size distribution (mode)  1..number_of_mode for template 4.57
- */
 
 /**
  * Returns particle size distribution (mode) number for templates 4.57, 4.58, 4.67, and 4.68.

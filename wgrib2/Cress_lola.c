@@ -78,14 +78,7 @@ extern enum output_grib_type grib_type;
   * You need to specify the lower left corner of the grid, the number of points in the zonal and meridional directions 
   * and the latitude/longitude increments. Finally you need to specify the output file and the format. 
   * 
-  * @param ARG4 ???
-  * 
-  * @return 0 for success, error code otherwise.
-  * 
-  * @note WARNING: winds and other vector fields will not be rotated. If the vector fields use a grid relative orientation, 
-  * then your interpolated winds will be using the original grid. 
-  * 
-  * @note The interpolation to the lola grid is by a Cressman analysis. The Cressman analysis is a multipass system which uses 
+  * The interpolation to the lola grid is by a Cressman analysis. The Cressman analysis is a multipass system which uses 
   * a user-specified "radius" for each pass. A Cressman analysis can be computationally expensive so you may want to explore 
   * multiprocessing techniques. (see the -for_n and -n options).
   * 
@@ -108,7 +101,7 @@ extern enum output_grib_type grib_type;
   * Warning, this scheme doesn't handle handle rotated winds in a useful manner. There will also be problem with analyzing winds 
   * near the poles. 
   * 
-  * ## Usage:
+  * ## Usage
   * -cress_lola LonSW:#lon:dlon LatSW:#lat:dlat file radius1:radius2:..:radiusN
   * 
   * LonSW - longitude of the South-West point, values from 0 .. 360
@@ -119,6 +112,13 @@ extern enum output_grib_type grib_type;
   * dlat - spacing of the points in the meridional direction in degrees
   * file - name of output grib file
   * radiusM - the radius in km for M-th pass
+  * 
+  * @param ARG4 ???
+  * 
+  * @return 0 for success, error code otherwise.
+  * 
+  * @note WARNING: winds and other vector fields will not be rotated. If the vector fields use a grid relative orientation, 
+  * then your interpolated winds will be using the original grid. 
   * 
   * @author Wesley Ebisuzaki @date 09/2005
   */

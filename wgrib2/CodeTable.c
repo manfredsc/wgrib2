@@ -27,12 +27,12 @@
 /**
  * Prints the discipline (Code Table 0.0) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_0.0
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_0.0
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -88,12 +88,12 @@ unsigned char *code_table_0_0_location(unsigned char **sec) {
 /**
  * Prints the master table version (Code Table 1.0) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_1.0
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_1.0
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -141,12 +141,12 @@ unsigned char *code_table_1_0_location(unsigned char **sec) {
 /**
  * Prints the local table version (Code Table 1.1) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_1.1
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_1.1
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -194,12 +194,12 @@ unsigned char *code_table_1_1_location(unsigned char **sec) {
 /**
  * Prints the significance of reference time (Code Table 1.2) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_1.2
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_1.2
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -254,13 +254,13 @@ unsigned char *code_table_1_2_location(unsigned char **sec) {
 /**
  * Prints the production status of processed data (Code Table 1.3) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_1.3
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_1.3
- * 
+ *
  * @author Wesley Ebisuzaki @date 2009
  */
 int f_code_table_1_3(ARG0) {
@@ -315,12 +315,12 @@ unsigned char *code_table_1_3_location(unsigned char **sec) {
 /**
  * Prints the type of processed data (Code Table 1.4) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_1.4
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_1.4
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -375,12 +375,12 @@ unsigned char *code_table_1_4_location(unsigned char **sec) {
 /**
  * Prints the identification template number (Code Table 1.5) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_1.5
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_1.5
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -429,12 +429,12 @@ unsigned char *code_table_1_5_location(unsigned char **sec) {
 /**
  * Prints the calendar (Code Table 1.6) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_1.6
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_1.6
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -484,12 +484,12 @@ unsigned char *code_table_1_6_location(unsigned char **sec) {
 /**
  * Prints the source of grid definition (Code Table 3.0) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_3.0
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_3.0
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -521,12 +521,12 @@ int code_table_3_0(unsigned char **sec) {
 /**
  * Prints the grid definition template number (Code Table 3.1) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_3.1
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_3.1
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -565,12 +565,12 @@ int code_table_3_1(unsigned char **sec) {
 /**
  * Prints the size (radius) and shape of the Earth (Code Table 3.2) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_3.2
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_3.2
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -659,12 +659,12 @@ unsigned char *code_table_3_2_location(unsigned char **sec) {
 /**
  * Prints the spectral data representation type (Code Table 3.6) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_3.6
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_3.6
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -700,12 +700,12 @@ int code_table_3_6(unsigned char **sec) {
 /**
  * Prints the spectral data representation mode (Code Table 3.7) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_3.7
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_3.7
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -741,12 +741,12 @@ int code_table_3_7(unsigned char **sec) {
 /**
  * Prints the grid point position (Code Table 3.8) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_3.8
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_3.8
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -791,12 +791,12 @@ int code_table_3_8(unsigned char **sec) {
 /**
  * Prints the regional/global thinned/reduced grid (Code Table 3.11) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_3.11
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_3.11
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -843,12 +843,12 @@ int code_table_3_11(unsigned char **sec) {
 /**
  * Prints the physical meaning of the vertical coordinate (Code Table 3.15) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_3.15
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_3.15
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -911,12 +911,12 @@ unsigned char *code_table_3_15_location(unsigned char **sec) {
 /**
  * Prints the type of horizontal line (Code Table 3.20) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_3.20
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_3.20
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -977,12 +977,12 @@ unsigned char *code_table_3_20_location(unsigned char **sec) {
 /**
  * Prints the vertical dimension coordinate values definition (Code Table 3.21) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_3.21
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_3.21
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -1027,12 +1027,12 @@ int code_table_3_21(unsigned char **sec) {
 /**
  * Prints the product definition template number (Code Table 4.0) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_4.0
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_4.0
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -1071,12 +1071,12 @@ int code_table_4_0(unsigned char **sec) {
 /**
  * Prints the parameter category by product discipline (Code Table 4.1) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_4.1
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_4.1
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -1136,12 +1136,12 @@ unsigned char *code_table_4_1_location(unsigned char **sec) {
 /**
  * Prints the parameter number by product discipline (Code Table 4.2) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_4.2
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_4.2
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -1202,12 +1202,12 @@ unsigned char *code_table_4_2_location(unsigned char **sec) {
 /**
  * Prints the type of generating process (Code Table 4.3) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_4.3
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_4.3
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -1353,12 +1353,12 @@ unsigned char *code_table_4_3_location(unsigned char **sec) {
 /**
  * Prints the indicator of unit of time range (Code Table 4.4) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_4.4
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_4.4
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -1525,12 +1525,12 @@ int code_table_4_4_not_used(unsigned char **sec) {
 /**
  * Prints the first value of the fixed surface type and units (Code Table 4.5) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_4.5a
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_4.5a
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -1681,12 +1681,12 @@ unsigned char *code_table_4_5a_location(unsigned char **sec) {
 /**
  * Prints the second value of the fixed surface type and units (Code Table 4.5) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_4.5b
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_4.5b
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -1836,12 +1836,12 @@ unsigned char *code_table_4_5b_location(unsigned char **sec) {
 /**
  * Prints the ensemble type (Code Table 4.6) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_4.6
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_4.6
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -1914,12 +1914,12 @@ unsigned char *code_table_4_6_location(unsigned char **sec) {
 /**
  * Prints the derived forecast (Code Table 4.7) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_4.7
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_4.7
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -1988,12 +1988,12 @@ unsigned char *code_table_4_7_location(unsigned char **sec) {
 /**
  * Prints the clustering method (Code Table 4.8) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_4.8
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_4.8
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -2059,12 +2059,12 @@ unsigned char *code_table_4_8_location(unsigned char **sec) {
 /**
  * Prints the probability type (Code Table 4.9) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_4.9
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_4.9
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -2129,12 +2129,12 @@ unsigned char *code_table_4_9_location(unsigned char **sec) {
  * Prints the first occurence of the type of statistical processing (Code Table 4.10) from 
  * the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_4.10
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_4.10
  *
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -2224,12 +2224,12 @@ unsigned char *code_table_4_10_location(unsigned char **sec) {
 /**
  * Prints the first type of time intervals (Code Table 4.11) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_4.11
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_4.11
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -2257,12 +2257,12 @@ int f_code_table_4_11(ARG0) {
 /**
  * Prints all types of time intervals (Code Table 4.11) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_4.11s
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_4.11s
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -2344,12 +2344,12 @@ unsigned char *code_table_4_11_location(unsigned char **sec) {
 /**
  * Prints the type of areal statistical processing (Code Table 4.15) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_4.15
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_4.15
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -2413,12 +2413,12 @@ unsigned char *code_table_4_15_location(unsigned char **sec) {
 /**
  * Prints the quality control value (Code Table 4.16) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_4.16
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_4.16
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -2482,12 +2482,12 @@ unsigned char *code_table_4_16_location(unsigned char **sec) {
 /**
  * Prints the type of interval (Code Table 4.91) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_4.91
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_4.91
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -2557,12 +2557,12 @@ unsigned char *code_table_4_91_location(unsigned char **sec) {
 /**
  * Prints the second copy of the type of interval (Code Table 4.91) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_4.91b
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_4.91b
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -2732,12 +2732,12 @@ extern struct codetable_4_230  codetable_4_230_table[];
 /**
  * Prints the chemical constituent type (Code Table 4.230) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_4.230
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_4.230
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -2815,12 +2815,12 @@ unsigned char *code_table_4_230_location(unsigned char **sec) {
 /**
  * Prints the aerosol type (Code Table 4.233) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_4.233
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_4.233
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -2898,12 +2898,12 @@ unsigned char *code_table_4_233_location(unsigned char **sec) {
 /**
  * Prints the wave spectral description (Code Table 4.235) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_4.235
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_4.235
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -2946,12 +2946,12 @@ int code_table_4_235(unsigned char **sec) {
 /**
  * Prints the type of distribution function (Code Table 4.240) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_4.240
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_4.240
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -3021,12 +3021,12 @@ unsigned char *code_table_4_240_location(unsigned char **sec) {
 /**
  * Prints the coverage attributes (Code Table 4.241) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_4.241
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_4.241
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -3084,12 +3084,12 @@ unsigned char *code_table_4_241_location(unsigned char **sec) {
 /**
  * Prints the tile classification (Code Table 4.242) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_4.242
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_4.242
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -3147,12 +3147,12 @@ unsigned char *code_table_4_242_location(unsigned char **sec) {
 /**
  * Prints the data representation number (Code Table 5.0) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_5.0
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_5.0
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -3193,12 +3193,12 @@ int code_table_5_0(unsigned char **sec) {
 /**
  * Prints the type of original field values (Code Table 5.1) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_5.1
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_5.1
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -3253,12 +3253,12 @@ int code_table_5_1(unsigned char **sec) {
 /**
  * Prints the group splitting method (Code Table 5.4) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_5.4
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_5.4
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -3292,12 +3292,12 @@ int code_table_5_4(unsigned char **sec) {
 /**
  * Prints the missing value management for complex packing (Code Table 5.5) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_5.5
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_5.5
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -3331,12 +3331,12 @@ int code_table_5_5(unsigned char **sec) {
 /**
  * Prints the complex packing spatial differencing (Code Table 5.6) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_5.6
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_5.6
  *
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -3370,12 +3370,12 @@ int code_table_5_6(unsigned char **sec) {
 /**
  * Prints the precision in IEEE packing (Code Table 5.7) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_5.7
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_5.7
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -3409,12 +3409,12 @@ int code_table_5_7(unsigned char **sec) {
 /**
  * Prints the bitmap indicator (Code Table 6.0) from the GRIB2 message.
  * 
+ * ## Usage
+ * -code_table_6.0
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -code_table_6.0
  * 
  * @author Wesley Ebisuzaki @date 2009
  */

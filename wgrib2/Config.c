@@ -37,12 +37,12 @@ extern const char *set_options;
 /**
  * Prints out the current configuration of the wgrib2 tool.
  * 
+ * ## Usage
+ * -config
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success, error code otherwise.
- * 
- * ## Usage:
- * -config
  * 
  * @author Wesley Ebisuzaki @date 3/2009
  */
