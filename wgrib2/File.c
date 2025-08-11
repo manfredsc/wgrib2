@@ -20,10 +20,13 @@
 
 extern int header;
 extern int file_append;
-extern int decode, latlon;
+extern int decode;
+extern int latlon;
 extern int flush_mode;
-extern int nx, ny;
-extern double *lat, *lon;
+extern int nx;
+extern int ny;
+extern double *lat;
+extern double *lon;
 extern int WxText, WxNum;
 
 /* parameters for text mode */
@@ -40,8 +43,8 @@ int f_bin(ARG1) {
     struct seq_file *save;
 
     if (mode == -1) {
-	*local = save = (struct seq_file *) malloc( sizeof(struct seq_file));
-	if (save == NULL) fatal_error("bin: memory allocation","");
+        *local = save = (struct seq_file *) malloc( sizeof(struct seq_file));
+        if (save == NULL) fatal_error("bin: memory allocation","");
         if (fopen_file(save, arg1, file_append ? "ab" : "wb") != 0) {
             free(save);
             fatal_error("Could not open %s", arg1);
@@ -49,26 +52,26 @@ int f_bin(ARG1) {
         decode = 1;
     }
     else if (mode == -2) {
-	save = *local;
-	fclose_file(save);
-	free(save);
+        save = *local;
+        fclose_file(save);
+        free(save);
     }
     else if (mode >= 0) {
-	save = *local;
-	if (header) {
-	    if (ndata > 4294967295U / sizeof(float))
-	        fatal_error("bin: 4-byte header overflow","");
-	    i = ndata * sizeof(float);
-            j = fwrite_file((void *) &i, sizeof(int), 1, save);
-	    if (j != 1) fatal_error("bin: write header","");
-	}
-        j = fwrite_file((void *) data, sizeof(float), ndata, save);
-	if (j != ndata) fatal_error_u("bin: error writing grid point written=%u", j);
+        save = *local;
         if (header) {
-	    i = ndata * sizeof(float);
-	    j = fwrite_file((void *) &i, sizeof(int),1, save);
-	    if (j != 1) fatal_error("bin: write header","");
-	}
+            if (ndata > 4294967295U / sizeof(float))
+                fatal_error("bin: 4-byte header overflow","");
+            i = ndata * sizeof(float);
+            j = fwrite_file((void *) &i, sizeof(int), 1, save);
+            if (j != 1) fatal_error("bin: write header","");
+        }
+        j = fwrite_file((void *) data, sizeof(float), ndata, save);
+        if (j != ndata) fatal_error_u("bin: error writing grid point written=%u", j);
+        if (header) {
+            i = ndata * sizeof(float);
+            j = fwrite_file((void *) &i, sizeof(int),1, save);
+            if (j != 1) fatal_error("bin: write header","");
+        }
         if (flush_mode) fflush_file(save);
     }
     return 0;
@@ -82,8 +85,8 @@ int f_ieee(ARG1) {
     struct seq_file *save;
 
     if (mode == -1) {
-	*local = save = (struct seq_file *) malloc( sizeof(struct seq_file));
-	if (save == NULL) fatal_error("ieee: memory allocation","");
+        *local = save = (struct seq_file *) malloc( sizeof(struct seq_file));
+        if (save == NULL) fatal_error("ieee: memory allocation","");
         if (fopen_file(save, arg1, file_append ? "ab" : "wb") != 0) {
             free(save);
             fatal_error("Could not open %s", arg1);
@@ -91,13 +94,13 @@ int f_ieee(ARG1) {
         decode = 1;
     }
     else if (mode == -2) {
-	save = *local;
-	fclose_file(save);
-	free(save);
+        save = *local;
+        fclose_file(save);
+        free(save);
     }
     else if (mode >= 0) {
-	save = *local;
-	wrtieee(data, ndata, header, save);
+        save = *local;
+        wrtieee(data, ndata, header, save);
         if (flush_mode) fflush_file(save);
     }
     return 0;
@@ -129,20 +132,20 @@ int f_text(ARG1) {
     unsigned int i;
 
     if (mode == -1) {
-	if ((*local = (void *) ffopen(arg1,file_append ? "a" : "w")) == NULL) 
-	        fatal_error("Could not open %s", arg1);
+        if ((*local = (void *) ffopen(arg1,file_append ? "a" : "w")) == NULL) 
+            fatal_error("Could not open %s", arg1);
         decode = 1;
     }
     else if (mode == -2) {
-	ffclose((FILE *) *local);
-	// free(*local);
+        ffclose((FILE *) *local);
+        // free(*local);
     }
     else if (mode >= 0) {
         if (header == 1) {
-	    fprintf((FILE *) *local,"%d %d\n", nx, ny);
-	}
-	for (i = 0; i < ndata; i++) {
-	    fprintf((FILE *) *local, text_format, data[i]);
+            fprintf((FILE *) *local,"%d %d\n", nx, ny);
+	    }
+        for (i = 0; i < ndata; i++) {
+            fprintf((FILE *) *local, text_format, data[i]);
             fprintf((FILE *) *local, ((i+1) % text_column) ? " " : "\n");
         }
         if (flush_mode) fflush((FILE *) *local);
@@ -158,42 +161,42 @@ int f_spread(ARG1) {
 
     if (mode == -1) {
         if ((*local = (void *) ffopen(arg1,file_append ? "a" : "w")) == NULL)
-	        fatal_error("Could not open %s", arg1);
+            fatal_error("Could not open %s", arg1);
         WxText = latlon = decode = 1;
     }
     else if (mode == -2) {
-	ffclose((FILE *) *local);
+        ffclose((FILE *) *local);
     }
     else if (mode >= 0) {
-	if (lat == NULL || lon == NULL || data == NULL) {
-	    fprintf(stderr,"no code to determine lat-lon information, no spread sheet output\n");
-	    return 0;
-	}
-	set_mode(0);
-	f_var(call_ARG0(inv_out,NULL));
-	fprintf((FILE *) *local,"lon,lat,%s",inv_out);
-	f_lev(call_ARG0(inv_out,NULL));
-	fprintf((FILE *) *local," %s", inv_out);
-	f_t(call_ARG0(inv_out,NULL));
-	fprintf((FILE *) *local," %s", inv_out);
-	f_ftime(call_ARG0(inv_out,NULL));
-	fprintf((FILE *) *local," %s\n", inv_out);
+        if (lat == NULL || lon == NULL || data == NULL) {
+            fprintf(stderr,"no code to determine lat-lon information, no spread sheet output\n");
+            return 0;
+        }
+        set_mode(0);
+        f_var(call_ARG0(inv_out,NULL));
+        fprintf((FILE *) *local,"lon,lat,%s",inv_out);
+        f_lev(call_ARG0(inv_out,NULL));
+        fprintf((FILE *) *local," %s", inv_out);
+        f_t(call_ARG0(inv_out,NULL));
+        fprintf((FILE *) *local," %s", inv_out);
+        f_ftime(call_ARG0(inv_out,NULL));
+        fprintf((FILE *) *local," %s\n", inv_out);
 
-	if (WxNum > 0) {
-	    for (i = 0; i < ndata; i++) {
-	        if(!UNDEFINED_VAL(data[i])) 
-	            fprintf((FILE *) *local,"%lf,%lf,\"%s\"\n",lon[i],lat[i],WxLabel(data[i]));
-	    }
-	}
-	else {
-	    for (i = 0; i < ndata; i++) {
-	        if(!UNDEFINED_VAL(data[i])) 
-	            fprintf((FILE *) *local,"%lf,%lf,%g\n",lon[i],lat[i],data[i]);
-	    }
-	}
+        if (WxNum > 0) {
+            for (i = 0; i < ndata; i++) {
+                if(!UNDEFINED_VAL(data[i])) 
+                    fprintf((FILE *) *local,"%lf,%lf,\"%s\"\n",lon[i],lat[i],WxLabel(data[i]));
+            }
+        }
+        else {
+            for (i = 0; i < ndata; i++) {
+                if(!UNDEFINED_VAL(data[i])) 
+                    fprintf((FILE *) *local,"%lf,%lf,%g\n",lon[i],lat[i],data[i]);
+            }
+        }
         if (flush_mode) fflush((FILE *) *local);
-	inv_out[0] = 0;
-	set_mode(mode);
+        inv_out[0] = 0;
+        set_mode(mode);
     }
 
     return 0;
@@ -208,20 +211,20 @@ int f_GRIB(ARG1) {
     struct seq_file *save;
 
     if (mode == -1) {
-	*local = save = (struct seq_file *) malloc( sizeof(struct seq_file));
-	if (save == NULL) fatal_error("GRIB: memory allocation","");
-	if (fopen_file(save, arg1, file_append ? "ab" : "wb") != 0) {
-	    free(save);
-	    fatal_error("Could not open %s", arg1);
-	}
+        *local = save = (struct seq_file *) malloc( sizeof(struct seq_file));
+        if (save == NULL) fatal_error("GRIB: memory allocation","");
+        if (fopen_file(save, arg1, file_append ? "ab" : "wb") != 0) {
+            free(save);
+            fatal_error("Could not open %s", arg1);
+        }
     }
     else if (mode == -2) {
-	save = *local;
-	fclose_file(save);
-	free(save);
+        save = *local;
+        fclose_file(save);
+        free(save);
     }
     else if (mode >= 0) {
-	save = *local;
+        save = *local;
         /* figure out size of grib file */
         size = uint8(sec[0]+8);
         /* write entire record to out */
@@ -241,23 +244,23 @@ int f_grib(ARG1) {
 
     i = 0;
     if (mode == -1) {
-	*local = save = (struct seq_file *) malloc( sizeof(struct seq_file));
-	if (save == NULL) fatal_error("grib: memory allocation","");
+        *local = save = (struct seq_file *) malloc( sizeof(struct seq_file));
+        if (save == NULL) fatal_error("grib: memory allocation","");
 
-	if (fopen_file(save, arg1, file_append ? "ab" : "wb") != 0) {
-	    free(save);
-	    fatal_error("Could not open %s", arg1);
-	}
+        if (fopen_file(save, arg1, file_append ? "ab" : "wb") != 0) {
+            free(save);
+            fatal_error("Could not open %s", arg1);
+        }
     }
     else if (mode == -2) {
-	save = (struct seq_file *) *local;
-	fclose_file(save);
-	free(save);
+        save = (struct seq_file *) *local;
+        fclose_file(save);
+        free(save);
     }
     else if (mode >= 0) {
-	save = (struct seq_file *) *local;
-	i = wrt_sec(sec[0], sec[1], sec[2], sec[3], sec[4], sec[5], sec[6],
-             sec[7], save);
+        save = (struct seq_file *) *local;
+        i = wrt_sec(sec[0], sec[1], sec[2], sec[3], sec[4], sec[5], sec[6],
+                    sec[7], save);
         if (flush_mode) fflush_file(save);
     }
     return i;
@@ -270,7 +273,7 @@ int f_grib(ARG1) {
 
 int f_persistent(ARG1) {
     if (mode == -1) {
-	mk_file_persistent(arg1);
+        mk_file_persistent(arg1);
     }
     return 0;
 }
@@ -282,7 +285,7 @@ int f_persistent(ARG1) {
 
 int f_transient(ARG1) {
     if (mode == -1) {
-	mk_file_transient(arg1);
+        mk_file_transient(arg1);
     }
     return 0;
 }
@@ -294,8 +297,8 @@ int f_transient(ARG1) {
 int f_rewind_init(ARG1) {
     int i;
     if (mode == -1) {
-	i = rewind_file(arg1);
-	if (i) fprintf(stderr,"WARNING: -rewind_init failed on %s\n", arg1);
+        i = rewind_file(arg1);
+        if (i) fprintf(stderr,"WARNING: -rewind_init failed on %s\n", arg1);
     }
     return 0;
 }
