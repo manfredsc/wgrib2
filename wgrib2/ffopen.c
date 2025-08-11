@@ -2,7 +2,6 @@
  * @brief Implements a simple extension to fopen. 
  * 
  * If file is already open, just return the pointer to the file handler
- * @author Public Domain: Wesley Ebisuzaki @date 02/2008
  * 
  * ### Program History Log
  * Date | Programmer | Comments
@@ -18,6 +17,8 @@
  * 04/2015 | W. Ebisuzaki | added @tmp:XXXX  temporary files, added for callable wgrib2
  *                          @mem:N
  * 07/2020 | W. Ebisuzaki, G. Trojan | fixed ffopen()
+ * 
+ * @author Public Domain: Wesley Ebisuzaki @date 02/2008
  */
 #include <stdio.h>
 #include <stdlib.h>
