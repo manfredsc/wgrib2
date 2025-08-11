@@ -27,7 +27,7 @@ extern jmp_buf fatal_err;
  *         fprintf(ARGS)
  *         do_fatal_error_processing
  * 
- * @param fmt Format string for the error message.
+ * @param fmt Pointer to format string for the error message.
  * @param ... Additional arguments for the format string.
  * 
  * @author Wesley Ebisuzaki @date 2004
