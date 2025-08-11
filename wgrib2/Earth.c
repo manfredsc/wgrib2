@@ -25,12 +25,12 @@
  * Such information is necessary for finding the latitude and longitude of the grid 
  * points in various projections.
  * 
+ * ## Usage:
+ * -radius
+ * 
  * @param ARG0 ???
  * 
  * @return 0 on success, error code otherwise.
- * 
- * ## Usage:
- * -radius
  * 
  * ## Example:
  * ???
@@ -67,23 +67,26 @@ int f_radius(ARG0) {
  * points. To get the correction locations after using the -set_radius option, you must 
  * write the file with the new shape of the Earth. Then you can use this new file. 
  * 
- * @param ARG1 ???
- * 
- * @return 0 on success, error code otherwise.
- * 
- * ## Usage:
+ * ## Usage
  * -set_radius N 
  *      N=0,2,4,5,6,8,9
  *      Code Table 3.2 is set to N
+ * 
  * -set_radius 1:R
  *      R=radius in meters (spherical)
  *      Code Table 3.2 is set to 1
+ * 
  * -set_radius 3:X:Y
  *      X=major axis Y=minor axis (oblate spheroid), X, Y in km
  *      Code Table 3.2 is set to 3
+ * 
  * -set_radius 7:X:Y 
  *      X=major axis Y=minor axis (oblate spheroid), X, Y in m
  *      Code Table 3.2 is set to 7
+ * 
+ * @param ARG1 ???
+ * 
+ * @return 0 on success, error code otherwise.
  * 
  * ## Example:
  * ???

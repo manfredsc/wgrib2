@@ -43,12 +43,12 @@ extern double *lon;
  * and maximum values. If latitude information is available, it also computes a 
  * cosine-weighted mean.
  * 
+ * ## Usage:
+ * -stats
+ * 
  * @param ARG0 ???
  * 
  * @return 0 on success, error code otherwise.
- * 
- * ## Usage:
- * -stats
  * 
  * ## Example:
  * ???
@@ -117,12 +117,12 @@ int f_stats(ARG0) {
 /**
  * Prints the maximum value of the field.
  * 
+ * ## Usage:
+ * -max
+ * 
  * @param ARG0???
  * 
  * @return 0 on success, error code otherwise.
- * 
- * ## Usage:
- * -max
  * 
  * ## Example:
  * ???
@@ -151,12 +151,12 @@ int f_max(ARG0) {
 /**
  * Prints the minimum value of the field.
  * 
+ * ## Usage:
+ * -min
+ * 
  * @param ARG0 ???
  * 
  * @return 0 on success, error code otherwise.
- * 
- * ## Usage:
- * -min
  * 
  * ## Example:
  * ???

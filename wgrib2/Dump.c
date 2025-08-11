@@ -60,17 +60,17 @@ extern enum input_type input;
  * I use -d interactively but this option should not be used in scripts unless you are 100% 
  * certain of the order of the records. 
  * 
- * @param ARG1 ???
- * 
- * @return 0 on success, error code otherwise.
- * 
- * ## Usage:
+ * ## Usage
  * -d N
  * -d N.M
  * -d N:OFFSET
  * -d N.M:OFFSET
  * 
  * N is an integer larger than 0, M is an positive integer, OFFSET is a positive integer
+ * 
+ * @param ARG1 ???
+ * 
+ * @return 0 on success, error code otherwise.
  * 
  * ## Example:
  * ???

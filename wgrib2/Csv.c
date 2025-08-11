@@ -70,6 +70,15 @@ extern int latlon;
  * A better field name may be "HGT.ENS=+19". You enable the extended variable name by adding the 
  * option -set_ext_name 1.
  * 
+ * ## Usage
+ * -csv output_file_name
+ * 
+ * The CSV is written to output_file_name (cannot be a memory file)
+ * 
+ * -set_ext_name 1 -csv output_file_name
+ * 
+ * The field is the extended grib name.
+ * 
  * @param ARG1 ???
  * 
  * @return 0 on success, error code otherwise.
@@ -94,15 +103,6 @@ extern int latlon;
  * hours to read the CSV file not including CPU time which will slow down the process. Converting grib into CSV 
  * is a viable strategy if the conversion is limited. You need to restrict the number of fields converted and 
  * should consider only converting a regional domain. Note, I wrote "viable" and not optimal. 
- * 
- * ## Usage:
- * -csv output_file_name
- * 
- * The CSV is written to output_file_name (cannot be a memory file)
- * 
- * -set_ext_name 1 -csv output_file_name
- * 
- * The field is the extended grib name.
  * 
  * ## Example:
  * ???
