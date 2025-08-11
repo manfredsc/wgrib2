@@ -23,12 +23,12 @@
  * Prints the size of the aerosol particle if applicable. This product applies to Product Definition 
  * Template 4.44-4.48. This option is part of the standard inventory.
  * 
+ * ## Usage:
+ * -aerosol_size
+ * 
  * @param ARG0 ???
  *
  * @return 0 for success, does not return error codes.
- * 
- * ## Usage:
- * -aerosol_size
  * 
  * ## Example: 
  * ???
@@ -59,12 +59,13 @@ int f_aerosol_size(ARG0) {
 /**
  * Prints the optical properties of the aerosol particle. This option is part of the standard inventory.
  * 
+ * 
+ * ## Usage
+ * -aerosol_wavelength
+ * 
  * @param ARG0 ???
  *
  * @return 0 for success, does not return error codes.
- * 
- * ## Usage:
- * -aerosol_wavelength
  * 
  * ## Example: 
  * ???

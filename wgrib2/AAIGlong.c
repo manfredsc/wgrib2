@@ -48,29 +48,28 @@ extern enum output_order_type output_order_wanted;
  * 
  * Each field is written to a different file (*.asc) which is written to the current directory.
  * 
- * File name convention for *asc output:
- *      NAME = (wgrib2 -S)
- *      NAME=(wgrib2 -S)
- *      remove (message number)[.submessage number]:(byte location): 
- *      remove trailing semicolon if any
- *      replace "/" by " DIV "
- *      replace "\" by " BS "
- *      replace ":" by "_"
- *      replace "'" by " Q "
- *      replace '"' by " Q "
+ * ## Usage:
+ * -AAIGlong
  * 
+ * ## File name convention for *asc output
+ * NAME = (wgrib2 -S)
+ * NAME=(wgrib2 -S)
+ * remove (message number)[.submessage number]:(byte location): 
+ * remove trailing semicolon if any
+ * replace "/" by " DIV "
+ * replace "\" by " BS "
+ * replace ":" by "_"
+ * replace "'" by " Q "
+ * replace '"' by " Q "
+ *
  * @param ARG0 ???
  *
  * @return 0 for success, error code otherwise.
  *
- * @note The (wgrib2 -S) output can change between different versions of wgrib2.
- * The grib table can be updated.
- * The new metadata can be added to the inventory in order to uniquely identify fields.
- * In rare cases, the format of the metadata has been updated.
- * If you need to format of the NAME to be unchanging, please freeze the version of wgrib2.
- *
- * ## Usage:
- * -AAIGlong
+ * @note The (wgrib2 -S) output can change between different versions of wgrib2. The grib table 
+ * can be updated. The new metadata can be added to the inventory in order to uniquely identify 
+ * fields. In rare cases, the format of the metadata has been updated. If you need to format of 
+ * the NAME to be unchanging, please freeze the version of wgrib2.
  * 
  * ## Example: 
  * ???
@@ -164,11 +163,11 @@ int f_AAIGlong(ARG0) {
     fprintf(out,"xllcenter %lf\n", lon[0] > 180.0 ? lon[0]-360.0 : lon[0]);
     fprintf(out,"yllcenter %lf\n", lat[0]);
     if (cellsize > 0.0) {
-      fprintf(out,"cellsize %lf\n", cellsize);
+        fprintf(out,"cellsize %lf\n", cellsize);
     }
     else {
-      fprintf(out,"dx       %lf\n", dlon);
-      fprintf(out,"dy       %lf\n", dlat);
+        fprintf(out,"dx       %lf\n", dlon);
+        fprintf(out,"dy       %lf\n", dlat);
     }
     fprintf(out,"NODATA_VALUE 9.999e20\n");
     for (j = 0; j < ny_; j++) {

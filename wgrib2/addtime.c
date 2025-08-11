@@ -501,10 +501,6 @@ int save_time(int year, int month, int day, int hour, int minute, int second, un
     return 0;
 }
 
-/*
-   inverse of get_time .. save struct *full_date  in PDS
- */
-
 /**
  * Saves a full_date struct into GRIB time code bytes.
  * 

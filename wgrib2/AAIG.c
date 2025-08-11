@@ -53,26 +53,26 @@ extern enum output_order_type output_order_wanted;
  * 
  * Each field is written to a different file (*.asc) which is written to the current directory.
  * 
- * File name convention for *asc output:
- *      NAME = grib name (-var), ex. TEMP, HGT 
- *      LEVEL = level, ex. surface, 2_m_above_ground, 500_mb 
- *      RT = reference time YYYYMMDDHH 
- *      VT = verification time (end_ft) YYYYMMDDHH
+ * ## Usage
+ * -AAIG
  * 
- *      If RT is the same as VT 
- *          output = NAME.LEVEL.RT.asc 
- *      If RT is different than VT 
- *          output = NAME.LEVEL.RT.VT.asc
- * 
+ * ## File name convention for *asc output
+ * NAME = grib name (-var), ex. TEMP, HGT
+ * LEVEL = level, ex. surface, 2_m_above_ground, 500_mb
+ * RT = reference time YYYYMMDDHH
+ * VT = verification time (end_ft) YYYYMMDDHH
+ *
+ * If RT is the same as VT:
+ *      output = NAME.LEVEL.RT.asc
+ * If RT is different than VT:
+ *      output = NAME.LEVEL.RT.VT.asc
+ *
  * @param ARG0 ???
  *
  * @return 0 for success, error code otherwise.
  *
  * @note The above file name convention works for a simple GFS forecast. However, life quickly gets 
  * more complicated and a new file name convention was needed (-AAIGlong).
- * 
- * ## Usage:
- * -AAIG
  * 
  * ## Example: 
  * ???
@@ -164,11 +164,11 @@ int f_AAIG(ARG0) {
     fprintf(out,"xllcenter %lf\n", lon[0] > 180.0 ? lon[0]-360.0 : lon[0]);
     fprintf(out,"yllcenter %lf\n", lat[0]);
     if (cellsize > 0.0) {
-      fprintf(out,"cellsize %lf\n", cellsize);
+        fprintf(out,"cellsize %lf\n", cellsize);
     }
     else {
-      fprintf(out,"dx       %lf\n", dlon);
-      fprintf(out,"dy       %lf\n", dlat);
+        fprintf(out,"dx       %lf\n", dlon);
+        fprintf(out,"dy       %lf\n", dlat);
     }
     fprintf(out,"NODATA_VALUE 9.999e20\n");
     for (j = 0; j < ny_; j++) {

@@ -20,6 +20,14 @@
  * Terminates wgrib2 after N seconds (real time). The alarm is activated in the 
  * setup phase and removed in the finalize phase.
  * 
+ * ## Usage:
+ *  -alarm N
+ * 
+ * N is an integer from 0..65536 (ISO C Standard). N = 0 will remove any pending alarm.
+ * 
+ * For Posix systems, the system generates a SIGALRM signal to the process after N seconds. The default 
+ * action is to terminate the process (wgrib2). 
+ * 
  * @param ARG1 ???
  * 
  * @return 0 for success, error code otherwise.
@@ -36,14 +44,6 @@
  * The -alarm option is a replacement for -limit which limits the number of (sub)messages which are 
  * processed. Jobs on web servers may hang because of problems with the network connections which will 
  * never trigger the -limit option. 
- * 
- * ## Usage:
- *  -alarm N
- * 
- * N is an integer from 0..65536 (ISO C Standard). N = 0 will remove any pending alarm.
- * 
- * For Posix systems, the system generates a SIGALRM signal to the process after N seconds. The default 
- * action is to terminate the process (wgrib2). 
  * 
  * @author Wesley Ebisuzaki @date 04/2017
 */
