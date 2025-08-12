@@ -8,6 +8,7 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
+/** Array of function information for wgrib2 options. */
 struct function functions[] = {
    {"else",f_else, Else, 0, "else, -if ... -else ... -endif", 100},
    {"elseif",f_if, Elseif, 1, "elseif X (POSIX regular expression) conditional on match, -if ... -elseif ... -endif", 200},
@@ -405,5 +406,6 @@ struct function functions[] = {
    {"mysql_speed",f_mysql_speed, output, 7, "H=[host] U=[user] P=[password] D=[db] T=[table] W=[western_lons:0|1] PV=[remove unlikely:0|1]", 100},
    #endif
 };
- 
+
+/** Number of functions in the function list. */
 int nfunctions = sizeof functions / sizeof functions[0];
