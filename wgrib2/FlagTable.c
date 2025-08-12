@@ -26,9 +26,9 @@ int f_flag_table_3_3(ARG0) {
     int res;
     if (mode >= 0) {
         res = flag_table_3_3(sec);
-	if (res >= 0) {
+        if (res >= 0) {
             sprintf(inv_out,"flag table 3.3=%d", res);
-	    inv_out += strlen(inv_out);
+            inv_out += strlen(inv_out);
         }
     }
     return 0;
@@ -63,10 +63,10 @@ unsigned char *flag_table_3_3_location(unsigned char **sec) {
         case 41:
         case 42:
         case 43:
-	case 140:
+        case 140:
         case 204:
               return gds+54;
-	case 4:
+        case 4:
         case 5:
         case 10:
         case 12:
@@ -77,23 +77,22 @@ unsigned char *flag_table_3_3_location(unsigned char **sec) {
         case 110:
               return gds+46;
 #ifdef WMO_VALIDATION
-	case 60:
+        case 60:
               return gds+71;
 #endif
-	case 32768:
-		if (center == NCEP) return gds+54;
-		return NULL;
-	case 32769:
-		if (center == NCEP) return gds+54;
-		return NULL;
-	case 40110:
-		if ((center == JMA1) || (center == JMA2)) return gds+46; 
-		return NULL;
-        default: break;
+        case 32768:
+            if (center == NCEP) return gds+54;
+            return NULL;
+        case 32769:
+            if (center == NCEP) return gds+54;
+            return NULL;
+        case 40110:
+            if ((center == JMA1) || (center == JMA2)) return gds+46; 
+            return NULL;
+            default: break;
     }
     return NULL;
 }
-
 
 
 /*
@@ -104,9 +103,9 @@ int f_vector_dir(ARG0) {
     int res;
     if (mode >= 0) {
         res = flag_table_3_3(sec);
-	if (res >= 0) {
-	    sprintf(inv_out, res & 8 ? "winds(grid)" : "winds(N/S)");
-	    inv_out += strlen(inv_out);
+        if (res >= 0) {
+            sprintf(inv_out, res & 8 ? "winds(grid)" : "winds(N/S)");
+            inv_out += strlen(inv_out);
         }
     }
     return 0;
@@ -120,9 +119,9 @@ int f_flag_table_3_4(ARG0) {
     int scan;
     if (mode >= 0) {
         scan = flag_table_3_4(sec);
-	if (scan >= 0) {
+        if (scan >= 0) {
             sprintf(inv_out,"flag table 3.4=%d %s", scan, scan_order[scan >> 4]);
-	}
+        }
     }
     return 0;
 }
@@ -158,46 +157,52 @@ unsigned char *flag_table_3_4_location(unsigned char **sec) {
         case 41:
         case 42:
         case 43:
-                 return gds+71; break;
-	case 4:
-	case 5:
-                 return gds+47; break;
+            return gds+71; break;
+        case 4:
+        case 5:
+            return gds+47; break;
         case 10: 
         case 12: 
-                 return gds+59; break;
-        case 20: return gds+64; break;
+            return gds+59; break;
+        case 20: 
+            return gds+64; break;
         case 30:
-        case 31: return gds+64; break;
+        case 31: 
+            return gds+64; break;
         case 50:
         case 51:
         case 52:
         case 53:
-                 /* spectral modes don't have scan order */
-                 return NULL; break;
+            /* spectral modes don't have scan order */
+            return NULL; break;
         case 90: 
         case 140: 
-		  return gds+63; break;
-        case 110: return gds+56; break;
+            return gds+63; break;
+        case 110: 
+            return gds+56; break;
         case 190: 
-	case 120: return gds+38; break;
-	case 204: return gds+71; break;
-        case 1000: return gds+50; break;
+        case 120: 
+            return gds+38; break;
+        case 204: 
+            return gds+71; break;
+        case 1000: 
+            return gds+50; break;
 #ifdef WMO_VALIDATION
-	case 60:
-              return gds+72; break;
+        case 60:
+            return gds+72; break;
 #endif
 	case 32768:
-		if (center == NCEP) return gds+71;
-		return NULL;
-		break;
+        if (center == NCEP) return gds+71;
+        return NULL;
+        break;
 	case 32769:
-		if (center == NCEP) return gds+71;
-		return NULL;
-		break;
+        if (center == NCEP) return gds+71;
+        return NULL;
+        break;
 	case 40110:
-		if ((center == JMA1) || (center == JMA2)) return gds+56; 
-		return NULL;
-		break;
+        if ((center == JMA1) || (center == JMA2)) return gds+56; 
+        return NULL;
+        break;
         default: break;
     }
     return NULL;
@@ -210,13 +215,14 @@ int f_flag_table_3_5(ARG0) {
     int p;
     if (mode >= 0) {
         p = flag_table_3_5(sec);
-	if (p >= 0) {
+        if (p >= 0) {
             sprintf(inv_out,"flag table 3.5=%d", p);
-	    inv_out += strlen(inv_out);
+            inv_out += strlen(inv_out);
         }
     }
     return 0;
 }
+
 int flag_table_3_5(unsigned char **sec) {
     unsigned char *p;
     p = flag_table_3_5_location(sec);
@@ -234,12 +240,14 @@ unsigned char *flag_table_3_5_location(unsigned char **sec) {
     switch (code_table_3_1(sec)) {
         case 20:
         case 30:
-        case 31: return gds+63; break;
-        case 110: return gds+55; break;
-	case 40110:
-	    if ((center == JMA1) || (center == JMA2)) return gds+55;
-	    break;
-	default: break;
+        case 31: 
+            return gds+63; break;
+        case 110: 
+            return gds+55; break;
+        case 40110:
+            if ((center == JMA1) || (center == JMA2)) return gds+55;
+            break;
+        default: break;
     }
     return NULL;
 }
