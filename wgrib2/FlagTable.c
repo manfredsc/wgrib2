@@ -1,3 +1,16 @@
+/** @file
+ * @brief Routines to return the value of the various flags. Use this instead of .h 
+ * files.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 12/2006 | W. Ebisuzaki | Initial
+ * 1/2007 | M. Schwarb | Cleanup
+ * 
+ * @author Public Domain: Wesley Ebisuzaki @date 12/2006
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,23 +18,28 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/*
- * FlagTable.c
- *
- * routines to return the value of the various flags
- *   policy: use this instead of .h files
- *
- * 12/2006: Public Domain Wesley Ebisuzaki
- * 1/2007 cleanup M. Schwarb
- */
-
+/** Defines scan order of the grid. */
 extern char *scan_order[];
+
+/** Defines stagger of the grid. */
 extern char *stagger_description[];
 
 /*
  * HEADER:-1:flag_table_3.3:inv:0:flag table 3.3, resolution and component flags
  */
 
+/**
+ * Prints the resolution and component flags (Flag Table 3.3) from the GRIB2 message.
+ * 
+ * ## Usage
+ * -flag_table_3.3
+ * 
+ * @param ARG0 ???
+ * 
+ * @return 0 on success
+ * 
+ * @author Wesley Ebisuzaki @date 12/2006
+ */
 int f_flag_table_3_3(ARG0) {
     int res;
     if (mode >= 0) {
@@ -33,12 +51,33 @@ int f_flag_table_3_3(ARG0) {
     }
     return 0;
 }
+
+/**
+ * Return the value of the resolution and component flags (Flag Table 3.3) from the 
+ * GRIB2 message.
+ * 
+ * @param sec Pointer to the GRIB section.
+ * 
+ * @return The value of the resolution and component flags, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 12/2006
+ */
 int flag_table_3_3(unsigned char **sec) {
     unsigned char *p;
     p = flag_table_3_3_location(sec);
     if (p == NULL) return -1;
     return (int) *p;
 }
+
+/**
+ * Set the value of the resolution and component flags (Flag Table 3.3) in the GRIB2 
+ * message.
+ * 
+ * @param sec Pointer to the GRIB section.
+ * @param flag The value to set.
+ * 
+ * @return 0 on success, or 1 if the flag could not be found.
+ */
 int set_flag_table_3_3(unsigned char **sec, unsigned int flag) {
     unsigned char *p;
     p = flag_table_3_3_location(sec);
@@ -47,6 +86,16 @@ int set_flag_table_3_3(unsigned char **sec, unsigned int flag) {
     return 0;
 }
 
+/**
+ * Returns the location of the resolution and component flags (Flag Table 3.3) in
+ * the GRIB2 message.
+ *
+ * @param sec Pointer to the GRIB section.
+ * 
+ * @return Pointer to the location of the flags, or NULL if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 12/2006
+ */
 unsigned char *flag_table_3_3_location(unsigned char **sec) {
     int grid_template, center;
     unsigned char *gds;
@@ -99,6 +148,26 @@ unsigned char *flag_table_3_3_location(unsigned char **sec) {
  * HEADER:1:vector_dir:inv:0:grid or earth relative winds
  */
 
+/**
+ * Bit 5 of the flag 3.3 indicates whether vector quantities are relative to the grid 
+ * or the North/South poles. 
+ * 
+ * This option prints out the "winds(N/S)" or "winds(grids)" depending on the value of the flag.
+ * 
+ * Note there is no flag that indicates whether the quantity is a U/V component of a vector. 
+ * 
+ * ## Usage
+ * -vector_dir
+ * 
+ * @param ARG0 ???
+ * 
+ * @return 0 on success
+ * 
+ * ## Example
+ * ???
+ * 
+ * @author Wesley Ebisuzaki @date 12/2006
+ */
 int f_vector_dir(ARG0) {
     int res;
     if (mode >= 0) {
@@ -115,6 +184,18 @@ int f_vector_dir(ARG0) {
  * HEADER:-1:flag_table_3.4:inv:0:flag table 3.4, scanning mode
  */
 
+/**
+ * Prints out the scanning mode (Flag Table 3.4) from the GRIB2 message.
+ * 
+ * ## Usage
+ * -flag_table_3.4
+ * 
+ * @param ARG0 ???
+ * 
+ * @return 0 on success
+ * 
+ * @author Wesley Ebisuzaki @date 12/2006
+ */
 int f_flag_table_3_4(ARG0) {
     int scan;
     if (mode >= 0) {
@@ -125,6 +206,16 @@ int f_flag_table_3_4(ARG0) {
     }
     return 0;
 }
+
+/**
+ * Returns the scanning mode (Flag Table 3.4) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the GRIB section.
+ * 
+ * @return The value of the scanning mode, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 12/2006
+ */
 int flag_table_3_4(unsigned char **sec) {
     unsigned char *p;
     p = flag_table_3_4_location(sec);
@@ -132,6 +223,16 @@ int flag_table_3_4(unsigned char **sec) {
     return (int) *p;
 }
 
+/**
+ * Sets the scanning mode (Flag Table 3.4) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the GRIB section.
+ * @param flag The value to set for the scanning mode.
+ * 
+ * @return 0 on success
+ * 
+ * @author Wesley Ebisuzaki @date 12/2006
+ */
 int set_flag_table_3_4(unsigned char **sec, unsigned int flag) {
     unsigned char *p;
     p = flag_table_3_4_location(sec);
@@ -140,6 +241,15 @@ int set_flag_table_3_4(unsigned char **sec, unsigned int flag) {
     return 0;
 }
 
+/**
+ * Returns the location of the scanning mode (Flag Table 3.4) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the GRIB section.
+ * 
+ * @return Pointer to the location of the scanning mode, or NULL if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 12/2006
+ */
 unsigned char *flag_table_3_4_location(unsigned char **sec) {
     int grid_template, center;
     unsigned char *gds;
@@ -211,6 +321,19 @@ unsigned char *flag_table_3_4_location(unsigned char **sec) {
 /*
  * HEADER:-1:flag_table_3.5:inv:0:flag table 3.5 projection center
  */
+
+/**
+ * Prints out the projection center (Flag Table 3.5) from the GRIB2 message.
+ * 
+ * ## Usage
+ * -flag_table_3.5
+ * 
+ * @param ARG0 ???
+ * 
+ * @return 0 on success
+ * 
+ * @author Wesley Ebisuzaki @date 12/2006
+ */
 int f_flag_table_3_5(ARG0) {
     int p;
     if (mode >= 0) {
@@ -223,6 +346,15 @@ int f_flag_table_3_5(ARG0) {
     return 0;
 }
 
+/**
+ * Returns the projection center (Flag Table 3.5) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the GRIB section.
+ * 
+ * @return The value of the projection center, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 12/2006
+ */
 int flag_table_3_5(unsigned char **sec) {
     unsigned char *p;
     p = flag_table_3_5_location(sec);
@@ -230,6 +362,15 @@ int flag_table_3_5(unsigned char **sec) {
     return (int) *p;
 }
 
+/**
+ * Returns the location of the projection center (Flag Table 3.5) in the GRIB2 message.
+ * 
+ * @param sec Pointer to the GRIB section.
+ * 
+ * @return Pointer to the location of the projection center, or NULL if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 12/2006
+ */
 unsigned char *flag_table_3_5_location(unsigned char **sec) {
     unsigned char *gds;
     int center;
@@ -256,6 +397,19 @@ unsigned char *flag_table_3_5_location(unsigned char **sec) {
  * HEADER:-1:flag_table_3.9:inv:0:flag table 3.9 numbering order of diamonds seen from corresponding pole
  */
 
+/**
+ * Prints the numbering order of diamonds seen from the corresponding pole (Flag Table 3.9) 
+ * from the GRIB2 message.
+ * 
+ * ## Usage
+ * -flag_table_3.9
+ * 
+ * @param ARG0 ???
+ * 
+ * @return 0 on success
+ * 
+ * @author Wesley Ebisuzaki @date 12/2006
+ */
 int f_flag_table_3_9(ARG0) {
     int p;
     if (mode >= 0) {
@@ -267,6 +421,17 @@ int f_flag_table_3_9(ARG0) {
     }
     return 0;
 }
+
+/**
+ * Returns the numbering order of diamonds seen from the corresponding pole (Flag Table 3.9)
+ * from the GRIB2 message.
+ * 
+ * @param sec Pointer to the GRIB section.
+ * 
+ * @return The value of the numbering order of diamonds, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 12/2006
+ */
 int flag_table_3_9(unsigned char **sec) {
 
     unsigned char *gds;
@@ -277,8 +442,22 @@ int flag_table_3_9(unsigned char **sec) {
     }
     return -1;
 }
+
 /*
  * HEADER:-1:flag_table_3.10:inv:0:flag table 3.10 scanning mode for one diamond
+ */
+
+/**
+ * Prints the scanning mode for one diamond (Flag Table 3.10) from the GRIB2 message.
+ * 
+ * ## Usage
+ * -flag_table_3.10
+ * 
+ * @param ARG0 ???
+ * 
+ * @return 0 on success
+ * 
+ * @author Wesley Ebisuzaki @date 12/2006
  */
 int f_flag_table_3_10(ARG0) {
     int p;
@@ -291,6 +470,16 @@ int f_flag_table_3_10(ARG0) {
     }
     return 0;
 }
+
+/**
+ * Returns the scanning mode for one diamond (Flag Table 3.10) from the GRIB2 message.
+ * 
+ * @param sec Pointer to the GRIB section.
+ * 
+ * @return The value of the scanning mode, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 12/2006
+ */
 int flag_table_3_10(unsigned char **sec) {
     unsigned char *gds;
     gds = sec[3];
