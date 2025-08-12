@@ -1,12 +1,5 @@
 /** @file
  * @brief Fixes CFSv2 monthly forecast fields.
- * 
- * ### Program History Log
- * Date | Programmer | Comments
- * -----|------------|---------
- * 08/2011 | W. Ebisuzaki | Initial
- * 11/2011 | W. Ebisuzaki | sets flag controlling whether DX and DY are defined
- * 
  * @author Public Domain: Wesley Ebisuzaki @date 08/2011
  */
 
