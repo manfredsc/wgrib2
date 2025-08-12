@@ -29,7 +29,7 @@
  * 2/2009 public domain Wesley Ebisuzaki
  */
 
-
+/** Flag to indicate if NCEP fix 3 is active.  */
 extern int fix_ncep_3_flag;
 
 /*
@@ -41,8 +41,6 @@ extern int fix_ncep_3_flag;
  *
  * NCEP libraries have a bug where they assume that the dscale is zero when they set 
  * the reference values only when nbits == 0.
- * 
- * This fix sets the dscale to zero for NCEP files when nbits == 0 or ngroups == 0.
  *
  * ## Usage
  * -fix_ncep_3
