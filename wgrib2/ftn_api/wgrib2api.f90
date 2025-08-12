@@ -1,3 +1,15 @@
+!> @file
+!> @brief Module for the wgrib2 Fortran API to read and write grib2 files.
+!>
+!> ### Program History Log
+!> Date | Programmer | Comments
+!> -----|------------|---------
+!> 12/2015 | W. Ebisuzaki | Initial
+!> 01/2017 | W. Ebisuzaki | grb2_wrt, grb2_inq, added optional parameter debug
+!> 01/2018 | W. Ebisuzaki | added real, parameter :: grb2_UNDEFINED
+!>
+!> @author Public Domain: Wesley Ebisuzaki @date 12/2015
+
 ! fortran api for reading and writing grib2
 ! 12/2015  Wesley Ebisuzaki   Public Domain
 !
@@ -40,7 +52,9 @@
 module wgrib2api
    use wgrib2lowapi
 
+   !> Undefined value - if bitmap.
    real, parameter ::   grb2_UNDEFINED = 9.999e20
+
    integer, private :: next_mem
    private :: reserve_mem_buffer_name
 
@@ -52,6 +66,13 @@ contains
 !                     3) returns the integer value of the memory file
 !                     4)
 
+   !> This function reserves a memory file (@mem:XX) and returns its name and integer value.
+   !>
+   !> @param[in] buffer Integer buffer to hold the memory file number.
+   !>
+   !> @return Character string containing the name of the memory file and its integer value.
+   !>
+   !> @author Wesley Ebisuzaki @date 12/2015
    character(len=7) function reserve_mem_buffer_name(buffer)
       integer :: buffer
       buffer = next_mem
@@ -68,20 +89,62 @@ contains
       next_mem = next_mem - 1
    end function reserve_mem_buffer_name
 
+   !> This function checks if a GRIB2 value is defined.
+   !>
+   !> @param[in] x Real value to check.
+   !>
+   !> @return Returns true if the value is defined, false otherwise.
+   !>
+   !> @author Wesley Ebisuzaki @date 12/2015
    logical function grb2_DEFINED_VAL(x)
       real, intent(in) :: x
       grb2_DEFINED_VAL = (x < 9.9989e20) .or. (x > 9.9991e20)
       return
    end function grb2_DEFINED_VAL
 
+   !> This function checks if a GRIB2 value is undefined.
+   !>
+   !> @param[in] x Real value to check.
+   !>
+   !> @return Returns true if the value is undefined, false otherwise.
+   !>
+   !> @author Wesley Ebisuzaki @date 12/2015
    logical function grb2_UNDEFINED_VAL(x)
       real, intent(in) :: x
       grb2_UNDEFINED_VAL = (x >= 9.9989e20) .and. (x <= 9.9991e20)
       return
    end function grb2_UNDEFINED_VAL
 
-   integer function grb2_var_args(lines,istart,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11, &
-      a12,a13,a14,a15,a16,a17,a18,a19,a20)
+   !> This function counts the number of variable arguments and populates the lines array.
+   !>
+   !> @param[in] lines Pointer to character array that holds the variable arguments.
+   !> @param[in] istart Starting index for populating the lines array (initial value of n).
+   !> @param[in] a1 First optional argument.
+   !> @param[in] a2 Second optional argument.
+   !> @param[in] a3 Third optional argument.
+   !> @param[in] a4 Fourth optional argument.
+   !> @param[in] a5 Fifth optional argument.
+   !> @param[in] a6 Sixth optional argument.
+   !> @param[in] a7 Seventh optional argument.
+   !> @param[in] a8 Eighth optional argument.
+   !> @param[in] a9 Ninth optional argument.
+   !> @param[in] a10 Tenth optional argument.
+   !> @param[in] a11 Eleventh optional argument.
+   !> @param[in] a12 Twelfth optional argument.
+   !> @param[in] a13 Thirteenth optional argument.
+   !> @param[in] a14 Fourteenth optional argument.
+   !> @param[in] a15 Fifteenth optional argument.
+   !> @param[in] a16 Sixteenth optional argument.
+   !> @param[in] a17 Seventeenth optional argument.
+   !> @param[in] a18 Eighteenth optional argument.
+   !> @param[in] a19 Nineteenth optional argument.
+   !> @param[in] a20 Twentieth optional argument.
+   !>
+   !> @return Returns n, the number of arguments present in the lines array.
+   !>
+   !> @author Wesley Ebisuzaki @date 12/2015
+   integer function grb2_var_args(lines, istart, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, &
+         a12, a13, a14, a15, a16, a17, a18, a19, a20)
 
       character (len=*), optional, intent(in):: a1,a2,a3,a4,a5,a6,a7,a8,a9,a10
       character (len=*), optional, intent(in):: a11,a12,a13,a14,a15,a16,a17
@@ -179,6 +242,15 @@ contains
       return
    end function grb2_var_args
 
+   !> This function adds a line to the lines array and updates n.
+   !>
+   !> @param[in] lines Pointer to character array that holds the arguments.
+   !> @param[in] n Current number of arguments.
+   !> @param[in] line The line to add.
+   !>
+   !> @return 0 for success
+   !>
+   !> @author Wesley Ebisuzaki @date 12/2015
    integer function add_line(lines,n,line)
       character (len=*), intent(inout):: lines(:)
       character (len=*), intent(in):: line
@@ -191,8 +263,37 @@ contains
       return
    end function add_line
 
-   integer function wgrib2a(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11, &
-      a12,a13,a14,a15,a16,a17,a18,a19,a20)
+   !> This function calls the wgrib2c command with the specified arguments. Same as 
+   !> $ wgrib2 [list of strings].
+   !>
+   !> Not used by grb2_* routines.
+   !>
+   !> @param[in] a1 First optional argument.
+   !> @param[in] a2 Second optional argument.
+   !> @param[in] a3 Third optional argument.
+   !> @param[in] a4 Fourth optional argument.
+   !> @param[in] a5 Fifth optional argument.
+   !> @param[in] a6 Sixth optional argument.
+   !> @param[in] a7 Seventh optional argument.
+   !> @param[in] a8 Eighth optional argument.
+   !> @param[in] a9 Ninth optional argument.
+   !> @param[in] a10 Tenth optional argument.
+   !> @param[in] a11 Eleventh optional argument.
+   !> @param[in] a12 Twelfth optional argument.
+   !> @param[in] a13 Thirteenth optional argument.
+   !> @param[in] a14 Fourteenth optional argument.
+   !> @param[in] a15 Fifteenth optional argument.
+   !> @param[in] a16 Sixteenth optional argument.
+   !> @param[in] a17 Seventeenth optional argument.
+   !> @param[in] a18 Eighteenth optional argument.
+   !> @param[in] a19 Nineteenth optional argument.
+   !> @param[in] a20 Twentieth optional argument.
+   !>
+   !> @return 0 for success, error code otherwise.
+   !>
+   !> @author Wesley Ebisuzaki @date 12/2015
+   integer function wgrib2a(a1 ,a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, &
+         a12, a13, a14, a15, a16, a17, a18, a19, a20)
 
       use iso_c_binding
       use wgrib2lowapi
@@ -205,16 +306,28 @@ contains
       character (len=300) :: lines(20)
 
       n = grb2_var_args(lines,0,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11, &
-         a12,a13,a14,a15,a16,a17,a18,a19,a20)
+                        a12,a13,a14,a15,a16,a17,a18,a19,a20)
 
       wgrib2a = wgrib2c(n,lines,300)
       return
    end function wgrib2a
 
-!
-!        grb2_mk_inv
-!        writes the match inventory to a file
-!
+   !> This function writes the match inventory to a file.
+   !>
+   !> ### Program History Log
+   !> Date | Programmer | Comments
+   !> -----|------------|---------
+   !> 12/2015 | W. Ebisuzaki | Initial
+   !> 12/2016 | W. Ebisuzaki | fixed -rewind_init grb, fixed -rewind_init-ignore error return
+   !> 11/2019 | W. Ebisuzaki | added optional parameter  use_ncep_table=logical_value
+   !>
+   !> @param[in] grbfile Input GRIB file.
+   !> @param[in] invfile Output inventory file.
+   !> @param[in] use_ncep_table Logical flag to use NCEP table (optional).
+   !>
+   !> @return 0 for success, error code otherwise.
+   !>
+   !> @author Wesley Ebisuzaki @date 12/2015
    integer function grb2_mk_inv(grbfile, invfile, use_ncep_table)
       use wgrib2lowapi
       implicit none
@@ -226,10 +339,10 @@ contains
 
       n = 0
       if (present(use_ncep_table)) then
-      if (use_ncep_table) then
-               i = add_line(cmd,n,'-set')
-               i = add_line(cmd,n,'center')
-               i = add_line(cmd,n,'7')
+         if (use_ncep_table) then
+            i = add_line(cmd,n,'-set')
+            i = add_line(cmd,n,'center')
+            i = add_line(cmd,n,'7')
          endif
       endif
       i = add_line(cmd,n,grbfile)
@@ -286,9 +399,14 @@ contains
 !        return
 !        end function grb2_filter
 !
-!       grb2_free_file(name)
-!       frees file from wgrib2's list of open files
 
+   !> This function releases file's handle after next call to wgrib2.
+   !>
+   !> @param[in] file Name of the file to free from wgrib2's list of open files.
+   !>
+   !> @return 0 for success, error code otherwise.
+   !>
+   !> @author Wesley Ebisuzaki @date 12/2015
    integer function grb2_free_file(file)
       use wgrib2lowapi
       implicit none
@@ -301,14 +419,68 @@ contains
       return
    end function grb2_free_file
 
-!
-!        grb2_wrt: grib2 wrt
-!               write grib message
-!
+   !> This function writes a grib message to a specified file.
+   !>
+   !> Must specify either data1 or data2, but not both.
+   !>
+   !> ### Program History Log
+   !> Date | Programmer | Comments
+   !> -----|------------|---------
+   !> 12/2015 | W. Ebisuzaki | Initial
+   !> 10/2016 | W. Ebisuzaki | added append=integer, fixed data2=grid
+   !> 01/2017 | W. Ebisuzaki | order code fixed, use we:ns, we:sn or raw
+   !>
+   !> @param[in] grbfile Name of the grib file to write.
+   !> @param[in] template_file Name of the grib file that is used as a template for the new grib file.
+   !> @param[in] template_id ID of the template to use.
+   !> @param[in] data1 Optional 1D array of real numbers (grid data). Must be specified if data2 is not.
+   !> @param[in] data2 Optional 2D array of real numbers (grid data). Must be specified if data1 is not.
+   !> @param[in] packing Packing type (optional). Used with -set_grib_type option to control the packing
+   !> method of the new grib message. If packing is not specified, the default packing method will be used (c2).
+   !> @param[in] order Order of the data (optional). Used with -order option to specify the order of the
+   !> data. The default configuration is for wgrib2 to convert all data into 'we:sn' order.
+   !> If order = 'raw', fastest data must be in same order as the template.
+   !> If order = 'we:ns', data must be in 'we:ns' order.
+   !> If order = 'we:sn', data must be in 'we:sn' order.
+   !> @param[in] var Variable name (optional). Used with -set_var option to change the variable name in the 
+   !> grib message.
+   !> @param[in] meta String to specify the metadata (optional). Used with -set_metadata_str option to apply 
+   !> the metadata to the grib message.
+   !> @param[in] append Flag to append to output files (optional). If non-zero, the -append option is applied 
+   !> to append to a currently existing file.
+   !> @param[in] level String representation of the level/layer of the field (optional). Used with -set_lev 
+   !> option to change the level/layer 
+   !> of the field in the grib message. 
+   !> @param[in] date Reference date (optional). Used with -set_date option to change the reference date in the
+   !> grib message.
+   !> @param[in] timing String representation of ftime (optional). Used with -set_ftime2 option to change the ftime
+   !> in the grib message.
+   !> @param[in] fhour Forecast hour (optional). Used with -set_ftime option to change the ftime to [fhour] hour fcst
+   !> in the grib message.
+   !> @param[in] fminute Forecast minute (optional). Used with -set_ftime option to change the ftime to [fminute] minute
+   !> fcst in the grib message.
+   !> @param[in] fhour_ave1 Forecast hour average 1 (optional). Used with fhour_ave2 and -set_ave option to change the ftime
+   !> in the grib message. This option was used with version 1 of ftime which will be removed in future releases.
+   !> @param[in] fhour_ave2 Forecast hour average 2 (optional). Used with fhour_ave1 and -set_ave option to change the ftime
+   !> in the grib message. This option was used with version 1 of ftime which will be removed in future releases.
+   !> @param[in] fhour_acc1 Forecast hour accumulation 1 (optional). Used with fhour_acc2 and -set_ave option to change the ftime
+   !> in the grib message. This option was used with version 1 of ftime which will be removed in future releases.
+   !> @param[in] fhour_acc2 Forecast hour accumulation 2 (optional). Used with fhour_acc1 and -set_ave option to change the ftime
+   !> in the grib message. This option was used with version 1 of ftime which will be removed in future releases.
+   !> @param[in] center Center ID (optional). Used with -set center option to change the center ID in the grib message.
+   !> @param[in] subcenter Subcenter ID (optional). Used with -set subcenter option to change the subcenter ID in the grib message.
+   !> @param[in] mb Real value of level of the field (optional). Used with -set_lev option to change the level in the grib message.
+   !> @param[in] debug Debug flag (optional).
+   !> @param[in] encode_bits Number of bits(optional). Used with -set_bin_prec option to change number of bits to encode grid
+   !> point data in the grib message.
+   !>
+   !> @return 0 for success, error code otherwise.
+   !>
+   !> @author Wesley Ebisuzaki @date 12/2015
    integer function grb2_wrt(grbfile, template_file,  template_id, &
-      data1, data2, packing, order, var, meta, append, level, date, timing, &
-      fhour, fminute, fhour_ave1, fhour_ave2, fhour_acc1, fhour_acc2, &
-      center, subcenter, mb, debug, encode_bits)
+         data1, data2, packing, order, var, meta, append, level, date, timing, &
+         fhour, fminute, fhour_ave1, fhour_ave2, fhour_acc1, fhour_acc2, &
+         center, subcenter, mb, debug, encode_bits)
 
       use iso_c_binding
       use wgrib2lowapi
@@ -528,13 +700,86 @@ contains
 !        use RPN register MAX-1  lat
 !        use RPN register MAX-2  lon
 !
+
+   !> This function performs an inquiry of a grib message. Uses optional arguments to get more information including grid data.
+   !>
+   !> ### Program History Log
+   !> Date | Programmer | Comments
+   !> -----|------------|---------
+   !> 12/2015 | W. Ebisuzaki | Initial
+   !> 10/2016 | W. Ebisuzaki | added verf_date, verf_edate, start_date, start_edate, end_date, end_edate
+   !> 01/2017 | W. Ebisuzaki | added copy=file
+   !>
+   !> @param[in] grbfile Input grib file.
+   !> @param[in] invfile Inventory of input file.
+   !> @param[in] a1 First optional argument.
+   !> @param[in] a2 Second optional argument.
+   !> @param[in] a3 Third optional argument.
+   !> @param[in] a4 Fourth optional argument.
+   !> @param[in] a5 Fifth optional argument.
+   !> @param[in] a6 Sixth optional argument.
+   !> @param[in] a7 Seventh optional argument.
+   !> @param[in] a8 Eighth optional argument.
+   !> @param[in] a9 Ninth optional argument.
+   !> @param[in] a10 Tenth optional argument.
+   !> @param[in] a11 Eleventh optional argument.
+   !> @param[in] a12 Twelfth optional argument.
+   !> @param[in] a13 Thirteenth optional argument.
+   !> @param[in] a14 Fourteenth optional argument.
+   !> @param[in] a15 Fifteenth optional argument.
+   !> @param[in] a16 Sixteenth optional argument.
+   !> @param[in] a17 Seventeenth optional argument.
+   !> @param[in] a18 Eighteenth optional argument.
+   !> @param[in] a19 Nineteenth optional argument.
+   !> @param[in] a20 Twentieth optional argument.
+   !> @param[in] npts Number of points, equivalent to nx*ny (optional). Ignored if NULL.
+   !> @param[in] nx Number of grid points in the x-direction (optional). Ignored if NULL.
+   !> @param[in] ny Number of grid points in the y-direction (optional). Ignored if NULL.
+   !> @param[in] nmatch Number of matches found (optional). Ignored if NULL.
+   !> @param[in] msgno Message number (optional). Ignored if NULL.
+   !> @param[in] submsg Sub-message number (optional). Ignored if NULL.
+   !> @param[in] data1 1D array of real numbers for grid data (optional). Ignored if NULL.
+   !> @param[in] nread Number of data points read (optional). Ignored if NULL.
+   !> @param[in] data2 2D array of real numbers for grid data (optional). Ignored if NULL.
+   !> @param[in] lat 2D array of real numbers for latitude (optional). Ignored if NULL.
+   !> @param[in] lon 2D array of real numbers for longitude (optional). Ignored if NULL.
+   !> @param[in] ref_date Reference date (optional). Ignored if NULL.
+   !> @param[in] ref_edate ??? (optional). Ignored if NULL.
+   !> @param[in] verf_date Verification date (optional). Ignored if NULL.
+   !> @param[in] verf_edate ??? (optional). Ignored if NULL.
+   !> @param[in] start_date Start date (optional). Ignored if NULL.
+   !> @param[in] start_edate ??? (optional). Ignored if NULL.
+   !> @param[in] end_date End date (optional). Ignored if NULL.
+   !> @param[in] end_edate ??? (optional). Ignored if NULL.
+   !> @param[in] order Order of the data (optional). Used with -order option to specify the order of the data.
+   !> @param[in] lastuse Flag indicating if this is the last time file will be used (optional). If non-zero,
+   !> the file will be closed after this call using -transient option.
+   !> @param[in] close File to close after this call (optional). Used with -transient option.
+   !> @param[in] desc Grid info description (optional). Populated with last inventory item of -S option. 
+   !> Ignored if NULL.
+   !> @param[in] grid_desc Grid description (optional). Populated with last inventory item of -grid option. 
+   !> Ignored if NULL.
+   !> @param[in] debug Debug flag (optional).
+   !> @param[in] copy Name of file where GRIB record is written (optional). Used with -grib option. 
+   !> @param[in] sequential Flag indicating whether or not to rewind inventory file (optional). If not null,
+   !> the -end option is used, stopping the processing of the grib file after one line of the inventory has been 
+   !> written. If non-zero, rewind_inv is set to false, meaning the inventory file will not be rewound after reading.
+   !> If null, rewind_inv is set to true by default.
+   !> @param[in] regex Flag indicating whether or not to use a POSIX extended regular expression. If non-zero,
+   !> the -egrep option is used. If zero or null, the -fgrep option is used.
+   !> @param[in] get_ref_edate ???
+   !> @param[in] get_start_edate ???
+   !> @param[in] get_end_edate ???
+   !>
+   !> @return Number of matches found or -1 if an error occurred.
+   !>
+   !> @author Wesley Ebisuzaki @date 12/2015
    integer function grb2_inq(grbfile, invfile, &
-      a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11, &
-      a12,a13,a14,a15,a16,a17,a18,a19,a20, &
-      npts,nx,ny,nmatch,msgno,submsg,data1,nread,data2,lat,lon,ref_date,ref_edate, &
-      verf_date, verf_edate,start_date,start_edate,end_date,end_edate,order,lastuse,close,&
-      desc,grid_desc,debug,copy,sequential,regex,get_ref_edate, get_start_edate, &
-      get_end_edate)
+         a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20, &
+         npts, nx, ny, nmatch, msgno, submsg, data1, nread, data2, lat, lon, ref_date, ref_edate, &
+         verf_date, verf_edate, start_date, start_edate, end_date, end_edate, order, lastuse, close, &
+         desc, grid_desc, debug, copy, sequential, regex, get_ref_edate, get_start_edate, &
+         get_end_edate)
 
       use wgrib2lowapi
       implicit none
@@ -953,6 +1198,14 @@ contains
 !	grb2_rewind(file)
 !	     rewinds internal wgrib2 file  .. grid is from N to S, default is from S to N
 !
+
+   !> This function rewinds the internal wgrib2 file by calling the -rewind_init [infile] option.
+   !>
+   !> @param[in] infile The name of the input file to rewind.
+   !>
+   !> @return 0 for success, error code otherwise.
+   !>
+   !> @author Wesley Ebisuzaki @date 12/2015
    integer function grb2_rewind(infile)
       use wgrib2lowapi
 
@@ -969,10 +1222,13 @@ contains
 !               combines u and v together
 !
 
-!	grb2_set_substring(string,substring,position)
-!               returns 0 if ok
-!               returns 8 if error
-
+   !> This function sets a substring in a string at a specified position.
+   !>
+   !> @param[in] string The original string to modify.
+   !> @param[in] substring The substring to insert.
+   !> @param[in] position The position to insert the substring.
+   !>
+   !> @return 0 for success, 8 for error.
 	integer function grb2_set_substring(string, substring, position)
 
       character (len=*), intent(inout) :: string
@@ -1009,6 +1265,14 @@ contains
 
 !	grb2_get_substring(string,position)
 
+   !> This function retrieves a substring from a string at a specified position.
+   !>
+   !> @param[in] string The original string from which to retrieve the substring.
+   !> @param[in] position The position to retrieve the substring.
+   !>
+   !> @return The extracted substring or an empty string if not found.
+   !>
+   !> @author Wesley Ebisuzaki @date 12/2015
    character (len=200) function grb2_get_substring(string, position)
 
       character (len=*), intent(in) :: string

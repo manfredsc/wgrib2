@@ -1,17 +1,26 @@
+/** @file
+ * @brief Defines callable C wrapper for Fortran api.
+ * @author Public Domain: Wesley Ebisuzaki @date 05/2015
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-/*
- * wgrib2c: a fortran callable wrapper for callable wgrib2
- *
- * 5/2015 Wesley Ebisuzaki   Public Domain
- *
- */
-
 int wgrib2(int argc, char **argv);
 int wgrib2c(int n, const char *lines, int len);
 
+/**
+ * A Fortran callable wrapper for callable wgrib2.
+ *
+ * Same as $ wgrib2 [list of strings]
+ * 
+ * @param n Number of arguments present in lines.
+ * @param lines Pointer to argument array.
+ * @param len Length of lines.
+ *
+ * @return 0 for success, error code otherwise.
+ */
 int wgrib2c(int n, const char *lines, int len) {
     int i, argc;
     char *buf, **argv, *s, *t;

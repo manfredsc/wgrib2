@@ -1,3 +1,8 @@
+!> @file
+!> @brief Module containing interfaces to the C functions used by the Fortran API.
+!> @author Public Domain: Wesley Ebisuzaki @date 10/2015
+
+!
 ! fortran lowapi for reading and writing grib2
 ! 10/2015  Wesley Ebisuzaki   Public Domain
 !
