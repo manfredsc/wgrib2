@@ -32,6 +32,9 @@ extern int fix_ncep_4_flag;
  *
  * This option is used to fix NCEP grib2 files where DX and DY are undefined.
  *
+ * ## Usage
+ * -fix_ncep_4
+ * 
  * @param ARG0 ???
  * 
  * @return 0 for success
