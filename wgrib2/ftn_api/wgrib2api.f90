@@ -744,13 +744,13 @@ contains
    !> @param[in] lat 2D array of real numbers for latitude (optional). Ignored if NULL.
    !> @param[in] lon 2D array of real numbers for longitude (optional). Ignored if NULL.
    !> @param[in] ref_date Reference date (optional). Ignored if NULL.
-   !> @param[in] ref_edate ??? (optional). Ignored if NULL.
+   !> @param[in] ref_edate Reference date with minutes and seconds (optional). Ignored if NULL.
    !> @param[in] verf_date Verification date (optional). Ignored if NULL.
-   !> @param[in] verf_edate ??? (optional). Ignored if NULL.
+   !> @param[in] verf_edate Verification date with minutes and seconds (optional). Ignored if NULL.
    !> @param[in] start_date Start date (optional). Ignored if NULL.
-   !> @param[in] start_edate ??? (optional). Ignored if NULL.
+   !> @param[in] start_edate Start date with minutes and seconds (optional). Ignored if NULL.
    !> @param[in] end_date End date (optional). Ignored if NULL.
-   !> @param[in] end_edate ??? (optional). Ignored if NULL.
+   !> @param[in] end_edate End date with minutes and seconds (optional). Ignored if NULL.
    !> @param[in] order Order of the data (optional). Used with -order option to specify the order of the data.
    !> @param[in] lastuse Flag indicating if this is the last time file will be used (optional). If non-zero,
    !> the file will be closed after this call using -transient option.
@@ -767,9 +767,12 @@ contains
    !> If null, rewind_inv is set to true by default.
    !> @param[in] regex Flag indicating whether or not to use a POSIX extended regular expression. If non-zero,
    !> the -egrep option is used. If zero or null, the -fgrep option is used.
-   !> @param[in] get_ref_edate ???
-   !> @param[in] get_start_edate ???
-   !> @param[in] get_end_edate ???
+   !> @param[in] get_ref_edate If present, the reference date with minutes and seconds will be obtained and written
+   !> to a new file. Ignored if NULL.
+   !> @param[in] get_start_edate If present, the start date with minutes and seconds will be obtained and written
+   !> to a new file. Ignored if NULL.
+   !> @param[in] get_end_edate If present, the end date with minutes and seconds will be obtained and written
+   !> to a new file. Ignored if NULL.
    !>
    !> @return Number of matches found or -1 if an error occurred.
    !>
