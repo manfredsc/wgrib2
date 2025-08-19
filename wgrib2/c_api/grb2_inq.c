@@ -1,11 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <limits.h>
-#include "c_wgrib2api.h"
-
-/* 3/2018 Public Domain, Wesley Ebisuzaki
- *
+/** @file
+ * @brief Inquiry routines for the C API.
+ * 
  * This is part of c_wgrib2api: grb2_inq(...)
  *
  * To support a variable number of search strings,
@@ -16,20 +11,57 @@
  *      from c_wgrib2api.h
  *   2) Change calls to grb2_inq(...) to grb2_inqVA(...,NULL)
  *   The call code to grb2_inqVA() will work in C99 systems.
- *
- *  options = SEQUENTIAL | DATA | LATLON | WENS | RAW_ORDER | META | GRIDMETA | REGEX
- *
- * v0.99 3/2018
+ * 
+ * @author Public Domain: Wesley Ebisuzaki @date 3/2018
  */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <limits.h>
+#include "c_wgrib2api.h"
 
 size_t wgrib2_get_mem_buffer_size(int n);
 int wgrib2_get_mem_buffer(unsigned char *my_buffer, size_t size, int n);
 int wgrib2_get_reg_data(float *data, size_t size, int reg);
 
-static int last_options, good;
-static unsigned int npnts, nx_, ny_;
-static int submsg, msg_no, inv_no;
+/** Last options used. */
+static int last_options;
 
+/** Flag indicating if the inquiry was successful. */
+static int good;
+
+/** Number of points in grid. */
+static unsigned int npnts;
+
+/** Number of grid points in the x direction. */
+static unsigned int nx_;
+
+/** Number of grid points in the y direction. */
+static unsigned int ny_;
+
+/** Sub-message number. */
+static int submsg;
+
+/** Message number. */
+static int msg_no;
+
+/** Inventory number. */
+static int inv_no;
+
+/**
+ * This function performs an inquiry of a grib message.
+ * 
+ * @param grb Input grib file.
+ * @param inv Inventory of input file.
+ * @param options Bitwise OR of option flags.
+ * options = SEQUENTIAL | DATA | LATLON | WENS | RAW_ORDER | META | GRIDMETA | REGEX
+ * @param ... Additional optional arguments.
+ *
+ * @return The number of points in the grid, or 0 if an error occurred.
+ *
+ * @author Wesley Ebisuzaki @date 3/2018
+ */
 long long int grb2_inqVA(const char *grb, const char *inv, unsigned int options, ... ) {
 
     va_list valist;
@@ -144,6 +176,18 @@ long long int grb2_inqVA(const char *grb, const char *inv, unsigned int options,
     return (long long int) npnts;
 }
 
+/**
+ * Get memory-copy of grid data from RPN register.
+ * 
+ * @param data Pointer to the data array.
+ * @param ndata Number of data points.
+ * 
+ * @return 0 on success, 1 on error.
+ * 
+ * @note Grid data stored in register 19.
+ * 
+ * @author Wesley Ebisuzaki @date 3/2018
+ */
 int grb2_get_data(float *data, int ndata) {
 
     if (good == 0) {
@@ -162,7 +206,19 @@ int grb2_get_data(float *data, int ndata) {
     return  wgrib2_get_reg_data(data, ndata, 19);
 }
 
-
+/**
+ * Get memory-copy of longitude and latitude data from RPN registers.
+ *
+ * @param lon Pointer to the longitude array.
+ * @param lat Pointer to the latitude array.
+ * @param ndata Number of data points.
+ *
+ * @return 0 on success, error code otherwise.
+ *
+ * @note Longitude and latitude data stored in registers 17 and 18, respectively.
+ * 
+ * @author Wesley Ebisuzaki @date 3/2018
+ */
 int grb2_get_lonlat(float *lon, float *lat, int ndata) {
     int err1, err2;
     if (good == 0) {
@@ -183,6 +239,15 @@ int grb2_get_lonlat(float *lon, float *lat, int ndata) {
     return err1 + err2;
 }
 
+/**
+ * Get the size of the memory buffer for metadata stored in RPN register.
+ *
+ * @return Size of the memory buffer for metadata, or 0 if an error occurred.
+ *
+ * @note Metadata stored in register 18.
+ *
+ * @author Wesley Ebisuzaki @date 3/2018
+ */
 int grb2_size_meta(void) {
     unsigned int size;
 
@@ -199,6 +264,18 @@ int grb2_size_meta(void) {
     return (int) (size + 1);
 }
 
+/**
+ * Get memory-copy of metadata from RPN register.
+ * 
+ * @param meta Pointer to the metadata array.
+ * @param nbytes Size of the metadata buffer.
+ * 
+ * @return 0 on success, error code otherwise.
+ * 
+ * @note Metadata stored in register 18.
+ * 
+ * @author Wesley Ebisuzaki @date 3/2018
+ */
 int grb2_get_meta(unsigned char *meta, int nbytes) {
     size_t size;
     int err;
@@ -226,6 +303,15 @@ int grb2_get_meta(unsigned char *meta, int nbytes) {
     return err;
 }
 
+/**
+ * Get the size of the memory buffer for grid metadata stored in RPN register.
+ *
+ * @return Size of the memory buffer for grid metadata, or 0 if an error occurred.
+ *
+ * @note Grid metadata stored in register 17.
+ *
+ * @author Wesley Ebisuzaki @date 3/2018
+ */
 int grb2_size_gridmeta(void) {
     unsigned int size;
 
@@ -242,6 +328,18 @@ int grb2_size_gridmeta(void) {
     return (int) (size + 1);
 }
 
+/**
+ * Get memory-copy of grid metadata from RPN register.
+ * 
+ * @param meta Pointer to the grid metadata array.
+ * @param nbytes Size of the grid metadata buffer.
+ * 
+ * @return 0 on success, error code otherwise.
+ * 
+ * @note Grid metadata stored in register 17.
+ * 
+ * @author Wesley Ebisuzaki @date 3/2018
+ */
 int grb2_get_gridmeta(unsigned char *meta, int nbytes) {
     size_t size;
     int err;

@@ -1,23 +1,37 @@
+/** @file
+ * @brief Handles arguments for wgrib2.
+ * @author Public Domain: Wesley Ebisuzaki @date 3/2018
+ */
 #include <stdio.h>
 #include <string.h>
 #include "c_wgrib2api.h"
 
-/*  10/2024   Public Domain   Wesley Ebisuzaki
- * handles arguments for wgrib2
- */
-
 int wgrib2(int argc, const char **argv);
 
-static int n_cmds = -1;
-char cmd[N_CMDS][CMD_LEN];
-char *cmds[N_CMDS+1];
+static int n_cmds = -1;     /**< Number of commands in command list. */
+char cmd[N_CMDS][CMD_LEN]; /** List of command strings. */
+char *cmds[N_CMDS+1]; /**< List of formatted command-line options. */
 
+/**
+ * Initialize the list of command-line options for wgrib2.
+ *
+ * @author Wesley Ebisuzaki @date 3/2018
+ */
 void wgrib2_init_cmds(void) {
     cmds[0] = "wgrib2 C_api";
     n_cmds = 1;
     return;
 }
 
+/**
+ * Add a command to the list for wgrib2.
+ *
+ * @param string The command string to add. Cannot be longer than CMD_LEN.
+ * 
+ * @return 0 on success, error code otherwise.
+ *
+ * @author Wesley Ebisuzaki @date 3/2018
+ */
 int wgrib2_add_cmd(const char *string) {
     int j;
 
@@ -30,10 +44,22 @@ int wgrib2_add_cmd(const char *string) {
     return 0;
 }
 
+/**
+ * Execute the command-line options for wgrib2.
+ *
+ * @return 0 on success, error code otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 3/2018
+ */
 int wgrib2_cmd(void) {
     return wgrib2(n_cmds, (const char **) cmds);
 }
 
+/**
+ * List all command-line options used.
+ *
+ * @author Wesley Ebisuzaki @date 3/2018
+ */
 int wgrib2_list_cmd(void) {
     int i;
     if (n_cmds < 0) {

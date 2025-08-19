@@ -1,12 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <limits.h>
-#include <string.h>
-#include "c_wgrib2api.h"
-
-/* 3/2018 Public Domain, Wesley Ebisuzaki
- *
+/**
+ * @file
+ * @brief Routine to write grib files for C API.
+ * 
  * This is part of c_wgrib2api: grb2_wrt(...)
  *
  * To support a variable number of search strings,
@@ -17,12 +12,32 @@
  *      from c_wgrib2api.h
  *   2) Change calls to grb2_wrt(...) to grb2_wrtVA(...,NULL)
  *   The call code to grb2_wrtVA() will work in C99 systems.
- *
- * v0.99 3/2018
+ * 
+ * @author Public Domain: Wesley Ebisuzaki @date 3/2018
  */
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <limits.h>
+#include <string.h>
+#include "c_wgrib2api.h"
 
 int wgrib2_set_reg(float *data, size_t size, int reg);
 
+/**
+ * This function writes a grib message to a specified file.
+ * 
+ * @param grb Name of the grib file to write.
+ * @param template Name of the grib file that is used as a template for the new grib file.
+ * @param msgno Message number.
+ * @param data Pointer to the data array.
+ * @param ndata Number of data points.
+ * @param ... Additional optional arguments.
+ *
+ * @return 0 on success, error code otherwise.
+ *
+ * @author Wesley Ebisuzaki @date 3/2018
+ */
 int grb2_wrtVA(const char *grb, const char *template, int msgno, float *data, 
         unsigned int ndata, ...) {
     va_list valist;
