@@ -46,10 +46,10 @@ long long int grb2_inqVA(const char *grb, const char *inv, unsigned int options,
     wgrib2_add_cmd("-i_file");
     wgrib2_add_cmd(inv);
     if (options & SEQUENTIAL) {
-	wgrib2_add_cmd("-end");
+        wgrib2_add_cmd("-end");
     }
     else {
-	wgrib2_add_cmd("-rewind_init");
+        wgrib2_add_cmd("-rewind_init");
         wgrib2_add_cmd(inv);
     }
 
@@ -62,7 +62,7 @@ long long int grb2_inqVA(const char *grb, const char *inv, unsigned int options,
     while (search) {
         wgrib2_add_cmd( (options & REGEX) ? "-egrep" : "-fgrep" );
         wgrib2_add_cmd(search);
-	search = (char *) va_arg(valist, char * );
+        search = (char *) va_arg(valist, char * );
     }
     va_end(valist);
 
@@ -86,13 +86,13 @@ long long int grb2_inqVA(const char *grb, const char *inv, unsigned int options,
     /* WENS - order of the data */
     if (options & WENS) {
         if (options & LATLON) {
-	    fprintf(stderr,"grb2_inq: WENS option cannot be used at same time as LATLON option\n");
-	    return 1;
-	}
+            fprintf(stderr,"grb2_inq: WENS option cannot be used at same time as LATLON option\n");
+            return 1;
+        }
         if (options & RAW_ORDER) {
-	    fprintf(stderr,"grb2_inq: WENS option cannot be used at same time as RAW_ORDER option\n");
-	    return 1;
-	}
+            fprintf(stderr,"grb2_inq: WENS option cannot be used at same time as RAW_ORDER option\n");
+            return 1;
+        }
         wgrib2_add_cmd("-order");
         wgrib2_add_cmd("we:ns");
     }
@@ -100,9 +100,9 @@ long long int grb2_inqVA(const char *grb, const char *inv, unsigned int options,
     /* RAW_ORDER - order of the data */
     if (options & RAW_ORDER) {
         if (options & LATLON) {
-	    fprintf(stderr,"grb2_inq: RAW_ORDER option cannot be used at same time as LATLON option\n");
-	    return 1;
-	}
+            fprintf(stderr,"grb2_inq: RAW_ORDER option cannot be used at same time as LATLON option\n");
+            return 1;
+        }
         wgrib2_add_cmd("-order");
         wgrib2_add_cmd("raw");
     }
@@ -147,16 +147,16 @@ long long int grb2_inqVA(const char *grb, const char *inv, unsigned int options,
 int grb2_get_data(float *data, int ndata) {
 
     if (good == 0) {
-	fprintf(stderr,"grb2_get_data: last find did not work.\n");
-	return 1;
+        fprintf(stderr,"grb2_get_data: last find did not work.\n");
+        return 1;
     }
     if (ndata != npnts) {
-	fprintf(stderr,"grb2_get_data: wrong size data.\n");
-	return 1;
+        fprintf(stderr,"grb2_get_data: wrong size data.\n");
+        return 1;
     }
     if ((last_options & DATA) == 0) {
-	fprintf(stderr,"grb2_get_data: grb2_inq did not request reading data.\n");
-	return 1;
+        fprintf(stderr,"grb2_get_data: grb2_inq did not request reading data.\n");
+        return 1;
     }
 
     return  wgrib2_get_reg_data(data, ndata, 19);
@@ -166,16 +166,16 @@ int grb2_get_data(float *data, int ndata) {
 int grb2_get_lonlat(float *lon, float *lat, int ndata) {
     int err1, err2;
     if (good == 0) {
-	fprintf(stderr,"grb2_get_lonlat: last find did not work.\n");
-	return 1;
+        fprintf(stderr,"grb2_get_lonlat: last find did not work.\n");
+        return 1;
     }
     if (ndata != npnts) {
-	fprintf(stderr,"grb2_get_lonlat: wrong size data.\n");
-	return 1;
+        fprintf(stderr,"grb2_get_lonlat: wrong size data.\n");
+        return 1;
     }
     if ((last_options & LONLAT) == 0) {
-	fprintf(stderr,"grb2_get_lonalt: grb2_inq did not request reading lonlat.\n");
-	return 1;
+        fprintf(stderr,"grb2_get_lonlat: grb2_inq did not request reading lonlat.\n");
+        return 1;
     }
 
     err1 = wgrib2_get_reg_data(lon, ndata, 17);
@@ -187,12 +187,12 @@ int grb2_size_meta(void) {
     unsigned int size;
 
     if (good == 0) {
-	fprintf(stderr,"grb2_size_meta: last find did not work.\n");
-	return 0;
+        fprintf(stderr,"grb2_size_meta: last find did not work.\n");
+        return 0;
     }
     if ((last_options & META) == 0) {
-	fprintf(stderr,"grb2_size_meta: grb2_inq did not request reading metadata.\n");
-	return 0;
+        fprintf(stderr,"grb2_size_meta: grb2_inq did not request reading metadata.\n");
+        return 0;
     }
     size = (unsigned int) wgrib2_get_mem_buffer_size(18);
     if (size == 0) return 0;
@@ -204,22 +204,22 @@ int grb2_get_meta(unsigned char *meta, int nbytes) {
     int err;
 
     if (good == 0) {
-	fprintf(stderr,"grb2_get_meta: last find did not work.\n");
-	return 1;
+        fprintf(stderr,"grb2_get_meta: last find did not work.\n");
+        return 1;
     }
     if ((last_options & META) == 0) {
-	fprintf(stderr,"grb2_get_meta: grb2_inq did not request reading metadata.\n");
-	return 1;
+        fprintf(stderr,"grb2_get_meta: grb2_inq did not request reading metadata.\n");
+        return 1;
     }
 
     size = wgrib2_get_mem_buffer_size(18);
     if (size == 0) {
-	fprintf(stderr,"grb2_get_meta: size = 0, grib format error\n");
-	return 1;
+        fprintf(stderr,"grb2_get_meta: size = 0, grib format error\n");
+        return 1;
     }
     if (size > INT_MAX  || size+1 > (size_t) nbytes) {
-	fprintf(stderr,"grb2_get_meta: size of metadata is too big.\n");
-	return 1;
+        fprintf(stderr,"grb2_get_meta: size of metadata is too big.\n");
+        return 1;
     }
     err = wgrib2_get_mem_buffer(meta, size, 18);
     if (err == 0) meta[size] = 0;	/* end the string */
@@ -247,22 +247,22 @@ int grb2_get_gridmeta(unsigned char *meta, int nbytes) {
     int err;
 
     if (good == 0) {
-	fprintf(stderr,"grb2_get_gridmeta: last find did not work.\n");
-	return 1;
+        fprintf(stderr,"grb2_get_gridmeta: last find did not work.\n");
+        return 1;
     }
     if ((last_options & GRIDMETA) == 0) {
-	fprintf(stderr,"grb2_get_gridmeta: grb2_inq did not request reading metadata.\n");
-	return 1;
+        fprintf(stderr,"grb2_get_gridmeta: grb2_inq did not request reading metadata.\n");
+        return 1;
     }
 
     size = wgrib2_get_mem_buffer_size(17);
     if (size == 0) {
-	fprintf(stderr,"grb2_get_gridmeta: size of gridmeta = 0, grid problem?.\n");
-	return 1;
+        fprintf(stderr,"grb2_get_gridmeta: size of gridmeta = 0, grid problem?.\n");
+        return 1;
     }
     if (size > INT_MAX  || size+1 > (size_t) nbytes) {
-	fprintf(stderr,"grb2_get_gridmeta: size of metadata is too big.\n");
-	return 1;
+        fprintf(stderr,"grb2_get_gridmeta: size of metadata is too big.\n");
+        return 1;
     }
     err = wgrib2_get_mem_buffer(meta, size, 17);
     if (err == 0) meta[size] = 0;	/* end the string */

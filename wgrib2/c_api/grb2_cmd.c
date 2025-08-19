@@ -13,7 +13,6 @@ char cmd[N_CMDS][CMD_LEN];
 char *cmds[N_CMDS+1];
 
 void wgrib2_init_cmds(void) {
-
     cmds[0] = "wgrib2 C_api";
     n_cmds = 1;
     return;
