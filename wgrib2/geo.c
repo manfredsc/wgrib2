@@ -1,4 +1,31 @@
-/******************************************************************************************
+/** @file
+ * @brief Routines to get latitude and longitude values of grid points.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 8/22/2005 | K. Pfeiffer | Initial
+ * 4/2006 | W. Ebisuzaki | Bug found by Naoya Suda (lambert2ll) Thanks
+ * 1/2007 | M. Schwarb | Some cleanup
+ * 1/2008 | W. Ebisuzaki | lat and lon changed from float to double, polar can use LatD != 60 SV
+ * 2/2008 | vsm | Added LatD for lambert conformal
+ * 2/2008 | W. Ebisuzaki | lambertll uses earth_radius as specified in code table 3.2
+ * 2/2008 | vsm | fix lambert conformal
+ * 2/2009 | W. Ebisuzaki | fix mercator
+ * 10/2009 | W. Ebisuzaki | Bug found by Jerry Stueve (mercator) Thanks
+ * 6/2010 | W. Ebisuzaki | creates new sec3 and lat-lon values,
+ *	                       changed (projection)2ll so that it reads gdt, not external nx, ny, npnts
+ *                         need to check if all scan modes are handled
+ * 10/2010 | W. Ebisuzaki | rotated lat-lon (experimental)
+ * 1/2012 | W. Ebisuzaki | regional Gaussian grid
+ * 12/2013 | W. Ebisuzaki  | added staggering to regular2ll .. adds to rotated lat-lon grids
+ * 02/2014 | W. Ebisuzaki  | added staggering to lambert2ll
+ * 04/2014 | W. Ebisuzaki  | add the new args to stagger()
+ *
+ * @author Karl Pfeiffer @date 2005-08-22
+ */
+
+/*
  Copyright (C) 2005-2006  Karl Pfeiffer
  This file is part of wgrib2 and is distributed under terms of the GNU General Public License 
  For details see, Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, 
@@ -8,26 +35,7 @@
   10/2009 Bug found by Jerry Stueve (mercator) Thanks
 */
 
-/*
- *  kdp 2005-08-22
- *
- *  Routines supporting the -geo option
- *
- * 1/2007 some cleanup M. Schwarb
- * 1/2008 lat and lon changed from float to double, polar can use LatD != 60 SV
- * 2/2008 vsm added LatD for lambert conformal
- * 2/2008 lambertll uses earth_radius as specified in code table 3.2
- * 2/2008 vsm fix lambert conformal
- * 2/2009 wne fix mercator
- * 6/2010 wne sec3_grid creates new sec3 and lat-lon values,
- *	changed (projection)2ll so that it reads gdt, not external nx, ny, npnts
- * need to check if all scan modes are handled
- * 10/2010 rotated lat-lon (experimental)
- * 1/2012 regional Gaussian grid
- * 12/2013 added staggering to regular2ll .. adds to rotated lat-lon grids
- * 02/2014 added staggering to lambert2ll 
- * 04/2014 add the new args to stagger()
- */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -40,27 +48,66 @@
 /* values from GNU C library version of math.h copyright Free Software Foundation, Inc. */
 
 #ifndef M_PI
-#define M_PI           3.14159265358979323846  /* pi */
+#define M_PI           3.14159265358979323846  /**< pi */
 #endif
 #ifndef M_PI_2
-#define M_PI_2         1.57079632679489661923  /* pi/2 */
+#define M_PI_2         1.57079632679489661923  /**< pi/2 */
 #endif
 #ifndef M_PI_4
-#define M_PI_4         0.78539816339744830962  /* pi/4 */
+#define M_PI_4         0.78539816339744830962  /**< pi/4 */
 #endif
 #ifndef M_SQRT2
-#define M_SQRT2        1.41421356237309504880  /* sqrt(2) */
+#define M_SQRT2        1.41421356237309504880  /**< sqrt(2) */
 #endif
 
-extern double *lat, *lon;
-extern int  scan, nx, ny;
+/** Pointer to array of latitude values. */
+extern double *lat;
+
+/** Pointer to array of longitude values. */
+extern double *lon;
+
+/** Scan mode flag. */
+extern int  scan;
+
+/** Number of grid points in the x direction. */
+extern int nx;
+
+/** Number of grid points in the y direction. */
+extern int ny;
+
+/** Pointer to array of variable dimensions. */
 extern int *variable_dim;
+
+/** Current output order type. */
 extern enum output_order_type output_order;
+
+/** Current geolocation type. */
 extern enum geolocation_type geolocation;
 
 // static double toradians(double x) { return x * (M_PI/180.0); }
+
+/** 
+ * Convert degrees to radians.
+ * 
+ * @param x Angle in degrees.
+ * 
+ * @return Angle in radians.
+ * 
+ * @author Karl Pfeiffer @date 2005-08-22
+ */
 static double todegrees(double x) { return x * (180.0/M_PI); }
 
+/**
+ * Get regular latitude and longitude values.
+ * 
+ * @param sec Pointer to the GRIB section.
+ * @param lat Pointer to the latitude array.
+ * @param lon Pointer to the longitude array.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * @author Karl Pfeiffer @date 2005-08-22
+ */
 int regular2ll(unsigned char **sec, double **lat, double **lon) {
  
     int basic_ang, sub_ang;
@@ -136,7 +183,7 @@ int regular2ll(unsigned char **sec, double **lat, double **lon) {
     /* find W latitude and dx */
 
     if ( GDS_Scan_row_rev(nscan) && (nny % 2 == 0) && ((nres & 32) == 0) ) {
-         fatal_error("grib grid definition ambiguity","");
+        fatal_error("grib grid definition ambiguity","");
     }
 
     if (GDS_Scan_x(nscan)) {
@@ -166,55 +213,66 @@ int regular2ll(unsigned char **sec, double **lat, double **lon) {
 	/* put x[] and y[] values in lon[] and lat[] */
         llat = *lat;
         llon = *lon;
-	if (stagger(sec, nnpnts,llon,llat)) fatal_error("geo: stagger problem","");
+        if (stagger(sec, nnpnts,llon,llat)) fatal_error("geo: stagger problem","");
 
         if (nnx > 1) {
-	    dx = (e-w) / (nnx - 1);
-	    dx = fabs(dx);
+            dx = (e-w) / (nnx - 1);
+            dx = fabs(dx);
             if (nres & 32) { /* lon increment is valid */
                 if (fabs(dx - fabs(dlon)) > 0.001) fatal_error("lat-lon grid: dlon is inconsistent, bad grid definition","");
-	    }
+            }
         }
         else {
-	    dx = 0.0;
-	}
-	dy = fabs(dy);
+            dx = 0.0;
+        }
+        dy = fabs(dy);
 
 #ifdef USE_OPENMP
 #pragma omp parallel for private(j)
 #endif
-	for (j = 0; j < nnpnts; j++) {
+        for (j = 0; j < nnpnts; j++) {
             llon[j] = lon1 + llon[j]*dx;
-	    llon[j] = llon[j] >= 360.0 ? llon[j] - 360.0 : llon[j];
-	    llon[j] = llon[j] < 0.0 ? llon[j] + 360.0 : llon[j];
-	    llat[j] = lat1 + llat[j]*dy;
-	}
-	return 0;
+            llon[j] = llon[j] >= 360.0 ? llon[j] - 360.0 : llon[j];
+            llon[j] = llon[j] < 0.0 ? llon[j] + 360.0 : llon[j];
+            llat[j] = lat1 + llat[j]*dy;
+        }
+        return 0;
     }
 
     /* must be thinned grid */
 
     llat = *lat;
-        /* quasi-regular grid */
-        for (j = 0; j < nny; j++) {
-            for (i = 0; i < variable_dim[j];  i++) {
-                *llat++ = s + j*dy;
-            }
+    /* quasi-regular grid */
+    for (j = 0; j < nny; j++) {
+        for (i = 0; i < variable_dim[j];  i++) {
+            *llat++ = s + j*dy;
         }
+    }
 
     llon = *lon;
-        /* quasi-regular grid */
-        for (j = 0; j < nny; j++) {
-            dx = (e-w) / (variable_dim[j]-1);
-            for (i = 0; i < variable_dim[j]; i++) {
-                *llon++ = w + i*dx >= 360.0 ? w + i*dx - 360.0: w + i*dx;
-            }
+    /* quasi-regular grid */
+    for (j = 0; j < nny; j++) {
+        dx = (e-w) / (variable_dim[j]-1);
+        for (i = 0; i < variable_dim[j]; i++) {
+            *llon++ = w + i*dx >= 360.0 ? w + i*dx - 360.0: w + i*dx;
         }
+    }
     return 0;
 } /* end regular2ll() */ 
 
-/* adapted from grib2ctl.pl */
-
+/**
+ * Get rotated regular latitude and longitude values.
+ *
+ * Adapted from grib2ctl.pl
+ *
+ * @param sec Pointer to the GRIB section.
+ * @param lat Pointer to the latitude array.
+ * @param lon Pointer to the longitude array.
+ *
+ * @return 0 for success, error code otherwise.
+ * 
+ * @author Karl Pfeiffer @date 2005-08-22
+ */
 int rot_regular2ll(unsigned char **sec, double **lat, double **lon) {
 
     unsigned char *gds;
@@ -235,10 +293,10 @@ int rot_regular2ll(unsigned char **sec, double **lat, double **lon) {
     basic_ang = GDS_LatLon_basic_ang(gds);
     sub_ang = GDS_LatLon_sub_ang(gds);
     if (basic_ang != 0) {
-	units = (double) basic_ang / (double) sub_ang;
+        units = (double) basic_ang / (double) sub_ang;
     }
     else {
-	units = 0.000001;
+        units = 0.000001;
     }
 
     sp_lat = GDS_RotLatLon_sp_lat(gds) * units;
@@ -272,21 +330,32 @@ int rot_regular2ll(unsigned char **sec, double **lat, double **lon) {
 #pragma omp parallel for private(i,pr,gr,pm,gm,glat,glon)
 #endif
     for (i = 0; i < npnts; i++) {
-	pr = (M_PI/180.0) * tlat[i];
-	gr = -(M_PI/180.0) * tlon[i];
+        pr = (M_PI/180.0) * tlat[i];
+        gr = -(M_PI/180.0) * tlon[i];
         pm = asin(cos(pr)*cos(gr));
         gm = atan2(cos(pr)*sin(gr),-sin(pr));
         glat = (180.0/M_PI)*(asin(sin_a*sin(pm)-cos_a*cos(pm)*cos(gm-r)));
         glon = -(180.0/M_PI)*(-b+atan2(cos(pm)*sin(gm-r),sin_a*cos(pm)*cos(gm-r)+cos_a*sin(pm)) );
-	tlat[i] = glat;
-	tlon[i] = glon;
+        tlat[i] = glat;
+        tlon[i] = glon;
    }
 
    return 0;
 }
 
-/* adapted from iplib */
-
+/**
+ * Get polar latitude and longitude values.
+ *
+ * Adapted from iplib
+ *
+ * @param sec Pointer to the GRIB section.
+ * @param llat Pointer to the latitude array.
+ * @param llon Pointer to the longitude array.
+ *
+ * @return 0 for success, error code otherwise.
+ * 
+ * @author Karl Pfeiffer @date 2005-08-22
+ */
 int polar2ll(unsigned char **sec, double **llat, double **llon) {
     
     double *lat, *lon;
@@ -335,9 +404,9 @@ int polar2ll(unsigned char **sec, double **llat, double **llon) {
 
     h = 1.0;
     if (GDS_Polar_sps(gds)) {
-	h = -1.0;
-	/* added 12/19/2008 WNE sps checkout */
-	orient -= M_PI;
+        h = -1.0;
+        /* added 12/19/2008 WNE sps checkout */
+        orient -= M_PI;
     }
 
 // removed 12/11    if (! (GDS_Scan_x(nscan))) dx = -dx;
@@ -358,10 +427,10 @@ int polar2ll(unsigned char **sec, double **llat, double **llon) {
 
 // added 12/11
     if (! (GDS_Scan_y(nscan))) {
-	yp = yp - nny + 1;
+        yp = yp - nny + 1;
     }
     if (! (GDS_Scan_x(nscan))) {
-	xp = xp - nnx + 1;
+        xp = xp - nnx + 1;
     }
 
     de2 = de*de;
@@ -388,7 +457,17 @@ int polar2ll(unsigned char **sec, double **llat, double **llon) {
     return 0;
 }
 
-
+/**
+ * Get Lambert latitude and longitude values.
+ *
+ * @param sec Pointer to the GRIB section.
+ * @param llat Pointer to the latitude array.
+ * @param llon Pointer to the longitude array.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * @author Karl Pfeiffer @date 2005-08-22
+ */
 int lambert2ll(unsigned char **sec, double **llat, double **llon) {
 
     double n;
@@ -482,22 +561,33 @@ int lambert2ll(unsigned char **sec, double **llat, double **llon) {
 #pragma omp parallel for private(j,x,y,tmp,theta,rho,lond,latd)
 #endif
     for (j = 0; j < nnpnts; j++) {
-	y = starty + lat[j]*dy;
+        y = starty + lat[j]*dy;
         x = startx + lon[j]*dx;
-	tmp = rhoref - y;
-	theta = atan(x / tmp);
+        tmp = rhoref - y;
+        theta = atan(x / tmp);
         rho = sqrt(x * x + tmp*tmp);
         rho = n > 0 ? rho : -rho;
         lond = lon2d + todegrees(theta/n);
         latd = todegrees(2.0 * atan(pow(earth_radius * f/rho,1.0/n)) - M_PI_2);
-	lond = lond >= 360.0 ? lond - 360.0 : lond;
-	lond = lond < 0.0 ? lond + 360.0 : lond;
+        lond = lond >= 360.0 ? lond - 360.0 : lond;
+        lond = lond < 0.0 ? lond + 360.0 : lond;
         lon[j] = lond;
         lat[j] = latd;
     }
     return 0;
 } /* end lambert2ll() */
 
+/**
+ * Get Lambert latitude and longitude values.
+ *
+ * @param sec Pointer to the GRIB section.
+ * @param lat Pointer to the latitude array.
+ * @param lon Pointer to the longitude array.
+ *
+ * @return 0 for success, error code otherwise.
+ * 
+ * @author Karl Pfeiffer @date 2005-08-22
+ */
 int mercator2ll(unsigned char **sec, double **lat, double **lon) {
 
     double dx, dy, lat1, lat2, lon1, lon2;
@@ -559,11 +649,11 @@ int mercator2ll(unsigned char **sec, double **lat, double **lon) {
     /* find W and E longitude */
 
     if ( ((nscan & 16) == 16) && (nny % 2 == 0) && ((nres & 32) == 0) ) {
-         fatal_error("Mercator grid: grid definition ambiguity, bad grid definition","");
+        fatal_error("Mercator grid: grid definition ambiguity, bad grid definition","");
     }
 
     if ( ((nscan & 16) == 16) && (nny % 2 == 0) ) {
-         fatal_error("Mercator: more code needed to decode grid definition","");
+        fatal_error("Mercator: more code needed to decode grid definition","");
     }
 
     if (GDS_Scan_x(nscan)) {
@@ -619,141 +709,166 @@ int mercator2ll(unsigned char **sec, double **lat, double **lon) {
     return 0;
 } /* end mercator2ll() */
 
-
-
-
-/*  kdp 2005-08-22
- *  
- *  Code for computing Gaussian latitudes was adapted from
- *  the wonderful gauss2lats.m Matlab program from Tom Holt.
- *  The code gauss2lats.m also works quite well with Octave.
- *
- *  Note that the algorithms used here require a 1-based
- *  array vice the typical 0-based array.  The points are
- *  mapped correctly to the (lat,lon) arrays as zero-based.
- *
- * Note: adapted from an NCAR fortran program by Tom Holt
+/**
+ * Evaluates the Legendre polynomial of degree n at x.
+ * 
+ * @param n Number of latitude points.
+ * @param x Cosine of the colatitude.
+ * 
+ * @return Value of the Legendre polynomial at x.
+ * 
+ * @author Karl Pfeiffer @date 2005-08-22
  */
 double gord(int n, double x) {
-  
-  double colat = acos(x);
-  double c1 = M_SQRT2;
-  int i;
-  
-  double fn = (double) n;
-  double ang = fn * colat;
-  double s1 =  0.0;
-  double c4 =  1.0;
-  double a  = -1.0;
-  double b  =  0.0;
-  double fi;
+    
+    double colat = acos(x);
+    double c1 = M_SQRT2;
+    int i;
+    
+    double fn = (double) n;
+    double ang = fn * colat;
+    double s1 =  0.0;
+    double c4 =  1.0;
+    double a  = -1.0;
+    double b  =  0.0;
+    double fi;
 
-  for (i=1; i <= n; i++) {
-    c1 = c1 * sqrt(1.0 - 1.0/(4.0*i*i));
-  } 
+    for (i=1; i <= n; i++) {
+        c1 = c1 * sqrt(1.0 - 1.0/(4.0*i*i));
+    } 
+    
+    for (i = 0; i <= n; i = i + 2) {
+        if ( i == n ) { c4 = 0.5 * c4; }
+        s1  = s1 + c4*cos(ang);
+        a   = a + 2.0;
+        b   = b + 1.0;
+        fi = (double) i;
+        ang = colat*(fn - fi - 2.0); 
+        c4 = (a*(fn-b+1.0)/(b*(fn+fn-a)))*c4;
+    }
   
-  for (i = 0; i <= n; i = i + 2) {
-    if ( i == n ) { c4 = 0.5 * c4; }
-    s1  = s1 + c4*cos(ang);
-    a   = a + 2.0;
-    b   = b + 1.0;
-    fi = (double) i;
-    ang = colat*(fn - fi - 2.0); 
-    c4 = (a*(fn-b+1.0)/(b*(fn+fn-a)))*c4;
-  }
-  
-  return ( s1 * c1 );
+    return ( s1 * c1 );
   
 } /* end gord() */
 
-
+/**
+ * Get Gaussian latitudes.
+ * 
+ * Code for computing Gaussian latitudes was adapted from
+ * the wonderful gauss2lats.m Matlab program from Tom Holt.
+ * The code gauss2lats.m also works quite well with Octave.
+ *
+ * Note that the algorithms used here require a 1-based
+ * array vice the typical 0-based array.  The points are
+ * mapped correctly to the (lat,lon) arrays as zero-based.
+ * 
+ * @param nlat Number of latitudes.
+ * @param ylat Pointer to the latitude array.
+ * 
+ * @return Pointer to the updated latitude array.
+ * 
+ * @note Adapted from an NCAR fortran program by Tom Holt.
+ * 
+ * @author Karl Pfeiffer @date 2005-08-22
+ */
 double *gauss2lats(int nlat, double *ylat) {
   
-  const double xlim = 1.0E-7;
-  
-  double *cosc  = (double *) malloc(sizeof(double) * (nlat + 1));
-  double *sinc  = (double *) malloc(sizeof(double) * (nlat + 1));
-  double *colat = (double *) malloc(sizeof(double) * (nlat + 1));
-  
-  int nzero = (nlat / 2);
-  
-  int i;
-  double fi = nlat;
-  double fi1 = fi + 1.0;
-  double a = fi * fi1/sqrt(4.0*fi1*fi1 - 1.0);
-  double b = fi1 * fi/sqrt(4.0*fi*fi - 1.0);
+    const double xlim = 1.0E-7;
+    
+    double *cosc  = (double *) malloc(sizeof(double) * (nlat + 1));
+    double *sinc  = (double *) malloc(sizeof(double) * (nlat + 1));
+    double *colat = (double *) malloc(sizeof(double) * (nlat + 1));
+    
+    int nzero = (nlat / 2);
+    
+    int i;
+    double fi = nlat;
+    double fi1 = fi + 1.0;
+    double a = fi * fi1/sqrt(4.0*fi1*fi1 - 1.0);
+    double b = fi1 * fi/sqrt(4.0*fi*fi - 1.0);
 
     double g, gm, gp, gt, delta, d;
 
 #ifdef USE_OPENMP
 #pragma omp parallel for private(i,g,gm,gp,gt,delta)
 #endif
-  for (i = 1; i <= nzero; i++) {
-    cosc[i] = sin((i - 0.5)*M_PI/nlat + M_PI*0.5);
-  
-    g = gord(nlat, cosc[i]);
-    gm = gord(nlat - 1, cosc[i]);
-    gp = gord(nlat + 1, cosc[i]);
-    gt = (cosc[i]*cosc[i] - 1.0)/(a * gp - b * gm);
-    delta = g*gt;
-    cosc[i] = cosc[i] - delta;
+    for (i = 1; i <= nzero; i++) {
+        cosc[i] = sin((i - 0.5)*M_PI/nlat + M_PI*0.5);
     
-    while ( fabs(delta) > xlim ) {
-      g = gord(nlat,cosc[i]);
-      gm = gord(nlat - 1, cosc[i]);
-      gp = gord(nlat + 1, cosc[i]);
-      gt = (cosc[i]*cosc[i] - 1.0)/(a * gp - b * gm);
-      delta = g*gt;
-      cosc[i] = cosc[i] - delta;
-      
-    } /* end while */
-    
-    colat[i] = acos(cosc[i]);
-    sinc[i] = sin(colat[i]);
-  }
+        g = gord(nlat, cosc[i]);
+        gm = gord(nlat - 1, cosc[i]);
+        gp = gord(nlat + 1, cosc[i]);
+        gt = (cosc[i]*cosc[i] - 1.0)/(a * gp - b * gm);
+        delta = g*gt;
+        cosc[i] = cosc[i] - delta;
+        
+        while ( fabs(delta) > xlim ) {
+            g = gord(nlat,cosc[i]);
+            gm = gord(nlat - 1, cosc[i]);
+            gp = gord(nlat + 1, cosc[i]);
+            gt = (cosc[i]*cosc[i] - 1.0)/(a * gp - b * gm);
+            delta = g*gt;
+            cosc[i] = cosc[i] - delta;
+        
+        } /* end while */
+        
+        colat[i] = acos(cosc[i]);
+        sinc[i] = sin(colat[i]);
+    }
 
   /*
    * ... deal with equator if odd number of points
    */
-  if ( ( nlat % 2) != 0 ) {
-    i = nzero + 1;
-    cosc[i] = 0.0;
-    d = gord(nlat - 1, cosc[i]);
-    d = d*d*fi*fi;
-    colat[i] = M_PI * 0.5;
-    sinc[i] = 1.0;
-  } /* end if() */
+    if ( ( nlat % 2) != 0 ) {
+        i = nzero + 1;
+        cosc[i] = 0.0;
+        d = gord(nlat - 1, cosc[i]);
+        d = d*d*fi*fi;
+        colat[i] = M_PI * 0.5;
+        sinc[i] = 1.0;
+    } /* end if() */
   
-  /*
-   *  ... deal with southern hemisphere by symmetry
-   */
-  for (i = nlat - nzero + 1; i <= nlat; i++) {
-    cosc[i]  = -cosc[nlat + 1 - i];
-    colat[i] = M_PI - colat[nlat + 1 - i];
-    sinc[i]  = sinc[nlat + 1 - i];
-  } /* end for(i) */
-  
+    /*
+    *  ... deal with southern hemisphere by symmetry
+    */
+    for (i = nlat - nzero + 1; i <= nlat; i++) {
+        cosc[i]  = -cosc[nlat + 1 - i];
+        colat[i] = M_PI - colat[nlat + 1 - i];
+        sinc[i]  = sinc[nlat + 1 - i];
+    } /* end for(i) */
+    
 #ifdef USE_OPENMP
 #pragma omp parallel for private(i)
 #endif
-  for (i = 1; i <= nlat; i++) {
-    ylat[i-1] = todegrees(acos(sinc[i]));
-    if ( i > (nlat / 2) ) ylat[i-1] = -ylat[i-1];
-    /* change from N-S to S-N */
-    ylat[i-1] = -ylat[i-1];
-  }
+    for (i = 1; i <= nlat; i++) {
+        ylat[i-1] = todegrees(acos(sinc[i]));
+        if ( i > (nlat / 2) ) ylat[i-1] = -ylat[i-1];
+        /* change from N-S to S-N */
+        ylat[i-1] = -ylat[i-1];
+    }
 
-  free(cosc);
-  free(sinc);
-  free(colat);
-  
-  return ylat;
+    free(cosc);
+    free(sinc);
+    free(colat);
+    
+    return ylat;
   
 } /* end gauss2lats() */
 
+/** Error tolerance for latitude in closest point search.*/
 #define LATERR		(0.01 * 180.0 / (double) nlat)
 
-
+/**
+ * Get Gaussian latitude and longitude values.
+ * 
+ * @param sec Pointer to the GRIB section.
+ * @param llat Pointer to the latitude array.
+ * @param llon Pointer to the longitude array.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * @author Karl Pfeiffer @date 2005-08-22
+ */
 int gauss2ll(unsigned char **sec, double **llat, double **llon) {
  
  
@@ -826,16 +941,16 @@ int gauss2ll(unsigned char **sec, double **llat, double **llon) {
     /* find index of south and north */
     isouth = inorth = -1;
     for (i = 0; i < nlat; i++) {
-	if (fabs(south - ylat[i]) < LATERR) {
-	    isouth = i;
-	    break;
-	}
+        if (fabs(south - ylat[i]) < LATERR) {
+            isouth = i;
+            break;
+        }
     }
     for (i = 0; i < nlat; i++) {
-	if (fabs(north - ylat[i]) < LATERR) {
-	    inorth = i;
-	    break;
-	}
+        if (fabs(north - ylat[i]) < LATERR) {
+            inorth = i;
+            break;
+        }
     }
 
     if (isouth < 0 || inorth < 0) fatal_error("gauss2ll: bad grid definition, lat1/lat2 not a Gaussian latitude","");
@@ -847,7 +962,7 @@ int gauss2ll(unsigned char **sec, double **llat, double **llon) {
 #ifdef USE_OPENMP
 #pragma omp parallel for private(ii,jj)
 #endif
-	for (jj = 0; jj < nny_; jj++) {
+        for (jj = 0; jj < nny_; jj++) {
             for (ii = 0; ii < nnx_; ii++) {
                 lat[ii+jj*nnx_] = ylat[jj+isouth];
             }
@@ -891,17 +1006,17 @@ int gauss2ll(unsigned char **sec, double **llat, double **llon) {
 {
 #pragma omp for private(i)
 #endif
-	for (i = 0; i < nnx; i++) {
+        for (i = 0; i < nnx; i++) {
             lon[i] = e + (dx * i) >= 360.0 ?  e + (dx * i) - 360.0 : e + (dx * i);  
-	}
+        }
 #ifdef USE_OPENMP
 #pragma omp for private(i,j)
 #endif
-	for (j = 1; j < nny; j++) {
-	    for (i = 0; i < nnx; i++) {
-		lon[i+j*nnx] = lon[i];
-	    }
-	}
+        for (j = 1; j < nny; j++) {
+            for (i = 0; i < nnx; i++) {
+                lon[i+j*nnx] = lon[i];
+            }
+        }
 #ifdef USE_OPENMP
 }
 #endif
@@ -918,11 +1033,26 @@ int gauss2ll(unsigned char **sec, double **llat, double **llon) {
     return 0;
 } /* end gauss2ll() */
 
-
 /* closest_init:  location of grid point in x-y-z space, assume r=1 */ 
 
-static double *x = NULL, *y = NULL, *z = NULL;
+/** X coordinates in Cartesian space */
+static double *x = NULL;
 
+/** Y coordinates in Cartesian space */
+static double *y = NULL;    
+
+/** Z coordinates in Cartesian space */
+static double *z = NULL;
+
+/**
+ * Initialize the closest point search.
+ * 
+ * @param sec Pointer to the GRIB section.
+ * 
+ * @return 0 on success, error code otherwise
+ * 
+ * @author Karl Pfeiffer @date 2005-08-22
+ */
 int closest_init(unsigned char **sec) {
 
     unsigned int i, nnpts;
@@ -931,7 +1061,7 @@ int closest_init(unsigned char **sec) {
 
     /* if using gctpc: use gctpc routines to find closest point */
     if  (!GDS_Scan_staggered(scan) && nx > 0 && ny > 0 && output_order == wesn && geolocation == gctpc) {
-       if (gctpc_ll2xy_init(sec, lon, lat) == 0) return 0;
+        if (gctpc_ll2xy_init(sec, lon, lat) == 0) return 0;
     }
 
     /* could use proj routines in future */
@@ -964,26 +1094,39 @@ int closest_init(unsigned char **sec) {
 #pragma omp parallel for private(i,s,c)
 #endif
         for (i = 0; i < nnpts; i++) {
-	    if (lat[i] >= 999.0 || lon[i] >= 999.0) {
-		/* x[i] = sin() .. cannot be bigger than 1 */
-		x[i] = y[i] = z[i] = 999.0;
-	    }
+            if (lat[i] >= 999.0 || lon[i] >= 999.0) {
+            /* x[i] = sin() .. cannot be bigger than 1 */
+            x[i] = y[i] = z[i] = 999.0;
+            }
             else {
                 s = sin(lat[i] * (M_PI / 180.0));
                 c = sqrt(1.0 - s * s);
                 z[i] = s;
                 x[i] = c * cos(lon[i] * (M_PI / 180.0));
                 y[i] = c * sin(lon[i] * (M_PI / 180.0));
-	    }
+            }
         }
 
     }
     return 0;
 }
 
-/*
- * closest: 
- *    * 6/2018 2G+ rewrote OpenMP
+/**
+ * Find the closest grid point to a given latitude and longitude.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 8/2005 | K. Pfeiffer | Initial
+ * 6/2018 | ??? | 2G + rewrote OpenMP
+ * 
+ * @param sec Pointer to the GRIB section.
+ * @param plat Latitude of the point to search for.
+ * @param plon Longitude of the point to search for.
+ * 
+ * @return Index of the closest grid point, or -1 if not found.
+ * 
+ * @author Karl Pfeiffer @date 2005-08-22
  */
 long int closest(unsigned char **sec, double plat, double plon) {
 
@@ -995,8 +1138,8 @@ long int closest(unsigned char **sec, double plat, double plon) {
 
     /* if gctpc: use gctpc routines */
     if  (!GDS_Scan_staggered(scan) && nx > 0 && ny > 0 && output_order == wesn && geolocation == gctpc) {
-	/* will fix it so that everything is 0 for out of bounds */
-	if (gctpc_ll2i(1, &plon, &plat, &k) == 0) return ((long int) k) - 1;
+        /* will fix it so that everything is 0 for out of bounds */
+        if (gctpc_ll2i(1, &plon, &plat, &k) == 0) return ((long int) k) - 1;
     }
 
     /* could use proj routines in future */
@@ -1021,10 +1164,10 @@ long int closest(unsigned char **sec, double plat, double plon) {
     j = -1;
 
     for (i = 0; i < nnpts; i++) {
-	if (x[i] >= 999.0) continue;
+        if (x[i] >= 999.0) continue;
         small = (x[i]-xx)*(x[i]-xx)+(y[i]-yy)*(y[i]-yy)+(z[i]-zz)*(z[i]-zz);
         j = i;
-	break;
+        break;
     }
     if (j == -1) return j;
     i0 = j;
@@ -1043,18 +1186,18 @@ long int closest(unsigned char **sec, double plat, double plon) {
 #pragma omp for nowait
 #endif
     for (i = i0+1; i < nnpts; i++) {
-	if (x[i] >= 999.0) continue;
+        if (x[i] >= 999.0) continue;
         s = (x[i]-xx)*(x[i]-xx)+(y[i]-yy)*(y[i]-yy)+(z[i]-zz)*(z[i]-zz);
         if (s < small_thread) {
-	    small_thread = s;
+            small_thread = s;
             j_thread = i;
-	}
+        }
     }
 #ifdef USE_OPENMP
 #pragma omp critical
 #endif
     {
-	if (small_thread < small) {
+        if (small_thread < small) {
             small = small_thread;
             j = j_thread;
         }
