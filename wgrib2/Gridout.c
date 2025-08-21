@@ -52,6 +52,9 @@ extern int latlon;
  * 
  * @return 0 for success, error code otherwise
  * 
+ * ## Example
+ * ???
+ * 
  * @author Wesley Ebisuzaki @date 2014
  */
 int f_gridout(ARG1) {
