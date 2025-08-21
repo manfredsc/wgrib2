@@ -1,9 +1,10 @@
-/* Public Domain 7/2021 Wesley Ebisuaki
- *
- * routines that convert lat/lon to i, j of a Gaussian grid
- * grid must be global in wesn order
- *
- * based on lat2ij.c
+/** @file
+ * @brief Routines that convert lat/lon to i, j of a Gaussian grid. Grid must be global 
+ * in wesn order.
+ * 
+ * Based on lat2ij.c
+ * 
+ * @author Public Domain: Wesley Ebisuzaki @date 7/2021
  */
 
 #include <stdio.h>
@@ -14,14 +15,41 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
+/** Error tolerance for floating point comparisons. */
 #define ERROR 0.0001
 
-extern double *lat, *lon;
+/** Pointer to array of latitude values. */
+extern double *lat;
+
+/** Pointer to array of longitude values. */
+extern double *lon;
+
+/** Current output order type. */
 extern enum output_order_type output_order;
 
-static unsigned int from_nx, from_ny;
-static double from_dlon, from_lon;
+/** Conversion factor for nx. */
+static unsigned int from_nx;
 
+/** Conversion factor for ny. */
+static unsigned int from_ny;
+
+/** Conversion factor for dlon. */
+static double from_dlon;
+
+/**  Conversion factor for longitude. */
+static double from_lon;
+
+/**
+ * Initialize the Gaussian grid parameters to convert lat/lon to i,j.
+ * 
+ * @param sec Pointer to the section of the grid descriptor.
+ * @param nx Number of grid points in the x-direction.
+ * @param ny Number of grid points in the y-direction.
+ * 
+ * @return 0 on success, error code otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 7/2021
+ */
 int gaussian_init(unsigned char **sec, unsigned int nx, unsigned int ny) {
 
     if (code_table_3_1(sec) != 40) fatal_error("gaussian_init: not gaussian grid","");
@@ -40,6 +68,17 @@ int gaussian_init(unsigned char **sec, unsigned int nx, unsigned int ny) {
 
 /* only for global gaussian grids, wesn order */
 
+/**
+ * Find the closest grid point (i,j) for a given latitude/longitude on a Gaussian grid.
+ *
+ * Only for global Gaussian grids in wesn order.
+ * 
+ * @param sec Pointer to the section of the grid descriptor.
+ * @param plat Latitude of the point.
+ * @param plon Longitude of the point.
+ *
+ * @return The index of the closest grid point, or -1 on error.
+ */
 long int gaussian_closest(unsigned char **sec, double plat, double plon) {
 
     double tmp, n_lat;
@@ -59,14 +98,14 @@ long int gaussian_closest(unsigned char **sec, double plat, double plon) {
     if (plat < -90-ERROR || plat > 90 + ERROR) return -1;
 
     for (iy = 0; iy < from_ny; iy++) {
-	/* not sure if n_lat = iy == from_ny-1 would short curcuit and avoid illegal mem access */
+        /* not sure if n_lat = iy == from_ny-1 would short curcuit and avoid illegal mem access */
         if (iy == from_ny-1) {
-	    n_lat = 90 + ERROR;
-	}
-	else {
-	    n_lat =  (lat[iy*from_nx] + lat[iy*from_nx + from_nx]) * 0.5;
-	}
-	if (plat < n_lat) return (ix + iy*from_nx);
+            n_lat = 90 + ERROR;
+        }
+        else {
+            n_lat =  (lat[iy*from_nx] + lat[iy*from_nx + from_nx]) * 0.5;
+        }
+        if (plat < n_lat) return (ix + iy*from_nx);
     }
     return -1;
 }
