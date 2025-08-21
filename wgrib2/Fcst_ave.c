@@ -49,10 +49,10 @@ extern int flush_mode;
 /** Use scaling flag. */
 extern int use_scale;
 
-/** Decoding scale flag. */
+/** Decimal scaling. */
 extern int dec_scale;
 
-/** Binary scale flag. */
+/** Binary scaling. */
 extern int bin_scale;
 
 /** Number of bits wanted. */
@@ -80,8 +80,8 @@ struct ave_struct {
     unsigned char *first_sec[9];        /**< First section of the GRIB message. */
     unsigned char *next_sec[9];         /**< Next section of the GRIB message. */
     int use_scale;                      /**< Use scaling flag. */
-    int dec_scale;                      /**< Decoding scale flag. */
-    int bin_scale;                      /**< Binary scale flag. */
+    int dec_scale;                      /**< Decimal scaling. */
+    int bin_scale;                      /**< Binary scaling. */
     int wanted_bits;                    /**< Number of bits wanted. */
     int max_bits;                       /**< Maximum number of bits. */
     enum output_grib_type grib_type;    /**< Output GRIB type. */
