@@ -45,10 +45,10 @@ extern int GDS_change_no;
 /** Use scale flag. */
 extern int use_scale;
 
-/** Decoding scale flag. */
+/** Decimal scaling. */
 extern int dec_scale;
 
-/** Binary scale flag. */
+/** Binary scaling. */
 extern int bin_scale;
 
 /** Number of bits wanted.*/
