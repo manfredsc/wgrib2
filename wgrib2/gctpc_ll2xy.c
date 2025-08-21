@@ -1,3 +1,7 @@
+/** @file 
+ * @brief Convert lon-lat vectors to i-j vectors using gctpc functions.
+ * @author Public Domain: Wesley Ebisuzaki @date 2/2012
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -23,16 +27,16 @@
 /* values from GNU C library version of math.h copyright Free Software Foundation, Inc. */
 
 #ifndef M_PI
-#define M_PI           3.14159265358979323846  /* pi */
+#define M_PI           3.14159265358979323846  /**< pi */
 #endif
 #ifndef M_PI_2
-#define M_PI_2         1.57079632679489661923  /* pi/2 */
+#define M_PI_2         1.57079632679489661923  /**< pi/2 */
 #endif
 #ifndef M_PI_4
 #define M_PI_4         0.78539816339744830962  /* pi/4 */
 #endif
 #ifndef M_SQRT2
-#define M_SQRT2        1.41421356237309504880  /* sqrt(2) */
+#define M_SQRT2        1.41421356237309504880  /**< sqrt(2) */
 #endif
 
 /*
@@ -68,11 +72,55 @@
  *
  */
 
+/** Function pointer for forward transformation */
 static long int (*forward_fn)(double, double, double *, double *);
-static double dx, dy, inv_dx, inv_dy, x_0, y_0, x00, xN;
-static unsigned int gdt;
-static int nx, ny;
 
+/** Grid spacing in x direction */
+static double dx; 
+
+/** Grid spacing in y direction */
+static double dy; 
+
+/** Inverse of grid spacing in x direction. */
+static double inv_dx; 
+
+/** Inverse of grid spacing in y direction. */
+static double inv_dy; 
+
+/** X coordinate of the first grid point. */
+static double x_0; 
+
+/** Y coordinate of the first grid point. */
+static double y_0; 
+
+/** X coordinate of the first grid point offset by dx/2. */
+static double x00;
+
+/** X coordinate of the last grid point. */
+static double xN;
+
+/** Grid Definition Template number. */
+static unsigned int gdt;
+
+/** Number of grid points in the x direction. */
+static int nx;
+
+/** Number of grid points in the y direction. */
+static int ny;
+
+/**
+ * Initialize the grid definition for lat/lon to x/y conversion. 
+ * 
+ * Call this function before gctpc_ll2xy or gctpc_ll2i.
+ * 
+ * @param sec Pointer to the grib sections of the grid.
+ * @param grid_lon Pointer to longitudes of the grid in wesn order.
+ * @param grid_lat Pointer to latitudes of the grid in wesn order.
+ * 
+ * @return 0 on success, 1 on failure.
+ * 
+ * @author Wesley Ebisuzaki @date 2/2012
+ */
 int gctpc_ll2xy_init(unsigned char **sec, double *grid_lon, double *grid_lat) {
 
     unsigned char *gds;
@@ -107,7 +155,7 @@ int gctpc_ll2xy_init(unsigned char **sec, double *grid_lon, double *grid_lat) {
     x_0 = y_0 = x00 = xN = inv_dx = inv_dy = 0.0;
 
     if (gdt == 0) {	/* lat-lon grid */
-	dx = grid_lon[1] - grid_lon[0];
+        dx = grid_lon[1] - grid_lon[0];
         dy = grid_lat[nx] - grid_lat[0];
         inv_dx = 1.0 / dx;
         inv_dy = 1.0 / dy;
@@ -121,8 +169,8 @@ int gctpc_ll2xy_init(unsigned char **sec, double *grid_lon, double *grid_lat) {
         /* get earth axis */
         axes_earth(sec, &r_maj, &r_min, NULL);
 
-	dx = GDS_Mercator_dx(gds);
-	dy = GDS_Mercator_dy(gds);
+        dx = GDS_Mercator_dx(gds);
+        dy = GDS_Mercator_dy(gds);
         inv_dx = 1.0 / dx;
         inv_dy = 1.0 / dy;
 
@@ -134,7 +182,7 @@ int gctpc_ll2xy_init(unsigned char **sec, double *grid_lon, double *grid_lat) {
 
         false_east = false_north = 0.0;
         long_i = merforint(r_maj,r_min,c_lon,c_lat,false_east,false_north);
-	if (long_i) fatal_error_i("gctpc_ll2xy_init merforint: return %ld", long_i);
+        if (long_i) fatal_error_i("gctpc_ll2xy_init merforint: return %ld", long_i);
 
         rlat = GDS_Mercator_lat1(gds) * (M_PI/180.0);
         rlon = GDS_Mercator_lon1(gds) * (M_PI/180.0);
@@ -163,7 +211,7 @@ int gctpc_ll2xy_init(unsigned char **sec, double *grid_lon, double *grid_lat) {
 
         false_east = false_north = 0.0;
         long_i = psforint(r_maj,r_min,c_lon,c_lat,false_east,false_north);
-	if (long_i) fatal_error_i("gctpc_ll2xy_init psforint: return %ld", long_i);
+        if (long_i) fatal_error_i("gctpc_ll2xy_init psforint: return %ld", long_i);
 
         rlon   = grid_lon[0] * (M_PI/180.0);
         rlat   = grid_lat[0] * (M_PI/180.0);
@@ -195,7 +243,7 @@ int gctpc_ll2xy_init(unsigned char **sec, double *grid_lon, double *grid_lat) {
 
         false_east = false_north = 0.0;
         long_i = lamccforint(r_maj,r_min,lat1,lat2,c_lon,c_lat,false_east,false_north);
-	if (long_i) fatal_error_i("gctpc_ll2xy_init lamccforint: return %ld", long_i);
+        if (long_i) fatal_error_i("gctpc_ll2xy_init lamccforint: return %ld", long_i);
 
         rlon   = grid_lon[0] * (M_PI/180.0);
         rlat   = grid_lat[0] * (M_PI/180.0);
@@ -208,9 +256,9 @@ int gctpc_ll2xy_init(unsigned char **sec, double *grid_lon, double *grid_lat) {
     }
     else if (gdt == 140) {            // lambert azimuthal equal area
 
-	/* get earth axis */
-	axes_earth(sec, &r_maj, &r_min, NULL);
-	r_maj = 0.5 * (r_maj + r_min);
+        /* get earth axis */
+        axes_earth(sec, &r_maj, &r_min, NULL);
+        r_maj = 0.5 * (r_maj + r_min);
 
         dx      = GDS_Lambert_Az_dx(gds);
         dy      = GDS_Lambert_Az_dy(gds);
@@ -223,7 +271,7 @@ int gctpc_ll2xy_init(unsigned char **sec, double *grid_lon, double *grid_lat) {
 
         false_east = false_north = 0.0;
         long_i = lamazforint(r_maj,c_lon,c_lat,false_east,false_north);
-	if (long_i) fatal_error_i("gctpc_ll2xy_init lamazforint: return %ld", long_i);
+        if (long_i) fatal_error_i("gctpc_ll2xy_init lamazforint: return %ld", long_i);
 
         rlon   = grid_lon[0] * (M_PI/180.0);
         rlat   = grid_lat[0] * (M_PI/180.0);
@@ -238,7 +286,22 @@ int gctpc_ll2xy_init(unsigned char **sec, double *grid_lon, double *grid_lat) {
     return forward_fn != NULL ? 0 : 1;
 }
 
-
+/**
+ * Get the x and y coordinates for a given longitude and latitude.
+ *
+ * You must first perform the setup step by calling gctpc_ll2xy_init() before calling 
+ * this function.
+ * 
+ * @param n Number of points to convert.
+ * @param lon Pointer to longitudes of points to convert to (i,j).
+ * @param lat Pointer to latitudes of points to convert to (i,j).
+ * @param x Pointer to x coordinates of grid.
+ * @param y Pointer to y coordinates of grid.
+ * 
+ * @return 0 on success, 1 on failure.
+ * 
+ * @author Wesley Ebisuzaki @date 2/2012
+ */
 int gctpc_ll2xy(int n, double *lon, double *lat, double *x, double *y) {
 
     int i;
@@ -276,6 +339,21 @@ int gctpc_ll2xy(int n, double *lon, double *lat, double *x, double *y) {
 
 /* iptr[] == 0 for out of bounds */
 
+/**
+ * Get nearest neighbor index for a given longitude and latitude.
+ *
+ * You must first perform the setup step by calling gctpc_ll2xy_init() before calling 
+ * this function.
+ * 
+ * @param n Number of points.
+ * @param lon Pointer to longitudes of points.
+ * @param lat Pointer to latitudes of points.
+ * @param ipnt Pointer to output array for nearest neighbor indices. (0 for out of bounds)
+ * 
+ * @return 0 on success, 1 on failure.
+ * 
+ * @author Wesley Ebisuzaki @date 2/2012
+ */
 int gctpc_ll2i(int n, double *lon, double *lat, unsigned int *ipnt) {
     int i;
     unsigned int ix, iy;
@@ -290,12 +368,12 @@ int gctpc_ll2i(int n, double *lon, double *lat, unsigned int *ipnt) {
             rlat = lat[i];
             ix = x = floor((rlon - x_0) * inv_dx + 0.5);
             iy = y = floor((rlat - y_0) * inv_dy + 0.5);
-	    if (x < 0 || x >= nx || y < 0 || y >= ny) {
-		ipnt[i] = 0;
-	    }
-	    else {
-		ipnt[i] = ix + nx*iy + 1;
-	    }
+            if (x < 0 || x >= nx || y < 0 || y >= ny) {
+                ipnt[i] = 0;
+            }
+            else {
+                ipnt[i] = ix + nx*iy + 1;
+            }
         }
         return 0;
     }
@@ -312,12 +390,12 @@ int gctpc_ll2i(int n, double *lon, double *lat, unsigned int *ipnt) {
         forward_fn(rlon, rlat, &x, &y);
         ix = x = floor((x - x_0)*inv_dx + 0.5);
         iy = y = floor((y - y_0)*inv_dy + 0.5);
-	if (x < 0 || x >= nx || y < 0 || y >= ny) {
-	    ipnt[i] = 0;
-	}
-	else {
-	    ipnt[i] = ix + nx*iy + 1;
-	}
+        if (x < 0 || x >= nx || y < 0 || y >= ny) {
+            ipnt[i] = 0;
+        }
+        else {
+            ipnt[i] = ix + nx*iy + 1;
+        }
     }
     return 0;
 }
