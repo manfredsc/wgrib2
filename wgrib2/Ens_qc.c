@@ -95,10 +95,10 @@ extern unsigned int *translation;
 /** Use scaling flag. */
 extern int use_scale;
 
-/** Decoding scale flag. */
+/** Decimal scaling. */
 extern int dec_scale;
 
-/** Binary scale flag. */
+/** Binary scaling. */
 extern int bin_scale;
 
 /** Number of bits wanted. */
@@ -120,8 +120,8 @@ struct ens_qc_struct {
     unsigned char *first_sec[9];        /**< Array containting first section. */
     struct full_date verf_date;         /**< Verification date. */
     int use_scale;                      /**< Use scaling flag. */
-    int dec_scale;                      /**< Decoding scale flag. */
-    int bin_scale;                      /**< Binary scale flag. */
+    int dec_scale;                      /**< Decimal scaling. */
+    int bin_scale;                      /**< Binary scaling. */
     int wanted_bits;                    /**< Number of bits wanted. */
     int max_bits;                       /**< Maximum number of bits. */
     enum output_grib_type grib_type;    /**< Output GRIB type. */
