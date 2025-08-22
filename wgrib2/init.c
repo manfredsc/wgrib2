@@ -151,8 +151,9 @@ extern char **WxKeys;                   /**< NDFD weather information keys. */
 extern const char *text_format;		/**< Pointer to text format. */
 extern int text_column;			    /**< Number of columns in text output. */
 
-#ifdef USE_TIGGE`
+#ifdef USE_TIGGE
 extern int tigge;			/**< Use TIGGE flag. */
+#endif
 extern int names;			/**< Name convention to use. */
 
 // extern long int pos_input;		/* seq read of grib */
