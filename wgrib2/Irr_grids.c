@@ -1,3 +1,7 @@
+/** @file
+ * @brief Routines for making irregular grids.
+ * @author Public Domain: Wesley Ebisuzaki @date 6/2011
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,17 +10,74 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-extern int decode, flush_mode, latlon, file_append, save_translation;
-extern double *lat, *lon;
+/** Decode grib file flag. */
+extern int decode;
+
+/** Flush of output flag. */
+extern int flush_mode;
+
+/** Flag to indicate lat-lon grid processing. */
+extern int  latlon;
+
+/** Append grib file flag. */
+extern int file_append;
+
+/** Flag to indicate whether to save translation information. */
+extern int save_translation;
+
+/** Pointer to array of latitude values. */
+extern double *lat;
+
+/** Pointer to array of longitude values. */
+extern double *lon;
+
+/** GDS change number. */
 extern int GDS_change_no;
-extern int use_scale, dec_scale, bin_scale, wanted_bits, max_bits;
-extern int nx, ny;
+
+/** Use scaling flag. */
+extern int use_scale;
+
+/** Decimal scaling factor. */
+extern int dec_scale;
+
+/** Bin scaling factor. */
+extern int bin_scale;
+
+/** Number of wanted bits. */
+extern int wanted_bits;
+
+/** Maximum number of bits. */
+extern int max_bits;
+
+/** Number of grid points in the x direction. */
+extern int nx;  
+
+/** Number of grid points in the y direction. */
+extern int ny;
+
+/** Number of grid points. */
 extern unsigned int npnts;
+
+/** Current output GRIB type. */
 extern enum output_grib_type grib_type;
 
+/** Message number. */
 extern int msg_no;
+
 /*
  * HEADER:100:irr_grid:output:3:make irregular grid (GDT=130 not adopted), nearest neighbor, X=lon-lat list Y=radius (km) Z=output grib file
+ */
+
+/**
+ * Make irregular grid.
+ * 
+ * This option will be elimated as template 3.130 was not adopted into the grib standard.
+ * 
+ * @param ARG3 ???
+ * 
+ * @return 0 on success, error code otherwise
+ * 
+ * @author Wesley Ebisuzaki @date 6/2011
  */
 int f_irr_grid(ARG3) {
 
@@ -24,7 +85,7 @@ int f_irr_grid(ARG3) {
     struct local_struct {
         unsigned int ngrid;
         double *lon_lat_list, radius;
-	struct seq_file out;
+        struct seq_file out;
         int *iptr;
         int last_GDS_change_no;
     };
@@ -41,64 +102,64 @@ int f_irr_grid(ARG3) {
     if (mode == -1) {
         decode = latlon = 1;
         *local = save = (struct local_struct *)malloc( sizeof(struct local_struct));
-	if (save == NULL) fatal_error("irr_grid: memory allocation","");
+        if (save == NULL) fatal_error("irr_grid: memory allocation","");
 
-	/* count number of colons */
-	t = arg1;
-	i = 0;
-	while (*t) {
-	    if (*t++ == ':') i++;
-	}
-	if (i % 2 != 1) fatal_error("irr_grid: need lon0:lat0:lon1:lat1:..:lonN:latN","");
+        /* count number of colons */
+        t = arg1;
+        i = 0;
+        while (*t) {
+            if (*t++ == ':') i++;
+        }
+        if (i % 2 != 1) fatal_error("irr_grid: need lon0:lat0:lon1:lat1:..:lonN:latN","");
 
-	// limit to number of points
-	// basic limit is 2**32 - 1  for all grids
-	// max size of sec3 is 2**32 - 1
-        // for gdt=130: size fo Sec3 is 30+npnts*8
-	// max value for npnts = 536870908     
+        // limit to number of points
+        // basic limit is 2**32 - 1  for all grids
+        // max size of sec3 is 2**32 - 1
+            // for gdt=130: size fo Sec3 is 30+npnts*8
+        // max value for npnts = 536870908     
 
         save->ngrid = (i + 1)/2;
-	if (save->ngrid > 536870908) fatal_error_i("irr_grid: grid points %d > 536870908", save->ngrid);
+        if (save->ngrid > 536870908) fatal_error_i("irr_grid: grid points %d > 536870908", save->ngrid);
 
-	save->lon_lat_list = (double *) malloc(2 * sizeof(double) * (size_t) save->ngrid);
-	save->iptr = (int *) malloc(sizeof(int) * (size_t) save->ngrid);
-	if (save->lon_lat_list == NULL || save->iptr == NULL ) fatal_error("irr_grid: memory allocation","");
+        save->lon_lat_list = (double *) malloc(2 * sizeof(double) * (size_t) save->ngrid);
+        save->iptr = (int *) malloc(sizeof(int) * (size_t) save->ngrid);
+        if (save->lon_lat_list == NULL || save->iptr == NULL ) fatal_error("irr_grid: memory allocation","");
 
-	t = arg1;
+        t = arg1;
         k = sscanf(t, "%lf%n", &tmp, &m);
-	if (k != 1) fatal_error("irr_grid: lat-lon list, %s",t);
-	save->lon_lat_list[0] = tmp;
-	t += m;
-	for (i = 1; i < 2*save->ngrid; i++) {
+        if (k != 1) fatal_error("irr_grid: lat-lon list, %s",t);
+        save->lon_lat_list[0] = tmp;
+        t += m;
+        for (i = 1; i < 2*save->ngrid; i++) {
             k = sscanf(t, ":%lf%n", &tmp, &m);
-	    if (k != 1) fatal_error("irr_grid: lat-lon list, %s",t);
-	    save->lon_lat_list[i] = tmp;
-	    t += m;
-	}
+            if (k != 1) fatal_error("irr_grid: lat-lon list, %s",t);
+            save->lon_lat_list[i] = tmp;
+            t += m;
+        }
 
-	for (i = 0 ; i < save->ngrid; i++) {
-	    tmp = save->lon_lat_list[i*2];
-	    if (tmp < 0.0) save->lon_lat_list[i*2] = tmp + 360.0;
-	    if (tmp > 360.0) save->lon_lat_list[i*2] = tmp - 360.0;
-	    if (fabs(save->lon_lat_list[i*2+1]) > 90.0) fatal_error("irr_grid: bad latitude","");
-	}
+        for (i = 0 ; i < save->ngrid; i++) {
+            tmp = save->lon_lat_list[i*2];
+            if (tmp < 0.0) save->lon_lat_list[i*2] = tmp + 360.0;
+            if (tmp > 360.0) save->lon_lat_list[i*2] = tmp - 360.0;
+            if (fabs(save->lon_lat_list[i*2+1]) > 90.0) fatal_error("irr_grid: bad latitude","");
+        }
 
-	if (sscanf(arg2,"%lf",&(save->radius)) != 1) fatal_error("irr_grid: radius %s", arg2);
+        if (sscanf(arg2,"%lf",&(save->radius)) != 1) fatal_error("irr_grid: radius %s", arg2);
 
         if (fopen_file(&(save->out), arg3, file_append ? "ab" : "wb") != 0) {
             free(save);
             fatal_error("Could not open %s", arg3);
-	}
-	return 0;
+        }
+        return 0;
     }
 
     save = (struct local_struct *) *local;
     if (mode == -2) {
-	fclose_file(&(save->out));
-	free(save->iptr);
-	free(save->lon_lat_list);
-	free(save);
-	return 0;
+        fclose_file(&(save->out));
+        free(save->iptr);
+        free(save->lon_lat_list);
+        free(save);
+        return 0;
     }
 
     if (save->last_GDS_change_no != GDS_change_no) {
@@ -115,12 +176,12 @@ int f_irr_grid(ARG3) {
     array = (float *) malloc(sizeof(float) * (size_t) save->ngrid);
     new_sec3 = (unsigned char *) malloc((30+8*save->ngrid) * sizeof(unsigned char));
     if (array == NULL || new_sec3 == NULL) {
-	if (array) free(array);
-	if (new_sec3) free(new_sec3);
-	free(save->iptr);
-	free(save->lon_lat_list);
-	free(save);
-	fatal_error("irr_grid: memory allocation","");
+        if (array) free(array);
+        if (new_sec3) free(new_sec3);
+        free(save->iptr);
+        free(save->lon_lat_list);
+        free(save);
+        fatal_error("irr_grid: memory allocation","");
     }
 
     /* sec3 = grid defintion */
@@ -134,14 +195,14 @@ int f_irr_grid(ARG3) {
 
     p = code_table_3_2_location(sec);
     if (p == NULL) {  // no earth descripition
-	for (i = 14; i < 30; i++) {
-	    new_sec3[i] = 255;
-	}
+        for (i = 14; i < 30; i++) {
+            new_sec3[i] = 255;
+        }
     }
     else {
-	for (i = 14; i < 30; i++) {
-	    new_sec3[i] = p[i-14];
-	}
+        for (i = 14; i < 30; i++) {
+            new_sec3[i] = p[i-14];
+        }
     }
 
     /* make new_sec[] with new grid definition */
@@ -149,13 +210,13 @@ int f_irr_grid(ARG3) {
     new_sec[3] = new_sec3;
 
     for (i = 0; i < save->ngrid; i++) {
-	array[i] = save->iptr[i] >= 0 ?  data[save->iptr[i]] : UNDEFINED;
-	int_char( (int) (save->lon_lat_list[i*2+1] * 1000000.0), new_sec3 + 30 + i*8);
-	uint_char( (int) (save->lon_lat_list[i*2] * 1000000.0), new_sec3 + 34 + i*8);
+        array[i] = save->iptr[i] >= 0 ?  data[save->iptr[i]] : UNDEFINED;
+        int_char( (int) (save->lon_lat_list[i*2+1] * 1000000.0), new_sec3 + 30 + i*8);
+        uint_char( (int) (save->lon_lat_list[i*2] * 1000000.0), new_sec3 + 34 + i*8);
     }
 
     grib_wrt(new_sec, array, save->ngrid, save->ngrid, 1, use_scale, dec_scale, bin_scale,
-                wanted_bits, max_bits, grib_type, &(save->out));
+            wanted_bits, max_bits, grib_type, &(save->out));
 
     free(array);
     free(new_sec3);
@@ -175,6 +236,17 @@ int f_irr_grid(ARG3) {
  */
 
 
+/**
+ * Get irregular grid lat/lon values.
+ * 
+ * @param sec Pointer to the GRIB section.
+ * @param lat Pointer to the latitude array.
+ * @param lon Pointer to the longitude array.
+ *
+ * @return 0 on success, error code otherwise
+ * 
+ * @author Wesley Ebisuzaki @date 6/2011
+ */
 int irr_grid2ll(unsigned char **sec, double **lat, double **lon) {
     unsigned char *gds;
     double *llat, *llon;
@@ -197,8 +269,8 @@ int irr_grid2ll(unsigned char **sec, double **lat, double **lon) {
     gds = sec[3];
 
     for (i = 0; i < nnpnts; i++) {
-	*llat++ = (double) 1e-6 * int4(gds+30+i*8);
-	*llon++ = (double) 1e-6 * int4(gds+34+i*8);
+        *llat++ = (double) 1e-6 * int4(gds+30+i*8);
+        *llon++ = (double) 1e-6 * int4(gds+34+i*8);
     }
     return 0;
 }
