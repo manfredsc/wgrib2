@@ -1,3 +1,19 @@
+/** @file
+ * @brief Level (Code Table 4.5) tables and functions.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 2006 | W. Ebisuzaki | Initial
+ * 1/2007 | M. Schwarb | Cleanup
+ * 1/2007 | Caser Tejeda Hernandez | Found error in meter underground
+ * 2/2007 | W. Ebisuzaki | Level 11
+ * 2/2007 | W. Ebisuzaki | Spelling error fixed
+ * 9/2008 | Nick Lott | type 241 added
+ * 
+ * @author Public Domain: Wesley Ebisuzaki @date 2006
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,22 +22,13 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/* Levels.c
- *   2006: public domain wesley ebisuzaki
- *   1/2007: cleanup M. Schwarb
- *   1/2007: Caser Tejeda Hernandez found error in meter underground
- *   2/2007: level 11
- *   2/2007: spelling error fixed
- *   9/2008: type 241 added Nick Lott 
- */
-
-
 /*
  * HEADER:200:lev:inv:0:level (code table 4.5)
  */
 
 /* code table 4.5 */
 
+/** Level Table Descriptions (Code Table 4.5) */
 const char *level_table[192] = {
 /* 0 */ "reserved",
 /* 1 */ "surface",
@@ -217,7 +224,7 @@ const char *level_table[192] = {
 /* 191 */ "reserved"
 };
 
-// 192..255
+/** NCEP Level Table Descriptions (Code Table 4.5 items 192-255) */
 const char *ncep_level_table[64] = {
 /* 192 */ "reserved",
 /* 193 */ "reserved",
@@ -285,7 +292,7 @@ const char *ncep_level_table[64] = {
 /* 255 */ "missing"
 };
 
-// 192..255
+/** KMA Level Table Descriptions (Code Table 4.5 items 192-255) */
 const char *kma_level_table[64] = {
 /* 192 */ "reserved",
 /* 193 */ "reserved",
@@ -357,6 +364,21 @@ int level1(int mode, int type, int undef_val, float value, int center, int subce
 int level2(int mode, int type1, int undef_val1, float value1, int type2, int undef_val2, 
    float value2, int center, int subcenter, char *inv_out);
 
+/**
+ * Prints the level of the field.
+ * 
+ * ## Usage
+ * -lev
+ * 
+ * @param ARG0 ???
+ * 
+ * @return 0 for success, error code otherwise
+ * 
+ * ## Example
+ * ???
+ * 
+ * @author Wesley Ebisuzaki @date 2006
+ */
 int f_lev(ARG0) {
 
     int level_type1, level_type2;
@@ -372,94 +394,110 @@ int f_lev(ARG0) {
     fixed_surfaces(sec, &level_type1, &val1, &undef_val1, &level_type2, &val2, &undef_val2);
 
     if (mode > 1) {
-	if (undef_val1 == 0) sprintf(inv_out,"lvl1=(%d,%lg) ",level_type1,val1);
-	else sprintf(inv_out,"lvl1=(%d,missing) ",level_type1);
-	inv_out += strlen(inv_out);
+        if (undef_val1 == 0) sprintf(inv_out,"lvl1=(%d,%lg) ",level_type1,val1);
+        else sprintf(inv_out,"lvl1=(%d,missing) ",level_type1);
+        inv_out += strlen(inv_out);
 
-	if (undef_val2 == 0) sprintf(inv_out,"lvl2=(%d,%lg):",level_type2,val2);
-	else sprintf(inv_out,"lvl2=(%d,missing):",level_type2);
-	inv_out += strlen(inv_out);
+        if (undef_val2 == 0) sprintf(inv_out,"lvl2=(%d,%lg):",level_type2,val2);
+        else sprintf(inv_out,"lvl2=(%d,missing):",level_type2);
+        inv_out += strlen(inv_out);
     }
 
     level2(mode, level_type1, undef_val1, val1, level_type2, undef_val2, val2, center, subcenter, inv_out);
     return 0;
 }
 
-/*
- * level2 is for layers
+/**
+ * Prints the level or layer of the field.
+ * 
+ * For layers. Calls level1() if only one level.
+ * 
+ * @param mode Mode of operation.
+ * @param type1 Type of the first level.
+ * @param undef_val1 Undefined value flag for the first level.
+ * @param value1 Value of the first level.
+ * @param type2 Type of the second level.
+ * @param undef_val2 Undefined value flag for the second level.
+ * @param value2 Value of the second level.
+ * @param center Originating center (Table 0).
+ * @param subcenter Originating subcenter (Table C).
+ * @param inv_out Output buffer for the level information.
+ * 
+ * @return Always returns 0.
+ * 
+ * @author Wesley Ebisuzaki @date 2006
  */
-
 int level2(int mode, int type1, int undef_val1, float value1, int type2, int undef_val2, float value2, int center, int subcenter,
-	char *inv_out) {
+	       char *inv_out) {
 
     if (type1 == 100 && type2 == 100) {
-	sprintf(inv_out,"%g-%g mb",value1/100,value2/100);
+        sprintf(inv_out,"%g-%g mb",value1/100,value2/100);
     }
     else if (type1 == 102 && type2 == 102) {
-	sprintf(inv_out,"%g-%g m above mean sea level",value1,value2);
+        sprintf(inv_out,"%g-%g m above mean sea level",value1,value2);
     }
     else if (type1 == 103 && type2 == 103) {
-	sprintf(inv_out,"%g-%g m above ground",value1,value2);
+        sprintf(inv_out,"%g-%g m above ground",value1,value2);
     }
     else if (type1 == 104 && type2 == 104) {
-	sprintf(inv_out,"%g-%g sigma layer",value1,value2);
+        sprintf(inv_out,"%g-%g sigma layer",value1,value2);
     }
     else if (type1 == 105 && type2 == 105) {
-	sprintf(inv_out,"%g-%g hybrid layer",value1,value2);
+        sprintf(inv_out,"%g-%g hybrid layer",value1,value2);
     }
     else if (type1 == 106 && type2 == 106) {
-	/* sprintf(inv_out,"%g-%g m below ground",value1/100,value2/100); removed 1/2007 */
-	sprintf(inv_out,"%g-%g m below ground",value1,value2);
+        /* sprintf(inv_out,"%g-%g m below ground",value1/100,value2/100); removed 1/2007 */
+        sprintf(inv_out,"%g-%g m below ground",value1,value2);
     }
     else if (type1 == 107 && type2 == 107) {
-	sprintf(inv_out,"%g-%g K isentropic layer",value1,value2);
+        sprintf(inv_out,"%g-%g K isentropic layer",value1,value2);
     }
     else if (type1 == 108 && type2 == 108) {
-	sprintf(inv_out,"%g-%g mb above ground",value1/100,value2/100);
+        sprintf(inv_out,"%g-%g mb above ground",value1/100,value2/100);
     }
     else if (type1 == 111 && type2 == 111) {
-	sprintf(inv_out,"%g-%g Eta layer",value1,value2);
+        sprintf(inv_out,"%g-%g Eta layer",value1,value2);
     }
     else if (type1 == 115 && type2 == 115) {
-	sprintf(inv_out,"%g-%g sigma height layer",value1,value2);
+        sprintf(inv_out,"%g-%g sigma height layer",value1,value2);
     }
     else if (type1 == 118 && type2 == 118) {
-	sprintf(inv_out,"%g-%g hybrid height layer",value1,value2);
+        sprintf(inv_out,"%g-%g hybrid height layer",value1,value2);
     }
     else if (type1 == 119 && type2 == 119) {
-	sprintf(inv_out,"%g-%g hybrid pressure layer",value1,value2);
+        sprintf(inv_out,"%g-%g hybrid pressure layer",value1,value2);
     }
     else if (type1 == 150 && type2 == 150) {
-	sprintf(inv_out,"%g-%g generalized vertical height coordinate",value1,value2);
+        sprintf(inv_out,"%g-%g generalized vertical height coordinate",value1,value2);
     }
     else if (type1 == 160 && type2 == 160) {
-	sprintf(inv_out,"%g-%g m below sea level",value1,value2);
+        sprintf(inv_out,"%g-%g m below sea level",value1,value2);
     }
     else if (type1 == 161 && type2 == 161) {
-	sprintf(inv_out,"%g-%g m ocean layer",value1,value2);
+        sprintf(inv_out,"%g-%g m ocean layer",value1,value2);
     }
     else if (type1 == 1 && type2 == 8) {
-	sprintf(inv_out,"atmos col");		// compatible with wgrib
+        sprintf(inv_out,"atmos col");		// compatible with wgrib
     }
     else if (type1 == 9 && type2 == 1) {
-	sprintf(inv_out,"ocean column");
+        sprintf(inv_out,"ocean column");
     }
     else if (center == NCEP && type1 == 235 && type2 == 235) {
-	    sprintf(inv_out,"%g-%gC ocean isotherm layer", value1/10,value2/10);
+        sprintf(inv_out,"%g-%gC ocean isotherm layer", value1/10,value2/10);
     }
     else if (center == NCEP && type1 == 236 && type2 == 236) {	// obsolete
-	    sprintf(inv_out,"%g-%g m ocean layer", value1*10,value2*10);
+        sprintf(inv_out,"%g-%g m ocean layer", value1*10,value2*10);
     }
     else if (type1 == 255 && type2 == 255) {
-	    sprintf(inv_out,"no_level");
+        sprintf(inv_out,"no_level");
     }
     else {
         level1(mode, type1, undef_val1, value1, center, subcenter,inv_out);
-	inv_out += strlen(inv_out);
+        inv_out += strlen(inv_out);
         if (type2 != 255) {
-	    sprintf(inv_out," - ");
-	    inv_out += strlen(inv_out);
-	    level1(mode, type2, undef_val2, value2, center, subcenter,inv_out);
+            sprintf(inv_out," - ");
+            inv_out += strlen(inv_out);
+            level1(mode, type2, undef_val2, value2, center, subcenter,inv_out);
         }
     }
     return 0;
@@ -469,14 +507,31 @@ int level2(int mode, int type1, int undef_val1, float value1, int type2, int und
  * level1 is for a single level (not a layer)
  */
 
+/**
+ * Prints the level of the field.
+ * 
+ * For single level (not a layer).
+ * 
+ * @param mode Mode of operation.
+ * @param type Type of the level.
+ * @param undef_val Undefined value flag for the level.
+ * @param val Value of the level.
+ * @param center Originating center (Table 0).
+ * @param subcenter Originating subcenter (Table C).
+ * @param inv_out Output buffer for the level information.
+ * 
+ * @return Always returns 0.
+ * 
+ * @author Wesley Ebisuzaki @date 2006
+ */
 int level1(int mode, int type, int undef_val, float val, int center, int subcenter,char *inv_out) {
 
     /* WMO defined levels */
 
     if (type < 192) {
         if (type == 100 || type == 108) val = val * 0.01;  // Pa -> mb
-	sprintf(inv_out,level_table[type], val);
-	return 0;
+        sprintf(inv_out,level_table[type], val);
+        return 0;
     }
 
     // no numeric information
@@ -485,12 +540,12 @@ int level1(int mode, int type, int undef_val, float val, int center, int subcent
     /* local table for NCEP */
     if (center == NCEP && type >= 192 && type <= 254) {
         if (type == 235) val *= 0.01;  // C -> 0.1C
-	sprintf(inv_out,ncep_level_table[type-192], val);
+        sprintf(inv_out,ncep_level_table[type-192], val);
     }
 
     else if (center == KMA && type >= 192 && type <= 254) {
         if (type == 235) val *= 0.01;  // C -> 0.1C
-	sprintf(inv_out,kma_level_table[type-192], val);
+        sprintf(inv_out,kma_level_table[type-192], val);
     }
 
     else {
