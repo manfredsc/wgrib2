@@ -1,17 +1,17 @@
 #!/bin/sh
-# 10/2024  Public Domain   Wesley Ebisuzaki
-#
-# Script to convert grib2 table information from the
-# "gribtable" format to the "gribtable.dat" format.
-#
-# Usage:
-#   - Zero arguments:                        "gribtable" --> "gribtable.dat"
-#   - One argument "mytab":                  "mytab"   --> "mytable.dat"
-#   - Two arguments "mytab" "mytab.custom":  "mytab"   --> "mytab.custom"
-#
-# sample "gribtab" format and corresponding "gribtable.dat" format:
-# 0:0:0:255:7:1:7:193:4LFTX:Best (4 layer) Lifted Index:K
-# {0,0,0,255,7,1,7,193, "4LFTX", "Best (4 layer) Lifted Index", "K"},
+## @file
+## @brief Script to convert grib2 table information from the
+## "gribtable" format to the "gribtable.dat" format.
+## 
+## Usage:
+##   - Zero arguments:                        "gribtable" --> "gribtable.dat"
+###   - One argument "mytab":                  "mytab"   --> "mytable.dat"
+###   - Two arguments "mytab" "mytab.custom":  "mytab"   --> "mytab.custom"
+##
+## sample "gribtab" format and corresponding "gribtable.dat" format:
+## 0:0:0:255:7:1:7:193:4LFTX:Best (4 layer) Lifted Index:K
+## {0,0,0,255,7,1,7,193, "4LFTX", "Best (4 layer) Lifted Index", "K"},
+## @author Public Domain: Wesley Ebisuzaki @date 10/2024
 
 if [ $# -ge 1 ]; then
   infile="$1"
