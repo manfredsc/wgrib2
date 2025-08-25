@@ -1,8 +1,6 @@
-/* Public Domain 7/2021 Wesley Ebisuzaki
- *
- * routines that convert lat-lon to i,j
- *
- * I expect things to change
+/** @file
+ * @brief Routines that convert lat-lon to i,j.
+ * @author Public Domain: Wesley Ebisuzaki @date 7/2021
  */
 
 #include <stdio.h>
@@ -13,15 +11,47 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
+/** Error tolerance for floating point comparisons. */
 #define ERROR 0.0001
 
-extern double *lat, *lon;
+/** Pointer to array of latitude values. */
+extern double *lat;
+
+/** Pointer to array of longitude values. */
+extern double *lon;
+
+/** Current output order type. */
 extern enum output_order_type output_order;
 
-static unsigned int from_nx, from_ny;
-static double from_dlon, from_dlat;
-static double from_lon, from_lat;
+/** Conversion factor for nx. */
+static unsigned int from_nx;
 
+/** Conversion factor for ny. */
+static unsigned int from_ny;
+
+/** Conversion factor for dlon. */
+static double from_dlon;
+
+/** Conversion factor for dlat. */
+static double from_dlat;
+
+/** Conversion factor for lon. */
+static double from_lon;
+
+/** Conversion factor for lat. */
+static double from_lat;
+
+/**
+ * Initialize the grid parameters to convert lat/lon to i,j.
+ *
+ * @param sec Pointer to the section of the grid descriptor.
+ * @param nx Number of grid points in the x-direction.
+ * @param ny Number of grid points in the y-direction.
+ * 
+ * @return 0 for success, error code otherwise
+ *
+ * @author Wesley Ebisuzaki @date 7/2021
+ */
 int latlon_init(unsigned char **sec, unsigned int nx, unsigned int ny) {
 
     if (code_table_3_1(sec) != 0) fatal_error("latlon_init: not lat-lon grid","");
@@ -38,6 +68,17 @@ int latlon_init(unsigned char **sec, unsigned int nx, unsigned int ny) {
     return 0;
 }
 
+/**
+ * Find the closest grid point to a given latitude/longitude.
+ *
+ * @param sec Pointer to the section of the grid descriptor.
+ * @param plat Latitude of the point to find.
+ * @param plon Longitude of the point to find.
+ *
+ * @return Index of the closest grid point, or -1 if not found.
+ *
+ * @author Wesley Ebisuzaki @date 7/2021
+ */
 long int latlon_closest(unsigned char **sec, double plat, double plon) {
 
     double tmp;
