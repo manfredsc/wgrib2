@@ -66,7 +66,7 @@ extern double *lat;
 /** Pointer to array of longitude values. */
 extern double *lon;
 
-/** Scan mode flag. */
+/** Scan mode. */
 extern int  scan;
 
 /** Number of grid points in the x direction. */
