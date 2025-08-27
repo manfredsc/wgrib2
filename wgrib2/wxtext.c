@@ -1,3 +1,7 @@
+/** @file
+ * @brief Decode and copy NDFD weather information keys.
+ * @author Public Domain: Wesley Ebisuzaki @date 6/2011
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,23 +10,24 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/*
- * WxText.c
- *
- * 6/2011 Public Domain Wesley Ebisuzaki
- *
- * NDFD uses section 2 (local) to keep weather information keys
- *   these keys are text strings with weather info.
- *
- * mk_WxKeys decodes and makes a copy of the keys
- *
- * v1.1 modification for MDL
- */
+/** Pointer to weather information table. */
+char *WxTable;
 
+/** Pointer to weather information keys. */
+char **WxKeys;
 
-char *WxTable, **WxKeys;
+/** Number of weather information keys. */
 int WxNum;
 
+/**
+ * Get the weather information label for a given float value.
+ *
+ * @param f The float value representing the weather information.
+ *
+ * @return The weather information label as a string.
+ * 
+ * @author Wesley Ebisuzaki @date 6/2011
+ */
 const char *WxLabel(float f) {
     int j;
     if (UNDEFINED_VAL(f)) return "Undefined";
@@ -31,6 +36,16 @@ const char *WxLabel(float f) {
     return WxKeys[j];
 }
 
+/**
+ * NDFD uses section 2 (local) to keep weather information keys. These keys are text strings 
+ * with weather info. This function decodes and makes a copy of the keys.
+ *
+ * @param sec Pointer to the GRIB sections.
+ *
+ * @return 0 on success. Throws fatal_error() on failure.
+ *
+ * @author Wesley Ebisuzaki @date 6/2011
+ */
 int mk_WxKeys(unsigned char **sec) {
 
     int template, n_bits, ok;
