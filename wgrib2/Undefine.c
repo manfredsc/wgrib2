@@ -288,7 +288,6 @@ int f_ijundefine(ARG3) {
  * 
  * @author Wesley Ebisuzaki @date 10/2007
  */
- */
 int f_undefine_val(ARG1) {
 
 #define DELTA 0.001
