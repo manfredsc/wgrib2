@@ -1,3 +1,13 @@
+/** @file
+ * @brief Some routines that undefine grid point values for later use.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 10/2007 | W. Ebisuzaki | Initial
+ * 1/2008 | W. Ebisuzaki | lat and lon changed from float to double
+ * @author Public Domain: Wesley Ebisuzaki @date 10/2007
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,20 +15,26 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/*
- * Undefine.c
- *
- *  Some routines that undefine grid point values for later use
- *
- * 10/2007: Public Domain: Wesley Ebisuzaki
- * 1/2008 lat and lon changed from float to double
- *
- */
+/** Decode grib file flag. */
+extern int decode;
 
+/** Flag to indicate lat-lon grid processing. */
+extern int latlon;
 
-extern int decode, latlon, scan;
-extern double *lat, *lon;
-extern unsigned int nx_, ny_;
+/** Scan mode. */
+extern int scan;
+
+/** Pointer to array of latitude values. */
+extern double *lat;
+
+/** Pointer to array of longitude values. */
+extern double *lon;
+
+/** Number of grid points in the x-direction. */
+extern unsigned int nx_;
+
+/** Number of grid points in the y-direction. */
+extern unsigned int ny_;
 
 /*
  * HEADER:100:undefine:misc:3:sets grid point values to undefined X=(in-box|out-box) Y=lon0:lon1 Z=lat0:lat1
@@ -31,6 +47,34 @@ extern unsigned int nx_, ny_;
  * spreadsheet output
  */
 
+/**
+ * Sets the data grid points to UNDEFINED.
+ * 
+ * The grid points are have to be inside or outside a user defined lat-lon box. This option 
+ * can be used to limit the output when writing text output. For example, you were only 
+ * interested in the UK, you could use this option to undefine the grid points outside the 
+ * of UK. Then when you write the data in spread-sheet format, you would get a much smaller 
+ * output. This option can also be used to find the regional average using the stat option. 
+ * 
+ * ## Usage
+ * -undefine (in-box|out-box) lon0:lon1 lat0:lat1
+ * 
+ * in-box:  decoded grid points inside the box are set to undefined
+ * out-box: decoded grid points outside the box are set to undefined
+ * lon0:lon1  west-east longitudes of the box
+ * lat0:lat1  south-north latitudes of the box
+ * 
+ * Points on the box boundary are considered to be in the box.
+ * 
+ * @param ARG3 ???
+ * 
+ * @return 0 on success. Throws fatal_error() on failure.
+ * 
+ * ## Example
+ * ???
+ * 
+ * @author Wesley Ebisuzaki @date 10/2007
+ */
 int f_undefine(ARG3) {
     struct local_struct {
         int in;
@@ -72,7 +116,7 @@ int f_undefine(ARG3) {
         save->lat1 = y;
     }
     else if (mode == -2) {
-	free(*local);
+        free(*local);
     }
 
     if (mode < 0) return 0;
@@ -113,6 +157,38 @@ int f_undefine(ARG3) {
  * spreadsheet output uses i,j coordinates, i = 1..nx j = 1..iy;
  */
 
+/**
+ * Sets the selected grid values to undefined. The grid points are have to be inside or outside 
+ * a user defined (i,j) box. I and j are the column and row number of the "raw" data starting 
+ * from 1. This option can be used to limit the output when writing output. For example, you were 
+ * only interested in the UK, you could use this option to undefine the grid points outside the 
+ * of UK. Then when you write the data in spread-sheet format, you would get a much smaller output. 
+ * This option can also be used to find the regional average using the stat option. Note that the 
+ * -ijundefine option changes the in-memory values of the grid points. If you want to alter the 
+ * grib file, you will have to write out the in-memory grid point values using the the -grib_out 
+ * option. 
+ * 
+ * ## Usage
+ * -ijundefine (in-box|out-box) ix0:ix1 iy0:iy1
+ * 
+ * in-box:  decoded grid points inside the box are set to undefined
+ * out-box: decoded grid points outside the box are set to undefined
+ * ix0:ix1 columns limits (1 <=  ix0 <= ix1 < nx)
+ * iy0:iy1 row limits (1 <= iy0 <= iy1 <  ny)
+ * Note: the order of the data should be in default mode (we:sn).
+ * Note: ix0, iy0 is the lower left hand corner (w/s).
+ * 
+ * Points on the box boundary are considered to be in the box.
+ * 
+ * @param ARG3 ???
+ * 
+ * @return 0 on success. Throws fatal_error() on failure.
+ * 
+ * ## Example
+ * ???
+ * 
+ * @author Wesley Ebisuzaki @date 10/2007
+ */
 int f_ijundefine(ARG3) {
     struct local_struct {
         int in;
@@ -147,7 +223,7 @@ int f_ijundefine(ARG3) {
         save->iy1 = y-1;
     }
     else if (mode == -2) {
-	free(*local);
+        free(*local);
     }
     if (mode < 0) return 0;
 
@@ -187,6 +263,32 @@ int f_ijundefine(ARG3) {
  * HEADER:100:undefine_val:misc:1:grid point set to undefined if X=val or X=low:high
  */ 
 
+/**
+ * Sets the grid points to undefined depending on the value of the grid point. If a single value 
+ * is specified, grid values within 0.1 percent are set to undefined. If two values are specified, 
+ * the values that are within that range are set to undefined. 
+ * 
+ * Note: the ability to handle ranges was always available but undocumented. My mistake. That's 
+ * what you get when you delay writing the documentation. 
+ * 
+ * ## Usage
+ * -undefine_val VALUE
+ *
+ * Grid values within 0.1 percent of VALUE are set to undefined.
+ *
+ * -undefine_val "VALUE1:VALUE2"
+ * Grid values that are within the range are set to undefined. (i.e., VALUE1 <= grid_value <= VALUE2)
+ * 
+ * @param ARG1 ???
+ * 
+ * @return 0 on success. Throws fatal_error() on failure.
+ * 
+ * ## Example
+ * ???
+ * 
+ * @author Wesley Ebisuzaki @date 10/2007
+ */
+ */
 int f_undefine_val(ARG1) {
 
 #define DELTA 0.001
@@ -219,7 +321,7 @@ int f_undefine_val(ARG1) {
         }
     }
     else if (mode == -2) {
-	free(*local);
+        free(*local);
     }
     if (mode < 0) return 0;
 

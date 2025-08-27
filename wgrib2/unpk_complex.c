@@ -1,3 +1,8 @@
+/** @file
+ * @brief Unpack GRIB2 data with complex packing.
+ * @author Public Domain: Wesley Ebisuzaki @date 2009
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,18 +14,25 @@
 #ifdef USE_OPENMP
 #include <omp.h>
 #else
-#define omp_get_num_threads()           1
-#define omp_get_thread_num()		0
+#define omp_get_num_threads()           1   /**< Number of threads */
+#define omp_get_thread_num()            0   /**< Thread ID */
 #endif
 
-// 2009 public domain wesley ebisuzaki
-//
-// note: assumption that the grib file will use 25 bits or less for storing data
-//       (limit of bitstream unpacking routines)
-// note: assumption that all data can be stored as integers and have a value < INT_MAX
-
-// #define DEBUG
-
+/**
+ * Unpack GRIB2 data with complex packing.
+ * 
+ * Assumptions:
+ * - The GRIB2 file uses 25 bits or less for storing data (limit of bitstream unpacking routines).
+ * - All data can be stored as integers and have a value < INT_MAX.
+ *
+ * @param sec Pointer to the GRIB2 section.
+ * @param data Pointer to the output data array.
+ * @param ndata Number of data points.
+ *
+ * @return 0 on success. Throws fatal_error() on failure.
+ *
+ * @author Wesley Ebisuzaki @date 2009
+ */
 int unpk_complex(unsigned char **sec, float *data, unsigned int ndata) {
 
     unsigned int i, ii, j, n_bytes, n_bits;
@@ -63,7 +75,7 @@ int unpk_complex(unsigned char **sec, float *data, unsigned int ndata) {
     extra_octets = (pack == 2) ? 0 : sec[5][48];
 
     if (ngroups == 0) {
-	if (bitmap_flag == 255) {
+        if (bitmap_flag == 255) {
 #ifdef IS_OPENMP_4_0
 #pragma omp simd
 #endif
@@ -109,25 +121,25 @@ int unpk_complex(unsigned char **sec, float *data, unsigned int ndata) {
     group_offset = (int *) malloc(sizeof (unsigned int) * (size_t) ngroups);
     udata = (int *) malloc(sizeof (unsigned int) * (size_t) npnts);
     if (group_refs == NULL || group_widths == NULL || group_lengths == NULL || 
-	group_location == NULL || group_clocation == NULL || group_offset == NULL
-	|| udata == NULL) fatal_error("unpk_complex: memory allocation","");
+        group_location == NULL || group_clocation == NULL || group_offset == NULL
+        || udata == NULL) fatal_error("unpk_complex: memory allocation","");
 
     // read any extra values
     d = sec[7]+5;
     min_val = 0;
     if (extra_octets) {
-	extra_vals[0] = uint_n(d,extra_octets);
-	d += extra_octets;
-	if (ctable_5_6 == 2) {
-	    extra_vals[1] = uint_n(d,extra_octets);
-	    d += extra_octets;
-	}
-	min_val = int_n(d,extra_octets);
-	d += extra_octets;
+        extra_vals[0] = uint_n(d,extra_octets);
+        d += extra_octets;
+        if (ctable_5_6 == 2) {
+            extra_vals[1] = uint_n(d,extra_octets);
+            d += extra_octets;
+        }
+        min_val = int_n(d,extra_octets);
+        d += extra_octets;
     }
 
     if (ctable_5_4 != 1) fatal_error_i("internal decode does not support code table 5.4=%d",
-		ctable_5_4);
+                                        ctable_5_4);
 
     // do a check for number of grid points and size
     clocation = offset = n_bytes = n_bits = j = 0;
@@ -148,19 +160,19 @@ int unpk_complex(unsigned char **sec, float *data, unsigned int ndata) {
 
     i = thread_id * di;
     if (i < ngroups) {
-	k  = ngroups - i;
-	if (k > di) k = di;
+        k  = ngroups - i;
+        if (k > di) k = di;
 
         // read the group reference values
-   	rd_bitstream(d + (i/8)*nbits, 0, group_refs+i, nbits, k);
+        rd_bitstream(d + (i/8)*nbits, 0, group_refs+i, nbits, k);
 
-	// read the group widths
-	rd_bitstream(d+(nbits*ngroups+7)/8+(i/8)*nbit_group_width, 0,
-			group_widths+i,nbit_group_width,k);
+        // read the group widths
+        rd_bitstream(d+(nbits*ngroups+7)/8+(i/8)*nbit_group_width, 0,
+                group_widths+i,nbit_group_width,k);
 #ifdef IS_OPENMP_4_0
 #pragma omp simd
 #endif
-	for (ii = 0; ii < k; ii++) group_widths[i+ii] += ref_group_width;
+        for (ii = 0; ii < k; ii++) group_widths[i+ii] += ref_group_width;
     }
 
 #ifdef USE_OPENMP	
@@ -169,29 +181,29 @@ int unpk_complex(unsigned char **sec, float *data, unsigned int ndata) {
 
     if (ctable_5_4 == 1) {
 
-	// for(i = 0; i < ngroups-1; i++) 
+        // for(i = 0; i < ngroups-1; i++) 
 
         // di * nthreads > (ngroups-1)
         di = (ngroups - 1 + nthreads - 1) / nthreads;
         // di * nthreads is now a multiple of 8
         di = ((di + 7) | 7) ^ 7;
-	i = thread_id * di;
+        i = thread_id * di;
         if (i < ngroups - 1) {
             k  = ngroups - 1 - i;
             if (k > di) k = di;
-	    rd_bitstream(d+(nbits*ngroups+7)/8+(ngroups*nbit_group_width+7)/8 + 
-	       (i/8)*nbits_group_len, 0,group_lengths + i, nbits_group_len, k);
+            rd_bitstream(d+(nbits*ngroups+7)/8+(ngroups*nbit_group_width+7)/8 + 
+                (i/8)*nbits_group_len, 0,group_lengths + i, nbits_group_len, k);
 #ifdef IS_OPENMP_4_0
 #pragma omp simd
 #endif
-	    for (ii = 0; ii < k; ii++) group_lengths[i+ii] = 
-		    group_lengths[i+ii] * group_length_factor + ref_group_length;
+            for (ii = 0; ii < k; ii++) group_lengths[i+ii] = 
+                group_lengths[i+ii] * group_length_factor + ref_group_length;
         }
 
 #ifdef USE_OPENMP
 #pragma omp single
 #endif
-	group_lengths[ngroups-1] = len_last;
+        group_lengths[ngroups-1] = len_last;
     }
 
 /* old version
@@ -257,38 +269,10 @@ int unpk_complex(unsigned char **sec, float *data, unsigned int ndata) {
 #pragma omp section
 #endif
         {
-	    unsigned int i;
+            unsigned int i;
             for (i = 0; i < ngroups; i++) {
-	        group_location[i] = j;
-	        j += group_lengths[i];
-	    }
-	}
-
-#ifdef USE_OPENMP
-#pragma omp section
-#endif
-        {
-	    unsigned int i;
-            for (i = 0; i < ngroups; i++) {
-		/* eliminate potential overflow here */
-	        // n_bytes += (group_lengths[i]*group_widths[i]) / 8;
-	        // n_bits += (group_lengths[i]*group_widths[i]) % 8;
-	        n_bytes += (group_lengths[i] / 8) * (group_widths[i]);
-		n_bits += (group_lengths[i] % 8) * (group_widths[i]);
-		n_bytes += n_bits / 8;
-		n_bits = n_bits % 8;
-            }
-        }
-
-#ifdef USE_OPENMP
-#pragma omp section
-#endif
-	{
-	    unsigned int i;
-            for (i = 0; i < ngroups; i++) {
-	        group_clocation[i] = clocation;
-	        clocation += group_lengths[i]*(group_widths[i]/8) +
-	              (group_lengths[i]/8)*(group_widths[i] % 8);
+                group_location[i] = j;
+                j += group_lengths[i];
             }
         }
 
@@ -296,11 +280,39 @@ int unpk_complex(unsigned char **sec, float *data, unsigned int ndata) {
 #pragma omp section
 #endif
         {
-	    unsigned int i;
+            unsigned int i;
             for (i = 0; i < ngroups; i++) {
-	        group_offset[i] = offset;
-	        offset += (group_lengths[i] % 8)*(group_widths[i] % 8);
-	    }
+                /* eliminate potential overflow here */
+                // n_bytes += (group_lengths[i]*group_widths[i]) / 8;
+                // n_bits += (group_lengths[i]*group_widths[i]) % 8;
+                    n_bytes += (group_lengths[i] / 8) * (group_widths[i]);
+                n_bits += (group_lengths[i] % 8) * (group_widths[i]);
+                n_bytes += n_bits / 8;
+                n_bits = n_bits % 8;
+            }
+        }
+
+#ifdef USE_OPENMP
+#pragma omp section
+#endif
+        {
+            unsigned int i;
+            for (i = 0; i < ngroups; i++) {
+                group_clocation[i] = clocation;
+                clocation += group_lengths[i]*(group_widths[i]/8) +
+                    (group_lengths[i]/8)*(group_widths[i] % 8);
+            }
+        }
+
+#ifdef USE_OPENMP
+#pragma omp section
+#endif
+        {
+            unsigned int i;
+            for (i = 0; i < ngroups; i++) {
+                group_offset[i] = offset;
+                offset += (group_lengths[i] % 8)*(group_widths[i] % 8);
+            }
         }
     }
 }
@@ -318,11 +330,11 @@ int unpk_complex(unsigned char **sec, float *data, unsigned int ndata) {
 #pragma omp parallel for private(i) schedule(static)
 #endif
     for (i = 0; i < ngroups; i++) {
-	group_clocation[i] += (group_offset[i] / 8);
-	group_offset[i] = (group_offset[i] % 8);
+        group_clocation[i] += (group_offset[i] / 8);
+        group_offset[i] = (group_offset[i] % 8);
 
-	rd_bitstream(d + group_clocation[i], group_offset[i], udata+group_location[i], 
-		group_widths[i], group_lengths[i]);
+        rd_bitstream(d + group_clocation[i], group_offset[i], udata+group_location[i], 
+            group_widths[i], group_lengths[i]);
     }
 
     // handle substitute, missing values and reference value
@@ -330,170 +342,170 @@ int unpk_complex(unsigned char **sec, float *data, unsigned int ndata) {
 #ifdef USE_OPENMP
 #pragma omp parallel for private(i,k,j)
 #endif
-	for (i = 0; i < ngroups; i++) {
-	    j = group_location[i];
+        for (i = 0; i < ngroups; i++) {
+            j = group_location[i];
 #ifdef IS_OPENMP_4_0
 #pragma omp simd
 #endif
-	    for (k = 0; k < group_lengths[i]; k++) {
-		udata[j+k] += group_refs[i];
-	    }
-	}
+            for (k = 0; k < group_lengths[i]; k++) {
+                udata[j+k] += group_refs[i];
+            }
+        }
     }
     else if (n_sub_missing == 1) {
 
 #ifdef USE_OPENMP
 #pragma omp parallel for private(i,m1,k,j)
 #endif
-	for (i = 0; i < ngroups; i++) {
-	    j = group_location[i];
-	    if (group_widths[i] == 0) {
-	        m1 = (1 << nbits) - 1;
-		if (m1 == group_refs[i]) {
+        for (i = 0; i < ngroups; i++) {
+            j = group_location[i];
+            if (group_widths[i] == 0) {
+                m1 = (1 << nbits) - 1;
+                if (m1 == group_refs[i]) {
 #ifdef IS_OPENMP_4_0
 #pragma omp simd
 #endif
-		    for (k = 0; k < group_lengths[i]; k++) udata[j+k] = INT_MAX;
-		}
-		else {
+                    for (k = 0; k < group_lengths[i]; k++) udata[j+k] = INT_MAX;
+                }
+                else {
 #ifdef IS_OPENMP_4_0
 #pragma omp simd
 #endif
-		    for (k = 0; k < group_lengths[i]; k++) udata[j+k] += group_refs[i];
-		}
+                    for (k = 0; k < group_lengths[i]; k++) udata[j+k] += group_refs[i];
+                }
 
-	    }
-	    else {
-	        m1 = (1 << group_widths[i]) - 1;
+            }
+            else {
+                m1 = (1 << group_widths[i]) - 1;
 #ifdef IS_OPENMP_4_0
 #pragma omp simd
 #endif
-	        for (k = 0; k < group_lengths[i]; k++) {
-		    if (udata[j+k] == m1) udata[j+k] = INT_MAX;
-		    else udata[j+k] += group_refs[i];
-		}
-	    }
-	}
+                for (k = 0; k < group_lengths[i]; k++) {
+                    if (udata[j+k] == m1) udata[j+k] = INT_MAX;
+                    else udata[j+k] += group_refs[i];
+                }
+            }
+        }
     }
     else if (n_sub_missing == 2) {
 #ifdef USE_OPENMP
 #pragma omp parallel for private(i,j,k,m1,m2)
 #endif
-	for (i = 0; i < ngroups; i++) {
-	    j = group_location[i];
-	    if (group_widths[i] == 0) {
-	        m1 = (1 << nbits) - 1;
-	        m2 = m1 - 1;
-		if (m1 == group_refs[i] || m2 == group_refs[i]) {
+        for (i = 0; i < ngroups; i++) {
+            j = group_location[i];
+            if (group_widths[i] == 0) {
+                m1 = (1 << nbits) - 1;
+                m2 = m1 - 1;
+                if (m1 == group_refs[i] || m2 == group_refs[i]) {
 #ifdef IS_OPENMP_4_0
 #pragma omp simd
 #endif
-		    for (k = 0; k < group_lengths[i]; k++) udata[j+k] = INT_MAX;
-		}
-		else {
+                    for (k = 0; k < group_lengths[i]; k++) udata[j+k] = INT_MAX;
+                }
+                else {
 #ifdef IS_OPENMP_4_0
 #pragma omp simd
 #endif
-		    for (k = 0; k < group_lengths[i]; k++) udata[j+k] += group_refs[i];
-		}
-	    }
-	    else {
-	        m1 = (1 << group_widths[i]) - 1;
-	        m2 = m1 - 1;
+                    for (k = 0; k < group_lengths[i]; k++) udata[j+k] += group_refs[i];
+                }
+            }
+            else {
+                m1 = (1 << group_widths[i]) - 1;
+                m2 = m1 - 1;
 #ifdef IS_OPENMP_4_0
 #pragma omp simd
 #endif
-	        for (k = 0; k < group_lengths[i]; k++) {
-		    if (udata[j+k] == m1 || udata[j+k] == m2) udata[j+k] = INT_MAX;
-		    else udata[j+k] += group_refs[i];
-		}
-	    }
-	}
+                for (k = 0; k < group_lengths[i]; k++) {
+                    if (udata[j+k] == m1 || udata[j+k] == m2) udata[j+k] = INT_MAX;
+                    else udata[j+k] += group_refs[i];
+                }
+            }
+        }
     }
 
     // post processing
 
-	if (pack == 3) {
-	    if (ctable_5_6 == 1) {
-		last = extra_vals[0];
-		i = 0;
-		while (i < npnts) {
-		    if (udata[i] == INT_MAX) i++;
-		    else {
-			udata[i++] = extra_vals[0];
-			break;
-		    }
-		}
-		for (; i < npnts; i++) {
-		    if (udata[i] != INT_MAX) {
-			udata[i] += last + min_val;
-			last = udata[i];
-		    }
-		}
-	    }
-	    else if (ctable_5_6 == 2) {
-		penultimate = extra_vals[0];
-		last = extra_vals[1];
+    if (pack == 3) {
+        if (ctable_5_6 == 1) {
+            last = extra_vals[0];
+            i = 0;
+            while (i < npnts) {
+                if (udata[i] == INT_MAX) i++;
+                else {
+                    udata[i++] = extra_vals[0];
+                    break;
+                }
+            }
+            for (; i < npnts; i++) {
+                if (udata[i] != INT_MAX) {
+                    udata[i] += last + min_val;
+                    last = udata[i];
+                }
+            }
+        }
+        else if (ctable_5_6 == 2) {
+            penultimate = extra_vals[0];
+            last = extra_vals[1];
 
-		i = 0;
-		while (i < npnts) {
-		    if (udata[i] == INT_MAX) i++;
-		    else {
-			udata[i++] = extra_vals[0];
-			break;
-		    }
-		}
-		while (i < npnts) {
-		    if (udata[i] == INT_MAX) i++;
-		    else {
-			udata[i++] = extra_vals[1];
-			break;
-		    }
-		}
-	        for (; i < npnts; i++) {
-		    if (udata[i] != INT_MAX) {
-			udata[i] =  udata[i] + min_val + last + last - penultimate;
-			penultimate = last;
-			last = udata[i];
-		    }
-		}
-	    }
-	    else fatal_error_i("Unsupported: code table 5.6=%d", ctable_5_6);
-	}
+            i = 0;
+            while (i < npnts) {
+                if (udata[i] == INT_MAX) i++;
+                else {
+                    udata[i++] = extra_vals[0];
+                    break;
+                }
+            }
+            while (i < npnts) {
+                if (udata[i] == INT_MAX) i++;
+                else {
+                    udata[i++] = extra_vals[1];
+                    break;
+                }
+            }
+            for (; i < npnts; i++) {
+                if (udata[i] != INT_MAX) {
+                    udata[i] =  udata[i] + min_val + last + last - penultimate;
+                    penultimate = last;
+                    last = udata[i];
+                }
+            }
+        }
+        else fatal_error_i("Unsupported: code table 5.6=%d", ctable_5_6);
+    }
 
-	// convert to float
+    // convert to float
 
-	if (bitmap_flag == 255) {
-	    // no bitmap
+    if (bitmap_flag == 255) {
+        // no bitmap
 #ifdef USE_OPENMP
 #pragma omp parallel for schedule(static) private(i)
 #endif
-	    for (i = 0; i < ndata; i++) {
-		data[i] = (udata[i] == INT_MAX) ? UNDEFINED : 
-			(ref_val0 + udata[i] * factor_2) * factor_10;
-	    }
-	}
-        else if (bitmap_flag == 0 || bitmap_flag == 254) {
-	    // bitmap, old code was not optimized because using bitmap increases the file
-	    // size, but NCEP did it anyway to be compatible with NCEP codes
-	    j = mask = 0;
-            mask_pointer = sec[6] + 6;
-	    i = 0;
-	    while (i < ndata) {
-                if ((i & 7) == 0) mask = *mask_pointer++;
-	        data[i++] = (mask & 128) ? (ref_val0 + udata[j++] * factor_2) * factor_10 : UNDEFINED;
-		mask <<= 1;
-            }
+        for (i = 0; i < ndata; i++) {
+            data[i] = (udata[i] == INT_MAX) ? UNDEFINED : 
+                (ref_val0 + udata[i] * factor_2) * factor_10;
         }
-        else fatal_error_i("unknown bitmap: %d", bitmap_flag);
+    }
+    else if (bitmap_flag == 0 || bitmap_flag == 254) {
+    // bitmap, old code was not optimized because using bitmap increases the file
+    // size, but NCEP did it anyway to be compatible with NCEP codes
+        j = mask = 0;
+        mask_pointer = sec[6] + 6;
+        i = 0;
+	    while (i < ndata) {
+            if ((i & 7) == 0) mask = *mask_pointer++;
+            data[i++] = (mask & 128) ? (ref_val0 + udata[j++] * factor_2) * factor_10 : UNDEFINED;
+            mask <<= 1;
+        }
+    }
+    else fatal_error_i("unknown bitmap: %d", bitmap_flag);
 
-	free(group_refs);
-	free(group_widths);
-	free(group_lengths);
-	free(group_location);
-	free(group_clocation);
-	free(group_offset);
-	free(udata);
+    free(group_refs);
+    free(group_widths);
+    free(group_lengths);
+    free(group_location);
+    free(group_clocation);
+    free(group_offset);
+    free(udata);
 
     return 0;
 }
