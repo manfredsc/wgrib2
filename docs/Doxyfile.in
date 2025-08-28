@@ -935,8 +935,6 @@ WARN_LOGFILE           =
 
 INPUT                  = @abs_top_srcdir@/docs/user_guide.md \
                          @abs_top_srcdir@/wgrib2 \
-                         @abs_top_srcdir@/wgrib2/ftn_api \
-                         @abs_top_srcdir@/wgrib2/gribtables \
                          @abs_top_srcdir@/aux_progs
 
 # This tag can be used to specify the character encoding of the source files
@@ -990,7 +988,7 @@ FILE_PATTERNS          = *.f \
 # be searched for input files as well.
 # The default value is: NO.
 
-RECURSIVE              = NO
+RECURSIVE              = YES
 
 # The EXCLUDE tag can be used to specify files and/or directories that should be
 # excluded from the INPUT source files. This way you can easily exclude a
