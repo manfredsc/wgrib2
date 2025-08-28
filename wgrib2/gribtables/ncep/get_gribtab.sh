@@ -7,17 +7,18 @@
 ##
 ## As output, a file "gribtable" is produced, which contains
 ## a colon separated list of the following items:
-##     column  1: Section 0 Discipline
-##     column  2: Section 1 Master Tables Version Number
-##     column  3: Section 1 Master Tables Minimum Version Number
-##     column  4: Section 1 Master Tables Maximum Version Number
-##     column  5: Section 1 originating centre, used for local tables
-##     column  6: Section 1 Local Tables Version Number
-##     column  7: Section 4 Template 4.0 Parameter category
-##     column  8: Section 4 Template 4.0 Parameter number
-##     column  9: Abbreviation
-##     column 10: Description (parameter name)
-##     column 11: Unit
+##     - column  1: Section 0 Discipline
+##     - column  2: Section 1 Master Tables Version Number
+##     - column  3: Section 1 Master Tables Minimum Version Number
+##     - column  4: Section 1 Master Tables Maximum Version Number
+##     - column  5: Section 1 originating centre, used for local tables
+##     - column  6: Section 1 Local Tables Version Number
+##     - column  7: Section 4 Template 4.0 Parameter category
+##     - column  8: Section 4 Template 4.0 Parameter number
+##     - column  9: Abbreviation
+##     - column 10: Description (parameter name)
+##     - column 11: Unit
+##
 ## - Entries with parameter categories smaller than 192 are printed
 ##   with Master Table Version equal 1 (operational table)
 ##   and columns 5 and 6 set as "0" (WMO) and "0" (no local table used).
@@ -28,6 +29,8 @@
 ## - Units are converted to a more human readable format.
 ##
 ## @author Manfred Schwarb <schwarb@meteodat.ch> @date 2007
+
+## @cond
 
 # Released under the General Public License Version 2 (GPLv2).
 
@@ -308,3 +311,5 @@ fi
 rm "$table_4_1" "$table_4_1_prep" "$subtable" "$subtable_prep"
 
 exit
+
+## @endcond

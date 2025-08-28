@@ -4,6 +4,7 @@
 ## @brief Remove non-ECMWF definitions from local_gribtable.
 ## @author Manfred Schwarb <schwarb@meteodat.ch> @date 2020
 
+## @cond
 # Released under the General Public License Version 3 (GPLv3).
 
 # local_gribtable includes definitions for other than ECMWF
@@ -36,3 +37,4 @@ awk '{ if ($5 == 98 && ($1 > 191 || $7 > 191 || $8 > 191) ) { print $0 ; print $
 # good version
 awk '{ if ($5 == 98 && ($1 > 191 || $7 > 191 || $8 > 191) ) { print $1":1:"$3":"$4":98:1:"$7":"$8":"$9":"$10":"$11 } }' FS=: <local_gribtable >local_gribtable_ecmwf
 
+## @endcond
