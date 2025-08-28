@@ -981,7 +981,8 @@ FILE_PATTERNS          = *.f \
                          *.F \
                          *.c \
                          *.h \
-                         *.F90
+                         *.F90 \
+                         *.f90
 
 # The RECURSIVE tag can be used to specify whether or not subdirectories should
 # be searched for input files as well.
