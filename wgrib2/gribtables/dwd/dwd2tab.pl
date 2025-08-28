@@ -1,23 +1,23 @@
 #!/usr/bin/perl -w
 
-#** @file
-# @brief Convert DWD shortName.def to gribtable format
-#
-# The "gribtable" file contains a colon separated list as follows:
-#     column  1: Section 0 Discipline
-#     column  2: Section 1 Master Tables Version Number
-#     column  3: Section 1 Master Tables Minimum Version Number
-#     column  4: Section 1 Master Tables Maximum Version Number
-#     column  5: Section 1 originating centre, used for local tables
-#     column  6: Section 1 Local Tables Version Number
-#     column  7: Section 4 Template 4.0 Parameter category
-#     column  8: Section 4 Template 4.0 Parameter number
-#     column  9: Abbreviation
-#     column 10: Description (parameter name)
-#     column 11: Unit
-#
-# @author Public domain: Wesley Ebisuzaki @date 1/2021
-#*
+## @file
+## @brief Convert DWD shortName.def to gribtable format
+##
+## The "gribtable" file contains a colon separated list as follows:
+##     column  1: Section 0 Discipline
+##     column  2: Section 1 Master Tables Version Number
+##     column  3: Section 1 Master Tables Minimum Version Number
+##     column  4: Section 1 Master Tables Maximum Version Number
+##     column  5: Section 1 originating centre, used for local tables
+##     column  6: Section 1 Local Tables Version Number
+##     column  7: Section 4 Template 4.0 Parameter category
+##     column  8: Section 4 Template 4.0 Parameter number
+##     column  9: Abbreviation
+##     column 10: Description (parameter name)
+##     column 11: Unit
+##
+## @author Public domain: Wesley Ebisuzaki @date 1/2021
+##
 
 open (IN,"< shortName.def");
 open (OUT,"> dwd_gribtable");
