@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
-# 1/2021       Public domain Wesley Ebisuzaki
-#
-# convert dwd shortName.def to gribtable format
+
+#** @file
+# @brief Convert DWD shortName.def to gribtable format
 #
 # The "gribtable" file contains a colon separated list as follows:
 #     column  1: Section 0 Discipline
@@ -15,6 +15,9 @@
 #     column  9: Abbreviation
 #     column 10: Description (parameter name)
 #     column 11: Unit
+#
+# @author Public domain: Wesley Ebisuzaki @date 1/2021
+#*
 
 open (IN,"< shortName.def");
 open (OUT,"> dwd_gribtable");

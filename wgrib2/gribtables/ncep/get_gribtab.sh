@@ -1,31 +1,34 @@
 #!/bin/sh
 
-# Script to convert NCEP grib2 table information as found in
-# http://www.nco.ncep.noaa.gov/pmb/docs/grib2/grib2_doc/
-# into usable form for wgrib2.
-# As output, a file "gribtable" is produced, which contains
-# a colon separated list of the following items:
-#     column  1: Section 0 Discipline
-#     column  2: Section 1 Master Tables Version Number
-#     column  3: Section 1 Master Tables Minimum Version Number
-#     column  4: Section 1 Master Tables Maximum Version Number
-#     column  5: Section 1 originating centre, used for local tables
-#     column  6: Section 1 Local Tables Version Number
-#     column  7: Section 4 Template 4.0 Parameter category
-#     column  8: Section 4 Template 4.0 Parameter number
-#     column  9: Abbreviation
-#     column 10: Description (parameter name)
-#     column 11: Unit
-# - Entries with parameter categories smaller than 192 are printed
-#   with Master Table Version equal 1 (operational table)
-#   and columns 5 and 6 set as "0" (WMO) and "0" (no local table used).
-# - Entries with parameter categories greater than or equal 192 are declared
-#   as NCEP-only with Master Table Version equal 0 (experimental)
-#   and columns 5 and 6 set as "7" (NCEP) and "1" (local table).
-# - Apostrophes of all sorts are removed, as they provoke problems in shells.
-# - Units are converted to a more human readable format.
-#
-# (c) 2007 Manfred Schwarb <schwarb@meteodat.ch>
+## @file
+## @brief Script to convert NCEP grib2 table information as found in the
+## [NCEP WMO GRIB2 Documentation](http://www.nco.ncep.noaa.gov/pmb/docs/grib2/grib2_doc/)
+## into a usable form for wgrib2.
+##
+## As output, a file "gribtable" is produced, which contains
+## a colon separated list of the following items:
+##     column  1: Section 0 Discipline
+##     column  2: Section 1 Master Tables Version Number
+##     column  3: Section 1 Master Tables Minimum Version Number
+##     column  4: Section 1 Master Tables Maximum Version Number
+##     column  5: Section 1 originating centre, used for local tables
+##     column  6: Section 1 Local Tables Version Number
+##     column  7: Section 4 Template 4.0 Parameter category
+##     column  8: Section 4 Template 4.0 Parameter number
+##     column  9: Abbreviation
+##     column 10: Description (parameter name)
+##     column 11: Unit
+## - Entries with parameter categories smaller than 192 are printed
+##   with Master Table Version equal 1 (operational table)
+##   and columns 5 and 6 set as "0" (WMO) and "0" (no local table used).
+## - Entries with parameter categories greater than or equal 192 are declared
+##   as NCEP-only with Master Table Version equal 0 (experimental)
+##   and columns 5 and 6 set as "7" (NCEP) and "1" (local table).
+## - Apostrophes of all sorts are removed, as they provoke problems in shells.
+## - Units are converted to a more human readable format.
+##
+## @author Manfred Schwarb <schwarb@meteodat.ch> @date 2007
+
 # Released under the General Public License Version 2 (GPLv2).
 
 table_4_1=/tmp/grib2table_4_1.tmp

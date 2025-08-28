@@ -1,5 +1,9 @@
 #!/bin/sh
-# (c) 2020 Manfred Schwarb <schwarb@meteodat.ch>
+
+## @file
+## @brief Remove non-ECMWF definitions from local_gribtable.
+## @author Manfred Schwarb <schwarb@meteodat.ch> @date 2020
+
 # Released under the General Public License Version 3 (GPLv3).
 
 # local_gribtable includes definitions for other than ECMWF
