@@ -3,8 +3,7 @@
 ## @file
 ## @brief Script to create a "gribtable" file for wgrib2 out of
 ## information pulled from the [ECMWF Parameter Database](https://codes.ecmwf.int/grib/param-db)
-## and the [ECMWF Parameter Database API]
-## (https://codes.ecmwf.int/parameter-database/api/v1/param/).
+## and the [ECMWF Parameter Database API](https://codes.ecmwf.int/parameter-database/api/v1/param/).
 ##
 ## This gribtable information uses the ECMWF short-name nomenclature which differs from NCEP 
 ## nomenclature.
@@ -22,11 +21,11 @@
 ##     column 10: Description (parameter name)
 ##     column 11: Unit
 ##
-## Besides standard unix commands, this script needs the program ["jq"]
-## (https://stedolan.github.io/jq).
+## Besides standard unix commands, this script needs the program ["jq"](https://stedolan.github.io/jq).
 ##
 ## @author Manfred Schwarb <schwarb@meteodat.ch> @date 2020-2025
 
+## @cond
 # Released under the General Public License Version 3 (GPLv3).
 
 set +o posix
@@ -306,3 +305,6 @@ LC_ALL=en_US     sort  -u -t: -k1n,1n -k2n,2n -k3n,3n -k4n,4n -k5n,5n -k6n,6n -k
 ##  "$droppedtableitems" >"$droppedtableitems.$$.2" && mv "$droppedtableitems.$$.2" "$droppedtableitems.2"
 
 exit
+
+
+##endcond
