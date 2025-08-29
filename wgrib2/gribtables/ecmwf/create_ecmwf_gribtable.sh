@@ -1,30 +1,32 @@
 #!/bin/bash
 
-# Script to create a "gribtable" file for wgrib2 out of
-# information pulled from https://codes.ecmwf.int/grib/param-db
-# and https://codes.ecmwf.int/parameter-database/api/v1/param/.
-# This gribtable information uses the ECMWF short-name nomenclature
-# which differs from NCEP nomenclature.
-#
-# The "gribtable" file contains a colon separated list as follows:
-#     column  1: Section 0 Discipline
-#     column  2: Section 1 Master Tables Version Number
-#     column  3: Section 1 Master Tables Minimum Version Number
-#     column  4: Section 1 Master Tables Maximum Version Number
-#     column  5: Section 1 originating centre, used for local tables
-#     column  6: Section 1 Local Tables Version Number
-#     column  7: Section 4 Template 4.0 Parameter category
-#     column  8: Section 4 Template 4.0 Parameter number
-#     column  9: Abbreviation
-#     column 10: Description (parameter name)
-#     column 11: Unit
-#
-# Besides standard unix commands, this script needs the
-# program "jq" (https://stedolan.github.io/jq)
-#
-# (c) 2020-2025 Manfred Schwarb <schwarb@meteodat.ch>
-# Released under the General Public License Version 3 (GPLv3).
+## @file
+## @brief Script to create a "gribtable" file for wgrib2 out of
+## information pulled from the [ECMWF Parameter Database](https://codes.ecmwf.int/grib/param-db)
+## and the [ECMWF Parameter Database API](https://codes.ecmwf.int/parameter-database/api/v1/param/).
+##
+## This gribtable information uses the ECMWF short-name nomenclature which differs from NCEP 
+## nomenclature.
+##
+## The "gribtable" file contains a colon separated list as follows:
+##     - column  1: Section 0 Discipline
+##     - column  2: Section 1 Master Tables Version Number
+##     - column  3: Section 1 Master Tables Minimum Version Number
+##     - column  4: Section 1 Master Tables Maximum Version Number
+##     - column  5: Section 1 originating centre, used for local tables
+##     - column  6: Section 1 Local Tables Version Number
+##     - column  7: Section 4 Template 4.0 Parameter category
+##     - column  8: Section 4 Template 4.0 Parameter number
+##     - column  9: Abbreviation
+##     - column 10: Description (parameter name)
+##     - column 11: Unit
+##
+## Besides standard unix commands, this script needs the program ["jq"](https://stedolan.github.io/jq).
+##
+## @author Manfred Schwarb <schwarb@meteodat.ch> @date 2020-2025
 
+## @cond
+# Released under the General Public License Version 3 (GPLv3).
 
 set +o posix
 unset POSIXLY_CORRECT
@@ -216,7 +218,7 @@ while read -r jsonitem1; do
   #---loop over the different key variants (different centres and/or versions):
   while read -r jsonitem; do
     #---parse details for $param_id:
-    jsonparams=`echo "$jsonitem" | sed 's/},{/£/g' | tr -d '}{"' | tr "," "\n" | sed 's/  \+/ /g'`
+    jsonparams=`echo "$jsonitem" | sed 's/},{/ï¿½/g' | tr -d '}{"' | tr "," "\n" | sed 's/  \+/ /g'`
     ##echo "$jsonparams" | awk '{ printf "\t%s\n",$0 } END { printf "\n" }'
 
     centre_id=`echo "$jsonparams" | grep -m1 "^centre_id:" | cut -d: -f2`
@@ -303,3 +305,6 @@ LC_ALL=en_US     sort  -u -t: -k1n,1n -k2n,2n -k3n,3n -k4n,4n -k5n,5n -k6n,6n -k
 ##  "$droppedtableitems" >"$droppedtableitems.$$.2" && mv "$droppedtableitems.$$.2" "$droppedtableitems.2"
 
 exit
+
+
+##endcond
