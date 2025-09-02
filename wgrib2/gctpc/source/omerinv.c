@@ -30,6 +30,8 @@ static double e;     /** eccentricity constant */
 static double es;		/**< 	eccentricity constant */
 static double false_northing;	/**< y offset in meters			*/
 static double false_easting;	/**< x offset in meters			*/
+static double sin_p20;		/**< sin value */
+static double cos_p20;		/**< cos value */
 static double bl;		/**< Constant */
 static double al;		/**< Constant */
 static double ts;		/**< Constant */
