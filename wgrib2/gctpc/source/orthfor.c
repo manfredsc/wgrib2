@@ -1,39 +1,45 @@
-/*******************************************************************************
-NAME                             ORTHOGRAPHIC 
+/** @file
+ * @brief Orthographic - Forward Transformation
+ * 
+ * PURPOSE: Transforms input longitude and latitude to Easting and
+ *          Northing for the Orthographic projection. The longitude and
+ *          latitude must be in radians. The Easting and Northing values will
+ *          be returned in meters.
+ * @author T. Mittan @date March, 1993
+ * ### Algorithm References
+ * 1. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ *
+ * 2. Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
+ *    U.S. Geological Survey Professional Paper 1453 , United State Government
+ *    Printing Office, Washington D.C., 1989.
+ */
 
-PURPOSE:	Transforms input longitude and latitude to Easting and
-		Northing for the Orthographic projection.  The
-		longitude and latitude must be in radians.  The Easting
-		and Northing values will be returned in meters.
-
-PROGRAMMER              DATE
-----------              ----
-T. Mittan		Mar, 1993
-
-ALGORITHM REFERENCES
-
-1.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-2.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
-    U.S. Geological Survey Professional Paper 1453 , United State Government
-    Printing Office, Washington D.C., 1989.
-*******************************************************************************/
 #include "cproj.h"
 
-/* Variables common to all subroutines in this code file
-  -----------------------------------------------------*/
-static double r_major;		/* major axis 				*/
-static double lon_center;	/* Center longitude (projection center) */
-static double lat_origin;	/* center latitude			*/
-static double false_northing;	/* y offset in meters			*/
-static double false_easting;	/* x offset in meters			*/
-static double sin_p14;		/* sin of center latitude		*/
-static double cos_p14;		/* cos of center latitude		*/
+/* Variables common to all subroutines in this code file */
+static double r_major;		/**< major axis 				*/
+static double lon_center;	/**< Center longitude (projection center) */
+static double lat_origin;	/**< center latitude			*/
+static double false_northing;/**< y offset in meters			*/
+static double false_easting;	/**< x offset in meters			*/
+static double sin_p14;		/**< sin of center latitude		*/
+static double cos_p14;		/**< cos of center latitude		*/
 
-/* Initialize the Orthographic projection
-  -------------------------------------*/
+/** 
+ * Initialize the Orthographic projection for forward transformation.
+ * 
+ * @param r_maj Major axis
+ * @param center_lon Center longitude
+ * @param center_lat Center latitude
+ * @param false_east X offset in meters
+ * @param false_north Y offset in meters
+ * 
+ * @return Always returns 0
+ * 
+ * @author T. Mittan @date March, 1993
+ */
 long orthforint(double r_maj, double center_lon, double center_lat,
         double false_east, double false_north) {
 //long orthforint(r_maj,center_lon,center_lat,false_east,false_north) 
@@ -66,8 +72,20 @@ return(OK);
 }
 
 
-/* Orthographic forward equations--mapping lat,long to x,y
-  ---------------------------------------------------*/
+/** 
+ * Orthographic forward equations--mapping lat,long to x,y
+ *
+ * @param lon Longitude
+ * @param lat Latitude
+ * @param x Pointer to store X projection coordinate
+ * @param y Pointer to store Y projection coordinate
+ * 
+ * @return
+ * - 0 :: Success
+ * - 143 :: Point can not be projected
+ * 
+ * @author T. Mittan @date March, 1993
+ */
 long orthfor( double lon, double lat, double *x, double *y) {
 //long orthfor(lon, lat, x, y)
 //double lon;			/* (I) Longitude 		*/
