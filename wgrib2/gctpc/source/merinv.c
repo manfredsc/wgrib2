@@ -1,42 +1,55 @@
-/*******************************************************************************
-NAME                            MERCATOR
+/** @file
+ * @brief Mercator - Inverse Projection
+ * 
+ * PURPOSE: Transforms input Easting and Northing to longitude and
+ *          latitude for the Mercator projection. The Easting and Northing
+ *          must be in meters. The longitude and latitude values will be
+ *          returned in radians.
+ * @author D. Steinwand, EROS @date Nov, 1991
+ * 
+ * ### Algorithm References
+ * 1. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ *
+ * 2. Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
+ *    U.S. Geological Survey Professional Paper 1453 , United State Government
+ *    Printing Office, Washington D.C., 1989.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 11/1991 | D. Steinwand, EROS | Initial implementation
+ * 3/1993 | T. Mittan | Update
+ */
 
-PURPOSE:	Transforms input Easting and Northing to longitude and
-		latitude for the Mercator projection.  The
-		Easting and Northing must be in meters.  The longitude
-		and latitude values will be returned in radians.
-
-PROGRAMMER              DATE
-----------              ----
-D. Steinwand, EROS      Nov, 1991
-T. Mittan		Mar, 1993
-
-ALGORITHM REFERENCES
-
-1.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-2.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
-    U.S. Geological Survey Professional Paper 1453 , United State Government
-    Printing Office, Washington D.C., 1989.
-*******************************************************************************/
 #include "cproj.h"
 
-/* Variables common to all subroutines in this code file
-  -----------------------------------------------------*/
-static double r_major;		/* major axis 				*/
-static double r_minor;		/* minor axis 				*/
-static double lon_center;	/* Center longitude (projection center) */
-static double lat_origin;	/* center latitude			*/
-static double e,es;		/* eccentricity constants		*/
-static double m1;		/* small value m			*/
-static double false_northing;	/* y offset in meters			*/
-static double false_easting;	/* x offset in meters			*/
+/* Variables common to all subroutines in this code file */
+static double r_major;		/**< major axis 				*/
+static double r_minor;		/**< minor axis 				*/
+static double lon_center;	/**< Center longitude (projection center) */
+static double lat_origin;	/**< center latitude			*/
+static double e,es;		/**< eccentricity constants		*/
+static double m1;		/**< small value m			*/
+static double false_northing;	/**< y offset in meters			*/
+static double false_easting;	/**< x offset in meters			*/
 
 
-/* Initialize the Mercator projection
-  -----------------------------------*/
+/** 
+ * Initialize the Mercator projection for inverse transformation.
+ * 
+ * @param r_maj Major axis radius
+ * @param r_min Minor axis radius
+ * @param center_lon Center longitude
+ * @param center_lat Center latitude
+ * @param false_east False easting
+ * @param false_north False northing
+ * 
+ * @return Always returns 0
+ * 
+ * @author D. Steinwand, EROS @date Nov, 1991
+ */
 long merinvint(double r_maj, double r_min, double center_lon, double center_lat,
         double false_east, double false_north) {
 //long merinvint(r_maj,r_min,center_lon,center_lat,false_east,false_north) 
@@ -75,8 +88,18 @@ return(OK);
 }
 
 
-/* Mercator inverse equations--mapping x,y to lat/long
-  --------------------------------------------------*/
+/** 
+ * Mercator inverse equations--mapping x,y to lat/long
+ *
+ * @param x X projection coordinate
+ * @param y Y projection coordinate
+ * @param lon Pointer to store longitude
+ * @param lat Pointer to store latitude
+ *
+ * @return 0 for success, error code for failure
+ *
+ * @author D. Steinwand, EROS @date Nov, 1991
+ */
 long merinv(double x, double y, double *lon, double *lat) {
 //long merinv(x, y, lon, lat)
 //double x;			/* (O) X projection coordinate 	*/

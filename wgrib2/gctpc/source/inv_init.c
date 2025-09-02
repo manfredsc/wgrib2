@@ -1,26 +1,38 @@
-/*******************************************************************************
-NAME                           INV_INIT 
+/** @file
+ * @brief Inverse Projection Initialization
+ * @author T. Mittan @date 3-09-93
+ * 
+ * ### Algorithm References
+ * 1. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ * 
+ * 2. Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
+ *    U.S. Geological Survey Professional Paper 1453 , United State Government
+ *    Printing Office, Washington D.C., 1989.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 3/1993 | T. Mittan | Initial development
+ * 11/1994 | S. Nelson | Added Clarke spheroid default to UTM
+ * 1/1998 | S. Nelson | Changed datum to spheroid.
+ */
 
-PURPOSE:	Initializes inverse projection transformation parameters
-
-PROGRAMMER              DATE		REASON
-----------              ----		------
-T. Mittan		3-09-93		Initial Development
-S. Nelson		11-94		Added Clarke spheroid default to UTM
-S. Nelson		 1-98		Changed datum to spheroid.
-
-ALGORITHM REFERENCES
-
-1.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-2.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
-    U.S. Geological Survey Professional Paper 1453 , United State Government
-    Printing Office, Washington D.C., 1989.
-*******************************************************************************/
 #include "cproj.h"
 
+/**
+ * Initialize inverse projection transformation parameters.
+ * 
+ * @param insys Input system code
+ * @param inzone Input zone number
+ * @param inparm Input array of projection parameters
+ * @param inspheroid Input spheroid code
+ * @param fn27 NAD 1927 parameter file
+ * @param fn83 NAD 1983 parameter file
+ * @param iflg Status flag
+ * @param inv_trans Inverse function pointer
+ */
 void inv_init(long insys, long inzone, double *inparm, long inspheroid,
         char *fn27, char *fn83, long *iflg, long (*inv_trans[])(double, double, double *, double *)) {
 //void inv_init(insys,inzone,inparm,inspheroid,fn27,fn83,iflg,inv_trans)

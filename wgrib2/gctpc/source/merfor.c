@@ -1,42 +1,54 @@
-/*******************************************************************************
-NAME                            MERCATOR
+/** @file
+ * @brief Mercator - Forward Transformation
+ * PURPOSE: Transforms input longitude and latitude to Easting and
+ *          Northing for the Mercator projection. The longitude and latitude
+ *          must be in radians. The Easting and Northing values will be
+ *          returned in meters.
+ * @author D. Steinwand, EROS @date Nov, 1991
+ * 
+ * ### Algorithm References
+ * 1. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ *
+ * 2. Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
+ *    U.S. Geological Survey Professional Paper 1453 , United State Government
+ *    Printing Office, Washington D.C., 1989.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 11/1991| D. Steinwand, EROS | Initial implementation
+ * 3/1993| T. Mittan | Update
+ */
 
-PURPOSE:	Transforms input longitude and latitude to Easting and
-		Northing for the Mercator projection.  The
-		longitude and latitude must be in radians.  The Easting
-		and Northing values will be returned in meters.
-
-PROGRAMMER              DATE
-----------              ----
-D. Steinwand, EROS      Nov, 1991
-T. Mittan		Mar, 1993
-
-ALGORITHM REFERENCES
-
-1.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-2.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
-    U.S. Geological Survey Professional Paper 1453 , United State Government
-    Printing Office, Washington D.C., 1989.
-*******************************************************************************/
 #include "cproj.h"
 
-/* Variables common to all subroutines in this code file
-  -----------------------------------------------------*/
-static double r_major;		/* major axis 				*/
-static double r_minor;		/* minor axis 				*/
-static double lon_center;	/* Center longitude (projection center) */
-static double lat_origin;	/* center latitude			*/
-static double e,es;		/* eccentricity constants		*/
-static double m1;		/* small value m			*/
-static double false_northing;	/* y offset in meters			*/
-static double false_easting;	/* x offset in meters			*/
+/* Variables common to all subroutines in this code file */
+static double r_major;		/**< major axis 				*/
+static double r_minor;		/**< minor axis 				*/
+static double lon_center;	/**< Center longitude (projection center) */
+static double lat_origin;	/**< center latitude			*/
+static double e,es;		/**< eccentricity constants		*/
+static double m1;		/**< small value m			*/
+static double false_northing;	/**< y offset in meters			*/
+static double false_easting;	/**< x offset in meters			*/
 
 
-/* Initialize the Mercator projection
-  -------------------------------------------------*/
+/** 
+ * Initialize the Mercator projection for forward transformation.
+ *
+ * @param r_maj Major axis radius
+ * @param r_min Minor axis radius
+ * @param center_lon Center longitude
+ * @param center_lat Center latitude
+ * @param false_east False easting
+ * @param false_north False northing
+ * 
+ * @return Always returns 0
+ *
+ * @author D. Steinwand, EROS @date Nov, 1991
+ */
 long merforint(double r_maj, double r_min, double center_lon, double center_lat,
         double false_east, double false_north) {
 //long merforint(r_maj,r_min,center_lon,center_lat,false_east,false_north) 
@@ -75,8 +87,18 @@ return(OK);
 }
 
 
-/* Mercator forward equations--mapping lat,long to x,y
-  --------------------------------------------------*/
+/** 
+ * Mercator forward equations--mapping lat,long to x,y 
+ * 
+ * @param lon Longitude
+ * @param lat Latitude
+ * @param x Pointer to X projection coordinate
+ * @param y Pointer to Y projection coordinate
+ * 
+ * @return
+ * - 0 :: Success
+ * - 53 :: Transformation cannot be computed at the poles
+ */
 long merfor(double lon, double lat, double *x, double *y) {
 // long merfor(lon, lat, x, y)
 // double lon;			/* (I) Longitude 		*/

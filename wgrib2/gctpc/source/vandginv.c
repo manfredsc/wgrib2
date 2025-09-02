@@ -1,42 +1,48 @@
-/*******************************************************************************
-NAME                    VAN DER GRINTEN 
+/** @file
+ * @brief Van der Grinten - Inverse Transformation
+ *
+ * PURPOSE: Transforms input Easting and Northing to longitude and
+ *          latitude for the Van der Grinten projection. The
+ *          Easting and Northing must be in meters. The longitude
+ *          and latitude values will be returned in radians.
+ *
+ * This function was adapted from the Lambert Azimuthal Equal Area projection
+ * code (FORTRAN) in the General Cartographic Transformation Package software
+ * which is available from the U.S. Geological Survey National Mapping Division.
+ * @author T. Mittan @date March, 1993
+ *
+ * ### Algorithm References
+ * 1. "New Equal-Area Map Projections for Noncircular Regions", John P. Snyder,
+ *    The American Cartographer, Vol 15, No. 4, October 1988, pp. 341-355.
+ *
+ * 2. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ *
+ * 3. "Software Documentation for GCTP General Cartographic Transformation
+ *    Package", U.S. Geological Survey National Mapping Division, May 1982.
+ */
 
-PURPOSE:	Transforms input Easting and Northing to longitude and
-		latitude for the Van der Grinten projection.  The
-		Easting and Northing must be in meters.  The longitude
-		and latitude values will be returned in radians.
-
-PROGRAMMER              DATE            
-----------              ----           
-T. Mittan		March, 1993
-
-This function was adapted from the Van Der Grinten projection code
-(FORTRAN) in the General Cartographic Transformation Package software
-which is available from the U.S. Geological Survey National Mapping Division.
- 
-ALGORITHM REFERENCES
-
-1.  "New Equal-Area Map Projections for Noncircular Regions", John P. Snyder,
-    The American Cartographer, Vol 15, No. 4, October 1988, pp. 341-355.
-
-2.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-3.  "Software Documentation for GCTP General Cartographic Transformation
-    Package", U.S. Geological Survey National Mapping Division, May 1982.
-*******************************************************************************/
 #include "cproj.h"
 
-/* Variables common to all subroutines in this code file
-  -----------------------------------------------------*/
-static double lon_center;	/* Center longitude (projection center) */
-static double R;		/* Radius of the earth (sphere)	 	*/
-static double false_easting;	/* x offset in meters			*/
-static double false_northing;	/* y offset in meters			*/
+/* Variables common to all subroutines in this code file */
+static double lon_center;	/**< Center longitude (projection center) */
+static double R;		/**< Radius of the earth (sphere)	 	*/
+static double false_easting;	/**< x offset in meters			*/
+static double false_northing;	/**< y offset in meters			*/
 
-/* Initialize the Van Der Grinten projection
-  ----------------------------------------*/
+/** 
+ * Initialize the Van Der Grinten projection for inverse transformation.
+ * 
+ * @param r Radius of the earth (sphere) 
+ * @param center_long Center longitude
+ * @param false_east x offset in meters
+ * @param false_north y offset in meters
+ *
+ * @return Always returns 0
+ *
+ * @author T. Mittan @date March, 1993
+ */
 long vandginvint(double r, double center_long, double false_east,
         double false_north) {
 //long vandginvint(r, center_long,false_east,false_north) 
@@ -62,8 +68,19 @@ offsetp(false_easting,false_northing);
 return(OK);
 }
 
-/* Van Der Grinten inverse equations--mapping x,y to lat/long
-  ---------------------------------------------------------*/
+
+/** 
+ * Van Der Grinten inverse equations--mapping x,y to lat/long 
+ * 
+ * @param x X projection coordinate
+ * @param y Y projection coordinate
+ * @param lon Pointer to store Longitude
+ * @param lat Pointer to store Latitude
+ *
+ * @return Always returns 0
+ *
+ * @author T. Mittan @date March, 1993
+ */
 long vandginv(double x, double y, double *lon, double *lat) {
 //long vandginv(x, y, lon, lat)
 //double x;			/* (O) X projection coordinate */

@@ -1,50 +1,55 @@
-/*******************************************************************************
-NAME                      ALASKA CONFORMAL 
+/** @file
+ * @brief Alaska Conformal - Inverse Transformation
+ * 
+ * PURPOSE: Transforms input Easting and Northing to longitude and latitude
+ * for the Alaska Conformal projection. The Easting and Northing must be in
+ * meters. The longitude and latitude values will be returned in radians.
+ * 
+ * This function was adapted from the Alaska Conformal projection code
+ * (FORTRAN) in the General Cartographic Transformation Package software
+ * which is available from the U.S. Geological Survey National Mapping Division.
+ * 
+ * @author T. Mittan @date March, 1993
+ * 
+ * ### Algorithm References
+ * 1.  "New Equal-Area Map Projections for Noncircular Regions", John P. Snyder,
+ *     The American Cartographer, Vol 15, No. 4, October 1988, pp. 341-355.
+ *
+ * 2.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *     Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *     State Government Printing Office, Washington D.C., 1987.
+ *
+ * 3.  "Software Documentation for GCTP General Cartographic Transformation
+ *     Package", U.S. Geological Survey National Mapping Division, May 1982.
+ */
 
-PURPOSE:	Transforms input Easting and Northing to longitude and
-		latitude for the Alaska Conformal projection.  The
-		Easting and Northing must be in meters.  The longitude
-		and latitude values will be returned in radians.
-
-PROGRAMMER              DATE            
-----------              ----           
-T. Mittan		March, 1993
-
-This function was adapted from the Alaska Conformal projection code
-(FORTRAN) in the General Cartographic Transformation Package software
-which is available from the U.S. Geological Survey National Mapping Division.
- 
-ALGORITHM REFERENCES
-
-1.  "New Equal-Area Map Projections for Noncircular Regions", John P. Snyder,
-    The American Cartographer, Vol 15, No. 4, October 1988, pp. 341-355.
-
-2.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-3.  "Software Documentation for GCTP General Cartographic Transformation
-    Package", U.S. Geological Survey National Mapping Division, May 1982.
-*******************************************************************************/
 #include "cproj.h"
 
-/* Variables common to all subroutines in this code file
-  -----------------------------------------------------*/
-static double r_major;		/* major axis			 	*/
-static double r_minor;		/* minor axis			 	*/
-static double lon_center;	/* Center longitude (projection center) */
-static double lat_center;	/* center latitude			*/
-static double false_easting;	/* x offset in meters			*/
-static double false_northing;	/* y offset in meters			*/
-static double acoef[7];
-static double bcoef[7];
-static double sin_p26;
-static double cos_p26;
-static double e;
-static long n;
+/* Variables common to all subroutines in this code file */
+static double r_major;		/**< major axis			 	*/
+static double r_minor;		/**< minor axis			 	*/
+static double lon_center;	/**< Center longitude (projection center) */
+static double lat_center;	/**< center latitude			*/
+static double false_easting;	/**< x offset in meters			*/
+static double false_northing;	/**< y offset in meters			*/
+static double acoef[7];     /**< A coefficients */
+static double bcoef[7];     /**< B coefficients */
+static double sin_p26;    /**< Sine of conformal latitude */
+static double cos_p26;    /**< Cosine of conformal latitude */
+static double e;    /**< Eccentricity */
+static long n;    /**< Number of coefficients */
 
-/* Initialize the ALASKA CONFORMAL projection
-  -----------------------------------------*/
+/** Initialize the ALASKA CONFORMAL projection for inverse transformation.
+ * 
+ * @param r_maj Major axis
+ * @param r_min Minor axis
+ * @param false_east X offset in meters
+ * @param false_north Y offset in meters
+ *
+ * @return Always returns 0
+ *
+ * @author T. Mittan @date March, 1993
+ */
 long alconinvint( double r_maj, double r_min, double false_east,
         double false_north) {
 //long alconinvint(r_maj,r_min,false_east,false_north) 
@@ -98,8 +103,23 @@ offsetp(false_easting,false_northing);
 return(OK);
 }
 
-/* ALASKA CONFORMAL inverse equations--mapping x,y to lat/long
-  ----------------------------------------------------------*/
+
+
+/**
+ * ALASKA CONFORMAL inverse equations--mapping x,y to lat/long
+ *
+ * @param x X projection coordinate
+ * @param y Y projection coordinate
+ * @param lon Pointer to Longitude
+ * @param lat Pointer to Latitude
+ *
+ * @return
+ * - 0 :: Success
+ * - 235 :: Too many iterations in inverse
+ * - 236 :: Too many iterations in inverse
+ *
+ * @author T. Mittan @date March, 1993
+ */
 long alconinv( double x, double y, double *lon, double *lat) {
 //long alconinv(x, y, lon, lat)
 //double x;			/* (O) X projection coordinate */
