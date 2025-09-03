@@ -5,6 +5,10 @@
  * -----|------------|---------
  * 3/2008 | W. Ebisuzaki | Initial
  * 5/2016 | DWD | Public Domain
+ * 10/2024 | A. Stahl | Use g2c for Jasper and PNG decoding
+ * 11/2024 | A. Stahl | Use g2c for OpenJPEG decoding / combine implementations
+ * 3/2025 | A. Stahl | Fix JPEG2000 decoding bug
+ * 3/2025 | W. Ebisuzaki | Replace ref to Jasper/OpenJPEG with G2C_JPEG2000_ENABLED
  * @author Public Domain: Wesley Ebisuzaki @date 3/2008
  */
 
