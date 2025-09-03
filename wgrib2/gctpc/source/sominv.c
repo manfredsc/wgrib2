@@ -1,35 +1,72 @@
-/*******************************************************************************
-NAME                          SPACE OBLIQUE MERCATOR (SOM)
+/** @file
+ * @brief Space Oblique Mercator (SOM) - Inverse Transformation
+ *
+ * PURPOSE: The first method of Transforming input Easting and
+ *          Northing to longitude and latitude for the SOM projection.
+ *          The Easting and Northing must be in meters.  The
+ *          longitude and latitude values will be returned in radians.
+ * @author D. Steinwand @date July, 1992
+ * 
+ * ### Algorithm References
+ * 1. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ *
+ * 2. "Software Documentation for GCTP General Cartographic Transformation
+ *    Package", U.S. Geological Survey National Mapping Division, May 1982.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 7/1992 | D. Steinwand | Initial implementation
+ * 3/1993 | T. Mittan    | Update
+ */
 
-PURPOSE:	The first method to Transform input Easting and Northing to
-		longitude and latitude for the SOM projection.  The
-		Easting and Northing must be in meters.  The longitude
-		and latitude values will be returned in radians.
-
-PROGRAM HISTORY
-PROGRAMMER              DATE            
-----------              ----           
-D. Steinwand            July, 1992
-T. Mittan		Mar,  1993
-
-ALGORITHM REFERENCES
-
-1.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-2.  "Software Documentation for GCTP General Cartographic Transformation
-    Package", U.S. Geological Survey National Mapping Division, May 1982.
-*******************************************************************************/
 #include "cproj.h"
-#define LANDSAT_RATIO 0.5201613
+#define LANDSAT_RATIO 0.5201613   /**< Landsat ratio (for resampling) */
 
-static double lon_center,a,b,a2,a4,c1,c3,q,t,u,w,xj,p21,sa,ca,es,s,start;
-static double false_easting;
-static double false_northing;
+static double lon_center; /**< Center longitude (projection center) */
+static double a; /**< Semi-major axis */
+static double b; /**< Semi-minor axis */
+static double a2; /**< SOM series coefficient */
+static double a4; /**< SOM series coefficient */
+static double c1; /**< SOM series coefficient */
+static double c3; /**< SOM series coefficient */
+static double q;  /**< For SOM series calculation */
+static double t;  /**< For SOM series calculation */
+static double u;  /**< For SOM series calculation */
+static double w;  /**< For SOM series calculation */
+static double xj; /**< For SOM series calculation */
+static double p21; /**< For SOM series calculation */
+static double sa; /**< Sine of inclination angle. */
+static double ca; /**< Cosine of inclination angle. */
+static double es; /**< Eccentricity squared */
+static double s;  /**< For SOM series calculation */
+static double start; /**< Where SOM starts, beginning or end. */
+static double false_easting; /**< X offset in meters */
+static double false_northing; /**< Y offset in meters */
 static void som_series(double *fb, double *fa2, double *fa4, double *fc1,
         double *fc3,double *dlam);
 
+/**
+ * Initialize the Space Oblique Mercator projection for inverse transformation.
+ *
+ * @param r_major Major axis radius.
+ * @param r_minor Minor axis radius.
+ * @param satnum Landsat satellite number (1,2,3,4,5).
+ * @param path Landsat path number.
+ * @param alf_in Inclination of orbit.
+ * @param lon Center longitude.
+ * @param false_east X offset in meters.
+ * @param false_north Y offset in meters.
+ * @param time Time.
+ * @param start1 Start time.
+ * @param flag Initialization method (A or B)
+ * 
+ * @return Always returns 0
+ *
+ * @author D. Steinwand @date July, 1992
+ */
 long sominvint(double  r_major, double  r_minor, long satnum, long path,
         double alf_in, double lon, double false_east, double false_north,
         double time, long start1, long flag) {
@@ -153,6 +190,20 @@ c3=sumc3/45.0;
 return(OK);
 }
 
+/**
+ * Space Oblique Mercator inverse equations--mapping x,y to lat,long
+ * 
+ * @param x X projection coordinate.
+ * @param y Y projection coordinate.
+ * @param lon Pointer to store longitude.
+ * @param lat Pointer to store latitude.
+ *
+ * @return 
+ * - 0 :: Success
+ * - 214 :: Convergence failure
+ *
+ * @author D. Steinwand @date July, 1992
+ */
 long sominv(double x, double y, double *lon, double *lat) {
 //long sominv(y, x, lon, lat)
 // 
@@ -225,14 +276,21 @@ else
 return(OK);
 }
  
-
-
-
-/* Series to calculate a,b,c coefficients to convert from transform 
-   latitude,longitude to Space Oblique Mercator (SOM) rectangular coordinates
-
-   Mathematical analysis by John Snyder 6/82
-  --------------------------------------------------------------------------*/
+/**
+ * Series to calculate a,b,c coefficients to convert from transform
+ * latitude, longitude to Space Oblique Mercator (SOM) rectangular coordinates.
+ *
+ * Mathematical analysis by John Snyder 6/82
+ * 
+ * @param fb Pointer to store coefficient fb.
+ * @param fa2 Pointer to store coefficient fa2.
+ * @param fa4 Pointer to store coefficient fa4.
+ * @param fc1 Pointer to store coefficient fc1.
+ * @param fc3 Pointer to store coefficient fc3.
+ * @param dlam Pointer to store dlam (updated to radians).
+ *
+ * @author D. Steinwand @date July, 1992
+ */
 static void som_series(double *fb, double *fa2, double *fa4, double *fc1,
         double *fc3,double *dlam) {
 // static void som_series(fb,fa2,fa4,fc1,fc3,dlam)

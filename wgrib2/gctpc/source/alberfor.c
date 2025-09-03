@@ -1,41 +1,54 @@
-/*******************************************************************************
-NAME                     ALBERS CONICAL EQUAL AREA 
+/** @file
+ * @brief Albers Conical Equal Area - Forward Transformation
+ *
+ * PURPOSE:	Transforms input longitude and latitude to Easting and Northing
+ * for the Albers Conical Equal Area projection.  The longitude
+ * and latitude must be in radians.  The Easting and Northing
+ * values will be returned in meters.
+ * 
+ * @author T. Mittan @date Feb. 1992
+ * 
+ * ### ALGORITHM REFERENCES
+ * 
+ * 1.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *     Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *     State Government Printing Office, Washington D.C., 1987.
+ *
+ * 2.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
+ *     U.S. Geological Survey Professional Paper 1453 , United State Government
+ *     Printing Office, Washington D.C., 1989.
+ */
 
-PURPOSE:	Transforms input longitude and latitude to Easting and Northing
-		for the Albers Conical Equal Area projection.  The longitude
-		and latitude must be in radians.  The Easting and Northing
-		values will be returned in meters.
-
-PROGRAMMER              DATE
-----------              ----
-T. Mittan,       	Feb, 1992
-
-ALGORITHM REFERENCES
-
-1.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-2.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
-    U.S. Geological Survey Professional Paper 1453 , United State Government
-    Printing Office, Washington D.C., 1989.
-*******************************************************************************/
 #include "cproj.h"
 
-/* Variables common to all subroutines in this code file
-  -----------------------------------------------------*/
-  static double r_major;	/* major axis				*/
-  static double r_minor;	/* minor axis				*/
-  static double c;		/* constant c				*/
-  static double e3;		/* eccentricity 			*/
-  static double rh;		/* heigth above elipsoid		*/
-  static double ns0;		/* ratio between meridians		*/
-  static double lon_center;	/* center longitude			*/
-  static double false_easting;	/* x offset in meters			*/
-  static double false_northing;	/* y offset in meters			*/
+/* Variables common to all subroutines in this code file */
+  static double r_major;	/**< major axis				*/
+  static double r_minor;	/**< minor axis				*/
+  static double c;		/**< constant c				*/
+  static double e3;		/**< eccentricity 			*/
+  static double rh;		/**< heigth above elipsoid		*/
+  static double ns0;		/**< ratio between meridians		*/
+  static double lon_center;	/**< center longitude			*/
+  static double false_easting;	/**< x offset in meters			*/
+  static double false_northing;	/**< y offset in meters			*/
 
-/* Initialize the Albers projection
-  -------------------------------*/
+/**
+ * Initialize the Albers projection for forward transformation.
+ *
+ * @param r_maj Major axis
+ * @param r_min Minor axis
+ * @param lat1 First standard parallel
+ * @param lat2 Second standard parallel
+ * @param lon0 Center longitude
+ * @param lat0 Center latitude
+ * @param false_east X offset in meters
+ * @param false_north Y offset in meters
+ * 
+ * @return
+ * - 0 :: Success
+ * - 31 :: Equal latitudes for standard parallels on opposite sides of equator
+ * @author T. Mittan @date Feb. 1992
+ */
 long alberforint(double r_maj, double r_min, double lat1, double lat2,
         double lon0, double lat0, double false_east, double false_north) {
 //long alberforint(
@@ -106,9 +119,20 @@ offsetp(false_easting,false_northing);
 return(OK);
 }
 
-/* Albers Conical Equal Area forward equations--mapping lat,long to x,y
-  -------------------------------------------------------------------*/
 
+/**
+ * Albers Conical Equal Area forward equations--mapping lat,long to x,y
+ * @param lon Longitude
+ * @param lat Latitude
+ * @param x Pointer to X projection coordinate
+ * @param y Pointer to Y projection coordinate
+ *
+ * @return
+ * - 0 :: Success
+ * - 31 :: Equal latitudes for standard parallels on opposite sides of equator
+ *
+ * @author T. Mittan @date Feb. 1992
+ */
 long alberfor(double lon, double lat, double *x, double *y) {
 // long alberfor(lon, lat, x, y)
 // double lon;			/* (I) Longitude 		*/

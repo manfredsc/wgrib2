@@ -1,43 +1,60 @@
-/*******************************************************************************
-NAME                          OBLATED EQUAL-AREA
 
-PURPOSE:	Transforms input Easting and Northing to longitude and
-		latitude for the Oblated Equal Area projection.  The
-		Easting and Northing must be in meters.  The longitude
-		and latitude values will be returned in radians.
+/** @file
+ * @brief Oblated Equal-Area - Inverse Transformation
+ *
+ * PURPOSE: Transforms input Easting and Northing to longitude and
+ *          latitude for the Oblated Equal Area projection. The Easting and
+ *          Northing must be in meters. The longitude and latitude values will
+ *          be returned in radians.
+ * @author D. Steinwand, EROS @date May, 1991
+ * 
+ * ### Algorithm References
+ * 1. "New Equal-Area Map Projections for Noncircular Regions", John P. Snyder,
+ *    The American Cartographer, Vol 15, No. 4, October 1988, pp. 341-355.
+ *
+ * 2. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ *
+ * 3. "Software Documentation for GCTP General Cartographic Transformation
+ *    Package", U.S. Geological Survey National Mapping Division, May 1982.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 5/1991 | D. Steinwand | Initial implementation
+ * 11/1993 | S. Nelson | Added "double adjust_lon()" function declaration statement
+ */
 
-PROGRAM HISTORY
-PROGRAMMER              DATE            REASON
-----------              ----            ------
-D. Steinwand            May, 1991     
-S. Nelson		Nov, 1993	Added "double adjust_lon()" function
-					declaration statement.
-
-ALGORITHM REFERENCES
-
-1.  "New Equal-Area Map Projections for Noncircular Regions", John P. Snyder,
-    The American Cartographer, Vol 15, No. 4, October 1988, pp. 341-355.
-
-2.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-3.  "Software Documentation for GCTP General Cartographic Transformation
-    Package", U.S. Geological Survey National Mapping Division, May 1982.
-*******************************************************************************/
 #include "cproj.h"
 
-static double lon_center;
-static double lat_o;
-static double theta;
-static double m;
-static double n;
-static double R;
-static double sin_lat_o;
-static double cos_lat_o;
-static double false_easting;
-static double false_northing;
+static double lon_center;     /**< Center longitude (projection center) */
+static double lat_o;          /**< Center latitude (projection center) */
+static double theta;          /**< Rotation angle (radians) */
+static double m;              /**< Shape parameter m */
+static double n;              /**< Shape parameter n */
+static double R;              /**< Radius of the earth (sphere) */
+static double sin_lat_o;      /**< Sine of center latitude */
+static double cos_lat_o;      /**< Cosine of center latitude */
+static double false_easting;  /**< X offset in meters */
+static double false_northing; /**< Y offset in meters */
 
+/**
+ * Initialize the Oblated Equal-Area projection for inverse transformation.
+ *
+ * @param r Radius of the earth (sphere)
+ * @param center_long Center longitude 
+ * @param center_lat Center latitude 
+ * @param shape_m Shape parameter m
+ * @param shape_n Shape parameter n
+ * @param angle Rotation angle (radians)
+ * @param false_east X offset in meters
+ * @param false_north Y offset in meters
+ * 
+ * @return Always returns 0
+ *
+ * @author D. Steinwand, EROS @date May, 1991
+ */
 long obleqinvint(double r, double center_long, double center_lat,
         double shape_m, double shape_n, double angle, double false_east,
         double false_north) {
@@ -80,6 +97,18 @@ sincos(lat_o, &sin_lat_o, &cos_lat_o);
 return(OK);
 }
 
+/**
+ * Oblated Equal-Area inverse equations--mapping x,y to lat,long
+ *
+ * @param x X projection coordinate
+ * @param y Y projection coordinate
+ * @param lon Pointer to the longitude
+ * @param lat Pointer to the latitude
+ *
+ * @return Always returns 0
+ *
+ * @author D. Steinwand, EROS @date May, 1991
+ */
 long obleqinv(double x, double y, double *lon, double *lat) {
 //long obleqinv(x, y, lon, lat)
 //

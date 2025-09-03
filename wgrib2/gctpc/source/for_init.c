@@ -1,26 +1,40 @@
-/*******************************************************************************
-NAME                           FOR_INIT 
+/** @file
+ * @brief Forward Projection Initialization
+ * @author T. Mittan @date Mar, 1993
+ *
+ * ### Algorithm References
+ * 1. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ *
+ * 2. Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
+ *    U.S. Geological Survey Professional Paper 1453 , United State Government
+ *    Printing Office, Washington D.C., 1989.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 3-09-93 | T. Mittan | Initial Development
+ * 11-94 | S. Nelson | Added Clarke spheroid default to UTM
+ * 1-98 | S. Nelson | Changed datum to spheroid
+ */
 
-PURPOSE:	Initializes forward projection transformation parameters
-
-PROGRAMMER              DATE		REASON
-----------              ----		------
-T. Mittan		3-09-93		Initial Development
-S. Nelson		11-94		Added Clarke spheroid default to UTM
-S. Nelson		 1-98		Changed datum to spheroid
-
-ALGORITHM REFERENCES
-
-1.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-2.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
-    U.S. Geological Survey Professional Paper 1453 , United State Government
-    Printing Office, Washington D.C., 1989.
-*******************************************************************************/
 #include "cproj.h"
 
+/**
+ * Initializes forward projection transformation parameters.
+ * 
+ * @param outsys Output system code
+ * @param outzone Output zone number
+ * @param outparm Pointer to output array of projection parameters
+ * @param outspheroid Output spheroid
+ * @param fn27 NAD 1927 parameter file
+ * @param fn83 NAD 1983 parameter file
+ * @param iflg Status flag
+ * @param for_trans Forward function pointer
+ * 
+ * @author T. Mittan @date March, 1993
+ */
 void for_init(long outsys, long outzone, double *outparm, long outspheroid,
         char *fn27, char *fn83, long *iflg, long (*for_trans[])(double, double, double *, double *)) {
 

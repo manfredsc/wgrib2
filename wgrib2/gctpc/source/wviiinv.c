@@ -1,39 +1,49 @@
-/*******************************************************************************
-NAME                  		WAGNER VII
+/** @file
+ * @brief Wagner VII - Inverse Transformation
+ *
+ * PURPOSE: Transforms input Easting and Northing to longitude and
+ *          latitude for the Wagner VII projection. The
+ *          Easting and Northing must be in meters. The longitude
+ *          and latitude values will be returned in radians.
+ *
+ * This function was implemented with formulas supplied by John P. Snyder.
+ * @author D. Steinwand, EROS @date May, 1991
+ * 
+ * ### Algorithm References
+ * 1. Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
+ *    U.S. Geological Survey Professional Paper 1453 , United State Government
+ *    Printing Office, Washington D.C., 1989.
+ *
+ * 2. Snyder, John P., Personal correspondence, January 1991.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 5/1991 | D. Steinwand, EROS | Original implementation
+ * 12/1993 | S. Nelson, EROS | Added function call to "asinz" to fix errors at
+ *                             90 and -90 deg lat. This replaced calls to "asin".
+ */
 
-PURPOSE:	Transforms input Easting and Northing to longitude and
-		latitude for the Wagner VII projection.  The
-		Easting and Northing must be in meters.  The longitude
-		and latitude values will be returned in radians.
-
-PROGRAMMER              DATE            
-----------              ----           
-D. Steinwand, EROS      May, 1991     
-S. Nelson, EROS		Dec, 1993	Added function call to "asinz" to
-					fix errors at 90 and -90 deg lat.
-					This replaced calls to "asin".
-
-This function was implemented with formulas supplied by John P. Snyder.
- 
-ALGORITHM REFERENCES
-
-1.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections", 
-    U.S. Geological Survey Professional Paper 1453 , United State Government 
-    Printing Office, Washington D.C., 1989.
-
-2.  Snyder, John P., Personal correspondence, January 1991.
-*******************************************************************************/
 #include "cproj.h"
 
-/* Variables common to all subroutines in this code file
-  -----------------------------------------------------*/
-static double lon_center;	/* Center longitude (projection center) */
-static double R;		/* Radius of the earth (sphere) */
-static double false_easting;    /* x offset                             */
-static double false_northing;   /* y offset                             */
+/* Variables common to all subroutines in this code file */
+static double lon_center;	/**< Center longitude (projection center) */
+static double R;		/**< Radius of the earth (sphere) */
+static double false_easting;    /**< x offset                             */
+static double false_northing;   /**< y offset                             */
 
-/* Initialize the Wagner VII projection
-  ------------------------------------*/
+/** 
+ * Initialize the Wagner VII projection for inverse transformation.
+ * 
+ * @param r Radius of the earth (sphere)
+ * @param center_long Center longitude
+ * @param false_east x offset in meters
+ * @param false_north y offset in meters
+ *
+ * @return Always returns 0
+ * 
+ * @author D. Steinwand, EROS @date May, 1991
+ */
 long wviiinvint( double r, double center_long, double false_east,
         double false_north) {
 // long wviiinvint(r, center_long,false_east,false_north) 
@@ -58,9 +68,19 @@ offsetp(false_easting,false_northing);
 return(OK);
 }
 
-/* Wagner VII inverse equations--mapping x,y to lat,long 
-  -----------------------------------------------------*/
 
+/** 
+ * Wagner VII inverse equations--mapping x,y to lat,long 
+ * 
+ * @param x X projection coordinate
+ * @param y Y projection coordinate
+ * @param lon Pointer to store longitude
+ * @param lat Pointer to store latitude
+ *
+ * @return Always returns 0
+ *
+ * @author D. Steinwand, EROS @date May, 1991
+ */
 long wviiinv(double x, double y, double *lon, double *lat) {
 // long wviiinv(x, y, lon, lat)
 // double x;		/* (I) X projection coordinate */

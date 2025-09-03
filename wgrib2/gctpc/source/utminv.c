@@ -1,53 +1,62 @@
-/*******************************************************************************
-NAME                            UNIVERSAL TRANSVERSE MERCATOR
+/** @file
+ * @brief Universal Transverse Mercator - Inverse Transformation
+ *
+ * PURPOSE: Transforms input Easting and Northing to longitude and
+ *          latitude for the Universal Transverse Mercator projection.
+ *          The Easting and Northing must be in meters.  The longitude
+ *          and latitude values will be returned in radians.
+ * @author D. Steinwand, EROS @date Nov, 1991
+ * 
+ * ### Algorithm References
+ * 1. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ *
+ * 2. Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
+ *    U.S. Geological Survey Professional Paper 1453 , United State Government
+ *    Printing Office, Washington D.C., 1989.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 11/1991 | D. Steinwand | Original Development
+ * 3/1993 | T. Mittan | Update
+ * 2/1995 | S. Nelson | Divided tmfor.c into two files, one for UTM (utmfor.c) and 
+ *                      one for TM (tmfor.c).  This was a necessary change to run 
+ *                      forward projection conversions for both UTM and TM in the 
+ *                      same process.
+ */
 
-PURPOSE:	Transforms input Easting and Northing to longitude and
-		latitude for the Universal Transverse Mercator projection.
-		The Easting and Northing must be in meters.  The longitude
-		and latitude values will be returned in radians.
-
-PROGRAMMER              DATE		REASON
-----------              ----		------
-D. Steinwand, EROS      Nov, 1991
-T. Mittan		Mar, 1993
-S. Nelson		Feb, 1995	Divided tminv.c into two files, one
-					for UTM (utminv.c) and one for
-					TM (tminv.c).  This was a necessary
-					change to run inverse projection
-					conversions for both UTM and TM
-					in the same process.
-
-ALGORITHM REFERENCES
-
-1.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-2.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
-    U.S. Geological Survey Professional Paper 1453 , United State Government
-    Printing Office, Washington D.C., 1989.
-*******************************************************************************/
 #include <stdlib.h>
 #include "cproj.h"
 
 
-/* Variables common to all subroutines in this code file
-  -----------------------------------------------------*/
-static double r_major;          /* major axis                           */
-static double r_minor;          /* minor axis                           */
-static double scale_factor;     /* scale factor                         */
-static double lon_center;       /* Center longitude (projection center) */
-static double lat_origin;       /* center latitude                      */
-static double e0,e1,e2,e3;      /* eccentricity constants               */
-static double e,es,esp;         /* eccentricity constants               */
-static double ml0;              /* small value m                        */
-static double false_northing;   /* y offset in meters                   */
-static double false_easting; 	/* x offset in meters			*/
-static long ind;		/* sphere flag value			*/
+/* Variables common to all subroutines in this code file */
+static double r_major;          /**< major axis                           */
+static double r_minor;          /**< minor axis                           */
+static double scale_factor;     /**< scale factor                         */
+static double lon_center;       /**< Center longitude (projection center) */
+static double lat_origin;       /**< center latitude                      */
+static double e0,e1,e2,e3;      /**< eccentricity constants               */
+static double e,es,esp;         /**< eccentricity constants               */
+static double ml0;              /**< small value m                        */
+static double false_northing;   /**< y offset in meters                   */
+static double false_easting;    /**< x offset in meters                   */
+static long ind;                /**< sphere flag value                    */
 
 
-/* Initialize the Universal Transverse Mercator (UTM) projection
-  -------------------------------------------------------------*/
+/** 
+ * Initialize the Universal Transverse Mercator (UTM) projection for inverse transformation.
+ *
+ * @param r_maj Major axis radius
+ * @param r_min Minor axis radius
+ * @param scale_fact Scale factor
+ * @param zone Zone number
+ * 
+ * @return
+ * - 0 :: Success
+ * - 11 :: Illegal zone number
+ */
 long utminvint(double r_maj,double r_min,double scale_fact,long zone) {
 //long utminvint(r_maj,r_min,scale_fact,zone)
 //
@@ -100,6 +109,24 @@ return(OK);
    Note:  The algorithm for UTM is exactly the same as TM and therefore
 	  if a change is implemented, also make the change to TMINV.c
   -----------------------------------------------------------------------*/
+
+/**
+ * Universal Transverse Mercator inverse equations--mapping x,y to lat,long 
+ *
+ * @note The algorithm for UTM is exactly the same as TM and therefore
+ *       if a change is implemented, also make the change to TMINV.c
+ * 
+ * @param x X projection coordinate.
+ * @param y Y projection coordinate.
+ * @param lon Pointer to store the longitude.
+ * @param lat Pointer to store the latitude.
+ *
+ * @return 
+ * - 0 :: Success
+ * - 95 :: Latitude failed to converge
+ *
+ * @author D. Steinwand @date Nov, 1991
+ */
 long utminv(double x, double y, double *lon, double *lat) {
 //long utminv(x, y, lon, lat)
 //double x;		/* (I) X projection coordinate 			*/
