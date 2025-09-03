@@ -1,44 +1,61 @@
 
-/*******************************************************************************
-NAME                            LAMBERT CONFORMAL CONIC
+/** @file
+ * @brief Lambert Conformal Conic - Forward Transformation
+ * 
+ * PURPOSE: Transforms input longitude and latitude to Easting and
+ *          Northing for the Lambert Conformal Conic projection. The
+ *          longitude and latitude must be in radians.  The Easting
+ *          and Northing values will be returned in meters.
+ * 
+ * ### Algorithm References
+ * 1. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ * 
+ * 2. Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
+ *    U.S. Geological Survey Professional Paper 1453 , United State Government
+ *    Printing Office, Washington D.C., 1987.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 2/26/1993 | T. Mittan | Initial implementation
+ * 1/1998 | S. Nelson | Corrected misspelling in error message
+ */
 
-PURPOSE:	Transforms input longitude and latitude to Easting and
-		Northing for the Lambert Conformal Conic projection.  The
-		longitude and latitude must be in radians.  The Easting
-		and Northing values will be returned in meters.
-
-PROGRAMMER	DATE	REASON
-----------	----	------
-T. Mittan	2-26-93
-S. Nelson	1-98	Corrected misspelling in error message
-
-ALGORITHM REFERENCES
-
-1.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-2.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
-    U.S. Geological Survey Professional Paper 1453 , United State Government
-*******************************************************************************/
 #include "cproj.h"
 
-/* Variables common to all subroutines in this code file
-  -----------------------------------------------------*/
-  static double r_major;                /* major axis                   */
-  static double r_minor;                /* minor axis                   */
-  static double es;                     /* eccentricity squared         */
-  static double e;                      /* eccentricity                 */
-  static double center_lon;             /* center longituted            */
-  static double center_lat;             /* cetner latitude              */
-  static double ns;                     /* ratio of angle between meridian*/
-  static double f0;                     /* flattening of ellipsoid      */
-  static double rh;                     /* height above ellipsoid       */
-  static double false_easting;          /* x offset in meters           */
-  static double false_northing;         /* y offset in meters           */
+/* Variables common to all subroutines in this code file */
+  static double r_major;                /**< major axis                   */
+  static double r_minor;                /**< minor axis                   */
+  static double es;                     /**< eccentricity squared         */
+  static double e;                      /**< eccentricity                 */
+  static double center_lon;             /**< center longitude             */
+  static double center_lat;             /**< center latitude              */
+  static double ns;                     /**< ratio of angle between meridian*/
+  static double f0;                     /**< flattening of ellipsoid      */
+  static double rh;                     /**< height above ellipsoid       */
+  static double false_easting;          /**< x offset in meters           */
+  static double false_northing;         /**< y offset in meters           */
 
-/* Initialize the Lambert Conformal conic projection
-  ------------------------------------------------*/
+/** 
+ * Initialize the Lambert Conformal conic projection for forward transformation.
+ * 
+ * @param r_maj Major axis
+ * @param r_min Minor axis
+ * @param lat1 First standard parallel
+ * @param lat2 Second standard parallel
+ * @param c_lon Center longitude
+ * @param c_lat Center latitude
+ * @param false_east X offset in meters
+ * @param false_north Y offset in meters
+ * 
+ * @return
+ * - 0 :: Success
+ * - 41 :: Equal latitudes for standard parallels on opposite sides of equator
+ * 
+ * @author T. Mittan @date Feb. 1993
+ */
 long lamccforint(double r_maj, double r_min, double lat1, double lat2,
         double c_lon, double c_lat, double false_east, double false_north) {
 //long lamccforint(r_maj,r_min,lat1,lat2,c_lon,c_lat,false_east,false_north)
@@ -110,8 +127,20 @@ offsetp(false_easting,false_northing);
 
 return(OK);
 }
-/* Lambert Conformal conic forward equations--mapping lat,long to x,y
-  -----------------------------------------------------------------*/
+
+
+/** 
+ * Lambert Conformal conic forward equations--mapping lat,long to x,y 
+ * 
+ * @param lon Longitude
+ * @param lat Latitude
+ * @param x Pointer to store X projection coordinate
+ * @param y Pointer to store Y projection coordinate
+ * 
+ * @return
+ * - 0 :: Success
+ * - 44 :: Point can not be projected
+ */
 long lamccfor(double lon, double lat, double *x, double *y) {
 //long lamccfor(lon, lat, x, y)
 //double lon;                     /* (I) Longitude                */

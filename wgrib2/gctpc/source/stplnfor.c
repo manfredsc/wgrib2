@@ -1,38 +1,38 @@
-/*******************************************************************************
-NAME                           STATE PLANE 
+/** @file
+ * @brief State Plane - Forward Transformation
+ * 
+ * PURPOSE: Transforms input longitude and latitude to Easting and
+ *          Northing for the State Plane projection. The longitude and
+ *          latitude must be in radians. The Easting and Northing values
+ *          will be returned in meters.
+ * @author T. Mittan @date April, 1993
+ * 
+ * ### Algorithm References
+ * 1. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ *
+ * 2. Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
+ *    U.S. Geological Survey Professional Paper 1453 , United State Government
+ *    Printing Office, Washington D.C., 1989.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 4/1993 | T. Mittan | Original Development
+ * 1/1998 | S. Nelson | Took out reinitialization test.  Initialization
+ *                      will be performed in all cases.  Added comments.
+ */
 
-PURPOSE:	Transforms input longitude and latitude to Easting and
-		Northing for the State Plane projection.  The
-		longitude and latitude must be in radians.  The Easting
-		and Northing values will be returned in meters.
-
-PROGRAMMER	DATE		Reason
-----------      ----		------
-T. Mittan	Apr, 1993	Original Development
-S. Nelson	Jan, 1998	Took out reinitialization test.  Initialization
-				will be performed in all cases.  Added comments.
-
-ALGORITHM REFERENCES
-
-1.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-2.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
-    U.S. Geological Survey Professional Paper 1453 , United State Government
-    Printing Office, Washington D.C., 1989.
-*******************************************************************************/
 #include <stdio.h>
 #include "cproj.h"
 
-static long id;		/* indicates which projection is to be transformed */
+static long id;		/**< indicates which projection is to be transformed */
 
 /* set the initialized values for zone and spheroid.  This value determines
-   wheather to initialize or not
-  ------------------------------------------------------------------------*/
+   whether to initialize or not */
 
-/* the Nad 27 State Plane Zones are set in this array
-  --------------------------------------------------*/
+/** The Nad 27 State Plane Zones are set in this array */
 static long NAD27[134] = {101,102,5010,5300,201,202,203,301,302,401,402,403,404,
 	       	405,406,407,501,502,503,600,700,901,902,903,1001,1002,5101,
 	       	5102,5103,5104,5105,1101,1102,1103,1201,1202,1301,1302,1401,
@@ -45,6 +45,7 @@ static long NAD27[134] = {101,102,5010,5300,201,202,203,301,302,401,402,403,404,
 		4601,4602,4701,4702,4801,4802,4803,4901,4902,4903,4904,5001,
 		5002,5003,5004,5005,5006,5007,5008,5009,5201,5202,5400};
 
+/** The Nad 83 State Plane Zones are set in this array */
 static long NAD83[134] = {101,102,5010,5300,201,202,203,301,302,401,402,403,
 		404,405,406,0000,501,502,503,600,700,901,902,903,1001,1002,
 		5101,5102,5103,5104,5105,1101,1102,1103,1201,1202,1301,1302,
@@ -56,8 +57,24 @@ static long NAD83[134] = {101,102,5010,5300,201,202,203,301,302,401,402,403,
 		4002,4100,4201,4202,4203,4204,4205,4301,4302,4303,4400,4501,
 		4502,4601,4602,4701,4702,4801,4802,4803,4901,4902,4903,4904,
 		5001,5002,5003,5004,5005,5006,5007,5008,5009,5200,0000,5400};                                             
-/* Initialize the State Plane projection
-  ------------------------------------*/
+
+/** 
+ * Initialize the State Plane projection for forward transformation.
+ * 
+ * @param zone Zone number
+ * @param sphere Spheroid number
+ * @param fn27 Name of file containing the NAD27 parameters
+ * @param fn83 Name of file containing the NAD83 parameters
+ * 
+ * @return 
+ * - 0 :: Success
+ * - 21 :: Illegal zone
+ * - 22 :: Error opening parameter file
+ * - 23 :: Illegal spheroid ID
+ * - 1116 :: Illegal DMS field
+ * 
+ * @author T. Mittan @date April, 1993
+ */
 long stplnforint(long zone, long sphere, char *fn27, char *fn83) {
 //long stplnforint( zone,sphere,fn27,fn83)
 //
@@ -235,8 +252,18 @@ return(OK);
 }
 
 
-/* State plane forward equations--mapping lat,long to x,y
-  -----------------------------------------------------*/
+/** 
+ * State plane forward equations--mapping lat,long to x,y 
+ * 
+ * @param lon Longitude in radians.
+ * @param lat Latitude in radians.
+ * @param x Pointer to store X projection coordinate.
+ * @param y Pointer to store Y projection coordinate.
+ *
+ * @return 0 on success, error code otherwise
+ * 
+ * @author T. Mittan @date April, 1993
+ */
 long stplnfor(double lon, double lat, double *x, double *y) {
 //long stplnfor(lon, lat, x, y)
 //double lon;			/* (I) Longitude 		*/

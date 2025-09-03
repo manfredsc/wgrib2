@@ -1,42 +1,49 @@
-/*******************************************************************************
-NAME                    MILLER CYLINDRICAL 
+/** @file
+ * @brief Miller Cylindrical - Inverse Transformation
+ * 
+ * PURPOSE: Transforms input Easting and Northing to longitude and
+ *          latitude for the Miller Cylindrical projection. The
+ *          Easting and Northing must be in meters. The longitude
+ *          and latitude values will be returned in radians.
+ *
+ * This function was adapted from the Miller Cylindrical projection code
+ * (FORTRAN) in the General Cartographic Transformation Package software
+ * which is available from the U.S. Geological Survey National Mapping Division.
+ *
+ * @author T. Mittan @date March, 1993
+ * 
+ * ### Algorithm References
+ * 1. "New Equal-Area Map Projections for Noncircular Regions", John P. Snyder,
+ *    The American Cartographer, Vol 15, No. 4, October 1988, pp. 341-355.
+ *
+ * 2. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ *
+ * 3. "Software Documentation for GCTP General Cartographic Transformation
+ *    Package", U.S. Geological Survey National Mapping Division, May 1982.
+ */
 
-PURPOSE:	Transforms input Easting and Northing to longitude and
-		latitude for the Miller Cylindrical projection.  The
-		Easting and Northing must be in meters.  The longitude
-		and latitude values will be returned in radians.
-
-PROGRAMMER              DATE            
-----------              ----           
-T. Mittan		March, 1993
-
-This function was adapted from the Miller Cylindrical projection code
-(FORTRAN) in the General Cartographic Transformation Package software
-which is available from the U.S. Geological Survey National Mapping Division.
- 
-ALGORITHM REFERENCES
-
-1.  "New Equal-Area Map Projections for Noncircular Regions", John P. Snyder,
-    The American Cartographer, Vol 15, No. 4, October 1988, pp. 341-355.
-
-2.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-3.  "Software Documentation for GCTP General Cartographic Transformation
-    Package", U.S. Geological Survey National Mapping Division, May 1982.
-*******************************************************************************/
 #include "cproj.h"
 
-/* Variables common to all subroutines in this code file
-  -----------------------------------------------------*/
-static double lon_center;	/* Center longitude (projection center) */
-static double R;		/* Radius of the earth (sphere)	 	*/
-static double false_easting;	/* x offset in meters			*/
-static double false_northing;	/* y offset in meters			*/
+/* Variables common to all subroutines in this code file */
+static double lon_center;	/**< Center longitude (projection center) */
+static double R;		/**< Radius of the earth (sphere)	 	*/
+static double false_easting;	/**< x offset in meters			*/
+static double false_northing;	/**< y offset in meters			*/
 
-/* Initialize the Miller Cylindrical projection
-  -------------------------------------------*/
+/** 
+ * Initialize the Miller Cylindrical projection for inverse transformation.
+ *
+ * @param r Radius of the earth (sphere)
+ * @param center_long Center longitude
+ * @param false_east False easting
+ * @param false_north False northing
+ *
+ * @return Always returns 0
+ *
+ * @author T. Mittan @date March, 1993
+ */
 long millinvint(double r, double center_long, double false_east,
         double false_north) {
 //long millinvint(r, center_long,false_east,false_north) 
@@ -62,8 +69,20 @@ offsetp(false_easting,false_northing);
 return(OK);
 }
 
-/* Miller Cylindrical inverse equations--mapping x,y to lat/long
-  ------------------------------------------------------------*/
+
+
+/** 
+ * Miller Cylindrical inverse equations--mapping x,y to lat/long 
+ * 
+ * @param x X projection coordinate
+ * @param y Y projection coordinate
+ * @param lon Pointer to Longitude
+ * @param lat Pointer to Latitude
+ * 
+ * @return Always returns 0
+ * 
+ * @author T. Mittan @date March, 1993
+ */
 long millinv(double x, double y, double *lon, double *lat) {
 //long millinv(x, y, lon, lat)
 //

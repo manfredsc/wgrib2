@@ -1,55 +1,57 @@
-/*******************************************************************************
-NAME                            PAKSZ 
+/** @file 
+ * @brief Convert packed DMS angle to seconds
+ *
+ * PURPOSE: This function converts a packed DMS angle to seconds. The standard
+ *          packed DMS format is:
+ *
+ *          degrees * 1000000 + minutes * 1000 + seconds
+ *
+ *          Example:	ang = 120025045.25 yields
+ *                  deg = 120
+ *                  min = 25
+ *                  sec = 45.25
+ * 
+ *          The algorithm used for the conversion is as follows:
+ *
+ *          1.  The absolute value of the angle is used.
+ *
+ *          2.  The degrees are separated out:
+ *              deg = ang/1000000 	(fractional portion truncated)
+ *
+ *          3.  The minutes are separated out:
+ *              min = (ang - deg * 1000000) / 1000 	   (fractional
+ *                              portion	truncated)
+ *
+ *          4.  The seconds are then computed:
+ *              sec = ang - deg * 1000000 - min * 1000
+ *
+ *          5.  The total angle in seconds is computed:
+ *              sec = deg * 3600.0 + min * 60.0 + sec
+ *
+ *          6.  The sign of sec is set to that of the input angle.
+ * @author T. Mittan @date March, 1993
+ * ### Algorithm References
+ * 1. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ *
+ * 2. Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
+ *    U.S. Geological Survey Professional Paper 1453 , United State Government
+ *    Printing Office, Washington D.C., 1989.
+ */
 
-PURPOSE:	This function converts a packed DMS angle to seconds.  The
-		standard packed DMS format is:
-
-		degrees * 1000000 + minutes * 1000 + seconds
-
-		Example:	ang = 120025045.25 yields
-				deg = 120
-				min = 25
-				sec = 45.25
-
-		The algorithm used for the conversion is as follows:
-
-		1.  The absolute value of the angle is used.
-
-		2.  The degrees are separated out:
-		    deg = ang/1000000 	(fractional portion truncated)
-	
-		3.  The minutes are separated out:
-		    min = (ang - deg * 1000000) / 1000 	   (fractional
-							portion	truncated)
-
-		4.  The seconds are then computed:
-		    sec = ang - deg * 1000000 - min * 1000
-
-		5.  The total angle in seconds is computed:
-		    sec = deg * 3600.0 + min * 60.0 + sec
-
-		6.  The sign of sec is set to that of the input angle.
-		    
-
-PROGRAMMER              DATE
-----------              ----
-T. Mittan	      MARCH, 1993
-
-
-ALGORITHM REFERENCES
-
-1.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Proffesional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-2.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
-    U.S. Geological Survey Professional Paper 1453 , United State Government
-    Printing Office, Washington D.C., 1989.
-*******************************************************************************/
 #include "cproj.h"
 
-/* Convert DMS packed angle into deg 
-----------------------------------*/
+/** 
+ * Convert DMS packed angle into degrees.
+ * 
+ * @param ang Angle in packed DMS format
+ * @param iflg Error flag number
+ * 
+ * @return Angle in degrees on success, error code on failure.
+ * 
+ * @author T. Mittan @date March, 1993
+ */
 double paksz(double ang, long *iflg) {
 //double paksz(ang,iflg)
 //

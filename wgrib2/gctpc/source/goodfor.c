@@ -1,41 +1,51 @@
-/*******************************************************************************
-NAME                        GOODE'S HOMOLOSINE
+/** @file
+ * @brief Goode's Homolosine - Forward Transformation
+ * 
+ * PURPOSE: Transforms input longitude and latitude to Easting and
+ *          Northing for the Goode's Homolosine projection.  The
+ *          longitude and latitude must be in radians.  The Easting
+ *          and Northing values will be returned in meters.
+ * 
+ * @author D. Steinwand, EROS @date May, 1991
+ * 
+ * ### Algorithm References
+ * 1. Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
+ *    U.S. Geological Survey Professional Paper 1453 , United State Government
+ *    Printing Office, Washington D.C., 1989.
+ *
+ * 2. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ *
+ * 3. Goode, J.P., 1925,  The Homolosine projection:  a new device for
+ *    portraying the Earth's surface entire:  Assoc. Am. Geographers, Annals,
+ *    v. 15, p. 119-125
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 5/1991 | D. Steinwand, EROS | Initial implementation
+ * 9/1992 | D. Steinwand, EROS | Updated
+ * 2/1993 | D. Steinwand, EROS | Updated
+ * 6/1993 | S. Nelson, EDC | Make changes in precision and number of iterations.
+ */
 
-PURPOSE:	Transforms input longitude and latitude to Easting and
-		Northing for the Goode's Homolosine projection.  The
-		longitude and latitude must be in radians.  The Easting
-		and Northing values will be returned in meters.
-
-PROGRAMMER              DATE
-----------              ----
-D. Steinwand, EROS      May, 1991; Updated Sept, 1992; Updated Feb 1993
-S. Nelson, EDC		Jun, 1993	Make changes in precision and number
-					of iterations.
-
-ALGORITHM REFERENCES
-
-1.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
-    U.S. Geological Survey Professional Paper 1453 , United State Government
-    Printing Office, Washington D.C., 1989.
-
-2.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-3.  Goode, J.P., 1925,  The Homolosine projection:  a new device for 
-    portraying the Earth's surface entire:  Assoc. Am. Geographers, Annals, 
-    v. 15, p. 119-125
-*******************************************************************************/
 #include "cproj.h"
 
-/* Variables common to all subroutines in this code file
-  -----------------------------------------------------*/
-static double R;		/* Radius of the earth (sphere) */
-static double lon_center[12];	/* Central meridians, one for each region */
-static double feast[12];	/* False easting, one for each region */
+/* Variables common to all subroutines in this code file */
 
-/* Initialize the Goode`s Homolosine projection
-  --------------------------------------------*/
+static double R;		/**< Radius of the earth (sphere) */
+static double lon_center[12];	/**< Central meridians, one for each region */
+static double feast[12];	/**< False easting, one for each region */
+
+/** Initialize the Goode`s Homolosine projection for forward transformation.
+ * 
+ * @param r Radius of the earth (sphere)
+ * 
+ * @return Always returns 0
+ * 
+ * @author D. Steinwand, EROS @date May, 1991
+ */
 long goodforint(double r) {
 //long goodforint(r) 
 //double r; 			/* (I) Radius of the earth (sphere) */
@@ -81,8 +91,20 @@ radius(r);
 return(OK);
 }
 
-/* Goode`s Homolosine forward equations--mapping lat,long to x,y
-  -------------------------------------------------------------*/
+
+/** Goode`s Homolosine forward equations--mapping lat,long to x,y 
+ *
+ * @param lon Longitude
+ * @param lat Latitude
+ * @param x Pointer to the X projection coordinate
+ * @param y Pointer to the Y projection coordinate
+ * 
+ * @return
+ * - 0 :: Success
+ * - 251 :: Iteration failed to converge
+ * 
+ * @author D. Steinwand, EROS @date May, 1991
+ */
 long goodfor(double lon, double lat, double *x, double *y) {
 //long goodfor(lon, lat, x, y)
 //double lon;			/* (I) Longitude */

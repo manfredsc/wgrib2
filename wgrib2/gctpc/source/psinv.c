@@ -1,44 +1,52 @@
-/*******************************************************************************
-NAME                            POLAR STEREOGRAPHIC 
+/** @file
+ * @brief Polar Stereographic - Inverse Transformation
+ * 
+ * PURPOSE: Transforms input Easting and Northing to longitude and
+ *          latitude for the Polar Stereographic projection. The
+ *          Easting and Northing must be in meters. The longitude
+ *          and latitude values will be returned in radians.
+ * @author T. Mittan @date 2-26-93
+ * 
+ * ### Algorithm References
+ * 1. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ *
+ * 2. Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
+ *    U.S. Geological Survey Professional Paper 1453 , United State Government
+ *    Printing Office, Washington D.C., 1989.
+ */
 
-PURPOSE:	Transforms input Easting and Northing to longitude and
-		latitude for the Polar Stereographic projection.  The
-		Easting and Northing must be in meters.  The longitude
-		and latitude values will be returned in radians.
-
-PROGRAMMER              DATE
-----------              ----
-T. Mittan		2-26-93
-
-ALGORITHM REFERENCES
-
-1.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-2.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
-    U.S. Geological Survey Professional Paper 1453 , United State Government
-    Printing Office, Washington D.C., 1989.
-*******************************************************************************/
 #include "cproj.h"
 
-/* Variables common to all subroutines in this code file
-  -----------------------------------------------------*/
-  static double r_major;                /* major axis                   */
-  static double r_minor;                /* minor axis                   */
-  static double e;                      /* eccentricity                 */
-  static double e4;                     /* e4 calculated from eccentricity*/
-  static double center_lon;             /* center longitude             */
-  static double center_lat;             /* center latitude              */
-  static double fac;                    /* sign variable                */
-  static double ind;                    /* flag variable                */
-  static double mcs;			/* small value m		*/
-  static double tcs;			/* small value t		*/
-  static double false_northing;		/* y offset in meters		*/
-  static double false_easting;		/* x offset in meters		*/
+/* Variables common to all subroutines in this code file */
+  static double r_major;                /**< major axis                   */
+  static double r_minor;                /**< minor axis                   */
+  static double e;                      /**< eccentricity                 */
+  static double e4;                     /**< e4 calculated from eccentricity*/
+  static double center_lon;             /**< center longitude             */
+  static double center_lat;             /**< center latitude              */
+  static double fac;                    /**< sign variable                */
+  static double ind;                    /**< flag variable                */
+  static double mcs;                    /**< small value m                */
+  static double tcs;                    /**< small value t                */
+  static double false_northing;        /**< y offset in meters           */
+  static double false_easting;         /**< x offset in meters           */
 
-/* Initialize the Polar Stereographic projection
-  --------------------------------------------*/
+/** 
+ * Initialize the Polar Stereographic projection for inverse transformation.
+ * 
+ * @param r_major Major axis radius
+ * @param r_minor Minor axis radius
+ * @param c_lon Center longitude
+ * @param c_lat Center latitude
+ * @param false_east X offset in meters
+ * @param false_north Y offset in meters
+ * 
+ * @return Always returns 0
+ * 
+ * @author T. Mittan @date 2-26-93
+ */
 long psinvint(double r_maj, double r_min, double c_lon, double c_lat,
         double false_east, double false_north) {
 //long psinvint(r_maj,r_min,c_lon,c_lat,false_east,false_north)
@@ -91,8 +99,17 @@ offsetp(false_east,false_north);
 return(OK);
 }
 
-/* Polar Stereographic inverse equations--mapping x,y to lat/long
-  --------------------------------------------------------------*/
+
+/** 
+ * Polar Stereographic inverse equations--mapping x,y to lat/long
+ *
+ * @param x X projection coordinate
+ * @param y Y projection coordinate
+ * @param lon Pointer to store the Longitude in radians
+ * @param lat Pointer to store the Latitude in radians
+ * 
+ * @return 0 for success, error code otherwise
+ */
 long psinv( double x, double y, double *lon, double *lat) {
 //long psinv(x, y, lon, lat)
 //double x;			/* (O) X projection coordinate 	*/
