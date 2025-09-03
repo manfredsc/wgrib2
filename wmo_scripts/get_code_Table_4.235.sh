@@ -1,6 +1,11 @@
 #!/bin/sh
-# 03/2025 Public Domain   Manfred Schwarb <schwarb@meteodat.ch>
-# This script updates wgrib2 with WMO code info.
+
+## @file
+## @brief This script updates wgrib2 with WMO code info.
+## @author Public Domain: Manfred Schwarb <schwarb@meteodat.ch>
+## @date 6/2025
+
+## @cond
 
 # Table 4.235 is no official WMO table, we fetch it from NCEP therefore
 
@@ -26,3 +31,5 @@ wget -nv "$urlbase/grib2_table4-235.shtml"  -O- | tr -s "[:cntrl:]" "[ *]" | sed
   }' > "$outfile"
 
 exit
+
+## @endcond
