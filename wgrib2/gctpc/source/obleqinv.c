@@ -1,4 +1,3 @@
-
 /** @file
  * @brief Oblated Equal-Area - Inverse Transformation
  *
