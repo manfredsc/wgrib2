@@ -1,6 +1,9 @@
-/* a list of aliases
- *
- * public domain 2/2007 Wesley Ebisuzaki
+/** @file
+ * @brief A list of aliases for existing options.
+ * 
+ * This file contains no code, however, it's contents are parsed by the script functions.sh
+ * to create the fnlist in fnlist.h and fnlist.c.
+ * @author Public Domain: Wesley Ebisuzaki @date 2/2007
  */
 
 #include <stdio.h>
