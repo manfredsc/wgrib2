@@ -1,5 +1,11 @@
 #!/bin/sh
-#  10/2024  Public Domain  Wesley Ebisuzaki
+
+## @file
+## @brief This script runs all get_*.sh scripts in the current directory
+## to create WMO tables.
+## @author Public Domain; Wesley Ebisuzaki @date 10/2024
+
+## @cond
 homedir=`pwd`
 PATH="$homedir:$PATH"
 
@@ -17,3 +23,4 @@ for script in $scriptlist; do
 done
 
 exit
+## @endcond
