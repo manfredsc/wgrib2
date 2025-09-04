@@ -30,9 +30,6 @@ wget -nv "$urlbase/raw/master/C11.csv" -O- | sed '{
       }
       printf "case %5d: string=\"%s\"; break;\n",num,name
     }
-  }
-  END {
-    print "default:    sprintf(tmp,\"%d\", ctr); string = tmp; break;"
   }' > "$outfile"
 
 exit

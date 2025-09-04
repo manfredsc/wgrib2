@@ -306,4 +306,3 @@ case   320: string="Radiation and Nuclear Safety Authority (Finland)"; break;
 case   321: string="State Office for Nuclear Safety (Czechia)"; break;
 case   322: string="Nuclear Regulation Authority (Slovakia)"; break;
 case 65535: string="Missing value"; break;
-default:    sprintf(tmp,"%d", ctr); string = tmp; break;
