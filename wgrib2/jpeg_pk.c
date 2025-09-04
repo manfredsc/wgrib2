@@ -1,5 +1,13 @@
 /** @file
  * @brief JPEG2000 packing for GRIB2.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 3/2008 | W. Ebisuzaki | Initial implementation
+ * 10/2024 | A. Stahl | Use g2c for Jasper encoding
+ * 11/2024 | A. Stahl | Use g2c for OpenJPEG encoding / combine implementations
+ * 3/2025 | W. Ebisuzaki | Replace ref to Jasper/OpenJPEG with G2C_JPEG2000_ENABLED
  * @author Public Domain: Wesley Ebisuzaki @date 3/2008
  */
 

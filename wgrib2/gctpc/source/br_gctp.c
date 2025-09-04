@@ -1,6 +1,6 @@
 /** @file
  * @brief Fortran bridge routine to call gctp() for UNIX.
- * @author Wesley Ebisuzaki @date 2020
+ * @author Wesley Ebisuzaki @date 2/2024
  */
 
 /**
@@ -26,7 +26,7 @@
  * @param fn83 Filename for NAD 1983 parameter file
  * @param iflg Error flag
  *
- * @author Wesley Ebisuzaki @date 2020
+ * @author Wesley Ebisuzaki @date 2/2024
  */
 #ifdef unix
 #include "cproj.h"

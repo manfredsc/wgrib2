@@ -1,6 +1,11 @@
 #!/bin/sh
-# 10/2024 Public Domain   Manfred Schwarb <schwarb@meteodat.ch>
-# This script updates wgrib2 with WMO code info.
+
+## @file
+## @brief This script updates wgrib2 with WMO code info.
+## @author Public Domain: Manfred Schwarb <schwarb@meteodat.ch>
+## @date 10/2024
+
+## @cond
 
 tab=$1
 tab="4.5"
@@ -83,3 +88,5 @@ cat $out
 
 
 exit
+
+## @endcond
