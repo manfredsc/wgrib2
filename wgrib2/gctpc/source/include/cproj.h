@@ -12,11 +12,7 @@
 #define TWO_PI 	(PI*2.0)			/**< Two Pi */
 #define EPSLN	1.0e-10				/**< Epsilon for floating point comparisons */
 #define R2D     57.2957795131		/**< Radians to Degrees conversion factor */
-/*
-#define D2R     0.0174532925199
-*/
 #define D2R     1.745329251994328e-2	/**< Degrees to Radians conversion factor */
-#define S2R	4.848136811095359e-6	/**< Seconds to Radians conversion factor */
 
 #define OK	0		/**< Success status code */
 #define ERROR  -1	/**< Error status code */

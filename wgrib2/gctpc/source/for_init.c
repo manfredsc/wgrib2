@@ -103,10 +103,10 @@ long mode;		/* which initialization method  to use A or B	*/
     zone = outzone;
     if (zone == 0)
       {
-      lon1 = paksz(outparm[0],iflg)* 3600 * S2R;
+      lon1 = paksz(outparm[0],iflg)* D2R;
       if (*iflg != 0)
         return;
-      lat1 = paksz(outparm[1],iflg)* 3600 * S2R;
+      lat1 = paksz(outparm[1],iflg)* D2R;
       if (*iflg != 0)
         return;
       zone = calc_utm_zone(lon1 * R2D);
@@ -132,16 +132,16 @@ long mode;		/* which initialization method  to use A or B	*/
     {
     /* this is the call to initialize ALBERS CONICAL EQUAL AREA 
     ----------------------------------------------------------*/
-    lat1 = paksz(outparm[2],iflg)* 3600 * S2R;
+    lat1 = paksz(outparm[2],iflg)* D2R;
     if (*iflg != 0)
        return;
-    lat2 = paksz(outparm[3],iflg)* 3600 * S2R;
+    lat2 = paksz(outparm[3],iflg)* D2R;
     if (*iflg != 0)
        return;
-    lat_origin = paksz(outparm[5],iflg)* 3600 * S2R;
+    lat_origin = paksz(outparm[5],iflg)* D2R;
     if (*iflg != 0)
        return;
-    center_long = paksz(outparm[4],iflg)* 3600 * S2R;
+    center_long = paksz(outparm[4],iflg)* D2R;
     if (*iflg != 0)
        return;
     *iflg = alberforint(r_major,r_minor,lat1,lat2,center_long,lat_origin,
@@ -153,16 +153,16 @@ long mode;		/* which initialization method  to use A or B	*/
     {
     /* this is the call to initialize LAMBERT CONFORMAL CONIC 
     --------------------------------------------------------*/
-    lat1 = paksz(outparm[2],iflg)* 3600 * S2R;
+    lat1 = paksz(outparm[2],iflg)* D2R;
     if (*iflg != 0)
        return;
-    lat2 = paksz(outparm[3],iflg)* 3600 * S2R;
+    lat2 = paksz(outparm[3],iflg)* D2R;
     if (*iflg != 0)
        return;
-    center_long = paksz(outparm[4],iflg)* 3600 * S2R;
+    center_long = paksz(outparm[4],iflg)* D2R;
     if (*iflg != 0)
        return;
-    lat_origin  = paksz(outparm[5],iflg)* 3600 * S2R;
+    lat_origin  = paksz(outparm[5],iflg)* D2R;
     if (*iflg != 0)
        return;
     *iflg = lamccforint(r_major,r_minor,lat1,lat2,center_long,lat_origin,
@@ -174,10 +174,10 @@ long mode;		/* which initialization method  to use A or B	*/
     {
     /* this is the call to initialize MERCATOR
     ----------------------------------------*/
-    center_long  = paksz(outparm[4],iflg)* 3600 * S2R;
+    center_long  = paksz(outparm[4],iflg)* D2R;
     if (*iflg != 0)
        return;
-    lat1   = paksz(outparm[5],iflg)* 3600 * S2R;
+    lat1   = paksz(outparm[5],iflg)* D2R;
     if (*iflg != 0)
        return;
     *iflg = merforint(r_major,r_minor,center_long,lat1,false_easting,
@@ -189,10 +189,10 @@ long mode;		/* which initialization method  to use A or B	*/
     {
     /* this is the call to initialize POLAR STEREOGRAPHIC 
     ----------------------------------------------------*/
-    center_long = paksz(outparm[4],iflg)* 3600 * S2R;
+    center_long = paksz(outparm[4],iflg)* D2R;
     if (*iflg != 0)
        return;
-    lat1  = paksz(outparm[5],iflg)* 3600 * S2R;
+    lat1  = paksz(outparm[5],iflg)* D2R;
     if (*iflg != 0)
        return;
     *iflg = psforint(r_major,r_minor,center_long,lat1,false_easting,
@@ -204,10 +204,10 @@ long mode;		/* which initialization method  to use A or B	*/
     {
     /* this is the call to initialize POLYCONIC
     -----------------------------------------*/
-    center_long  = paksz(outparm[4],iflg)* 3600 * S2R;
+    center_long  = paksz(outparm[4],iflg)* D2R;
     if (*iflg != 0)
        return;
-    lat_origin   = paksz(outparm[5],iflg)* 3600 * S2R;
+    lat_origin   = paksz(outparm[5],iflg)* D2R;
     if (*iflg != 0)
        return;
     *iflg = polyforint(r_major,r_minor,center_long,lat_origin,false_easting,
@@ -219,16 +219,16 @@ long mode;		/* which initialization method  to use A or B	*/
     {
     /* this is the call to initialize EQUIDISTANT CONIC 
     -------------------------------------------------*/
-    lat1 = paksz(outparm[2],iflg)* 3600 * S2R;
+    lat1 = paksz(outparm[2],iflg)* D2R;
     if (*iflg != 0)
        return;
-    lat2 = paksz(outparm[3],iflg)* 3600 * S2R;
+    lat2 = paksz(outparm[3],iflg)* D2R;
     if (*iflg != 0)
        return;
-    center_long  = paksz(outparm[4],iflg)* 3600 * S2R;
+    center_long  = paksz(outparm[4],iflg)* D2R;
     if (*iflg != 0)
        return;
-    lat_origin   = paksz(outparm[5],iflg)* 3600 * S2R;
+    lat_origin   = paksz(outparm[5],iflg)* D2R;
     if (*iflg != 0)
        return;
     if (outparm[8] == 0)
@@ -245,10 +245,10 @@ long mode;		/* which initialization method  to use A or B	*/
     /* this is the call to initialize TRANSVERSE MECTAR
     -------------------------------------------------*/
     scale_factor = outparm[2];
-    center_long  = paksz(outparm[4],iflg)* 3600 * S2R;
+    center_long  = paksz(outparm[4],iflg)* D2R;
     if (*iflg != 0)
        return;
-    lat_origin   = paksz(outparm[5],iflg)* 3600 * S2R;
+    lat_origin   = paksz(outparm[5],iflg)* D2R;
     if (*iflg != 0)
        return;
     *iflg = tmforint(r_major,r_minor,scale_factor,center_long,lat_origin,
@@ -260,10 +260,10 @@ long mode;		/* which initialization method  to use A or B	*/
     {
     /* this is the call to initialize STEREOGRAPHIC
     ---------------------------------------------*/
-    center_long  = paksz(outparm[4],iflg)* 3600 * S2R;
+    center_long  = paksz(outparm[4],iflg)* D2R;
     if (*iflg != 0)
        return;
-    center_lat   = paksz(outparm[5],iflg)* 3600 * S2R;
+    center_lat   = paksz(outparm[5],iflg)* D2R;
     if (*iflg != 0)
        return;
     *iflg = sterforint(radius,center_long,center_lat,false_easting,
@@ -275,10 +275,10 @@ long mode;		/* which initialization method  to use A or B	*/
     {
     /* this is the call to initialize LAMBERT AZIMUTHAL
     -------------------------------------------------*/
-    center_long = paksz(outparm[4],iflg)* 3600 * S2R;
+    center_long = paksz(outparm[4],iflg)* D2R;
     if (*iflg != 0)
        return;
-    center_lat  = paksz(outparm[5],iflg)* 3600 * S2R;
+    center_lat  = paksz(outparm[5],iflg)* D2R;
     if (*iflg != 0)
        return;
     *iflg = lamazforint(radius,center_long, center_lat,false_easting,
@@ -290,10 +290,10 @@ long mode;		/* which initialization method  to use A or B	*/
     {
     /* this is the call to initialize AZIMUTHAL EQUIDISTANT
     -----------------------------------------------------*/
-    center_long  = paksz(outparm[4],iflg)* 3600 * S2R;
+    center_long  = paksz(outparm[4],iflg)* D2R;
     if (*iflg != 0)
        return;
-    center_lat   = paksz(outparm[5],iflg)* 3600 * S2R;
+    center_lat   = paksz(outparm[5],iflg)* D2R;
     if (*iflg != 0)
        return;
     *iflg = azimforint(radius,center_long,center_lat,false_easting,
@@ -305,10 +305,10 @@ long mode;		/* which initialization method  to use A or B	*/
     {
     /* this is the call to initialize GNOMONIC 
     ----------------------------------------*/
-    center_long  = paksz(outparm[4],iflg)* 3600 * S2R;
+    center_long  = paksz(outparm[4],iflg)* D2R;
     if (*iflg != 0)
        return;
-    center_lat   = paksz(outparm[5],iflg)* 3600 * S2R;
+    center_lat   = paksz(outparm[5],iflg)* D2R;
     if (*iflg != 0)
        return;
     *iflg = gnomforint(radius,center_long,center_lat,false_easting,
@@ -320,10 +320,10 @@ long mode;		/* which initialization method  to use A or B	*/
     {
     /* this is the call to initalize ORTHOGRAPHIC
     -------------------------------------------*/
-    center_long  = paksz(outparm[4],iflg)* 3600 * S2R;
+    center_long  = paksz(outparm[4],iflg)* D2R;
     if (*iflg != 0)
        return;
-    center_lat   = paksz(outparm[5],iflg)* 3600 * S2R;
+    center_lat   = paksz(outparm[5],iflg)* D2R;
     if (*iflg != 0)
        return;
     *iflg = orthforint(radius,center_long,center_lat,false_easting,
@@ -335,10 +335,10 @@ long mode;		/* which initialization method  to use A or B	*/
     {
     /* this is the call to initalize GENERAL VERTICAL NEAR-SIDE PERSPECTIVE
     ----------------------------------------------------------------------*/
-    center_long  = paksz(outparm[4],iflg)* 3600 * S2R;
+    center_long  = paksz(outparm[4],iflg)* D2R;
     if (*iflg != 0)
        return;
-    center_lat   = paksz(outparm[5],iflg)* 3600 * S2R;
+    center_lat   = paksz(outparm[5],iflg)* D2R;
     if (*iflg != 0)
        return;
     h = outparm[2];
@@ -351,7 +351,7 @@ long mode;		/* which initialization method  to use A or B	*/
     {
     /* this is the call to initialize SINUSOIDAL 
     -------------------------------------------*/
-    center_long = paksz(outparm[4],iflg)* 3600 * S2R;
+    center_long = paksz(outparm[4],iflg)* D2R;
     if (*iflg != 0)
        return;
     *iflg = sinforint(radius, center_long,false_easting,false_northing);
@@ -362,10 +362,10 @@ long mode;		/* which initialization method  to use A or B	*/
     {
     /* this is the call to initialize EQUIRECTANGULAR
     -----------------------------------------------*/
-    center_long  = paksz(outparm[4],iflg)* 3600 * S2R;
+    center_long  = paksz(outparm[4],iflg)* D2R;
     if (*iflg != 0)
        return;
-    lat1   = paksz(outparm[5],iflg)* 3600 * S2R;
+    lat1   = paksz(outparm[5],iflg)* D2R;
     if (*iflg != 0)
        return;
     *iflg = equiforint(radius,center_long,lat1,false_easting,false_northing); 
@@ -376,7 +376,7 @@ long mode;		/* which initialization method  to use A or B	*/
     {
     /* this is the call to initialize MILLER CYLINDRICAL 
     --------------------------------------------------*/
-    center_long  = paksz(outparm[4],iflg) * 3600 * S2R;
+    center_long  = paksz(outparm[4],iflg) * D2R;
     if (*iflg != 0)
        return;
     *iflg = millforint(radius, center_long,false_easting,false_northing); 
@@ -387,7 +387,7 @@ long mode;		/* which initialization method  to use A or B	*/
     {
     /* this is the call to initialize VAN DER GRINTEN 
     -----------------------------------------------*/
-    center_long  = paksz(outparm[4],iflg)* 3600 * S2R;
+    center_long  = paksz(outparm[4],iflg)* D2R;
     if (*iflg != 0)
        return;
     *iflg = vandgforint(radius, center_long,false_easting,false_northing); 
@@ -399,32 +399,32 @@ long mode;		/* which initialization method  to use A or B	*/
      /* this is the call to initialize HOTLINE OBLIQUE MERCATOR
      ---------------------------------------------------------*/
      scale_factor = outparm[2];
-     lat_origin = paksz(outparm[5],iflg)* 3600 * S2R;
+     lat_origin = paksz(outparm[5],iflg)* D2R;
      if (*iflg != 0)
         return;
      if (outparm[12] != 0)
         {
         mode = 1;
-        azimuth = paksz(outparm[3],iflg)* 3600 * S2R;
+        azimuth = paksz(outparm[3],iflg)* D2R;
         if (*iflg != 0)
            return;
-        lon_origin = paksz(outparm[4],iflg)* 3600 * S2R;
+        lon_origin = paksz(outparm[4],iflg)* D2R;
         if (*iflg != 0)
            return;
         }
      else
         {
         mode = 0;
-        lon1 = paksz(outparm[8],iflg)* 3600 * S2R;
+        lon1 = paksz(outparm[8],iflg)* D2R;
         if (*iflg != 0)
            return;
-        lat1 = paksz(outparm[9],iflg)* 3600 * S2R;
+        lat1 = paksz(outparm[9],iflg)* D2R;
         if (*iflg != 0)
            return;
-        lon2 = paksz(outparm[10],iflg)* 3600 * S2R;
+        lon2 = paksz(outparm[10],iflg)* D2R;
         if (*iflg != 0)
            return;
-        lat2 = paksz(outparm[11],iflg)* 3600 * S2R;
+        lat2 = paksz(outparm[11],iflg)* D2R;
         if (*iflg != 0)
            return;
         }
@@ -443,10 +443,10 @@ long mode;		/* which initialization method  to use A or B	*/
     if (outparm[12] == 0)
        {
        mode = 1;
-       alf = paksz(outparm[3],iflg)* 3600 * S2R;
+       alf = paksz(outparm[3],iflg)* D2R;
        if (*iflg != 0)
           return;
-       lon1 = paksz(outparm[4],iflg)* 3600 * S2R;
+       lon1 = paksz(outparm[4],iflg)* D2R;
        if (*iflg != 0)
           return;
        time = outparm[8];
@@ -466,7 +466,7 @@ long mode;		/* which initialization method  to use A or B	*/
     {
     /* this is the call to initialize HAMMER 
     --------------------------------------*/
-    center_long  = paksz(outparm[4],iflg)* 3600 * S2R;
+    center_long  = paksz(outparm[4],iflg)* D2R;
     if (*iflg != 0)
        return;
     *iflg = hamforint(radius,center_long,false_easting,false_northing); 
@@ -477,7 +477,7 @@ long mode;		/* which initialization method  to use A or B	*/
     {
     /* this is the call to initialize ROBINSON 
     ----------------------------------------*/
-    center_long  = paksz(outparm[4],iflg)* 3600 * S2R;
+    center_long  = paksz(outparm[4],iflg)* D2R;
     if (*iflg != 0)
        return;
     *iflg = robforint(radius,center_long,false_easting,false_northing); 
@@ -496,7 +496,7 @@ long mode;		/* which initialization method  to use A or B	*/
     {
     /* this is the call to initialize MOLLWEIDE
     ------------------------------------------*/
-    center_long = paksz(outparm[4],iflg)* 3600 * S2R;
+    center_long = paksz(outparm[4],iflg)* D2R;
     if (*iflg != 0)
        return;
     *iflg = molwforint(radius, center_long,false_easting,false_northing);
@@ -523,7 +523,7 @@ long mode;		/* which initialization method  to use A or B	*/
     {
     /* this is the call to initialize WAGNER IV 
     -----------------------------------------*/
-    center_long = paksz(outparm[4],iflg)* 3600 * S2R;
+    center_long = paksz(outparm[4],iflg)* D2R;
     if (*iflg != 0)
        return;
     *iflg = wivforint(radius, center_long,false_easting,false_northing);
@@ -534,7 +534,7 @@ long mode;		/* which initialization method  to use A or B	*/
     {
     /* this is the call to initialize WAGNER VII 
     ------------------------------------------*/
-    center_long = paksz(outparm[4],iflg)* 3600 * S2R;
+    center_long = paksz(outparm[4],iflg)* D2R;
     if (*iflg != 0)
        return;
     *iflg = wviiforint(radius, center_long,false_easting,false_northing);
@@ -545,15 +545,15 @@ long mode;		/* which initialization method  to use A or B	*/
     {
     /* this is the call to initialize OBLATED EQUAL AREA 
     ---------------------------------------------------*/
-    center_long = paksz(outparm[4],iflg)* 3600 * S2R;
+    center_long = paksz(outparm[4],iflg)* D2R;
     if (*iflg != 0)
        return;
-    center_lat  = paksz(outparm[5],iflg)* 3600 * S2R;
+    center_lat  = paksz(outparm[5],iflg)* D2R;
     if (*iflg != 0)
        return;
     shape_m = outparm[2];
     shape_n = outparm[3];
-    angle = paksz(outparm[8],iflg)* 3600 * S2R;
+    angle = paksz(outparm[8],iflg)* D2R;
     if (*iflg != 0)
        return;
     *iflg = obleqforint(radius,center_long,center_lat,shape_m, shape_n, 
