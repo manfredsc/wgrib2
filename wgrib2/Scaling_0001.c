@@ -1,17 +1,8 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <limits.h>
-#include <math.h>
-#include <string.h>
-#include "grb2.h"
-#include "wgrib2.h"
-#include "fnlist.h"
-
-/*
- * 8/2013 Public Domain by Wesley Ebisuzaki
- *
- * grid values can be saved in one of two different styles.
- *
+/** @file
+ * @brief A table to use NCEP-style GRIB precision.
+ * 
+ * Grid values can be saved in one of two different styles.
+ * 
  * ECMWF-style:
  *    all variables use N-bits of precision to store grid values.
  *    for ERA-5, the 16 bits are used and grid values can be represented
@@ -45,10 +36,35 @@
  * in order for the scipts to recognize it as source code
  * with an option.
  *
- * consider Scaling_0001.c to be an example of a set scaling option.
+ * Consider Scaling_0001.c to be an example of a set scaling option.
+ * @author Public Domain: Wesley Ebisuzaki @date 8/2013
  */
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+#include <math.h>
+#include <string.h>
+#include "grb2.h"
+#include "wgrib2.h"
+#include "fnlist.h"
 
-extern int use_scale, dec_scale, bin_scale, max_bits, wanted_bits, decode;
+/** Use scaling flag. */
+extern int use_scale;
+
+/** Decimal scaling. */
+extern int dec_scale;
+
+/** Binary scaling. */
+extern int bin_scale;
+
+/** Maximum number of bits. */
+extern int max_bits;
+
+/** Number of bits wanted. */
+extern int wanted_bits;
+
+/** Decode grib file flag. */
+extern int decode;
 
 /* how to set precision table
 
@@ -78,15 +94,15 @@ For ECMWF style (number of bit of precision)
    
 */
 
+/** Precision structure. */
 struct prec {
-   const char *name;
-   int dec_prec;
-   int bin_prec;
-   int wanted_bits;
+   const char *name; /**< Variable name */
+   int dec_prec;     /**< Decimal precision */
+   int bin_prec;     /**< Binary precision */
+   int wanted_bits;  /**< Number of bits wanted */
 };
 
-/* if you put the table in alphabetical order, you could rewrite the search to be faster */
-
+/** Precision table. If you put the table in alphabetical order, you could rewrite the search to be faster.*/
 static struct prec prec_table[] = {
     {"HGT", 0, 0, 0},
     {"5WAVH", 0, 0, 0},
@@ -154,12 +170,52 @@ static struct prec prec_table[] = {
     {"LAND", 0, 0, 0},
     {"ICEC", -2, 0, 0},
 };
+
+/** Number of entries in the precision table. */
 #define N_prec_table	(sizeof(prec_table) / sizeof(prec_table[0]))
 
 /*
  * HEADER:100:scaling_0001:misc:0:changes scaling testing (sample)
  */
 
+/**
+ * Converts a field from ECMWF-style precision to NCEP-style precision.
+ * 
+ * The standard NCEP post-processor uses data files that specify the precision of every field 
+ * (grid values have values of i*10^j*2^k, where j and k are specified by the data file). 
+ * Different models may have different precisions even though they use the same NCEP post-
+ * processor. 
+ * 
+ * Wgrib2, by default, writes new fields using the ECMWF-style which specifies the binary 
+ * precision, n. (grid values have values i*2^j, where the values of i ranges from 0 to 2^(n+1) - 1) 
+ * 
+ * The -scaling_0001 option converts a field from ECMWF-style precision to NCEP-style precision. 
+ * Since everybody has a different scaling, -scaling_0001 was designed to be an example on how 
+ * to write an option that applies your precisions. I am assuming that are creative enough that 
+ * there will be no duplicate names. I will include scaling_* to the wgrib2 distributions. 
+ * 
+ * ## Usage
+ * -scaling_0001
+ * 
+ * ## To add your own scaling
+ * 1) cd (wherever)/grib2/wgrib2
+ * 2) cp Scaling_0001.c Scaling_mymodelv1.c (note: code needs to start with a capital)
+ * 3) edit Scaling_mymodelv1.c (don't forget to change scaling_0001 to scaling_mymodelv1 
+ * everywhere)
+ * 4) cd ..
+ * 5) compile wgrib2 using directions
+ * 
+ * @param ARG0 ???
+ * 
+ * @return 0 for success, error code otherwise
+ * 
+ * ## Example
+ * @code{.sh}
+ * wgrib2 IN.grb -scaling_0001 -set_grib_type c3 -grib_out OUT.grb
+ * @endcode
+ * 
+ * @author Wesley Ebisuzaki @date 8/2013
+ */
 int f_scaling_0001(ARG0) {
     char name[STRING_SIZE];
     int i, old_mode;
@@ -176,17 +232,17 @@ int f_scaling_0001(ARG0) {
 
     for (i = 0; i < N_prec_table; i++) {
         if (strcmp(name,prec_table[i].name) == 0) {
-	    if (prec_table[i].wanted_bits > 0) {
-	        use_scale = 0;
-		wanted_bits = prec_table[i].wanted_bits;
-	    }
-	    else {
-	        use_scale = 1;
-	        dec_scale = prec_table[i].dec_prec;
+            if (prec_table[i].wanted_bits > 0) {
+                use_scale = 0;
+                wanted_bits = prec_table[i].wanted_bits;
+            }
+            else {
+                use_scale = 1;
+                dec_scale = prec_table[i].dec_prec;
                 bin_scale = prec_table[i].bin_prec;
-	    }
+            }
             return 0;
-	}
+        }
     }
     /* didn't find entry .. do not change scaling */
     if (mode > 0) fprintf(stderr,"scaling_0001: did not find %s\n",name);

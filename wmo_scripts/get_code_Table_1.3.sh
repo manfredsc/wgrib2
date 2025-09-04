@@ -1,6 +1,11 @@
 #!/bin/sh
-# 06/2025 Public Domain   Manfred Schwarb <schwarb@meteodat.ch>
-# This script updates wgrib2 with WMO code info.
+
+## @file
+## @brief This script updates wgrib2 with WMO code info.
+## @author Public Domain: Manfred Schwarb <schwarb@meteodat.ch>
+## @date 6/2025
+
+## @cond
 
 urlbase="https://github.com/wmo-im/GRIB2"
 
@@ -22,3 +27,5 @@ wget -nv "$urlbase/raw/master/GRIB2_CodeFlag_1_3_CodeTable_en.csv" -O- | sed '{
   }' > "$outfile"
 
 exit
+
+## @endcond

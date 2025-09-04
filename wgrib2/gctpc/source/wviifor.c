@@ -1,36 +1,42 @@
-/*******************************************************************************
-NAME                  		WAGNER VII
+/** @file
+ * @brief Wagner VII - Forward Transformation
+ *
+ * PURPOSE: Transforms input longitude and latitude to Easting and
+ *          Northing for the Wagner VII projection. The
+ *          longitude and latitude must be in radians. The Easting
+ *          and Northing values will be returned in meters.
+ *
+ * This function was implemented with formulas supplied by John P. Snyder.
+ * @author D. Steinwand, EROS @date May, 1991
+ * 
+ * ### Algorithm References
+ * 1. Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
+ *    U.S. Geological Survey Professional Paper 1453 , United State Government
+ *    Printing Office, Washington D.C., 1989.
+ *
+ * 2. Snyder, John P., Personal correspondence, January 1991.
+ */
 
-PURPOSE:	Transforms input longitude and latitude to Easting and
-		Northing for the Wagner VII projection.  The
-		longitude and latitude must be in radians.  The Easting
-		and Northing values will be returned in meters.
-
-PROGRAMMER              DATE            
-----------              ----           
-D. Steinwand, EROS      May, 1991     
-
-This function was implemented with formulas supplied by John P. Snyder.
- 
-ALGORITHM REFERENCES
-
-1.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections", 
-    U.S. Geological Survey Professional Paper 1453 , United State Government 
-    Printing Office, Washington D.C., 1989.
-
-2.  Snyder, John P., Personal correspondence, January 1991.
-*******************************************************************************/
 #include "cproj.h"
 
-/* Variables common to all subroutines in this code file
-  -----------------------------------------------------*/
-static double lon_center;	/* Center longitude (projection center) */
-static double R;		/* Radius of the earth (sphere) */
-static double false_easting;	/* x offset				*/
-static double false_northing;	/* y offset				*/
+/* Variables common to all subroutines in this code file */
+static double lon_center;	/**< Center longitude (projection center) */
+static double R;		/**< Radius of the earth (sphere) */
+static double false_easting;	/**< x offset in meters */
+static double false_northing;	/**< y offset in meters */
 
-/* Initialize the Wagner VII projection
-  ------------------------------------*/
+/** 
+ * Initialize the Wagner VII projection for forward transformation.
+ * 
+ * @param r Radius of the earth (sphere)
+ * @param center_long Center longitude
+ * @param false_east x offset in meters
+ * @param false_north y offset in meters
+ * 
+ * @return Always returns 0
+ * 
+ * @author D. Steinwand, EROS @date May, 1991
+ */
 long wviiforint(double r, double center_long, double false_east,
         double false_north) {
 //long wviiforint(r, center_long,false_east,false_north) 
@@ -55,8 +61,19 @@ offsetp(false_easting,false_northing);
 return(OK);
 }
 
-/* Wagner VII forward equations--mapping lat,long to x,y
-  -----------------------------------------------------*/
+
+/** 
+ * Wagner VII forward equations--mapping lat,long to x,y
+ *
+ * @param lon Longitude
+ * @param lat Latitude
+ * @param x Pointer to store the X projection coordinate
+ * @param y Pointer to store the Y projection coordinate
+ * 
+ * @return Always returns 0
+ * 
+ * @author D. Steinwand, EROS @date May, 1991
+ */
 long wviifor(double lon, double lat, double *x, double *y) {
 //long wviifor(lon, lat, x, y)
 //double lon;			/* (I) Longitude */

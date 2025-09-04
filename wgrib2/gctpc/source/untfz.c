@@ -1,29 +1,29 @@
-/*******************************************************************************
-NAME                            UNTFZ 
+/** @file
+ * @brief Unit Conversion Factors
+ *
+ * PURPOSE: This function determines the conversion factor between the
+ *          input unit type and the output unit type.  Valid types include:
+ *          - 0 = Radians
+ *          - 1 = U.S. feet
+ *          - 2 = Meters
+ *          - 3 = Seconds of arc
+ *          - 4 = Degrees of arc
+ *          - 5 = International feet
+ * @author T. Mittan @date March, 1993
+ *
+ * ### Algorithm References
+ * 1. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ *
+ * 2. Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
+ *    U.S. Geological Survey Professional Paper 1453 , United State Government
+ *    Printing Office, Washington D.C., 1989.
+ */
 
-PURPOSE:	This function determines the convergence factor between the
-		input unit type and the output unit type.  Valid types include:
-
-		0 = Radians		3 = Seconds of arc
-		1 = U.S. feet		4 = Degrees of arc
-		2 = Meters		5 = International feet
-
-PROGRAMMER              DATE
-----------              ----
-T. Mittan	      MARCH, 1993
-
-ALGORITHM REFERENCES
-
-1.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-2.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
-    U.S. Geological Survey Professional Paper 1453 , United State Government
-    Printing Office, Washington D.C., 1989.
-*******************************************************************************/
 #include "cproj.h"
 
+/** List of conversion factors */
 static double factors[6][6] = {
 	{1.0, 0.0, 0.0, 206264.8062470963, 57.29577951308231, 0.0},
 	{0.0, 1.0, .3048006096012192, 0.0, 0.0, 1.000002000004},
@@ -32,8 +32,28 @@ static double factors[6][6] = {
 	{.0174532925199433, 0.0, 0.0, 3600, 1.0, 0.0},
 	{0.0, .999998, .3048, 0.0, 0.0, 1.0}};
 
-/* Convert DMS packed angle into deg 
-----------------------------------*/
+/**
+ * Determines the conversion factor between input and output unit types.
+ * 
+ * Valid unit types include:
+ * - 0 = Radians
+ * - 1 = U.S. feet
+ * - 2 = Meters
+ * - 3 = Seconds of arc
+ * - 4 = Degrees of arc
+ * - 5 = International feet
+ *
+ * @param inunit Input unit type (0-5)
+ * @param outunit Output unit type (0-5)
+ * @param factor Pointer to the conversion factor
+ * 
+ * @return
+ * - 0 :: Success
+ * - 5 :: Illegal source or target unit code
+ * - 1101 :: Incompatible unit codes
+ *
+ * @author T. Mittan @date March, 1993
+ */
 long untfz(long inunit, long outunit, double *factor) {
 //long untfz(inunit,outunit,factor)
 //
