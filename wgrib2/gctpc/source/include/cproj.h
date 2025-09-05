@@ -7,12 +7,12 @@
 
 #include <math.h>
 
-#define PI 	3.141592653589793238	/**< Pi */
-#define HALF_PI (PI*0.5)			/**< Half Pi */
-#define TWO_PI 	(PI*2.0)			/**< Two Pi */
-#define EPSLN	1.0e-10				/**< Epsilon for floating point comparisons */
-#define R2D     57.2957795131		/**< Radians to Degrees conversion factor */
-#define D2R     1.745329251994328e-2	/**< Degrees to Radians conversion factor */
+#define PI      3.14159265358979323846	/**< Pi */
+#define HALF_PI 1.57079632679489661923	/**< Half Pi */
+#define TWO_PI  6.28318530717958647693	/**< Two Pi */
+#define EPSLN   1.0e-10			/**< Epsilon for floating point comparisons */
+#define R2D     57.295779513082320877	/**< Radians to Degrees conversion factor */
+#define D2R     0.017453292519943295769	/**< Degrees to Radians conversion factor */
 
 #define OK	0		/**< Success status code */
 #define ERROR  -1	/**< Error status code */
