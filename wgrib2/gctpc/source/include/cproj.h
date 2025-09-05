@@ -13,6 +13,9 @@
 #define EPSLN   1.0e-10			/**< Epsilon for floating point comparisons */
 #define R2D     57.295779513082320877	/**< Radians to Degrees conversion factor */
 #define D2R     0.017453292519943295769	/**< Degrees to Radians conversion factor */
+#define S2R     0.0000048481368110953599359 /**< Seconds to Radians conversion factor */
+#define R2S     206264.80624709635516       /**< Radians to Seconds conversion factor */
+
 
 #define OK	0		/**< Success status code */
 #define ERROR  -1	/**< Error status code */
