@@ -18,5 +18,21 @@ do
 done
 
 ../aux_progs/gmerge tmp.gmerge.grb $arg
+
+
+echo "*** running gmerge and ens_qc test "
+
+../aux_progs/gmerge - $arg | ../wgrib2/wgrib2 - -ens_qc ens_qc.x ens_qc.y ens_qc.z 1 >/dev/null
+
+ck="1559805086 4891"
+newck=`../wgrib2/wgrib2 ens_qc.x -match spread -stats | cksum`
+echo "ck=$ck"
+echo "newck=$newck"
+if [ "$ck" != "$newck" ] ; then
+    echo "ck=$ck"
+    echo "newck=$newck"
+    echo "error in ens_qc"
+    exit 1
+fi
 echo "*** SUCCESS!"
 exit 0
