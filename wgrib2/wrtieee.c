@@ -6,7 +6,7 @@
  * -----|------------|---------
  * 7/1997 | W. Ebisuzaki | Initial
  * 7/1997 | W. Ebisuzaki | Buffered, faster
- * 2/1999 | W. Ebisuzaki | Fixed ixed (typo) error in wrtieee_header found by Bob Farquhar
+ * 2/1999 | W. Ebisuzaki | Fixed (typo) error in wrtieee_header found by Bob Farquhar
  * 3/2008 | W. Ebisuzaki | Added little-endian output
  * 11/2013 | W. Ebisuzaki | Removed h4[] to cleanup not initialized warning
  * 7/2015 | W. Ebisuzaki | OpenMP support, write to fwrite_file, bigger buffer
