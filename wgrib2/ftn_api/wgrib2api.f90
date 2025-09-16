@@ -1232,7 +1232,7 @@ contains
    !> @param[in] position The position to insert the substring.
    !>
    !> @return 0 for success, 8 for error.
-	integer function grb2_set_substring(string, substring, position)
+   integer function grb2_set_substring(string, substring, position)
 
       character (len=*), intent(inout) :: string
       character (len=*), intent(in) :: substring
@@ -1264,7 +1264,7 @@ contains
          endif
       enddo
       return
-	end function grb2_set_substring
+   end function grb2_set_substring
 
 !	grb2_get_substring(string,position)
 
