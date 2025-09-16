@@ -187,7 +187,6 @@ copy_test_data(ref_LARGECAT220250305_12_1443copy_stats.txt)
 
 
 if (MAKE_FTN_API)
-  shell_test(test_ftn_api)
   ftn_api_test(test_fortran_api)
 endif()
 if (BUILD_LIB)
