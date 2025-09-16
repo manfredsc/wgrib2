@@ -1,48 +1,71 @@
-/*******************************************************************************
-NAME                       OBLIQUE MERCATOR (HOTINE) 
+/** @file
+ * @brief Oblique Mercator (Hotine) - Forward Transformation
+ *
+ * PURPOSE: Transforms input longitude and latitude to Easting and
+ *          Northing for the Oblique Mercator projection. The longitude and
+ *          latitude must be in radians. The Easting and Northing values will
+ *          be returned in meters.
+ * @author T. Mittan @date March, 1993
+ *
+ * ### Algorithm References
+ * 1. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ *
+ * 2. Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
+ *    U.S. Geological Survey Professional Paper 1453 , United State Government
+ *    Printing Office, Washington D.C., 1989.
+ */
 
-PURPOSE:	Transforms input longitude and latitude to Easting and
-		Northing for the Oblique Mercator projection.  The
-		longitude and latitude must be in radians.  The Easting
-		and Northing values will be returned in meters.
-
-PROGRAMMER              DATE
-----------              ----
-T. Mittan		Mar, 1993
-
-ALGORITHM REFERENCES
-
-1.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-2.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
-    U.S. Geological Survey Professional Paper 1453 , United State Government
-    Printing Office, Washington D.C., 1989.
-*******************************************************************************/
 #include "cproj.h"
 
-/* Variables common to all subroutines in this code file
-  -----------------------------------------------------*/
-static double r_major;		/* major axis 				*/
-static double r_minor;		/* minor axis 				*/
-static double scale_factor;	/* scale factor				*/
-static double lon_origin;	/* center longitude			*/
-static double lat_origin;	/* center latitude			*/
-static double e,es;		/* eccentricity constants		*/
-static double false_northing;	/* y offset in meters			*/
-static double false_easting;	/* x offset in meters			*/
-static double sin_p20,cos_p20;	/* sin and cos values			*/
-static double bl;
-static double al;
-static double d;
-static double el,u;
-static double singam,cosgam;
-static double sinaz,cosaz;
+/* Variables common to all subroutines in this code file */
+static double r_major;		/**< major axis 				*/
+static double r_minor;		/**< minor axis 				*/
+static double scale_factor;	/**< scale factor				*/
+static double lon_origin;	/**< center longitude			*/
+static double lat_origin;	/**< center latitude			*/
+static double e;     /** eccentricity constant */
+static double es;		/**< 	eccentricity constant */
+static double false_northing;	/**< y offset in meters			*/
+static double false_easting;	/**< x offset in meters			*/
+static double sin_p20;		/**< sin value */
+static double cos_p20;		/**< cos value */
+static double bl;		/**< Constant */
+static double al;		/**< Constant */
+static double d;		/**< Constant */
+static double el;		/**< Constant */
+static double u;		/**< Constant */
+static double singam;		/**< Sin of gamma */
+static double cosgam;		/**< Cos of gamma */
+static double sinaz;		/**< Sin of azimuth */
+static double cosaz;		/**< Cos of azimuth */
 
 
-/* Initialize the Oblique Mercator  projection
-  ------------------------------------------*/
+/** 
+ * Initialize the Oblique Mercator projection for forward transformation.
+ * 
+ * @param r_maj Major axis
+ * @param r_min Minor axis
+ * @param scale_fact Scale factor
+ * @param azimuth Azimuth east of north
+ * @param lon_orig Longitude of origin
+ * @param lat_orig Center latitude
+ * @param false_east X offset in meters
+ * @param false_north Y offset in meters
+ * @param lon1 First longitude point to define central line
+ * @param lat1 First latitude point to define central line
+ * @param lon2 Second longitude point to define central line
+ * @param lat2 Second latitude point to define central line
+ * @param mode Which format type -  A (mode=0) or B (mode=1)
+ * 
+ * @return 
+ * - 0 :: Success
+ * - 201 :: Input data error
+ * - 202 :: Input data error
+ * 
+ * @author T. Mittan @date March, 1993
+ */
 long omerforint(double r_maj, double r_min, double scale_fact,
         double azimuth, double lon_orig, double lat_orig, double false_east,
         double false_north, double lon1, double lat1, double lon2, double lat2,
@@ -208,8 +231,20 @@ return(OK);
 }
 
 
-/* Oblique Mercator forward equations--mapping lat,long to x,y
-  ----------------------------------------------------------*/
+/** 
+ * Oblique Mercator forward equations--mapping lat,long to x,y 
+ * 
+ * @param lon Longitude 
+ * @param lat Latitude
+ * @param x Pointer to X projection coordinate
+ * @param y Pointer to Y projection coordinate
+ * 
+ * @return 
+ * - 0 :: Success
+ * - 205 :: Point projects into infinity
+ * 
+ * @author T. Mittan @date March, 1993
+ */
 long omerfor(double lon, double lat, double *x, double *y) {
 //long omerfor(lon, lat, x, y)
 //double lon;			/* (I) Longitude 		*/

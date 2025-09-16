@@ -1,5 +1,8 @@
 #!/bin/sh
-#  03/2025  Public Domain  Manfred Schwarb
+
+## @file
+## @brief This script installs WMO code info into wgrib2.
+## @author Public Domain: Manfred Schwarb  @date 03/2025
 
 cd tables.tmp || exit 1
 
