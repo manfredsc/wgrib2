@@ -1,9 +1,9 @@
-/* wgrib2 interface to proj4.c */
-/* proj4.h  10/2024    Public Domain     Wesley Ebisuzaki */
+/** @file
+ * @brief wgrib2 interface to proj4.c
+ * @author Public Domain: Wesley Ebisuzaki @date 2006
+ */
 
-
-/* projection parameters  and scaling for x, y (to get in grid lengths) */
-
+/** Projection parameters and scaling for x, y (to get in grid lengths) */
 struct proj4_struct {
     double lon_0, lat_0, x_0, y_0;
     double radius_major, radius_minor;

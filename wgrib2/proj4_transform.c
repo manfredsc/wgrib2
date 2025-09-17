@@ -1,6 +1,7 @@
-/* proj4_transform.c Public domain 10/2012 Wesley Ebisuzaki */
-/* proj4_ll2xy   convert lat/lon to X,Y */
-/* proj4_xy2ll   convert lat/lon to X,Y */
+/** @file
+ * @brief Transform using Proj.
+ * @author Public Domain: Wesley Ebisuzaki @date 10/2012
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,7 +14,20 @@
 #include <proj_api.h>
 #include "proj4_wgrib2.h"
 
-
+/**
+ * Convert lat/lon to X/Y.
+ * 
+ * @param projection Pointer to projection structure.
+ * @param n Number of points to transform.
+ * @param lon Pointer to array of longitudes in degrees.
+ * @param lat Pointer to array of latitudes in degrees.
+ * @param x Pointer to array of X coordinates.
+ * @param y Pointer to array of Y coordinates.
+ * 
+ * @return 0 for success, error code otherwise
+ * 
+ * @author Wesley Ebisuzaki @date 10/2012
+ */
 int proj4_ll2xy(struct proj4_struct *projection, int n, double *lon, double *lat, double *x, double *y) {
 
     int i;
@@ -51,7 +65,20 @@ int proj4_ll2xy(struct proj4_struct *projection, int n, double *lon, double *lat
     return 0;
 }
 
-
+/**
+ * Convert X/Y to lat/lon.
+ *
+ * @param projection Pointer to projection structure.
+ * @param n Number of points to transform.
+ * @param x Pointer to array of X coordinates.
+ * @param y Pointer to array of Y coordinates.
+ * @param lon Pointer to array of longitudes in degrees.
+ * @param lat Pointer to array of latitudes in degrees.
+ *
+ * @return 0 for success, error code otherwise
+ *
+ * @author Wesley Ebisuzaki @date 10/2012
+ */
 int proj4_xy2ll(struct proj4_struct *projection, int n, double *x, double *y, double *lon, double *lat) {
     int i;
     double rlon, rlat;
@@ -63,12 +90,12 @@ int proj4_xy2ll(struct proj4_struct *projection, int n, double *x, double *y, do
         for (i = 0; i < n; i++) {
             rlon = x[i] + projection->x_0;
             rlat = y[i] + projection->y_0;
-	    if (rlon >= 360.0) rlon -= 360.0;
-	    if (rlon < 0.0) rlon += 360.0;
-	    if (rlon < 0.0) rlon += 360.0;
-	    lon[i] = rlon;
-	    lat[i] = rlat;
-	}
+            if (rlon >= 360.0) rlon -= 360.0;
+            if (rlon < 0.0) rlon += 360.0;
+            if (rlon < 0.0) rlon += 360.0;
+            lon[i] = rlon;
+            lat[i] = rlat;
+        }
         return 0;
     }
 #ifdef USE_OPENMP
@@ -78,14 +105,14 @@ int proj4_xy2ll(struct proj4_struct *projection, int n, double *x, double *y, do
         rlon = x[i] + projection->x_0;
         rlat = y[i] + projection->y_0;
         if ( pj_transform(projection->pj_grid, projection->pj_latlon, 1, 1, &rlon, &rlat, NULL) != 0 ) {
-	    lon[i] = lat[i] = UNDEFINED;
-	}
-	else {
+            lon[i] = lat[i] = UNDEFINED;
+        }
+        else {
             lon[i] = rlon * RAD_TO_DEG;
             lat[i] = rlat * RAD_TO_DEG;
             if (lon[i] < 0.0) lon[i] += 360.0;
             if (lon[i] > 360) lon[i] -= 360.0;
-	}
+        }
     }
     return 0;
 }

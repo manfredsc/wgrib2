@@ -1,3 +1,7 @@
+/** @file
+ * @brief Function to dump GRIB metadata as Python dictionary.
+ * @author Public Domain: George Trojan @date 8/2020
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,15 +9,33 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
+/** Item delimiter string. */
 extern const char *item_deliminator;
-extern unsigned int npnts, nx_, ny_;
-/*
- * function to dump GRIB metadata as Python dictionary
- * public domain 8/2020 George Trojan
- */
+
+/** Number of points in the grid. */
+extern unsigned int npnts;
+
+/** Number of grid points in the x direction. */
+extern unsigned int nx_;
+
+/** Number of grid points in the y direction. */
+extern unsigned int ny_;
 
 /*
  * HEADER:200:pyinv:inv:0:miscelaneous metadata for pywgrib2_XXX (experimental)
+ */
+
+/**
+ * Function to dump GRIB metadata as Python dictionary. For pywgrib2_XXX (experimental).
+ * 
+ * ## Usage 
+ * -pyinv
+ * 
+ * @param ARG0 ???
+ * 
+ * @return 0 for success, error code otherwise
+ *
+ * @author George Trojan @date 8/2020
  */
 int f_pyinv(ARG0)
 {
