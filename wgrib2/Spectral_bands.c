@@ -1,3 +1,7 @@
+/** @file
+ * @brief Show spectral band information (PDT 4.31 or 4.32).
+ * @author Public Domain: Wesley Ebisuzaki, Sam Trahan @date 2009
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,14 +9,25 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/*
- * Public Domain 2009: Wesley Ebisuzaki
- * Public Domain 2009: Sam Trahan
- */
+/** Newline character. */
 extern char *nl;
 
 /*
  * HEADER:-1:spectral_bands_extname:inv:0:spectral bands for satellite, pdt=4.31 or 4.32, concise name for ExtName
+ */
+
+/**
+ * Prints the spectral band information for satellite (Product Definition Template 4.31 or 
+ * 4.32). Uses the concise name for ExtName.
+ * 
+ * ## Usage
+ * -spectral_bands_extname
+ * 
+ * @param ARG0 ???
+ * 
+ * @return Always returns 0.
+ * 
+ * @author Wesley Ebisuzaki, Sam Trahan @date 2009
  */
 int f_spectral_bands_extname(ARG0) {
     int pdt, nb, i, ipol;
@@ -131,6 +146,20 @@ int f_spectral_bands_extname(ARG0) {
 /*
  * HEADER:400:spectral_bands:inv:0:spectral bands for satellite, pdt=4.31 or 4.32
  */
+
+/**
+ * Prints the spectral band information for satellite (Product Definition Template 4.31 or 
+ * 4.32).
+ * 
+ * ## Usage
+ * -spectral_bands
+ * 
+ * @param ARG0 ???
+ * 
+ * @return Always returns 0.
+ * 
+ * @author Wesley Ebisuzaki, Sam Trahan @date 2009
+ */
 int f_spectral_bands(ARG0) {
     int pdt, nb, i, ipol;
     int code1, code2, instrument, scale_factor, scaled_val;
@@ -140,22 +169,22 @@ int f_spectral_bands(ARG0) {
     const char *classification, *source;
     if (mode >= 0) {
         pdt = GB2_ProdDefTemplateNo(sec);
-	if (pdt == 0) return 0;				/* don't handle old format */
+        if (pdt == 0) return 0;				/* don't handle old format */
 
         nb_location = number_of_contributing_spectral_bands_location(sec);
         if (nb_location == NULL) return 0;		/* not spectral band pdt */
-	nb = *nb_location;
-	if (nb == 255) nb = 0;
-	bandstart = nb_location + 1;
+        nb = *nb_location;
+        if (nb == 255) nb = 0;
+        bandstart = nb_location + 1;
 
-	// print out spectral info
-	for (i = 0; i < nb; i++) {
-	    code1 = uint2(bandstart+11*i);
-	    code2 = uint2(bandstart+2+11*i);
-	    instrument = uint2(bandstart+4+11*i);
-	    scale_factor = int1(bandstart+6+11*i);
-	    scaled_val = uint4(bandstart+7+11*i);
-	    value = scaled2flt(scale_factor, scaled_val);
+        // print out spectral info
+        for (i = 0; i < nb; i++) {
+            code1 = uint2(bandstart+11*i);
+            code2 = uint2(bandstart+2+11*i);
+            instrument = uint2(bandstart+4+11*i);
+            scale_factor = int1(bandstart+6+11*i);
+            scaled_val = uint4(bandstart+7+11*i);
+            value = scaled2flt(scale_factor, scaled_val);
 
             classification=NULL;
             agency=NULL;
@@ -243,7 +272,7 @@ int f_spectral_bands(ARG0) {
                 }
             }
 
-	}
+        }
     }
     return 0;
 }

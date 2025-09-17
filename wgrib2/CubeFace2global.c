@@ -1,3 +1,7 @@
+/** @file
+ * @brief Convert single faces of a cubed sphere to a 6-face format.
+ * @author Public Domain: Wesley Ebisuzaki @date 4/2019
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,28 +12,63 @@
 #include "fnlist.h"
 #ifdef WMO_VALIDATION
 
+/** Decode grib file flag. */
+extern int decode;
 
-/*
- * CubeFace2global.c     4/2019 Public Domain, Wesley Ebisuzaki
- *
- * A cubed sphere grib message can consist of one face or all 6 faces.
- *
- * This routine convert single faces to a 6-face format.
- * Can use to merge 1-6 faces to global cubed sphere format
- *
- * 4/2019:  v1.0 Wesley Ebisuzaki
- */
+/** Append grib file flag. */
+extern int file_append;
 
-extern int decode, file_append, save_translation;
-extern unsigned int nx_, ny_;
+/** Flag to indicate whether to save translation information. */
+extern int save_translation;
+
+/** Number of grid points in x-direction. */
+extern unsigned int nx_;
+
+/** Number of grid points in y-direction. */
+extern unsigned int ny_;
+
+/** Flush output flag. */
 extern int flush_mode;
-extern int use_scale, dec_scale, bin_scale, wanted_bits, max_bits;
+
+/** Use scaling flag. */
+extern int use_scale;
+
+/** Decimal scaling. */
+extern int dec_scale;
+
+/** Binary scaling. */
+extern int bin_scale;
+
+/** Number of bits wanted. */
+extern int wanted_bits;
+
+/** Maximum number of bits. */
+extern int max_bits;
+
+/** Output GRIB type. */
 extern enum output_grib_type grib_type;
 
 /*
  * HEADER:100:cubeface2global:output:2:write faces X as global cubed grid to Y: X=list of faces to exclude
  */
 
+/**
+ * A cubed sphere grib message can consist of one face or all 6 faces.
+ *
+ * This routine converts single faces to a 6-face format. Can use to merge 1-6 faces 
+ * to global cubed sphere format.
+ * 
+ * ## Usage
+ * -cubeface2global faces output_file_name
+ * 
+ * Where faces is the list of faces to exclude (0-6)
+ * 
+ * @param ARG2 ???
+ * 
+ * @return 0 on success, error code otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 4/2019
+ */
 int f_cubeface2global(ARG2) {
 
     struct local_struct {

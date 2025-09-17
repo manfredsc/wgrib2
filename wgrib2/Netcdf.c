@@ -1,5 +1,19 @@
-/******************************************************************************************FF
+/** @file
+ * @brief NetCDF routines.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 2007 | K. Nilssen | First version
+ * 3/2007 | W. Ebisuzaki | First release version w/ changes
+ * 5/2007 - 6/2009 | S. Varlamov vsm@jamstec.go.jp | Various updates and improvements
+ * 6/8/2009| W. Ebisuzaki | Minor update
+ * 1/2011 | W. Ebisuzaki | replace new_GDS by GDS_change_no
+ * 
+ * @author Kristian Nilssen @date 2007
+ */
 
+/*
  This file is part of wgrib2 and is distributed under terms of the GNU General Public License
  For details see, Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  Boston, MA  02110-1301  USA
@@ -10,6 +24,7 @@
  Version 8 June 2009
   minor update 1/2011 replace new_GDS by GDS_change_no, WNE
  */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -29,28 +44,79 @@
 // change by Sander Hulst 5/2011, for netcdf-4 library compiled without netcdf-4/hdf format 
 
 /* defined in Netcdf_sup.c */
+
+/** 4D level types for netCDF */
 extern g2nc_4Dlt nc_4Dlt[G2NC_NUM_4DLT];
+
+/** NetCDF conversion table */
 extern g2nc_table * nc_table;
+
+/** NetCDF compatibility flag. */
 extern int nc_grads_compatible;
+
+/** NetCDF packing flag. */
 extern int nc_pack;
+
+/** NetCDF packing offset. */
 extern float nc_pack_offset;
+
+/** NetCDF packing scale. */
 extern float nc_pack_scale;
+
+/** NetCDF valid range minimum. */
 extern float nc_valid_min;
+
+/** NetCDF valid range maximum. */
 extern float nc_valid_max;
+
+/** NetCDF maximum LEV dimension. */
 extern int nc_nlev;
+
+/** NetCDF date. 0 for undefined. */
 extern double nc_date0;
-extern int    nc_date0_type;  /* 1 for absolute, -1 for relative (alignment only) */
-extern double nc_dt;          /* -1 will be used for variable (undefined) step */
+
+/** NetCDF date type. 0 for undefined; 1 for absolute, -1 for relative (alignment only) */
+extern int    nc_date0_type;
+
+/** NetCDF time step. 0 for not initialized; -1 will be used for variable (undefined) step*/
+extern double nc_dt;
+
+/** NetCDF version 4 flag */
 extern int nc4;
 
 /* defined in wgrib2.c */
+
+/** Append grib file flag. */
 extern int file_append;
-extern int decode, latlon;
-extern double *lat, *lon;
-extern int nx, ny;
+
+/** Decode grib file flag. */
+extern int decode;
+
+/** Flag to indicate lat-lon grid processing. */
+extern int latlon;
+
+/** Pointer to array of latitude values. */
+extern double *lat;
+
+/** Pointer to array of longitude values. */
+extern double *lon;
+
+/** Number of grid points in the x direction. */
+extern int nx;
+
+/** Number of grid points in the y direction. */
+extern int ny;
+
 // extern unsigned in npnts;
+
+/** Current output order type. */
 extern enum output_order_type output_order;
-extern int mode, GDS_change_no;
+
+/** Mode of operation. */
+extern int mode;
+
+/** GDS change number. */
+extern int GDS_change_no;
 
 //int level2(int mode, int type1, float value1, int type2, float value2, int center, int subcenter,
 //           char *inv_out);
@@ -80,13 +146,27 @@ static int update_nc_ref_time(int ncid, double verf_utime, double ref_utime,
 static int update_nc_lev( int ncid, g2nc_4Dlt * lt_4D,
                    float lev_val, int nlev,  int lev_dim, int lev_var,
                    int * lev_ind, int * lev_step, int * lev_type);
-/******************************************************************************************/
+
+/**
+ * Check for NetCDF errors and handle them.
+ *
+ * @param status The NetCDF status code.
+ * 
+ * @author Kristian Nilssen @date 2007
+ */
 static void netcdf_command(int status)
 {
   if (status != NC_NOERR) fatal_error("netcdf error %s", nc_strerror(status));
 }
 
-/******************************************************************************************/
+/**
+ * Check for NetCDF errors and handle them. (with message)
+ *
+ * @param status The NetCDF status code.
+ * @param message The error message to display.
+ * 
+ * @author Kristian Nilssen @date 2007
+ */
 static void netcdf_command_plus(int status, const char * message)
 {
   if (status != NC_NOERR)
@@ -96,7 +176,15 @@ static void netcdf_command_plus(int status, const char * message)
   }
 }
 
-/******************************************************************************************/
+/**
+ * Convert NetCDF data type to GRIB2 packing type.
+ *
+ * @param type The NetCDF data type.
+ *
+ * @return The corresponding GRIB2 packing type.
+ * 
+ * @author Kristian Nilssen @date 2007
+ */
 static int g2nc_type2pack(int type)
 {
   switch (type)
@@ -113,6 +201,16 @@ static int g2nc_type2pack(int type)
       return G2NC_PACK_UNDEF;
   }
 }
+
+/**
+ * Convert GRIB2 packing type to NetCDF data type.
+ *
+ * @param pack The GRIB2 packing type.
+ * 
+ * @return The corresponding NetCDF data type.
+ *
+ * @author Kristian Nilssen @date 2007
+ */
 static int g2nc_pack2type(int pack)
 {
   switch (pack)
@@ -131,13 +229,20 @@ static int g2nc_pack2type(int pack)
       return NC_NAT;
   }
 }
+
 /*_FillValue for different data types, could be used for packing (short,byte), max value*/
+
+/** Fill value for short data type. */
 static short       sfill_value = G2NC_FILL_VALUE_SHORT;
+
+/** Fill value for byte data type. */
 static signed char bfill_value = G2NC_FILL_VALUE_BYTE;
+
+/** Fill value for float data type. */
 static float       ffill_value = G2NC_FILL_VALUE_FLOAT;
 // static double      dfill_value = G2NC_FILL_VALUE_DOUBLE;
 
-/******************************************************************************************
+/*
  *
  * HEADER:100:netcdf:output:1:write netcdf data to X
  *
@@ -146,6 +251,123 @@ static float       ffill_value = G2NC_FILL_VALUE_FLOAT;
  *  In this module all options-dependant actions are done when mode > 0,
  *  it guaranty that all global variables were assigned
  *
+ */
+
+/**
+ * Writes the grid values to a specified file in netcdf format using COARDS convention for the 
+ * Latitude-Longitude, Mercator and Gaussian grids and the CF-1.0 convention for Lambert and 
+ * Polar stereographic projection grids. Other grid templates and projections are not supported 
+ * yet. 
+ * 
+ * Default the grid values are written as 4 bytes float having {TIME,LAT,LON} dimension shape 
+ * (3D data) and possible vertical LEV information added to the name of variables. For example, 
+ * V wind component defined at 10 m level in atmosphere will have default name VGRD_10maboveground. 
+ * With some minimal efforts and using the sub-options described below it is also possible to 
+ * write data as a 4D data with the {TIME,LEV,LAT,LON} dimension shape that could be usefull 
+ * for the vertical structure analysis etc. 
+ * 
+ * 3D and 4D data could be mixed in the same netcdf file if both have the same horizontal grid 
+ * shapes. Practically any number of variables could be placed in to the single netcdf file as 
+ * well as time dimension can be almost arbitrary extended. For these purposes please use the 
+ * wgrib2 -append option. All missing values in data are replaced by the _FillValue defined in 
+ * wgrib2 as 9.999e+20 for the float data, 32767 for short-packed data and 127 for byte-packed 
+ * data. 
+ * 
+ * ## Usage
+ * -netcdf file_name
+ *
+ * ## Sub-options for netcdf
+ * Next sub-options could help to customize created netcdf file(s). All sub-options must preceed 
+ * the -netcdf option as it is the wgrib2 rule. More then one -netcdf option could be given on 
+ * the wgrib2 command line, please read the documentation for wgrib2. Almost all sub-options 
+ * have -no_... version that annulates previous assignment. For the advanced users it is recommended 
+ * to use the GRIB2 to NETCDF conversion table with the -nc_table sub-option or combine the command 
+ * line options with instructions in the -nc_table conversion file. 
+ * 
+ * The -append option makes possible to create single large data set for long time series of gridded 
+ * data. Time dimension of data in the netcdf file is "unlimited", it could be extended "forward" 
+ * when adding new data but not "backward" before the first defined time value. If data for the 
+ * same time step already exist in the updated netcdf file these will be silently overwritten. 
+ *
+ * -nc_grads
+ *    Require NetCDF file to be grads v1.9b4 compatible (fixed time step only)
+ *
+ * -no_nc_grads
+ *    NetCDF file may not be grads v1.9b4 compatible, variable time step.
+ * 
+ * -nc_pack
+ *    Pack/check limits of all NEW input variables.
+ *
+ * -no_nc_pack
+ *    No packing in netcdf for NEW variables.
+ * 
+ * -nc_nlev 
+ *    Set the maximum LEV dimension for {TIME,LEV,LAT,LON} data in netCDF files.
+ * 
+ * -nc_table
+ *    Set conversion_to_netcdf_table file name.
+ * 
+ * -no_nc_table
+ *    Disable the previously defined conversion to netcdf table.
+ * 
+ * -nc_time
+ *    NetCDF time step definition.
+ * 
+ * -no_nc_time
+ *    Disable previously defined initial or relative date and time step.
+ * 
+ * -nc4
+ *    Use NetCDF version 4 (compressed, controlled endianness etc).
+ * 
+ * -nc3
+ *    Use NetCDF version 3 (classic).
+ * 
+ * ## Problem 1
+ * The -netcdf option uses the "verification" time (-vt) as the time coordinate in the netcdf 
+ * file. Unlike in grib, the definition of new "time" values has to go chronologically. For 
+ * example, the analysis, 6-hour forecast and then the 12-hour forecast. Allocation of new time 
+ * values in a different order will result in error messages. If your grib file doesn't follow 
+ * the order, you can sort the file by the verification time. 
+ * 
+ * @code{.sh}
+ * wgrib2 FILE.old -vt -s | sort -k3,3 -t: | wgrib2 -i FILE.old -grib FILE.new
+ * wgrib2 FILE.new -netcdf FILE.nc
+ * @endcode
+ * 
+ * ## Problem 2
+ * Another problem is that netcdf-3 files are limited to 4GB in size. The grib2 format supports 
+ * compression so that conversion to uncompressed netcdf3 or the poorly compressed netcdf4 can 
+ * increase the file size dramatically. I am sure that Western Digital, Seagate, Hitachi and 
+ * Toshiba all appreciate your support. 
+ * 
+ * ## Problem 3
+ * The -netcdf option is limited to "normal" wens grids. The COARDS convention only allows 
+ * lat-lon, mercator and Gaussian grids. The rotated, thinned and staggered grids are not 
+ * supported. Netcdf can support more grids than the COARDS convention but -netcdf was written 
+ * to that convention. 
+ * 
+ * To handle thinned Gaussian grids, you must first convert it to full Gaussian grid. 
+ * 
+ * @code{.sh}
+ * $ wgrib2 IN.grb -reduced_gaussian_grid OUT.grb -1 linear
+ * $ wgrib2 OUT.grib -netcdf OUT.nc
+ * @endcode
+ * 
+ * To handle rotated lat-lon grids, you must first convert the file to a lat-lon file using 
+ * -new_grid. 
+ * 
+ * To handle non-wesn lat-lon/mercator/Gaussian grids, you must first convert the file to a 
+ * wens file. You can use -new_grid. The -new_grid option may not work with thinned or staggered 
+ * grids. 
+ * 
+ * @param ARG1 ???
+ * 
+ * @return 0 for success, error code otherwise
+ * 
+ * ## Example
+ * ???
+ * 
+ * @author Kristian Nilssen @date 2007
  */
 int f_netcdf(ARG1)
 {

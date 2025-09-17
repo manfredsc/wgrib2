@@ -1,45 +1,62 @@
-/*******************************************************************************
-NAME                     ALBERS CONICAL EQUAL-AREA 
+/** @file
+ * @brief Albers Conical Equal Area - Inverse Transformation
+ * 
+ * PURPOSE:	Transforms input Easting and Northing to longitude and latitude
+ * for the Albers Conical Equal Area projection.  The Easting and Northing
+ * must be in meters.  The longitude and latitude values will be returned
+ * in radians.
+ * 
+ * @author T. Mittan @date Feb. 1992
+ * 
+ * ### Algorithm References
+ * 1.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *     Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *     State Government Printing Office, Washington D.C., 1987.
+ *
+ * 2.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
+ *     U.S. Geological Survey Professional Paper 1453 , United State Government
+ *     Printing Office, Washington D.C., 1989.
+ *
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 2/1992| T. Mittan | Initial
+ * 2/1996| S. Nelson | Made a modification to the assignment to "con" enclosing the
+ *                     section 1.0 - e3 in parenthesis.
+ */
 
-PURPOSE:	Transforms input Easting and Northing to longitude and
-		latitude for the Albers Conical Equal Area projection.  The
-		Easting and Northing must be in meters.  The longitude
-		and latitude values will be returned in radians.
-
-PROGRAMMER              DATE
-----------              ----
-T. Mittan,       	Feb, 1992
-S. Nelson		Feb, 1996	Made a modification to the
-					assignment to "con" enclosing the
-					section 1.0 - e3 in parenthesis.
-
-ALGORITHM REFERENCES
-
-1.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-2.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
-    U.S. Geological Survey Professional Paper 1453 , United State Government
-    Printing Office, Washington D.C., 1989.
-*******************************************************************************/
 #include "cproj.h"
 
-/* Variables common to all subroutines in this code file
-  -----------------------------------------------------*/
-  static double r_major;        /* major axis                           */
-  static double r_minor;        /* minor axis                           */
-  static double c;              /* constant c                           */
-  static double e3;             /* eccentricity                         */
-  static double es;		/* eccentricity squared			*/
-  static double rh;             /* heigth above elipsoid                */
-  static double ns0;            /* ratio between meridians              */
-  static double lon_center;     /* center longitude                     */
-  static double false_easting;  /* x offset in meters                   */
-  static double false_northing; /* y offset in meters                   */
+/* Variables common to all subroutines in this code file */
+  static double r_major;        /**< major axis                           */
+  static double r_minor;        /**< minor axis                           */
+  static double c;              /**< constant c                           */
+  static double e3;             /**< eccentricity                         */
+  static double es;		/**< eccentricity squared			*/
+  static double rh;             /**< height above ellipsoid               */
+  static double ns0;            /**< ratio between meridians              */
+  static double lon_center;     /**< center longitude                     */
+  static double false_easting;  /**< x offset in meters                   */
+  static double false_northing; /**< y offset in meters                   */
 
-/* Initialize the Albers projection
-  -------------------------------*/
+/**
+ * Initialize the Albers projection for inverse transformation.
+ * 
+ * @param r_maj Major axis
+ * @param r_min Minor axis
+ * @param lat1 First standard parallel
+ * @param lat2 Second standard parallel
+ * @param lon0 Center longitude
+ * @param lat0 Center latitude
+ * @param false_east X offset in meters
+ * @param false_north Y offset in meters
+ *
+ * @return
+ * - 0 :: Success
+ * - 31 :: Equal latitudes for standard parallels on opposite sides of equator
+ *
+ * @author T. Mittan @date Feb. 1992
+ */
 long alberinvint( double r_maj, double r_min, double lat1, double lat2,
         double lon0, double lat0, double false_east, double false_north) {
 //long alberinvint(r_maj,r_min,lat1,lat2,lon0,lat0,false_east,false_north)
@@ -111,8 +128,19 @@ offsetp(false_easting,false_northing);
 return(OK);
 }
 
-/* Albers Conical Equal Area inverse equations--mapping x,y to lat/long
-  -------------------------------------------------------------------*/
+
+
+/** Albers Conical Equal Area inverse equations--mapping x,y to lat/long
+ *
+ * @param x X projection coordinate
+ * @param y Y projection coordinate
+ * @param lon Pointer to Longitude
+ * @param lat Pointer to Latitude
+ *
+ * @return 0 on success, error code otherwise.
+ * 
+ * @author T. Mittan @date Feb. 1992
+ */
 long alberinv( double x, double y, double *lon, double *lat) {
 //long alberinv(x, y, lon, lat)
 //double x;			/* (O) X projection coordinate 	*/

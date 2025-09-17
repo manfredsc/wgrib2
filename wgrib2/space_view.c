@@ -1,3 +1,24 @@
+/** @file
+ * @brief Convert space view grid coordinates to latitude/longitude.
+ * 
+ * Based on algorithms from:
+ * LRIT/HRIT Global Specification, Coordination Group for Meteorological Satellites
+ * Doc No CGMS 03 isssue 2.6
+ * Date - 12 August 1999
+ * 
+ * This document assumed certain constants: satellite height radius (pole/equator) which 
+ * differed from the values in the grib file. I attempted to replace the constants with the 
+ * grib-specified values.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 4/2011 | W. Ebisuzaki | Initial
+ * 4/2015 | L. Majewski | Fixed definition of lop
+ * 9/2017 | W. Ebisuzaki | lop does not need to be changed to radians
+ * @author Public Domain: Wesley Ebisuzaki @date 4/11/2011
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -6,50 +27,36 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/*
- * spaceview.c
- *
- * 2011-4-11 Public Domain Wesley Ebisuzaki
- *
- * this routine assigns lat/lon to the grid points of a space view 
- * perspective grid
- *
- * based on algorithms from
- *
- * LRIT/HRIT Global Specification, Coordination Group for Meteorological Satellites
- * Doc No CGMS 03 isssue 2.6 
- * date 12 August 1999
- *
- * This document assumed certain constants: satellite height
- *  radius (pole/equator) which differed from the values in the grib file
- *  I attempted to replace the constants with the grib-specified values.
- *
- * code can be speeded up x=-x and y=-y relationships
- *
- * code limited to orient == 0 and sat lat = 0
- *  v1.0 4-2011
- *
- * 4/2015: L. Majewski fixed defn of lop
- * 9/2017: W. Ebisuzaki lop does not need to be changed to radians
- */
-
-
 #ifndef M_PI
-#define M_PI           3.14159265358979323846  /* pi */
+#define M_PI           3.14159265358979323846  /**< pi */
 #endif
 #ifndef M_PI_2
-#define M_PI_2         1.57079632679489661923  /* pi/2 */
+#define M_PI_2         1.57079632679489661923  /**< pi/2 */
 #endif
 #ifndef M_PI_4
-#define M_PI_4         0.78539816339744830962  /* pi/4 */
+#define M_PI_4         0.78539816339744830962  /**< pi/4 */
 #endif
 #ifndef M_SQRT2
-#define M_SQRT2        1.41421356237309504880  /* sqrt(2) */
+#define M_SQRT2        1.41421356237309504880  /**< sqrt(2) */
 #endif
 
+/** Current output order type. */
 extern enum output_order_type output_order;
 
-
+/**
+ * This routine assigns lat/lon to the grid points of a space view perspective grid.
+ *
+ * Code limited to orient == 0 and sat lat = 0. Code can be speeded up using x=-x and y=-y 
+ * relationships.
+ * 
+ * @param sec Pointer to GRIB sections.
+ * @param lat Pointer to latitude array.
+ * @param lon Pointer to longitude array.
+ * 
+ * @return 0 on success. Throws fatal_error() on failure.
+ *
+ * @author Wesley Ebisuzaki @date 4/2011
+ */
 int space_view2ll(unsigned char **sec, double **lat, double **lon) {
     double major, minor, r_eq, r_pol, sat_height;
     double lap, lop, orient_angle, angular_size;
@@ -136,10 +143,10 @@ int space_view2ll(unsigned char **sec, double **lat, double **lon) {
         xp = (nnx-1) - (xp - x0);
     }
     if (GDS_Scan_y(nscan)) {
-	yp = yp - y0;
+        yp = yp - y0;
     }
     else {
-	yp = (nny-1) - (yp - y0);
+        yp = (nny-1) - (yp - y0);
     }
 //fprintf(stderr,">> new center point point x/y=%lf %lf nnx=%d nny=%d\n", xp,yp,nnx, nny);
 //fprintf(stderr,">> rx %lf ry %lf\n", rx,ry);
@@ -154,45 +161,45 @@ int space_view2ll(unsigned char **sec, double **lat, double **lon) {
     if (s_x == NULL || c_x == NULL) fatal_error("space_view: memory allocation","");
 
     for (ix = 0; ix < nnx; ix++) {
-	x = (ix - xp) * rx;
-	s_x[ix] = sin(x);
-	c_x[ix] = sqrt(1.0 - s_x[ix]*s_x[ix]);
+        x = (ix - xp) * rx;
+        s_x[ix] = sin(x);
+        c_x[ix] = sqrt(1.0 - s_x[ix]*s_x[ix]);
     }
     
     for (iy = 0; iy < nny; iy++) {
-	y = (iy - yp) * ry;
-	sin_y = sin(y);
-//	cos_y = cos(y);
-	cos_y = sqrt(1.0 - sin_y*sin_y);
+        y = (iy - yp) * ry;
+        sin_y = sin(y);
+    //	cos_y = cos(y);
+        cos_y = sqrt(1.0 - sin_y*sin_y);
 // printf("iy %d y %lf cos %lf sin %lf\n", iy, y, cos_y, sin_y);
 
 // old	tmp1 = (cos_y*cos_y + factor_2*sin_y*sin_y);
-	tmp1 = (1 + (factor_2-1.0)*sin_y*sin_y);
+        tmp1 = (1 + (factor_2-1.0)*sin_y*sin_y);
 
         for (ix = 0; ix < nnx; ix++, i++) {
-	    x = (ix - xp) * rx;
+            x = (ix - xp) * rx;
 //	    sin_x = sin(x);
 ////	    cos_x = cos(x);
 //	    cos_x = sqrt(1.0 - sin_x*sin_x);
-	    sin_x = s_x[ix];
-	    cos_x = c_x[ix];
+                sin_x = s_x[ix];
+                cos_x = c_x[ix];
 
-	    Sd = sat_height * cos_x * cos_y;
-	    Sd = Sd * Sd - tmp1*factor_1;
-	    if (Sd <= 0.0) {	// outside of view
-		llat[i] = llon[i] = UNDEFINED_ANGLE;
-	    }
-	    else {
-	        Sd = sqrt(Sd);
-	        Sn = (sat_height*cos_x*cos_y - Sd) / tmp1;
-	        S1 = sat_height - Sn * cos_x * cos_y;
-	        S2 = Sn * sin_x * cos_y;
-	        S3 = Sn * sin_y;
-	        Sxy = sqrt(S1*S1 + S2*S2);
-	        llon[i] = atan(S2/S1)*(180.0/M_PI) + lop;
-		if (llon[i] > 360.0) llon[i] -= 360.0;
-		// if (llon[i] < 0.0) llon[i] += 360.0;  should never happen as lop >= 0
-	        llat[i] = atan(factor_2*S3/Sxy)*(180.0/M_PI);
+                Sd = sat_height * cos_x * cos_y;
+                Sd = Sd * Sd - tmp1*factor_1;
+            if (Sd <= 0.0) {	// outside of view
+                llat[i] = llon[i] = UNDEFINED_ANGLE;
+            }
+            else {
+                Sd = sqrt(Sd);
+                Sn = (sat_height*cos_x*cos_y - Sd) / tmp1;
+                S1 = sat_height - Sn * cos_x * cos_y;
+                S2 = Sn * sin_x * cos_y;
+                S3 = Sn * sin_y;
+                Sxy = sqrt(S1*S1 + S2*S2);
+                llon[i] = atan(S2/S1)*(180.0/M_PI) + lop;
+                if (llon[i] > 360.0) llon[i] -= 360.0;
+                // if (llon[i] < 0.0) llon[i] += 360.0;  should never happen as lop >= 0
+                llat[i] = atan(factor_2*S3/Sxy)*(180.0/M_PI);
 /*
 if ((iy == 1588 || iy == 300) && ix ==  1588) {
 printf("ix %d iy %d x %lf y %lf\n",ix,iy,x,y);
@@ -203,8 +210,8 @@ printf("Sxy=%lf S3/Sxy=%lf atan() %lf\n", Sxy, S3/Sxy, atan(S3/Sxy));
 printf("lat %lf lon %lf i=%d\n", llat[i] , llon[i], i);
 }
 */
-	    }
-	}
+            }
+        }
     }
     free(s_x);
     free(c_x);

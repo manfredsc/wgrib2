@@ -129,8 +129,8 @@ extern enum output_grib_type grib_type;         /**< Output GRIB type. */
 extern int use_bitmap;                          /**< Use bitmap flag. */
 extern enum wind_rotation_type wind_rotation;   /**< Wind rotation type. */
 
-extern const char **vectors;                        /**< Grid vectors. */
-extern const char *default_vectors[];               /**< Default grid vectors. */
+extern const char **vectors;                        /**< Vector fields. */
+extern const char *default_vectors[];               /**< Default vector fields. */
 extern enum new_grid_format_type new_grid_format;   /**< New grid format type. */
 
 /* Match.c */

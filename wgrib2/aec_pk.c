@@ -1,9 +1,15 @@
-/* This file is part of wgrib2.
- * aec_pk.c
- * 6/2016  copyright DWD, under GNU GPL
- * 6/2016  cleanup, optimizations Wesley Ebisuzaki
- *
- * wgrib2 is free software: you can redistribute it and/or modify
+/** @file
+ * @brief AEC packing for GRIB2.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 6/2016 | DWD | Initial
+ * 6/2016 | W. Ebisuzaki | cleanup, optimizations
+ * @author DWD @date 6/2016
+ */
+
+/* wgrib2 is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
@@ -32,7 +38,23 @@
 
 #include <libaec.h>
 
-
+/**
+ * Writes out AEC compressed GRIB message.
+ *
+ * @param sec Pointer to the GRIB2 sections.
+ * @param data Pointer to the data array.
+ * @param ndata Number of data points.
+ * @param use_scale Use scaling (0 or 1).
+ * @param dec_scale Decimal scaling factor.
+ * @param bin_scale Binary scaling factor.
+ * @param wanted_bits Number of bits wanted.
+ * @param max_bits Maximum number of bits.
+ * @param out Pointer to the output file struct.
+ *
+ * @return 0 for success. Returns error code or throws fatal_error() on failure.
+ *
+ * @author DWD @date 6/2016
+ */
 int aec_grib_out(unsigned char ** sec, float *data, unsigned int ndata, int use_scale,
         int dec_scale, int bin_scale, int wanted_bits, int max_bits, struct seq_file *out){
 
@@ -49,10 +71,10 @@ int aec_grib_out(unsigned char ** sec, float *data, unsigned int ndata, int use_
 
     struct aec_stream strm;
     unsigned char *inbuffer;
-	/* printf("aec_grib_out: use_scale = %d dec_scale = %d bin_scale = %d wanted_bits = %d max_bits = %d " ,
-	  use_scale, dec_scale, bin_scale, wanted_bits, max_bits ); */
+    /* printf("aec_grib_out: use_scale = %d dec_scale = %d bin_scale = %d wanted_bits = %d max_bits = %d " ,
+        use_scale, dec_scale, bin_scale, wanted_bits, max_bits ); */
 
-	/* set default flags, TODO pass flags from template */
+    /* set default flags, TODO pass flags from template */
     ccsds_flags = AEC_DATA_MSB | AEC_DATA_PREPROCESS | AEC_DATA_3BYTE;
 
     inbuffer = NULL;

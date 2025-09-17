@@ -1,15 +1,10 @@
-/*
- * New_grid_order
+/** @file
+ * @brief Put GRIB file in order for new_grid to work.
  *
- * put grib file in order for new_grid to work
- *   
- * 10/2019    Public Domain Wesley Ebisuzaki
- *
- * output for new_grid is put into X
- * vectors that do not have corresponding vector are put into Y
- * vector fields are written into one grib message
- *
- * v1.0
+ * Output for new_grid is put into X.
+ * Vectors that do not have corresponding vector are put into Y.
+ * Vector fields are written into one grib message.
+ * @author Public Domain: Wesley Ebisuzaki @date 10/2019
  */
 
 #include <stdio.h>
@@ -19,31 +14,40 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-extern int file_append, flush_mode;
+/** Append grib file flag. */
+extern int file_append;
+
+/** Flush of output flag. */
+extern int flush_mode;
+
+/** Vector fields. */
 extern const char **vectors;
 
-/* 
- * uv_index
- *  returns index in u_v list
- *   even: U
- *   odd: V 
- *     V that corresponds to U has index+1
- *   -1: not found
+/**
+ * Find the index of a variable in the u/v list.
+ *
+ * @param name Pointer to name of the variable.
+ *
+ * @return Index of the variable in the u/v list, or -1 if not found.
+ * If even: U
+ * If odd: V
+ *   V that corresponds to U has index+1
+ *
+ * @author Wesley Ebisuzaki @date 10/2019
  */
-
 static int uv_index(const char *name) {
     int i;
 
     i = 0;
     while (vectors[i] != NULL) {
-	if (strcmp(vectors[i], name) == 0) return i;
-	if (strcmp(vectors[i+1], name) == 0) return i+1;
-	i += 2;
+        if (strcmp(vectors[i], name) == 0) return i;
+        if (strcmp(vectors[i+1], name) == 0) return i+1;
+        i += 2;
     }
     return -1;
 }
 
-
+/** Struct that holds a GRIB message. */
 struct grib_message {
     size_t size_data;
     int uvindex;
@@ -52,10 +56,15 @@ struct grib_message {
     struct grib_message *next;
 };
 
-/*
- * creates a new grib_message given sec[]
+/**
+ * Create a new grib_message given sec.
+ *
+ * @param sec Pointer to the GRIB message sections.
+ *
+ * @return Pointer to the new grib_message struct, or NULL on failure.
+ *
+ * @author Wesley Ebisuzaki @date 10/2019
  */
-
 static struct grib_message *new_grib_message(unsigned char **sec) {
     unsigned int size[9], j;
     int i;
@@ -87,21 +96,30 @@ static struct grib_message *new_grib_message(unsigned char **sec) {
 
     /* save grib message along with sec[] */
     for (i = 0; i < 9; i++) {
-	if (sec[i] == NULL) {
-	   grb_msg->sec[i] = NULL;
-	}
-	else {
-	    grb_msg->sec[i] = p;
-	    for (j = 0; j < size[i]; j++) {
-		*p++ = sec[i][j];
-	    }
-	}
+        if (sec[i] == NULL) {
+        grb_msg->sec[i] = NULL;
+        }
+        else {
+            grb_msg->sec[i] = p;
+            for (j = 0; j < size[i]; j++) {
+            *p++ = sec[i][j];
+            }
+        }
     }
     return grb_msg;
 }
 
-/* write U/V grib message */
-
+/** 
+ * Write U/V grib message.
+ *
+ * @param sec1 Pointer to the first GRIB message sections.
+ * @param sec2 Pointer to the second GRIB message sections.
+ * @param file Pointer to the output file struct.
+ *
+ * @return 0 on success, 1 on failure.
+ * 
+ * @author Wesley Ebisuzaki @date 10/2019
+ */
 static int wrt_uv_sec(unsigned char **sec1, unsigned char **sec2, struct seq_file *file) {
     size_t size;
     unsigned char s[16];
@@ -159,11 +177,48 @@ static int wrt_uv_sec(unsigned char **sec1, unsigned char **sec2, struct seq_fil
  * HEADER:111:new_grid_order:output:2:put in required order for -new_grid, X=out Y=out2 no matching vector
  */
 
+/**
+ * Puts GRIB messages in the required order for -new_grid.
+ * 
+ * The option -new_grid requires that the grib file be processed in a certain order. When 
+ * vector fields are encountered, the specifications are that the U field must be followed 
+ * by the corresponding V field. (The -new_grid implementation allows any number of scalars 
+ * to in between the U and corresponding V fields.) If you do not follow the specification, 
+ * some U or V fields may not be interpolated. 
+ * 
+ * Regridding grib files by the -new_grid is very common, and a technique have been developed 
+ * to speed up this task. Basically you put scalar fields in its own grib message, and corresponding 
+ * vector fields in their own grib message (U and V are in submessages). Then you can regrid 
+ * each grib message independantly. If you have N cores, you run N copies of wgrib2 that 
+ * regrids 1/N of the file. The -new_grid_order is designed to put the data in this structure. 
+ * 
+ * The option -new_grid_order rearranges the file so that the fields follow the specification 
+ * for use by -new_grid_order. Note that the order depends on the fields that are specified as 
+ * vectors by the -new_grid_vector option. The output of -new_grid_order puts the U and corresponding 
+ * V grib message into the same grib message, like -submsg_uvr. The vector fields that cannot be 
+ * pair with the corrsponding U or V fields are written to a secondary file. 
+ * 
+ * ## Usage
+ * -new_grid_order GRIB_A GRIB_B
+ * 
+ * GRIB_A is a grib output file with data in order compatible with -new_grid
+ * GRIB_B is a grib output file with data that cannot be processed by -new_grid because corresponding 
+ * U or V fields were missing
+ *
+ * @param ARG2 ???
+ * 
+ * @return 0 on success, error code otherwise
+ * 
+ * ## Example
+ * ???
+ * 
+ * @author Wesley Ebisuzaki @date 10/2019
+ */
 int f_new_grid_order(ARG2) {
 
     struct local_struct {
-	struct grib_message *next; 	
-	struct seq_file out, out_no_match;
+        struct grib_message *next; 	
+        struct seq_file out, out_no_match;
     };
 
     struct local_struct *save;
@@ -185,93 +240,93 @@ int f_new_grid_order(ARG2) {
         if (fopen_file(&(save->out_no_match), arg2, file_append ? "ab" : "wb") != 0) {
             free(save);
             fatal_error("Could not open %s", arg2);
-	}
-	save->next = NULL;
-	return 0;
+        }
+        save->next = NULL;
+        return 0;
     }
 
     save = (struct local_struct *) *local;
 
     if (mode == -2)  {		// cleanup
-	/* delete grib messages that haven't been written out */
-	if (save->next) {
-	    grib = save->next;
-	    while (grib) {
-	        i = wrt_sec(grib->sec[0], grib->sec[1], grib->sec[2], grib->sec[3], grib->sec[4], 
-			grib->sec[5], grib->sec[6], grib->sec[7], &(save->out_no_match));
-	        if (flush_mode) fflush_file(&(save->out));
-		p = grib;
-		grib = grib->next;
-		free(p->data);
-		free(p);
-	    }
-	    fprintf(stderr,"new_grid_order: some vectors were unmatched, see %s\n", arg2);	
-	}
-	
-	fclose_file(&(save->out));
-	fclose_file(&(save->out_no_match));
+        /* delete grib messages that haven't been written out */
+        if (save->next) {
+            grib = save->next;
+            while (grib) {
+                i = wrt_sec(grib->sec[0], grib->sec[1], grib->sec[2], grib->sec[3], grib->sec[4], 
+                            grib->sec[5], grib->sec[6], grib->sec[7], &(save->out_no_match));
+                if (flush_mode) fflush_file(&(save->out));
+                p = grib;
+                grib = grib->next;
+                free(p->data);
+                free(p);
+            }
+            fprintf(stderr,"new_grid_order: some vectors were unmatched, see %s\n", arg2);	
+        }
+        
+        fclose_file(&(save->out));
+        fclose_file(&(save->out_no_match));
         free(save);
-	return 0;
+        return 0;
     }
 
     if (mode >= 0 )  {					// processing
 
         i = getName(sec, mode, NULL, name, NULL, NULL);
-	uv = uv_index(name);
+        uv = uv_index(name);
 
-	/* scalar */
-	if (uv == -1) {
-	    i = wrt_sec(sec[0], sec[1], sec[2], sec[3], sec[4], sec[5], sec[6], sec[7], &(save->out));
-	    if (flush_mode) fflush_file(&(save->out));
-	    if (i) fatal_error_i("new_grid_order: write problem %i",i);
-	    return 0;
-	}
+        /* scalar */
+        if (uv == -1) {
+            i = wrt_sec(sec[0], sec[1], sec[2], sec[3], sec[4], sec[5], sec[6], sec[7], &(save->out));
+            if (flush_mode) fflush_file(&(save->out));
+            if (i) fatal_error_i("new_grid_order: write problem %i",i);
+            return 0;
+        }
 
-	/* vector */
+        /* vector */
 
-	/* see if u-v  match */
+        /* see if u-v  match */
 
-	grib = save->next;
-	last_grib = NULL;
-	i = uv ^ 1;
+        grib = save->next;
+        last_grib = NULL;
+        i = uv ^ 1;
 
-	while (grib != NULL) {
-	    if (i == grib->uvindex) {
-		if ( (same_sec0_not_var(mode, sec,grib->sec) == 1) &&
- 	             (same_sec1_not_var(mode, sec,grib->sec) == 1) &&
- 	             (same_sec2(sec,grib->sec) == 1) &&
- 	             (same_sec3(sec,grib->sec) == 1) &&
- 	             (same_sec4_not_var(mode,sec,grib->sec) == 1) ) break;
-	    }
-	    last_grib = grib;
-	    grib = grib->next;
-	}
+        while (grib != NULL) {
+            if (i == grib->uvindex) {
+                if ( (same_sec0_not_var(mode, sec,grib->sec) == 1) &&
+                        (same_sec1_not_var(mode, sec,grib->sec) == 1) &&
+                        (same_sec2(sec,grib->sec) == 1) &&
+                        (same_sec3(sec,grib->sec) == 1) &&
+                        (same_sec4_not_var(mode,sec,grib->sec) == 1) ) break;
+            }
+            last_grib = grib;
+            grib = grib->next;
+        }
 
-	if (grib) {		// match
+        if (grib) {		// match
 
-	    // write vector pair
-	    if (uv & 1) wrt_uv_sec(grib->sec, sec, &(save->out));
-	    else wrt_uv_sec(sec, grib->sec, &(save->out));
-	    if (flush_mode) fflush_file(&(save->out));
+            // write vector pair
+            if (uv & 1) wrt_uv_sec(grib->sec, sec, &(save->out));
+            else wrt_uv_sec(sec, grib->sec, &(save->out));
+            if (flush_mode) fflush_file(&(save->out));
 
-	    // unlink grib
-	    if (last_grib == NULL) save->next = grib->next;
-	    else last_grib->next = grib->next;
+            // unlink grib
+            if (last_grib == NULL) save->next = grib->next;
+            else last_grib->next = grib->next;
 
-	    // free grib
-	    free(grib->data);
-	    free(grib);
-	    return 0;
-	}
+            // free grib
+            free(grib->data);
+            free(grib);
+            return 0;
+        }
 
-	/* save grib_message */
-	p = new_grib_message(sec);
-	if (p == NULL) fatal_error("new_grid_order: onew_grib_message","");
-	p->uvindex = uv;
+        /* save grib_message */
+        p = new_grib_message(sec);
+        if (p == NULL) fatal_error("new_grid_order: onew_grib_message","");
+        p->uvindex = uv;
 
-	/* add to linked list */
-	p->next = save->next;
-	save->next = p;
+        /* add to linked list */
+        p->next = save->next;
+        save->next = p;
     }
     return 0;
 }

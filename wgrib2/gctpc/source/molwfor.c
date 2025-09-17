@@ -1,38 +1,50 @@
-/*******************************************************************************
-NAME                            MOLLWEIDE
+/** @file
+ * @brief Mollweide - Forward Transformation
+ * 
+ * PURPOSE: Transforms input longitude and latitude to Easting and
+ *          Northing for the Mollweide projection. The longitude
+ *          and latitude must be in radians. The Easting and
+ *          Northing values will be returned in meters.
+ * @author D. Steinwand, EROS @date May, 1991
+ * 
+ * ### Algorithm References
+ * 1. Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
+ *    U.S. Geological Survey Professional Paper 1453 , United State Government
+ *    Printing Office, Washington D.C., 1989.
+ *
+ * 2. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 5/1991 | D. Steinwand | Initial implementation
+ * 9/1992 | D. Steinwand | Update
+ * 2/1993 | D. Steinwand | Update
+ * 6/1993 | S. Nelson | Made corrections in precision and number of iterations
+ */
 
-PURPOSE:	Transforms input longitude and latitude to Easting and
-		Northing for the MOllweide projection.  The
-		longitude and latitude must be in radians.  The Easting
-		and Northing values will be returned in meters.
-
-PROGRAMMER              DATE
-----------              ----
-D. Steinwand, EROS      May, 1991;  Updated Sept, 1992; Updated Feb, 1993
-S. Nelson, EDC		Jun, 2993;	Made corrections in precision and
-					number of iterations.
-
-ALGORITHM REFERENCES
-
-1.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
-    U.S. Geological Survey Professional Paper 1453 , United State Government
-    Printing Office, Washington D.C., 1989.
-
-2.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-*******************************************************************************/
 #include "cproj.h"
 
-/* Variables common to all subroutines in this code file
-  -----------------------------------------------------*/
-static double lon_center;	/* Center longitude (projection center) */
-static double R;		/* Radius of the earth (sphere) */
-static double false_easting;	/* x offset in meters			*/
-static double false_northing;	/* y offset in meters			*/
+/* Variables common to all subroutines in this code file */
+static double lon_center;	/**< Center longitude (projection center) */
+static double R;		/**< Radius of the earth (sphere) */
+static double false_easting;	/**< x offset in meters */
+static double false_northing;	/**< y offset in meters */
 
-/* Initialize the Mollweide projection
-  ------------------------------------*/
+/** 
+ * Initialize the Mollweide projection for forward transformation.
+ *
+ * @param r Radius of the earth (sphere)
+ * @param center_long Center longitude (projection center)
+ * @param false_east x offset in meters
+ * @param false_north y offset in meters
+ * 
+ * @return Always returns 0
+ * 
+ * @author D. Steinwand, EROS @date May, 1991
+ */
 long molwforint(double r, double center_long, double false_east,
         double false_north) {
 //long molwforint(r, center_long,false_east,false_north)
@@ -57,8 +69,19 @@ offsetp(false_easting,false_northing);
 return(OK);
 }
 
-/* Mollweide forward equations--mapping lat,long to x,y
-  ----------------------------------------------------*/
+
+/** 
+ * Mollweide forward equations--mapping lat,long to x,y
+ *
+ * @param lon Longitude
+ * @param lat Latitude
+ * @param x Pointer to the X projection coordinate
+ * @param y Pointer to the Y projection coordinate
+ * 
+ * @return
+ * - 0 :: Success
+ * - 241 :: Iteration failed to converge
+ */
 long molwfor(double lon, double lat, double *x, double *y) {
 //long molwfor(lon, lat, x, y)
 //double lon;			/* (I) Longitude */

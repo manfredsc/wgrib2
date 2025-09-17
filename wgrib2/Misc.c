@@ -151,7 +151,7 @@ extern int use_g2clib;
  * 3,-90,5e-06
  * 3.5,-90,5e-06
  * 4,-90,5e-06
- * @endcode{}
+ * @endcode
  * 
  * ## Speed
  * The following command is very common so it incorporated within wgrib2. This speeds up 

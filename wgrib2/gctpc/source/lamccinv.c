@@ -1,43 +1,54 @@
-/*******************************************************************************
-NAME                            LAMBERT CONFORMAL CONIC 
+/** @file
+ * @brief Lambert Conformal Conic - Inverse Transformation
+ * 
+ * PURPOSE: Transforms input Easting and Northing to longitude and
+ *          latitude for the Lambert Conformal Conic projection. The
+ *          Easting and Northing must be in meters.  The longitude
+ *          and latitude values will be returned in radians.
+ * @author T. Mittan @date 2/26/93
+ *
+ * ### Algorithm References
+ * 1. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ *
+ * 2. Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
+ *    U.S. Geological Survey Professional Paper 1453 , United State Government
+ *    Printing Office, Washington D.C., 1989.
+ */
 
-PURPOSE:	Transforms input Easting and Northing to longitude and
-		latitude for the Lambert Conformal Conic projection.  The
-		Easting and Northing must be in meters.  The longitude
-		and latitude values will be returned in radians.
-
-PROGRAMMER              DATE
-----------              ----
-T. Mittan		2-26-93
-
-ALGORITHM REFERENCES
-
-1.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-2.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
-    U.S. Geological Survey Professional Paper 1453 , United State Government
-    Printing Office, Washington D.C., 1989.
-*******************************************************************************/
 #include "cproj.h"
 
-/* Variables common to all subroutines in this code file
-  -----------------------------------------------------*/
-  static double r_major;                /* major axis                   */
-  static double r_minor;                /* minor axis                   */
-  static double es;                     /* eccentricity squared         */
-  static double e;                      /* eccentricity                 */
-  static double center_lon;             /* center longituted            */
-  static double center_lat;             /* cetner latitude              */
-  static double ns;                     /* ratio of angle between meridian*/
-  static double f0;                     /* flattening of ellipsoid      */
-  static double rh;                     /* height above ellipsoid       */
-  static double false_easting;          /* x offset in meters           */
-  static double false_northing;		/* y offset in meters		*/
+/* Variables common to all subroutines in this code file */
+  static double r_major;                /**< major axis                   */
+  static double r_minor;                /**< minor axis                   */
+  static double es;                     /**< eccentricity squared         */
+  static double e;                      /**< eccentricity                 */
+  static double center_lon;             /**< center longitude             */
+  static double center_lat;             /**< center latitude              */
+  static double ns;                     /**< ratio of angle between meridian*/
+  static double f0;                     /**< flattening of ellipsoid      */
+  static double rh;                     /**< height above ellipsoid       */
+  static double false_easting;          /**< x offset in meters           */
+  static double false_northing;        /**< y offset in meters           */
 
-/* Initialize the Lambert Conformal Conic projection
-  ------------------------------------------------*/
+/** 
+ * Initialize the Lambert Conformal Conic projection for inverse transformation.
+ *
+ * @param r_maj Major axis radius
+ * @param r_min Minor axis radius
+ * @param lat1 First standard parallel
+ * @param lat2 Second standard parallel
+ * @param c_lon Center longitude
+ * @param c_lat Center latitude
+ * @param false_east False easting
+ * @param false_north False northing
+ * 
+ * @return
+ * - 0 :: Success
+ * - 41 :: Equal latitudes for standard parallels on opposite sides of equator
+ * @author T. Mittan @date 2/26/93
+ */
 long lamccinvint(double r_maj, double r_min, double lat1, double lat2,
         double c_lon, double c_lat, double false_east, double false_north) {
 //long lamccinvint(r_maj,r_min,lat1,lat2,c_lon,c_lat,false_east,false_north)
@@ -112,8 +123,20 @@ offsetp(false_easting,false_northing);
 return(OK);
 }
 
-/* Lambert Conformal Conic inverse equations--mapping x,y to lat/long
-  -----------------------------------------------------------------*/
+
+
+/** 
+ * Lambert Conformal Conic inverse equations--mapping x,y to lat/long
+ *
+ * @param x X projection coordinate
+ * @param y Y projection coordinate
+ * @param lon Pointer to store longitude
+ * @param lat Pointer to store latitude
+ *
+ * @return 0 for success, error code for failure
+ *
+ * @author T. Mittan @date 2/26/93
+ */
 long lamccinv(double x, double y, double *lon, double *lat) {
 //long lamccinv(x , y, lon, lat)
 //double x;			/* (O) X projection coordinate 	*/

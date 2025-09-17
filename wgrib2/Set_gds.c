@@ -1,3 +1,8 @@
+/** @file
+ * @brief Routine to make a blank GDS (Grid Definition Section).
+ * @author Public Domain: Wesley Ebisuzaki @date 4/2019
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -8,18 +13,23 @@
 #include "fnlist.h"
 
 /*
- * the set options  4/2019 Public Domain Wesley Ebisuzaki
- *
- * routines to make a blank GDS
- *
- * 4/2019 1st version
- */
-
-/*
  * HEADER:100:set_gds:misc:1:makes new gds (section 3), X=size in bytes
  */
 
-
+/**
+ * Makes a new Section 3 (Grid Definition Section).
+ * 
+ * ## Usage
+ * -set_gds X
+ *
+ * X is the size of the new GDS in bytes.
+ * 
+ * @param ARG1 ???
+ * 
+ * @return 0 on success. Throws fatal_error() on failure.
+ * 
+ * @author Wesley Ebisuzaki @date 4/2019
+ */
 int f_set_gds(ARG1) {
 
     unsigned char *new_sec3;

@@ -1,3 +1,8 @@
+/** @file
+ * @brief Create the grib2 Section 3 (GDT Section) and latitudes and longitudes values for 
+ * various grids.
+ * @author Public Domain: Wesley Ebisuzaki @date 6/2010
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,21 +10,26 @@
 #include "grb2.h"
 #include "wgrib2.h"
 
-/*
- * create the grib2 sec3 and latitudes and longitudes values for various grids
- *
- * public domain 6/2010 Wesley Ebisuzaki
- *
- */
-
-
-
+/** Angle factor for grid calculations */
 #define ANGLE_FACTOR 1.0e6
 
-/* create the grib2 sec3 for lat-lon grid */
-
+/**
+ * Create the grib2 Section 3 (GDT Section) for lat-lon grid.
+ * 
+ * @param nx Number of grid points in the x-direction.
+ * @param x0 Starting longitude.
+ * @param dx Longitude increment.
+ * @param ny Number of grid points in the y-direction.
+ * @param y0 Starting latitude.
+ * @param dy Latitude increment.
+ * @param old_sec Pointer to old section data (if available).
+ * 
+ * @return Pointer to the new section 3 data
+ * 
+ * @author Wesley Ebisuzaki @date 6/2010
+ */
 unsigned char *sec3_lola(int nx, double x0, double dx, int ny, double y0, double dy, 
-	unsigned char **old_sec) {
+        unsigned char **old_sec) {
 
     static unsigned char gds[72];
     unsigned char *p;
@@ -40,17 +50,17 @@ unsigned char *sec3_lola(int nx, double x0, double dx, int ny, double y0, double
     /* shape of the earth */
 
     if (old_sec == NULL) {		/* use NCEP default */
-	gds[14] = 6;			/* shape of earth */
-	gds[15] = 0;			/* scale factor of radius of spherical earth */
-	uint_char(0, gds+16);		/* scaled value of radius of spherical earth */
-	gds[20] = 0;			/* scale factor of major radious of oblate earth */
-	uint_char(0, gds+21);		/* scaled value of major axis */
-	gds[25] = 0;			/* scale factor of minor axis */
-	uint_char(0, gds+26);		/* scaled value of minor axis */
+        gds[14] = 6;			/* shape of earth */
+        gds[15] = 0;			/* scale factor of radius of spherical earth */
+        uint_char(0, gds+16);		/* scaled value of radius of spherical earth */
+        gds[20] = 0;			/* scale factor of major radious of oblate earth */
+        uint_char(0, gds+21);		/* scaled value of major axis */
+        gds[25] = 0;			/* scale factor of minor axis */
+        uint_char(0, gds+26);		/* scaled value of minor axis */
     }
     else {
-	p = code_table_3_2_location(old_sec);
-	for (i = 0; i < 16; i++) gds[14+i] = p[i];
+        p = code_table_3_2_location(old_sec);
+        for (i = 0; i < 16; i++) gds[14+i] = p[i];
     }
 
     uint_char(nx, gds+30);
@@ -80,15 +90,26 @@ unsigned char *sec3_lola(int nx, double x0, double dx, int ny, double y0, double
     return gds;
 }
 
-/*
- * create the grib2 sec3 for straight forward gaussian grid
+/**
+ * Create the grib2 Section 3 (GDT Section) for straight forward gaussian grid.
  *
- * grib2 allows regional and thinned gaussian grids
- *  this routine only allows global gaussian grids
+ * GRIB2 allows regional and thinned gaussian grids. This routine only allows global gaussian 
+ * grids.
+ *
+ * @param nx Number of grid points in the x-direction.
+ * @param x0 Starting longitude.
+ * @param dx Longitude increment.
+ * @param ny Number of grid points in the y-direction.
+ * @param y0 Starting latitude.
+ * @param dy Latitude increment.
+ * @param old_sec Pointer to old section data (if available).
+ *
+ * @return Pointer to the new section 3 data.
+ *
+ * @author Wesley Ebisuzaki @date 6/2010
  */
-
 unsigned char *sec3_gaussian(int nx, double x0, double dx, int ny, double y0, 
-	unsigned char **old_sec) {
+        unsigned char **old_sec) {
 
     static unsigned char gds[72];
     unsigned char *p;
@@ -96,7 +117,7 @@ unsigned char *sec3_gaussian(int nx, double x0, double dx, int ny, double y0,
     int i;
 
     if (x0 < 0) x0 += 360.0;
-	
+
     uint_char(72, gds);                 /* 1-4 length of section */
 
     gds[4] = 3;                         /* section 3 */
@@ -151,12 +172,24 @@ unsigned char *sec3_gaussian(int nx, double x0, double dx, int ny, double y0,
     return gds;
 }
 
-/*
- * create the grib2 sec3 for mercator
+/**
+ * Create the grib2 Section 3 (GDT Section) for mercator grid.
  *
- * dx, dy in meters
+ * @param lad Latitude at which the Mercator projection intersects the Earth (Latitude where dx and dy are specified)
+ * @param nx Number of grid points in the x-direction.
+ * @param x0 Starting longitude.
+ * @param dx Longitude increment (in meters).
+ * @param xn Ending longitude.
+ * @param ny Number of grid points in the y-direction.
+ * @param y0 Starting latitude.
+ * @param dy Latitude increment (in meters).
+ * @param yn Ending latitude.
+ * @param old_sec Pointer to old section data (if available).
+ *
+ * @return Pointer to the new section 3 data.
+ *
+ * @author Wesley Ebisuzaki @date 6/2010
  */
-
 unsigned char *sec3_mercator(double lad, int nx, double x0, double dx, double xn, int ny, double y0, double dy, double yn,
         unsigned char **old_sec) {
 
@@ -219,9 +252,28 @@ unsigned char *sec3_mercator(double lad, int nx, double x0, double dx, double xn
  * x0, y0 are lon/lat for first grid point, ie grid(1,1)
  */
 
+/**
+ * Create the grib2 Section 3 (GDT Section) for lambert conformal (conic) grid.
+ *
+ * @param lov Longitude of meridian parallel to y-axis along which latitude increases as y-coordinate increases.
+ * @param lad Latitude where dx and dy are specified.
+ * @param latin1 First latitude from the pole at which the secant cone cuts the sphere.
+ * @param latin2 Second latitude from the pole at which the secant cone cuts the sphere
+ * @param proj Projection center flag.
+ * @param nx Number of grid points in the x-direction.
+ * @param x0 Starting longitude.
+ * @param dx Longitude increment.
+ * @param ny Number of grid points in the y-direction.
+ * @param y0 Starting latitude.
+ * @param dy Latitude increment.
+ * @param old_sec Pointer to old section data (if available).
+ *
+ * @return Pointer to the new section 3 data.
+ *
+ * @author Wesley Ebisuzaki @date 6/2010
+ */
 unsigned char *sec3_lc(double lov, double lad, double latin1, double latin2, int proj,
-	int nx, double x0, double dx, int ny, double y0, double dy, 
-	unsigned char **old_sec) {
+        int nx, double x0, double dx, int ny, double y0, double dy, unsigned char **old_sec) {
 
     static unsigned char gds[81];
     int i;
@@ -284,10 +336,24 @@ unsigned char *sec3_lc(double lov, double lad, double latin1, double latin2, int
     return gds;
 }
 
-/*
- * create the grib2 sec3 for polar stereographic
+/**
+ * Creates a grib2 Section 3 (GDT Section) for a polar stereographic projection.
+ *
+ * @param lov Orientation of the grid.
+ * @param lad Latitude where dx and dy are specified.
+ * @param proj Projection center flag.
+ * @param nx Number of grid points in the x-direction.
+ * @param x0 Starting longitude.
+ * @param dx Longitude increment.
+ * @param ny Number of grid points in the y-direction.
+ * @param y0 Starting latitude.
+ * @param dy Latitude increment.
+ * @param old_sec Pointer to old section data (if available).
+ *
+ * @return Pointer to the new section 3 data.
+ * 
+ * @author Wesley Ebisuzaki @date 6/2010
  */
-
 unsigned char *sec3_polar_stereo(double lov, double lad, int proj,
         int nx, double x0, double dx, int ny, double y0, double dy,
         unsigned char **old_sec) {
@@ -345,12 +411,26 @@ unsigned char *sec3_polar_stereo(double lov, double lad, int proj,
     return gds;
 }
 
-/*
- * create the grib2 sec3 for rotate lat-lon grid (rot-ll)
+/**
+ * Creates a grib2 Section 3 (GDT Section) for a rotated latitude-longitude grid (rot-ll).
+ *
+ * @param nx Number of grid points in the x-direction.
+ * @param x0 Starting longitude.
+ * @param dx Longitude increment.
+ * @param ny Number of grid points in the y-direction.
+ * @param y0 Starting latitude.
+ * @param dy Latitude increment.
+ * @param sp_lon Longitude of the southern pole of projection.
+ * @param sp_lat Latitude of the southern pole of projection.
+ * @param sp_rot Rotation angle of the southern pole of projection.
+ * @param old_sec Pointer to old section data (if available).
+ *
+ * @return Pointer to the new section 3 data.
+ * 
+ * @author Wesley Ebisuzaki @date 6/2010
  */
-
 unsigned char *sec3_rot_ll(int nx, double x0, double dx, int ny, double y0, double dy, 
-	double sp_lon, double sp_lat, double sp_rot, unsigned char **old_sec) {
+        double sp_lon, double sp_lat, double sp_rot, unsigned char **old_sec) {
 
     static unsigned char gds[84];
     unsigned char *p;

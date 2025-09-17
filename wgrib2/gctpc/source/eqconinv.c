@@ -1,45 +1,59 @@
-/*******************************************************************************
-NAME                            EQUIDISTANT CONIC 
+/** @file
+ * @brief Equidistant Conic - Inverse Transformation
+ * 
+ * PURPOSE: Transforms input Easting and Northing to longitude and
+ *          latitude for the Equidistant Conic projection. The
+ *          Easting and Northing must be in meters. The longitude
+ *          and latitude values will be returned in radians.
+ * 
+ * @author T. Mittan @date March, 1993
+ * 
+ * ### Algorithm References
+ * 1. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ *
+ * 2. Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
+ *    U.S. Geological Survey Professional Paper 1453 , United State Government
+ *    Printing Office, Washington D.C., 1989.
+ */
 
-PURPOSE:	Transforms input Easting and Northing to longitude and
-		latitude for the Equidistant Conic projection.  The
-		Easting and Northing must be in meters.  The longitude
-		and latitude values will be returned in radians.
-
-PROGRAMMER              DATE
-----------              ----
-T. Mittan		Mar, 1993
-
-ALGORITHM REFERENCES
-
-1.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-2.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
-    U.S. Geological Survey Professional Paper 1453 , United State Government
-    Printing Office, Washington D.C., 1989.
-*******************************************************************************/
 #include "cproj.h"
 
-/* Variables common to all subroutines in this code file
-  -----------------------------------------------------*/
-static double r_major;		/* major axis 				*/
-static double r_minor;		/* minor axis 				*/
-static double lon_center;	/* Center longitude (projection center) */
-static double lat_origin;	/* center latitude			*/
-static double e0,e1,e2,e3;	/* eccentricity constants		*/
-static double e,es;		/* eccentricity constants		*/
-static double ml0;		/* small value m			*/
-static double false_northing;	/* y offset in meters			*/
-static double false_easting;	/* x offset in meters			*/
-static double ns;
-static double g;
-static double rh;
+/* Variables common to all subroutines in this code file */
+static double r_major;		/**< major axis 				*/
+static double r_minor;		/**< minor axis 				*/
+static double lon_center;	/**< Center longitude (projection center) */
+static double lat_origin;	/**< center latitude			*/
+static double e0,e1,e2,e3;	/**< eccentricity constants		*/
+static double e,es;		/**< eccentricity constants		*/
+static double ml0;		/**< small value m			*/
+static double false_northing;	/**< y offset in meters		*/
+static double false_easting;	/**< x offset in meters		*/
+static double ns;		/**< scale factor			*/
+static double g;		/**< constant for latitude		*/
+static double rh;    /**< radius of the earth at the latitude */
 
 
-/* Initialize the Equidistant Conic projection
-  ------------------------------------------*/
+/**
+ * Initialize the Equidistant Conic projection for inverse transformation.
+ * 
+ * @param r_maj Major axis
+ * @param r_min Minor axis
+ * @param lat1 Latitude of standard parallel
+ * @param lat2 Latitude of standard parallel
+ * @param center_lon Center longitude
+ * @param center_lat Center latitude
+ * @param false_east X offset in meters
+ * @param false_north Y offset in meters
+ * @param mode Which format is present -  A (mode=0) or B (mode=1)
+ * 
+ * @return 
+ * - 0 :: Success
+ * - 81 :: Standard parallels on opposite sides of equator
+ * 
+ * @author T. Mittan @date March, 1993
+ */
 long eqconinvint(double r_maj, double r_min, double lat1, double lat2,
         double center_lon, double center_lat, double false_east,
         double false_north, long mode) {
@@ -133,6 +147,19 @@ return(OK);
 
 /* Equidistant Conic inverse equations--mapping x,y to lat/long
   -----------------------------------------------------------*/
+
+/**
+ * Equidistant Conic inverse equations--mapping x,y to lat/long
+ * 
+ * @param x X projection coordinate
+ * @param y Y projection coordinate
+ * @param lon Pointer to longitude
+ * @param lat Pointer to latitude
+ * 
+ * @return Always returns 0
+ * 
+ * @author T. Mittan @date March, 1993
+ */
 long eqconinv(double x, double y, double *lon, double *lat) {
 // long eqconinv(x, y, lon, lat)
 // double x;			/* (O) X projection coordinate 	*/

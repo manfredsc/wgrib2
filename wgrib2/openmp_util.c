@@ -1,3 +1,16 @@
+/** @file
+ * @brief OpenMP 3.1+ compatible routines.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 8/2015 | W. Ebisuzaki | Initial
+ * 6/2016 | W. Ebisuzaki | Added more functions
+ * 4/2022 | W. Ebisuzaki | Now requires OpenMP 3.1 like rest of wgrib2.
+ * 5/2023 | W. Ebisuzaki | int_min_array(), int_max_array()
+ * 
+ * @author Public Domain: Wesley Ebisuzaki @date 8/2015
+ */
 #include <stdio.h>
 #include <limits.h>
 #include "wgrib2.h"
@@ -6,16 +19,6 @@
 #include <omp.h>
 #endif
 
-
-/* openmp compatible routines, OpenMP 3.1+
- *
- * Public Domain 8/2015 Wesley Ebisuzaki  
- *               6/2016 Wesley Ebisuzaki
- *
- * 4/2022: now requires OpenMP 3.1 like rest of wgrib2.
- * 5/2023: int_min_array(), int_max_array()
- */
-
 /*
  * min_max_array()  returns min/max of the array
  *
@@ -23,22 +26,34 @@
  * return 1:  if min max not found, min = max = 0
  */
 
+/**
+ * Returns min/max of an array.
+ * 
+ * @param data Pointer to the array.
+ * @param n Number of elements in the array.
+ * @param min Pointer to store the minimum value.
+ * @param max Pointer to store the maximum value.
+ *
+ * @return 0 if min/max found, 1 if not found (min = max = 0)
+ * 
+ * @author Wesley Ebisuzaki @date 8/2015
+ */
 int min_max_array(float *data, unsigned int n, float *min, float *max) {
 
     unsigned int first, i;
     float mn, mx;
 
     if (n == 0) {
-	*min = *max = 0.0;
-	return 1;
+        *min = *max = 0.0;
+        return 1;
     }
 
     for (first = 0; first < n; first++) {
         if (DEFINED_VAL(data[first])) break;
     }
     if (first >= n) {
-	*min = *max = 0.0;
-	return 1;
+        *min = *max = 0.0;
+        return 1;
     }
 
     mn = mx = data[first];
@@ -46,8 +61,8 @@ int min_max_array(float *data, unsigned int n, float *min, float *max) {
 #pragma omp parallel for private(i) reduction(min:mn) reduction(max:mx)
 #endif
     for (i = first+1; i < n; i++) {
-	if (DEFINED_VAL(data[i])) {
-	    mn = (mn > data[i]) ? data[i] : mn;
+        if (DEFINED_VAL(data[i])) {
+            mn = (mn > data[i]) ? data[i] : mn;
             mx = (mx < data[i]) ? data[i] : mx;
         }
     }
@@ -57,21 +72,26 @@ int min_max_array(float *data, unsigned int n, float *min, float *max) {
     return 0;
 }
 
-/*
- * min_max_array_all_defined()  returns min/max of the array which has all values defined
+/**
+ * Returns min/max of an array which has all values defined.
  *
- * return 0:  if min max found
- * return 1:  if min max not found, min = max = 0
+ * @param data Pointer to the array.
+ * @param n Number of elements in the array.
+ * @param min Pointer to store the minimum value.
+ * @param max Pointer to store the maximum value.
+ *
+ * @return 0 if min/max found, 1 if not found (min = max = 0)
+ *
+ * @author Wesley Ebisuzaki @date 8/2015
  */
-
 int min_max_array_all_defined(float *data, unsigned int n, float *min, float *max) {
 
     float mx, mn;
     unsigned int i;
 
     if (n == 0) {
-	*min = *max = 0.0;
-	return 1;
+        *min = *max = 0.0;
+        return 1;
     }
 
     mn = mx = data[0];
@@ -79,20 +99,24 @@ int min_max_array_all_defined(float *data, unsigned int n, float *min, float *ma
 #pragma omp parallel for private(i) reduction(min:mn) reduction(max:mx)
 #endif
     for (i = 1; i < n; i++) {
-	mx = data[i] > mx ? data[i] : mx;
-	mn = data[i] < mn ? data[i] : mn;
+        mx = data[i] > mx ? data[i] : mx;
+        mn = data[i] < mn ? data[i] : mn;
     }
     *min = mn;
     *max = mx;
     return 0;
 } 
 
-/*
- * find min/max of an integer array
- * return 0:  if min max found
- * return 1:  if min max not found, min = max = 0
+/**
+ * Find min/max of an integer array.
+ *
+ * @param data Pointer to the array.
+ * @param n Number of elements in the array.
+ * @param min Pointer to store the minimum value.
+ * @param max Pointer to store the maximum value.
+ *
+ * @return 0 if min/max found, 1 if not found (min = max = 0)
  */
-
 int int_min_max_array(int *data, unsigned int n, int *min, int *max) {
 
     unsigned int first, i;
@@ -113,9 +137,9 @@ int int_min_max_array(int *data, unsigned int n, int *min, int *max) {
 #endif
     for (i = first + 1; i < n; i++) {
         if (data[i] != INT_MAX) {
-	    mx = data[i] > mx ? data[i] : mx;
-	    mn = data[i] < mn ? data[i] : mn;
-	}
+            mx = data[i] > mx ? data[i] : mx;
+            mn = data[i] < mn ? data[i] : mn;
+        }
     }
 
     *min = mn;
@@ -123,13 +147,16 @@ int int_min_max_array(int *data, unsigned int n, int *min, int *max) {
     return 0;
 }
 
-/*
- * int_min_array()
- * return INT_MAX: min not found
- * return i: min of array
- * INT_MAX is the undefined value
+/**
+ * Find minimum value in an integer array.
+ *
+ * @param data Pointer to the array.
+ * @param n Number of elements in the array.
+ *
+ * @return Minimum value if found, INT_MAX (the undefined value) if not found.
+ *
+ * @author Wesley Ebisuzaki @date 5/2023
  */
-
 int int_min_array(int *data, unsigned int n) {
 
     unsigned int first, i;
@@ -146,9 +173,9 @@ int int_min_array(int *data, unsigned int n) {
 #pragma omp parallel for private(i) reduction(min:mn)
 #endif
     for (i = first+1; i < n; i++) {
-	if (data[i] != INT_MAX) {
-	    mn = data[i] < mn ? data[i] : mn;
-	}
+        if (data[i] != INT_MAX) {
+            mn = data[i] < mn ? data[i] : mn;
+        }
     }
 
     return mn;
@@ -161,6 +188,16 @@ int int_min_array(int *data, unsigned int n) {
  * INT_MAX is the undefined value
  */
 
+/**
+ * Find maximum value in an integer array.
+ *
+ * @param data Pointer to the array.
+ * @param n Number of elements in the array.
+ *
+ * @return Maximum value if found, INT_MAX (the undefined value) if not found.
+ *
+ * @author Wesley Ebisuzaki @date 5/2023
+ */
 int int_max_array(int *data, unsigned int n) {
 
     unsigned int first, i;
@@ -177,9 +214,9 @@ int int_max_array(int *data, unsigned int n) {
 #pragma omp parallel for private(i) reduction(max:mx)
 #endif
     for (i = first+1; i < n; i++) {
-	if (data[i] != INT_MAX) {
-	    mx = data[i] > mx ? data[i] : mx;
-	}
+        if (data[i] != INT_MAX) {
+            mx = data[i] > mx ? data[i] : mx;
+        }
     }
 
     return mx;
