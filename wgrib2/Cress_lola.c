@@ -1,3 +1,8 @@
+/** @file
+ * @brief Uses Cressman analysis to create a LOngitude LAtitude grid.
+ * @author Public Domain: Wesley Ebisuzaki @date 09/2005
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,38 +10,118 @@
 #include "grb2.h"
 #include "wgrib2.h"
 #include "fnlist.h"
-/*
- * Cress_lola.c                  10/2024  Public Domain  Wesley Ebisuzaki
- *  use Cressman analysis to create a LOngitude LAtitude grid
- *
- */
 
 /* M_PI is not ANSI C but are commonly defined */
 /* values from GNU C library version of math.h copyright Free Software Foundation, Inc. */
 
 #ifndef M_PI
-#define M_PI           3.14159265358979323846  /* pi */
+#define M_PI           3.14159265358979323846  /**< pi */
 #endif
 
+/** Decode grib file flag. */
+extern int decode;
 
-extern int decode, flush_mode;
+/** Flush of output flag. */
+extern int flush_mode;
+
+/** Append grib file flag. */
 extern int file_append;
 
-extern double *lat, *lon;
+/** Pointer to array of latitude values. */
+extern double *lat;
+
+/** Pointer to array of longitude values. */
+extern double *lon;
+
+/** Flag to indicate lat-lon grid processing. */
 extern int latlon;
+
+/** Number of points in the grid. */
 extern unsigned int npnts;
+
+/** GDS change number. */
 extern int GDS_change_no;
 
-extern int use_scale, dec_scale, bin_scale, wanted_bits, max_bits;
+/** Use scale flag. */
+extern int use_scale;
+
+/** Decimal scaling. */
+extern int dec_scale;
+
+/** Binary scaling. */
+extern int bin_scale;
+
+/** Number of bits wanted.*/
+extern int wanted_bits;
+
+/** Maximum number of bits. */
+extern int max_bits;
+
+/** Output GRIB type. */
 extern enum output_grib_type grib_type;
 
+/** Maximum number of scans. */
 #define MAX_SCANS 10
+
+/** Square distance calculation macro. */
 #define DIST_SQ(x,y,z) ((x)*(x) + (y)*(y) + (z)*(z))
 
 /*
  * HEADER:111:cress_lola:output:4:lon-lat grid values X=lon0:nlon:dlon Y=lat0:nlat:dlat Z=file A=radius1:radius2:..:radiusN
  */
 
+ /**
+  * Creates a regular LOngitude LAtitude grid using Cressman analysis and writes the output to a file.
+  * 
+  * This option is similar to the -lola option, which uses a nearest-neighbor interpolation.
+  * 
+  * You need to specify the lower left corner of the grid, the number of points in the zonal and meridional directions 
+  * and the latitude/longitude increments. Finally you need to specify the output file and the format. 
+  * 
+  * The interpolation to the lola grid is by a Cressman analysis. The Cressman analysis is a multipass system which uses 
+  * a user-specified "radius" for each pass. A Cressman analysis can be computationally expensive so you may want to explore 
+  * multiprocessing techniques. (see the -for_n and -n options).
+  * 
+  * ## Prelim - Cressman Analysis
+  * definition: 
+  *     input grid = observations = grid from the input grib file 
+  *     output grid = grid as defined by  LonSW:#lon:dlon LatSW:#lat:dlat
+  * 
+  * (1) compute mean of observations,save mean on background grid (output)
+  *     background(i,j) = average(observation)
+  * 
+  * (2) Repeat N times:  PASS-M
+  *     (a) find background value for observations by bilinear interpolation of background grid
+  *     (b) remove the background from the observations: obs' = obs - interpolated_background
+  *     (c) inc'(i,j)  = weighted average of obs'
+  *         inc'(i,j) is increment on output grid
+  *         weighted average of obs' depends on the distance between grid point and observation
+  *     (d) new background = background + inc'
+  * 
+  * Warning, this scheme doesn't handle handle rotated winds in a useful manner. There will also be problem with analyzing winds 
+  * near the poles. 
+  * 
+  * ## Usage
+  * -cress_lola LonSW:#lon:dlon LatSW:#lat:dlat file radius1:radius2:..:radiusN
+  * 
+  * LonSW - longitude of the South-West point, values from 0 .. 360
+  * #lon - number of longitude points
+  * dlon - spacing of the points in the zonal direction in degrees
+  * LatSW -  Latitude of the South-West point, values from -90 .. 90
+  * #lat - number of latitude points
+  * dlat - spacing of the points in the meridional direction in degrees
+  * file - name of output grib file
+  * radiusM - the radius in km for M-th pass
+  * 
+  * @param ARG4 ???
+  * 
+  * @return 0 for success, error code otherwise.
+  * 
+  * @note WARNING: winds and other vector fields will not be rotated. If the vector fields use a grid relative orientation, 
+  * then your interpolated winds will be using the original grid. 
+  * 
+  * @author Wesley Ebisuzaki @date 09/2005
+  */
 int f_cress_lola(ARG4) {
 
     int n, nx, ny, nxny, ix, iy, i, j, k, m, iradius;

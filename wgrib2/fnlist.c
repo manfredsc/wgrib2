@@ -86,7 +86,7 @@ struct function functions[] = {
    {"code_table_4.5b",f_code_table_4_5b, inv, 0, "code table 4.5 (2nd value)", -1},
    {"code_table_4.6",f_code_table_4_6, inv, 0, "code table 4.6 ensemble type", -1},
    {"code_table_4.7",f_code_table_4_7, inv, 0, "code table 4.7 derived forecast", -1},
-   {"code_table_4.8",f_code_table_4_8, inv, 0, "code table 4.7 derived forecast", -1},
+   {"code_table_4.8",f_code_table_4_8, inv, 0, "code table 4.8 clustering method", -1},
    {"code_table_4.9",f_code_table_4_9, inv, 0, "code table 4.9 Probability Type", -1},
    {"code_table_4.91",f_code_table_4_91, inv, 0, "code table 4.91 type of interval", -1},
    {"code_table_4.91b",f_code_table_4_91b, inv, 0, "code table 4.91 type of interval (2nd copy)", -1},

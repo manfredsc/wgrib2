@@ -54,6 +54,9 @@
  * 12/2021: Public Domain: Wesley Ebisuzaki
  *  1/2020: Initial public release
  *  9/2023: faster by using SIMD
+ *  9/2025: fix race condition: could not observe race condition in multiple attempts
+ *             found by code examination, vulnerability may have been reduced
+ *             by code optimizer.
  */
 
 /** Code Figure for Average in Code Table 4.7 */
@@ -207,16 +210,16 @@ static int init_ens_qc_struct(struct ens_qc_struct *save, unsigned char **sec,
 //       save->verf_date.day, save->verf_date.hour);
 
     if (translation == NULL) {
-#ifdef USE_OPENMP
-#pragma omp parallel for private(i)
+#ifdef IS_OPENMP_4_0
+#pragma omp simd
 #endif
         for (i = 0; i < ndata; i++) {
             save->grids[i] = data[i];
         }
     }
     else {
-#ifdef USE_OPENMP
-#pragma omp parallel for private(i)
+#ifdef IS_OPENMP_4_0
+#pragma omp simd
 #endif
         for (i = 0; i < ndata; i++) {
             save->grids[translation[i]] = data[i];
@@ -260,16 +263,16 @@ static int update_ens_qc_struct(struct ens_qc_struct *save, unsigned char **sec,
        do it now because translation[] may be different in finalized phase */
 
     if (translation == NULL) {
-#ifdef USE_OPENMP
-#pragma omp parallel for private(i)
+#ifdef IS_OPENMP_4_0
+#pragma omp simd
 #endif
         for (i = 0; i < ndata; i++) {
             save->grids[i+save->n_ens*ndata] = data[i];
         }
     }
     else {
-#ifdef USE_OPENMP
-#pragma omp parallel for private(i)
+#ifdef IS_OPENMP_4_0
+#pragma omp simd
 #endif
     for (i = 0; i < ndata; i++) {
         save->grids[translation[i]+save->n_ens*ndata] = data[i];
@@ -293,7 +296,7 @@ static int wrt_ens_qc(unsigned char **sec, struct ens_qc_struct *save) {
     int pdt, pdt_ens, k, k_0;
     unsigned int i, ndata;
     float *datamin, *datamax, *datavar, *datamean, *dataextreme, maxextreme;
-    float minval, maxval;
+    float minval, maxval, tmpf;
     double tmp, sum, sq;
     int n, n_grids;
     unsigned char sec4[SET_PDT_SIZE];
@@ -328,6 +331,9 @@ static int wrt_ens_qc(unsigned char **sec, struct ens_qc_struct *save) {
         fatal_error("ens_qc: new_pdt failed","");
 
     /* make a new sec[][] */
+#ifdef IS_OPENMP_4_0
+#pragma omp simd
+#endif
     for (i = 0; i < 9; i++) new_sec[i] = save->first_sec[i];
     new_sec[4] = sec4;
 
@@ -359,7 +365,7 @@ static int wrt_ens_qc(unsigned char **sec, struct ens_qc_struct *save) {
             fatal_error("ens_qc: memory allocation","");
 
 #ifdef USE_OPENMP
-#pragma omp parallel for private(i, k, sum, sq, k_0, n, minval, maxval), reduction (max:maxextreme)
+#pragma omp parallel for private(i, k, sum, sq, k_0, n, minval, maxval, tmp, tmpf), reduction (max:maxextreme)
 #endif
     for (i = 0; i < ndata; i++) {
         sum = sq = 0;
@@ -368,37 +374,44 @@ static int wrt_ens_qc(unsigned char **sec, struct ens_qc_struct *save) {
 
         /* find first defined value */
         for (k_0 = 0; k_0 < n_grids; k_0++) {
-            if (DEFINED_VAL(save->grids[i+k_0*ndata])) break;
-        }
-        if (k_0 < n_grids) {
-            minval = maxval = sum = save->grids[i+k_0*ndata];
-            n = 1;
 
-            /* calculate sum, min and max */
-            for (k = k_0 + 1; k < n_grids; k++) {
-                tmp = save->grids[i+k*ndata];
-                if (DEFINED_VAL(tmp)) {
-                    maxval = maxval > tmp ? maxval : tmp;
-                    minval = minval < tmp ? minval : tmp;
-                    sum += tmp;
-                    n++;
-                }
-            }
-            datamean[i] = sum = sum / n;
-            datamin[i] = minval;
-            datamax[i] = maxval;
+	    if (DEFINED_VAL(save->grids[i+k_0*ndata])) break;
+	}
+	if (k_0 < n_grids) {
+	   minval = maxval = sum = save->grids[i+k_0*ndata];
+	   n = 1;
 
-            /* calculate variance */
-
-            sq = 0;
+	   /* calculate sum, min and max */
 #ifdef IS_OPENMP_4_0
-#pragma omp simd private(tmp) reduction(+:sq)
+#pragma omp simd private(tmpf) reduction(+:sum,n) reduction(min: minval) reduction(max: maxval)
+#endif
+	   for (k = k_0 + 1; k < n_grids; k++) {
+		tmpf = save->grids[i+k*ndata];
+		if (DEFINED_VAL(tmpf)) {
+		    maxval = maxval > tmpf ? maxval : tmpf;
+		    minval = minval < tmpf ? minval : tmpf;
+		    sum += tmpf;
+		    n++;
+		}
+	    }
+	    datamean[i] = sum = sum / n;
+	    datamin[i] = minval;
+	    datamax[i] = maxval;
+
+	    /* calculate variance */
+
+	    sq = 0;
+
+#ifdef IS_OPENMP_4_0
+#pragma omp simd private(tmpf) reduction(+:sq)
 #endif
             for (k = k_0; k < n_grids; k++) {
-                tmp = save->grids[i+k*ndata];
-                if (DEFINED_VAL(tmp)) {
-                    sq += (tmp - sum)*(tmp - sum);
-                }
+
+	        tmpf = save->grids[i+k*ndata];
+                if (DEFINED_VAL(tmpf)) {
+		    sq += (tmpf - sum)*(tmpf - sum);
+	        }
+
             }
             datavar[i] = sq = sqrt(sq/n);
             if (sq > 0) {

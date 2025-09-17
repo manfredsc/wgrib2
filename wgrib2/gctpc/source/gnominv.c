@@ -1,45 +1,52 @@
-/*******************************************************************************
-NAME                            GNOMONIC 
+/** @file
+ * @brief Gnomonic - Inverse Transformation
+ * 
+ * PURPOSE: Transforms input Easting and Northing to longitude and
+ *          latitude for the Gnomonic projection. The Easting and
+ *          Northing must be in meters. The longitude and latitude
+ *          values will be returned in radians.
+ * 
+ * This function was adapted from the Gnomonic projection code (FORTRAN)
+ * in the General Cartographic Transformation Package software which is
+ * available from the U.S. Geological Survey National Mapping Division.
+ * 
+ * @author T. Mittan @date Mar, 1993
+ * 
+ * ### Algorithm References
+ * 1. "New Equal-Area Map Projections for Noncircular Regions", John P. Snyder,
+ *    The American Cartographer, Vol 15, No. 4, October 1988, pp. 341-355.
+ *
+ * 2. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ *
+ * 3. "Software Documentation for GCTP General Cartographic Transformation
+ *    Package", U.S. Geological Survey National Mapping Division, May 1982.
+ */
 
-PURPOSE:	Transforms input Easting and Northing to longitude and
-		latitude for the Gnomonic projection.  The
-		Easting and Northing must be in meters.  The longitude
-		and latitude values will be returned in radians.
-
-PROGRAMMER              DATE            
-----------              ----           
-T. Mittan		Mar, 1993
-
-This function was adapted from the Gnomonic projection code (FORTRAN)
-in the General Cartographic Transformation Package software which is
-available from the U.S. Geological Survey National Mapping Division.
- 
-ALGORITHM REFERENCES
-
-1.  "New Equal-Area Map Projections for Noncircular Regions", John P. Snyder,
-    The American Cartographer, Vol 15, No. 4, October 1988, pp. 341-355.
-
-2.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-3.  "Software Documentation for GCTP General Cartographic Transformation
-    Package", U.S. Geological Survey National Mapping Division, May 1982.
-*******************************************************************************/
 #include "cproj.h"
 
-/* Variables common to all subroutines in this code file
-  -----------------------------------------------------*/
-static double lon_center;	/* Center longitude (projection center) */
-static double lat_center;	/* Center latitude (projection center) 	*/
-static double R;		/* Radius of the earth (sphere)	 	*/
-static double sin_p13;		/* Sine of the center latitude 		*/
-static double cos_p13;		/* Cosine of the center latitude 	*/
-static double false_easting;	/* x offset in meters			*/
-static double false_northing;	/* y offset in meters			*/
+/* Variables common to all subroutines in this code file */
+static double lon_center;	/**< Center longitude (projection center) */
+static double lat_center;	/**< Center latitude (projection center) 	*/
+static double R;		/**< Radius of the earth (sphere)	 	*/
+static double sin_p13;		/**< Sine of the center latitude 		*/
+static double cos_p13;		/**< Cosine of the center latitude 	*/
+static double false_easting;	/**< x offset in meters			*/
+static double false_northing;	/**< y offset in meters			*/
 
-/* Initialize the Gnomonic projection
-  ---------------------------------*/
+/** Initialize the Gnomonic projection for inverse transformation
+ *
+ * @param r Radius of the earth (sphere)
+ * @param center_long Center longitude
+ * @param center_lat Center latitude
+ * @param false_east x offset in meters
+ * @param false_north y offset in meters
+ *
+ * @return Always returns 0
+ *
+ * @author T. Mittan @date Mar, 1993
+ */
 long gnominvint(double r, double center_long, double center_lat,
         double false_east, double false_north) {
 //long gnominvint(r, center_long, center_lat,false_east,false_north) 
@@ -69,8 +76,23 @@ offsetp(false_easting,false_northing);
 return(OK);
 }
 
+
+
 /* Gnomonic inverse equations--mapping x,y to lat/long
   --------------------------------------------------*/
+
+/**
+ * Gnomonic inverse equations--mapping x,y to lat/long
+ * 
+ * @param x X projection coordinate
+ * @param y Y projection coordinate
+ * @param lon Pointer to Longitude
+ * @param lat Pointer to Latitude
+ * 
+ * @return Always returns 0
+ * 
+ * @author T. Mittan @date Mar, 1993
+ */
 long gnominv(double x, double y, double *lon, double *lat) {
 //long gnominv(x, y, lon, lat)
 //double x;			/* (O) X projection coordinate */

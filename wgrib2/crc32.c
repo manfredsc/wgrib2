@@ -1,3 +1,25 @@
+/** @file
+ * @brief Calculate POSIX CRC32 checksums.
+ * 
+ * @note The checksum algorithm and calculation of crctab was originally written
+ * by Q. Frank Xia for the cksum utility, part of the GNU coreutils package
+ * (v7.4). It was modified by R.N. Bokhorst for use in wgrib2.
+ *
+ * The code calculates the crctab when the cksum function is called for the
+ * first time. The calculated crctab should be identical to the one given in
+ * the code segment between "#ifdef STATIC_CRCTAB" and "#else". It was done
+ * this way to limit the number of 'static' bytes in the final binary. The
+ * static table can be used instead by defining STATIC_CRCTAB.
+ *
+ * This software is NOT compatible with either the System V or the BSD
+ * `sum' program. Nor will it produce the same result as most typical CRC32
+ * implementations that use the reverse representation of the polynomial
+ * (0xEDB88320 ). It is supposed to conform to POSIX, except perhaps
+ * for foreign language support.
+ * 
+ * @author R.N. Bokhorst @date 2009
+ */
+
 /* crc32.c -- calculate POSIX CRC32 checksums
    Copyright (C) 2009, R.N. Bokhorst, reinoud.bokhorst@bmtargoss.com
 
@@ -14,23 +36,6 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-/*
-   The checksum algorithm and calculation of crctab was originally written
-   by Q. Frank Xia for the cksum utility, part of the GNU coreutils package
-   (v7.4). It was modified by R.N. Bokhorst for use in wgrib2.
-
-   The code calculates the crctab when the cksum function is called for the
-   first time. The calculated crctab should be identical to the one given in
-   the code segment between "#ifdef STATIC_CRCTAB" and "#else". It was done
-   this way to limit the number of 'static' bytes in the final binary. The
-   static table can be used instead by defining STATIC_CRCTAB.
-
-   This software is NOT compatible with either the System V or the BSD
-   `sum' program. Nor will it produce the same result as most typical CRC32
-   implementations that use the reverse representation of the polynomial
-   (0xEDB88320 ). It is supposed to conform to POSIX, except perhaps
-   for foreign language support.
-*/
 
 #include <stdio.h>
 #include <inttypes.h>    /* C99 portable types */
@@ -41,6 +46,7 @@
 
 #ifdef STATIC_CRCTAB
 
+/** Static CRC32 table */
 static uint32_t crctab[256] = {
     0x00000000,
     0x04c11db7, 0x09823b6e, 0x0d4326d9, 0x130476dc, 0x17c56b6b,
@@ -115,13 +121,28 @@ static uint32_t crctab[256] = {
     which produces 0x04c11db7
 */
 
-
+/** Bit manipulation macros */
 #define BIT(x)  ((uint32_t) 1 << (x))
+
+/** Shift-out bitmask */
 #define SBIT    BIT(31)
+
+/** Generating polynomial for CRC32 */
 #define GEN     (uint32_t)0x04C11DB7
 
+/** CRC32 lookup table */
 static uint32_t crctab[256];
 
+/**
+ * Calculates the CRC32 remainder for a given polynomial and returns it.
+ * 
+ * @param m The polynomial to calculate the remainder for.
+ * @param r The array of remainders for each bit position.
+ * 
+ * @return The calculated CRC32 remainder.
+ * 
+ * @author R.N. Bokhorst @date 2009
+ */
 static uint32_t crc_remainder(int m, uint32_t *r)
 {
     uint32_t rem = 0;
@@ -136,6 +157,13 @@ static uint32_t crc_remainder(int m, uint32_t *r)
     return rem & 0xFFFFFFFF;  /* Make it run on 64-bit machine */
 }
 
+/**
+ * Initializes the CRC32 table with precomputed values.
+ * 
+ * @return 1 on success
+ * 
+ * @author R.N. Bokhorst @date 2009
+ */
 static int init_crctab(void)
 {
     int i;
@@ -158,13 +186,18 @@ static int init_crctab(void)
 
 #endif /* ! STATIC_CRCTAB */
 
-
-/*
-  Calculate and return the CRC32 checksum of buffer with length in bytes
-
-  Note: cksum needs to be 32-bit+ unsigned integer
-*/
-
+/**
+ * Calculates and returns the CRC32 checksum of a given buffer.
+ * 
+ * @param buf Pointer to the buffer containing the data.
+ * @param length Length of the buffer in bytes.
+ * 
+ * @return The calculated CRC32 checksum as an unsigned integer.
+ * 
+ * @note chksum needs to be a 32-bit+ unsigned integer.
+ * 
+ * @author R.N. Bokhorst @date 2009
+ */
 unsigned int cksum(unsigned char const *buf, size_t length)
 {
     uint32_t crc = 0;

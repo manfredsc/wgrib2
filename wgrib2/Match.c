@@ -312,24 +312,58 @@ int f_not(ARG1)  {
 /**
  * If X (POSIX regular expression), conditional execution on match.
  * 
- * wgrib2 uses -if, -elseif, -else and -endif options to implement a proper IF blocking 
- * structure. IF blocks can be nested. Note, the "if" flag is reset prior to processing 
- * of a record. 
+ * The -if option returns either true or false. What happens next depends on whether you are 
+ * using Version 1 or Version 2 of the "If blocks". Prior to wgrib2 v3.0.0, you only get 
+ * Version 1. With wgrib2 3.0.0+, you can use either Version 1 or 2 but not both at the same 
+ * time. 
  * 
- * Within the if block, you can have -else and -elseif options. The -elseif options must 
- * proceed the the -else option.
+ * ## Version 1
+ * For Version 1 "IF blocks", the -if option returns true or false. If true, then all the 
+ * options up to and including the next "output" option are executed. If false, then all the 
+ * options up to and including the next "output" option are not executed. Options following 
+ * the output option are executed as normal.With Version 1, nesting of IF blocks is not 
+ * defined. The option -fi is a NULL output option. Note that -fi cannot be used in Version 2 
+ * "IF blocks". 
  * 
- * If blocks are terminated by the -endif option. The -fi option is deprecated and should
- * not be used.
+ * ### Definition
+ * 
+ * wgrib2 (...) [if] [list of non-ouput options] [output option]
+ * 
+ * [if] = -if, -not_if, -if_fs, -not_if_fs, -if_n, -if_rec
+ * 
+ * if [if] returns the value of false, the list of non-output options and the next output 
+ * options are not executed.
+ * 
+ * if [if] returns the value of true, the following options are executed.
+ * 
+ * [output option] is the terminator of the if block
+ * 
+ * If blocks should not be nested. The results are undefined.
+ * 
+ * ## Version 2
+ * For Version 2 of the IF blocks, wgrib2 uses -if, -elseif, -else and -endif options to 
+ * implement a proper IF blocking structure. IF blocks can be nested. Note, the "if" flag is 
+ * reset prior to processing of a record. 
+ * 
+ * ### Definition
+ * 1. The if blocks can now be nested, and are terminated by an -endif.
+ * 2. Within the if block, you can have -else and -elseif options.
+ * 3. The -elseif options must proceed the -else option.
+ * 4. The -fi option is not allowed.
+ * 5. Version 1 and Version 2 if blocks cannot be mixed.
  * 
  * ## Limitations
- * The  maximum number of -if options on a command line is limited by
- * 1. system limit of open files 
- * 2. maximum length of a command line
- * 3. maximum number of regular expressions allowed MAX_MATCH (wgrib.h)
- * 4. maximum number of parsed arguments N_ARGLIST (wgrib.h)
+ * The Version 1 limits, the maximum number of -if options on a command line is limited by (1) 
+ * system limit of open files (2) maximum length of a command line, (3) maximum number of regular 
+ * expressions allowed MAX_MATCH (wgrib.h), and (4) maximum number of parsed arguments N_ARGLIST 
+ * (wgrib.h). 
  * 
- * The number of nested IF blocks is limited to 10.
+ * The Version 2 limits include the Version 1 limits and include a limit of the number of nested 
+ * IF blocks (10). 
+ * 
+ * Version 1 and Version 2 IF blocks cannot be mixed. The -fi option is restricted to Version 1 
+ * IF blocks. There are NO plans to eliminate Version 1 IF blocks. However, Version 2 IF blocks 
+ * are recommended for future development. 
  * 
  * ## Usage
  * -if X
@@ -352,6 +386,9 @@ int f_not(ARG1)  {
  * @param ARG1 ???
  * 
  * @return 0 for success, error code otherwise
+ * 
+ * ## Example
+ * ???
  * 
  * @author Wesley Ebisuzaki @date 2/2008
  */

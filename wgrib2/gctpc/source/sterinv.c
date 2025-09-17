@@ -1,39 +1,46 @@
-/*******************************************************************************
-NAME                             STEREOGRAPHIC 
+/** @file
+ * @brief Stereographic - Inverse Transformation
+ * 
+ * PURPOSE: Transforms input Easting and Northing to longitude and
+ *          latitude for the Stereographic projection. The Easting and
+ *          Northing must be in meters. The longitude and latitude values
+ *          will be returned in radians.
+ * @author T. Mittan @date March, 1993
+ * 
+ * ### Algorithm References
+ * 1. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ *
+ * 2. Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
+ *    U.S. Geological Survey Professional Paper 1453 , United State Government
+ *    Printing Office, Washington D.C., 1989.
+ */
 
-PURPOSE:	Transforms input Easting and Northing to longitude and
-		latitude for the Stereographic projection.  The
-		Easting and Northing must be in meters.  The longitude
-		and latitude values will be returned in radians.
-
-PROGRAMMER              DATE
-----------              ----
-T. Mittan		Mar, 1993
-
-ALGORITHM REFERENCES
-
-1.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-2.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
-    U.S. Geological Survey Professional Paper 1453 , United State Government
-    Printing Office, Washington D.C., 1989.
-*******************************************************************************/
 #include "cproj.h"
 
-/* Variables common to all subroutines in this code file
-  -----------------------------------------------------*/
-static double r_major;		/* major axis 				*/
-static double lon_center;	/* Center longitude (projection center) */
-static double lat_origin;	/* center latitude			*/
-static double false_northing;	/* y offset in meters			*/
-static double false_easting;	/* x offset in meters			*/
-static double sin_p10;		/* sin of center latitude		*/
-static double cos_p10;		/* cos of center latitude		*/
+/* Variables common to all subroutines in this code file */
+static double r_major;		/**< major axis 				*/
+static double lon_center;	/**< Center longitude (projection center) */
+static double lat_origin;	/**< center latitude			*/
+static double false_northing;/**< y offset in meters			*/
+static double false_easting;	/**< x offset in meters			*/
+static double sin_p10;		/**< sin of center latitude		*/
+static double cos_p10;		/**< cos of center latitude		*/
 
-/* Initialize the Stereographic projection
-  --------------------------------------*/
+/** 
+ * Initialize the Stereographic projection for inverse transformation.
+ * 
+ * @param r_maj Major axis radius.
+ * @param center_lon Center longitude.
+ * @param center_lat Center latitude.
+ * @param false_east X offset in meters.
+ * @param false_north Y offset in meters.
+ * 
+ * @return Always returns 0
+ * 
+ * @author T. Mittan @date March, 1993
+ */
 long sterinvint(double r_maj, double center_lon, double center_lat,
         double false_east, double false_north) {
 //long sterinvint(r_maj,center_lon,center_lat,false_east,false_north) 
@@ -66,8 +73,18 @@ return(OK);
 }
 
 
-/* Stereographic inverse equations--mapping x,y to lat/long
-  -------------------------------------------------------*/
+/** 
+ * Stereographic inverse equations--mapping x,y to lat/long
+ *
+ * @param x X projection coordinate.
+ * @param y Y projection coordinate.
+ * @param lon Pointer to store the longitude.
+ * @param lat Pointer to store the latitude.
+ *
+ * @return Always returns 0.
+ * 
+ * @author T. Mittan @date March, 1993
+ */
 long sterinv(double x, double y, double *lon, double *lat) {
 //long sterinv(x, y, lon, lat)
 //double x;			/* (O) X projection coordinate 	*/
