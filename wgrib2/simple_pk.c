@@ -1,3 +1,8 @@
+/** @file
+ * @brief Pack GRIB2 data with simple packing.
+ * @author Public Domain: Wesley Ebisuzaki @date 2005
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,23 +15,30 @@
 #ifdef USE_OPENMP
 #include <omp.h>
 #else
+/** Default number of threads if USE_OPENMP = OFF */
 #define omp_get_num_threads()		1
 #endif
 
-/*  10/2024  Public Domain Wesley Ebisuzaki
+/**
+ * Write a GRIB2 file using simple packing.
  *
- * write a grib-2 file 
+ * @param sec Pointer to the GRIB2 sections. Sections 0 to 4 are predefined.
+ * @param data Pointer to array of values to encode into GRIB2.
+ * @param ndata Number of data values.
+ * @param use_scale Use scaling flag.
+ * @param dec_scale Decimal scaling factor.
+ * @param bin_scale Binary scaling factor.
+ * @param wanted_bits Number of bits wanted for packing.
+ * @param max_bits Maximum number of bits allowed for packing.
+ * @param out Pointer to output file structure.
  *
- * sec0..sec4 predefined sections 0 to 4
- * data[] = values to encode into grib
- * ndata = size of data
- * out = output file
+ * @return 0 on success, 1 on failure.
  *
+ * @author Wesley Ebisuzaki @date 2005
  */
-
 int simple_grib_out(unsigned char **sec, float *data, unsigned int ndata, 
-    int use_scale, int dec_scale, int bin_scale, int wanted_bits, 
-    int max_bits, struct seq_file *out) {
+        int use_scale, int dec_scale, int bin_scale, int wanted_bits, 
+        int max_bits, struct seq_file *out) {
 
     unsigned int n_defined;
     int i;
@@ -57,9 +69,23 @@ int simple_grib_out(unsigned char **sec, float *data, unsigned int ndata,
  * make sec 5 and 7 using simple packing
  */
 
-
+/**
+ * Make section 5 and 7 using simple packing.
+ *
+ * @param data Pointer to array of values to encode into GRIB2.
+ * @param n Number of data values.
+ * @param sec5 Pointer to store the created section 5.
+ * @param sec7 Pointer to store the created section 7.
+ * @param use_scale Use scaling flag.
+ * @param dec_scale Decimal scaling factor.
+ * @param bin_scale Binary scaling factor.
+ * @param wanted_bits Number of bits wanted for packing.
+ * @param max_bits Maximum number of bits allowed for packing.
+ *
+ * @return 0 on success. Throws fatal_error() on failure.
+ */
 int mk_sec5and7(float *data, unsigned int n, unsigned char **sec5, unsigned char **sec7, 
-	int use_scale, int dec_scale, int bin_scale, int wanted_bits, int max_bits) {
+        int use_scale, int dec_scale, int bin_scale, int wanted_bits, int max_bits) {
 
     float min_val, max_val, ncep_min_val;
     int nbits, binary_scale, j;
@@ -76,7 +102,7 @@ int mk_sec5and7(float *data, unsigned int n, unsigned char **sec5, unsigned char
         ref = ncep_min_val = 0.0;
     }
     else {
-	min_max_array_all_defined(data, n, &min_val, &max_val);
+        min_max_array_all_defined(data, n, &min_val, &max_val);
 
         ncep_min_val = min_val;
         if (use_scale == 0) {
@@ -158,19 +184,19 @@ int mk_sec5and7(float *data, unsigned int n, unsigned char **sec5, unsigned char
 //      starts on a byte boundary.  
 //
 
-	/* can parallized if di is a multiple of 8,  large di reduces flist2bits overhead
-	 * schedule static in order to reduce false sharing
-	 * di should be long to reduce subroutine overhead
-	 */
-	di = 128;		/* multiple of 8 */
+        /* can parallized if di is a multiple of 8,  large di reduces flist2bits overhead
+        * schedule static in order to reduce false sharing
+        * di should be long to reduce subroutine overhead
+        */
+        di = 128;		/* multiple of 8 */
 #ifdef USE_OPENMP
 #pragma omp parallel for private(i,k) schedule(static)
 #endif
- 	for (i = 0; i < n; i+= di) {
-	     k  = n - i;
-	     if (k > di) k = di;
-             flist2bitstream(data + i, p + 5 + (i/8)*nbits, k, nbits);
-	}
+        for (i = 0; i < n; i+= di) {
+            k  = n - i;
+            if (k > di) k = di;
+            flist2bitstream(data + i, p + 5 + (i/8)*nbits, k, nbits);
+        }
 
 
 /* this version has problems with oneAPI
@@ -197,8 +223,8 @@ int mk_sec5and7(float *data, unsigned int n, unsigned char **sec5, unsigned char
     // fix for buggy NCEP decoders
     // for constant fields, they ignore the decimal scaling
     if (nbits == 0) {
-	dec_scale = binary_scale = 0;
-	ref = ncep_min_val;
+        dec_scale = binary_scale = 0;
+        ref = ncep_min_val;
     }
 
     *sec5 = p = (unsigned char *) malloc(sec5_size);
