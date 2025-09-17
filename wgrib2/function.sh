@@ -1,23 +1,23 @@
 #!/bin/sh
-# function.sh    10/2024    Public Domain   Wesley Ebisuzaki
-#
-# wgrib2 options are translated into function calls.
-#  this script reads the source code and finds all the options
-#  and creates the header for the options (fnlist.h) and
-#  a structure that associates the name of the option with
-#   the address of the option, number of arguements, option type,
-#   brief description and a integer which is the prority in
-#   the help screens (fnlist.c)
-#
-# function.sh makes fnlist.c, fnlist.h
-#
-# needs to be rerun when adding new options, option headers are changed
-#
-# all information for fnlist.c and fnlist.h are in the HEADER line
-#
+## @file
+## @brief This script retrieves a list of all functions that are 
+## associated with options and makes fnlist.c, fnlist.h.
+##
+## Needs to be run when adding new options or option headers are
+## changed. All information for fnlist.c and fnlist.h are in the 
+## HEADER line.
+##
+## wgrib2 options are translated into function calls.
+## This script reads the source code and finds all the options
+## and creates the header for the options (fnlist.h) and
+## a structure that associates the name of the option with
+## the address of the option, number of arguements, option type,
+## brief description and a integer which is the prority in
+## the help screens (fnlist.c)
+## @author Public Domain: Wesley Ebisuzaki @date 10/2024
+
 # set -x
 
-# get list of all functions that are associated with options
 
 export LC_ALL=C
 grep "^ \* HEADER:" [A-Z]*.c | cut -f3- -d: | sort -t: -k3,3 -k2,2 >fnlist
