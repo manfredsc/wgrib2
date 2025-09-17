@@ -1,18 +1,51 @@
+/** @file
+ * @brief Selects the shortest (byte length) GRIB message from three input files and writes
+ * to the output file/pipe.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 2010 | W. Ebisuzaki | Initial
+ * 03/4/2010 | W. Ebisuzaki | used realloc rather than malloc, use big buffers
+ * 01/2010 | W. Ebisuzaki | added fflush
+ * 03/2014 | W. Ebisuzaki | added line number to printf
+ * 
+ * @author Public Domain: Wesley Ebisuzaki @date 05/2009
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
-// 10/2024  Public Domain  Wesley Ebisuzaki
-//
-// 3 files .. same fields but with different packing
-// returns smaller of indiv fields
-//
-// fixed 3/4/2010 - used realloc rather than malloc, use big buffers
-// 1/2010 added fflush
-// 3/2014 added line number to printf
 
+/** Maximum Buffer Size */
 #define SIZE 4096*4
 unsigned long int uint8(unsigned char *p);
 
-
+/**
+ * Takes 3 input files/pipes, reads 1 grib message from each, and writes the shortest message 
+ * (by byte length) to the output file/pipe. This process continues until one file runs out
+ * of data.
+ * 
+ * This program is used for compression.
+ * 
+ * ## Example
+ * @code{.sh}
+ * mkfifo pipe1 pipe2 pipe3
+ * wgrib2 IN.grb -set_grib_type c1 -grib_out pipe1 \
+ *      -set_grib_type c2 -grib_out pipe2 \
+ *      -set_grib_type c3 -grib_out pipe3 &
+ * smallest_grib2 OUT.grb pipe1 pipe2 pipe3
+ * rm pipe1 pipe2 pipe3
+ * @endcode
+ * 
+ * OUT.grb contains the same data as IN.grb but using the best complex packing (c1, c2, or c3).
+ *
+ * @param argc Number of command line arguments
+ * @param argv Array of command line arguments
+ *
+ * @return 0 on success, non-zero on error
+ *
+ * @author Wesley Ebisuzaki @date 2010
+ */
 int main(int argc, char **argv) {
 
     FILE *out, *in1, *in2, *in3;

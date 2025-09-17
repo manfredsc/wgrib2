@@ -1,3 +1,9 @@
+/** @file
+ * @brief Selects the shortest (byte length) GRIB message from four input files and writes
+ * to the output file/pipe.
+ * @author Public Domain: Wesley Ebisuzaki @date 02/2011
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 // 10/2024  Public  Domain   Wesley Ebisuzaki
@@ -8,9 +14,37 @@
 // 1/2010 added fflush
 // 2/2011 added 4 files
 
+/** Maximum Buffer Size */
 #define SIZE 4096*4
 unsigned long int uint8(unsigned char *p);
 
+/**
+ * Takes 4 input files/pipes, reads 1 grib message from each, and writes the shortest message 
+ * (by byte length) to the output file/pipe. This process continues until one file runs out
+ * of data.
+ * 
+ * This program is used for compression.
+ * 
+ * ## Example
+ * @code{.sh}
+ * mkfifo pipe1 pipe2 pipe3 pipe4
+ * wgrib2 IN.grb -set_grib_type c1 -grib_out pipe1 \
+ *      -set_grib_type c2 -grib_out pipe2 \
+ *      -set_grib_type c3 -grib_out pipe3 \
+ *      -set_grib_type j  -grib_out pipe4 &
+ * smallest_4 OUT.grb pipe1 pipe2 pipe3 pipe4
+ * rm pipe1 pipe2 pipe3 pipe4
+ * @endcode
+ * 
+ * OUT.grb contains the same data as IN.grb but using the best of jpeg or complex packing.
+ *
+ * @param argc Number of command line arguments
+ * @param argv Array of command line arguments
+ *
+ * @return 0 on success, non-zero on error
+ *
+ * @author Wesley Ebisuzaki @date 02/2011
+ */
 int main(int argc, char **argv) {
 
     FILE *out, *in1, *in2, *in3, *in4;
