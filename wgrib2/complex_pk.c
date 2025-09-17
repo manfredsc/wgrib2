@@ -1,3 +1,7 @@
+/** @file
+ * @brief Functions for GRIB2 files with complex packing.
+ * @author Public Domain: Wesley Ebisuzaki @date 07/2009
+ */
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
@@ -26,6 +30,15 @@
 // #define LEN_SEC_MAX 63
 // #define LEN_BITS 6
 
+/**
+ * Returns the number of bits needed to represent an unsigned integer.
+ * 
+ * @param i The unsigned integer to analyze.
+ * 
+ * @return The number of bits needed to represent the integer.
+ * 
+ * @author Wesley Ebisuzaki @date 07/2009
+ */
 static int find_nbits(unsigned int i) {
 #if !defined __GNUC__ || __GNUC__ < 4
     int j;
@@ -57,13 +70,25 @@ static int find_nbits(unsigned int i) {
 #endif
 }
 
-
+/** Struct for section with complex packing. */
 struct section {
     int mn, mx, missing;    	// stats
     unsigned int i0, i1;                     // pointers to data[]
     struct section *head, *tail;
 };
 
+/** 
+ * Calculates the size of a section with complex packing.
+ * 
+ * @param s Pointer to the section.
+ * @param ref_bits Number of bits for the reference value.
+ * @param width_bits Number of bits for the width value.
+ * @param has_undef Indicates if there are undefined values.
+ * 
+ * @return Size of the section in bytes.
+ * 
+ * @author Wesley Ebisuzaki @date 07/2009
+*/
 static int sizeofsection(struct section *s, int ref_bits, int width_bits, int has_undef) {
     if (s->mn == INT_MAX) return ref_bits + width_bits;     // all undef
     if (s->mn == s->mx) {
@@ -73,6 +98,21 @@ static int sizeofsection(struct section *s, int ref_bits, int width_bits, int ha
     return find_nbits(s->mx-s->mn + has_undef)*(s->i1-s->i0+1) + ref_bits + width_bits;
 }
 
+/**
+ * Calculates the size of a section with complex packing, considering min, max, and undefined values.
+ * 
+ * @param mn Minimum value in the section.
+ * @param mx Maximum value in the section.
+ * @param n Number of values in the section.
+ * @param ref_bits Number of bits for the reference value.
+ * @param width_bits Number of bits for the width value.
+ * @param has_undef_sec Indicates if there are undefined values in the section.
+ * @param has_undef Indicates if there are undefined values.
+ * 
+ * @return Size of the section in bytes.
+ * 
+ * @author Wesley Ebisuzaki @date 07/2009
+ */
 static int sizeofsection2(int mn, int mx, int n, int ref_bits, int width_bits, int has_undef_sec, int has_undef) {
     if (mn == INT_MAX) return ref_bits + width_bits;
     if (mn == mx) {
@@ -82,6 +122,18 @@ static int sizeofsection2(int mn, int mx, int n, int ref_bits, int width_bits, i
     return find_nbits(mx-mn + has_undef)*n + ref_bits + width_bits;
 }
 
+/**
+ * Calculates the total size of all sections with complex packing.
+ * 
+ * @param s Pointer to the first section.
+ * @param ref_bits Number of bits for the reference value.
+ * @param width_bits Number of bits for the width value.
+ * @param has_undef Indicates if there are undefined values.
+ * 
+ * @return Total size in bytes.
+ * 
+ * @author Wesley Ebisuzaki @date 07/2009
+ */
 static int size_all(struct section *s, int ref_bits, int width_bits, int has_undef) {
     unsigned int bytes, bits;
 
@@ -95,6 +147,14 @@ static int size_all(struct section *s, int ref_bits, int width_bits, int has_und
     return (int) (bytes + (bits != 0));
 }
 
+/**
+ * Moves one value to the left in a section with complex packing.
+ * 
+ * @param s Pointer to the section.
+ * @param v Pointer to the array of values.
+ * 
+ * @author Wesley Ebisuzaki @date 07/2009
+ */
 static void move_one_left(struct section *s, int *v) {
     struct section *t;
     int val, i;
@@ -167,6 +227,14 @@ static void move_one_left(struct section *s, int *v) {
     return;
 }
 
+/**
+ * Moves one value to the right in a section with complex packing.
+ * 
+ * @param s Pointer to the section.
+ * @param v Pointer to the array of values.
+ * 
+ * @author Wesley Ebisuzaki @date 07/2009
+ */
 static void move_one_right(struct section *s, int *v) {
     struct section *t;
     int val, i, j;
@@ -253,6 +321,16 @@ static void move_one_right(struct section *s, int *v) {
     return;
 } 
 
+/**
+ * Exchanges two sections with complex packing.
+ * 
+ * @param s Pointer to the first section.
+ * @param v Pointer to the array of values.
+ * @param has_undef Indicates if there are undefined values.
+ * @param LEN_SEC_MAX Maximum length of a section.
+ * 
+ * @author Wesley Ebisuzaki @date 07/2009
+ */
 static void exchange(struct section *s, int *v, int has_undef, int LEN_SEC_MAX) {
     struct section *t;
     int val0, val1, nbit_s, nbit_t;
@@ -311,8 +389,18 @@ static void exchange(struct section *s, int *v, int has_undef, int LEN_SEC_MAX) 
     }
 }
 
-
-
+/**
+ * Merges two sections with complex packing if they are close enough.
+ * 
+ * @param h Pointer to the head section.
+ * @param ref_bits Number of bits for the reference value.
+ * @param width_bits Number of bits for the width value.
+ * @param has_undef Indicates if there are undefined values.
+ * @param param Maximum difference between min and max values for merging.
+ * @param LEN_SEC_MAX Maximum length of a section.
+ * 
+ * @author Wesley Ebisuzaki @date 07/2009
+ */
 static void merge_j(struct section *h, int ref_bits, int width_bits, int has_undef, 
         int param, int LEN_SEC_MAX) {
     struct section *t, *m;
@@ -407,12 +495,25 @@ static void merge_j(struct section *h, int ref_bits, int width_bits, int has_und
     }
 }
 
-
-/*
- * writes out a complex packed grib message
+/**
+ * Writes out a complex packed GRIB message.
+ * 
+ * @param sec Pointer to the sections of the GRIB2 message.
+ * @param data Pointer to the array of data values.
+ * @param ndata Number of data values.
+ * @param use_scale Indicates if scaling is used.
+ * @param dec_scale Decimal scaling factor.
+ * @param bin_scale Binary scaling factor.
+ * @param wanted_bits Number of bits for packed values.
+ * @param max_bits Maximum number of bits for packed values.
+ * @param packing_mode Packing mode (1, 2, or 3).
+ * @param use_bitmap Indicates if a bitmap is used.
+ * @param out Pointer to the output file structure.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 07/2009
  */
-
-
 int complex_grib_out(unsigned char **sec, float *data, unsigned int ndata, 
         int use_scale, int dec_scale, int bin_scale, int wanted_bits, int max_bits, 
         int packing_mode, int use_bitmap, struct seq_file *out) {

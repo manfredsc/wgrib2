@@ -22,6 +22,11 @@ function(copy_test_data name)
     FILE_PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
 endfunction()
 
+function(ftn_api_test name)
+  add_executable(${name} ${name}.F90)
+  target_link_libraries(${name} PRIVATE wgrib2_ftn_api)
+  add_test(NAME ${name} COMMAND ${name})
+endfunction(ftn_api_test name)
 
 # Some test files are large and are kept on the NOAA EMC FTP
 # site. This function is used to download such test data. It takes two
@@ -114,6 +119,7 @@ copy_test_data(ref_c3_overflow.grib2)
 # Run these shell tests.
 shell_test(run_wgrib2_tests)
 shell_test(run_wgrib2_rpn_tests)
+shell_test(run_wgrib2_update_table_tests)
 
 shell_test(run_wgrib2_png_tests)
 shell_test(run_gmerge_tests)
@@ -181,7 +187,7 @@ copy_test_data(ref_LARGECAT220250305_12_1443copy_stats.txt)
 
 
 if (MAKE_FTN_API)
-  shell_test(test_ftn_api)
+  ftn_api_test(test_fortran_api)
 endif()
 if (BUILD_LIB)
   shell_test(test_lib)

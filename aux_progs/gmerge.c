@@ -1,31 +1,59 @@
+/** @file
+ * @brief This program takes the input of N files or pipes containing grib2 files
+ * and merges them into one file in a round-robin order.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 05/2009 | W. Ebisuzaki | Initial
+ * 08/2012 | M. Schwarb | added declarations, exit(0)
+ * 02/2015 | W. Ebisuzaki | can write to stdout by filename='-'
+ * 01/2018 | W. Ebisuzaki | increase N to 200, print N in description
+ * 05/2018 | W. Ebisuzaki | increase buffer size, call feof
+ * 12/2022 | W. Ebisuzaki | better error messages, list of input files can be 1 file
+ * 01/2023 | W. Ebisuzaki | updated for 2023, cmake compile added
+ * 05/2025 | W. Ebisuzaki | increase N again (32..200..system limit)
+ * 
+ * @author Public Domain: Wesley Ebisuzaki @date 05/2009
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-/*
- * gmerge    w. ebisuzaki
- * public domain May 2009
- *  8/2012 Manfred Schwarb - added declarations, exit(0)
- *  2/2015 Wesley Ebisuzaki - can write to stdout by filename='-'
- *  1/2018 Wesley Ebisuzaki - increase N to 200, print N in description
- *  5/2018 Wesley Ebisuzaki - increase buffer size, call feof
- *  12/2022 Wesley Ebisuzaki - better error messages, list of input files can be 1 file
- *  1/2023  Wesley Ebisuzaki   updated for 2023, cmake compile added
- *  5/2025  Wesley Ebisuzaki  increase N again (32..200..system limit)
- *
- * takes the input of N files or pipes containing grib2 files
- * and merges them into one file in a round-robin order.
- *
- * $0 (output) in1.grb in2.grb ... inN.grb
- *  input grib files must not have any non-grib2 information
- *
- */
-
+/** Current Version of gmerge */
 #define VERSION "gmerge v1.6 5/2025"
 
 unsigned long int uint8(unsigned char *);
 int rd_msg(FILE *, FILE *);
 
+/**
+ * Combines two or more streams of grib files. The output takes one grib message from
+ * the first file/pipe, then one from the second file/pipe, and so on until you reach
+ * the last file/pipe.
+ *
+ * The program is to split the workload over several copies of wgrib2.
+ * 
+ * ## Example
+ * 
+ * @code{.sh}
+ * mkfifo pipe1 pipe2
+ * wgrib2 IN.grb -for 1::2 -set_grib_type j -grib_out pipe1 & 
+ * wgrib2 IN.grb -for 2::2 -set_grib_type j -grib_out pipe2 & 
+ * gmerge OUT.grb pipe1 pipe2
+ * rm pipe1 pipe2
+ * @endcode
+ * 
+ * OUT.grb contains the jpeg compressed version of IN.grb. The compression was run as 
+ * two tasks.
+ * 
+ * @param argc The number of command line arguments.
+ * @param argv The command line arguments.
+ * 
+ * @return 0 on success, non-zero on error.
+ *
+ * @author Wesley Ebisuzaki @date 05/2009
+ */
 int main(int argc, char **argv) {
 
     FILE *out, *p[argc];
@@ -80,8 +108,19 @@ int main(int argc, char **argv) {
     exit(0);
 }
 
+/** Maximum Buffer Size */
 #define BSIZE 4096*8
 
+/**
+ * Reads a GRIB2 message from the input file and writes it to the output file.
+ *
+ * @param in Pointer to the input file.
+ * @param out Pointer to the output file.
+ *
+ * @return 0 on success, non-zero on error.
+ *
+ * @author Wesley Ebisuzaki @date 05/2009
+ */
 int rd_msg(FILE *in, FILE *out) {
     long unsigned int n;
     int i,j,k;

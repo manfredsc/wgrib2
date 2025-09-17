@@ -1,3 +1,8 @@
+/** @file
+ * @brief Converts lat-lon file to ArcInfo ASCII grid file.
+ * @author Public Domain: Wesley Ebisuzaki @date 10/2015
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,26 +11,71 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/*
- * AAIGlong.c - converts lat-lon file to ArcInfo ASCII grid file
- *   each grid is written into its own file
- *
- * copied from AAIG.c 10/2015 Public Domain Wesley Ebisuzaki
- *     filename convention for *.asc files is too simple for modern grib2 files
- *     use new filename conventions
- *
- */
+/** Decode grib file flag  */
+extern int decode;
 
+/** Flag to indicate lat-lon grid processing. */
+extern int latlon;
 
-extern int decode, latlon;
-extern double *lat, *lon;
-extern unsigned int nx_, ny_;
-extern enum output_order_type output_order, output_order_wanted;
+/** Pointer to array of latitude values. */
+extern double *lat;
+
+/** Pointer to array of longitude values. */
+extern double *lon;
+
+/** Number of grid points in x-direction. */
+extern unsigned int nx_;
+
+/** Number of grid points in y-direction. */
+extern unsigned int ny_;
+
+/** Current output order type. */
+extern enum output_order_type output_order;
+
+/** Desired output order type. */
+extern enum output_order_type output_order_wanted;
 
 /*
  * HEADER:100:AAIGlong:output:0:writes Ascii ArcInfo Grid file, lat-lon grid only long-name *.asc (alpha)
  */
 
+/**
+ * Converts a lat-lon file and writes the data into a Ascii ArcInfo Grid file. This option
+ * is similar to the -AAIG option, but uses a new file name convention for the output files.
+ * 
+ * This option is experimental and only supports equally spaced lat-lon grids. You can use the
+ * -new_grid option to create an equally spaced lat-lon grid.
+ * 
+ * Each field is written to a different file (*.asc) which is written to the current directory.
+ * 
+ * ## Usage
+ * -AAIGlong
+ * 
+ * ## File name convention for *asc output
+ * NAME = (wgrib2 -S)
+ * NAME=(wgrib2 -S)
+ * remove (message number)[.submessage number]:(byte location): 
+ * remove trailing semicolon if any
+ * replace "/" by " DIV "
+ * replace "\" by " BS "
+ * replace ":" by "_"
+ * replace "'" by " Q "
+ * replace '"' by " Q "
+ *
+ * @param ARG0 ???
+ *
+ * @return 0 for success, error code otherwise.
+ *
+ * @note The (wgrib2 -S) output can change between different versions of wgrib2. The grib table 
+ * can be updated. The new metadata can be added to the inventory in order to uniquely identify 
+ * fields. In rare cases, the format of the metadata has been updated. If you need to format of 
+ * the NAME to be unchanging, please freeze the version of wgrib2.
+ * 
+ * ## Example: 
+ * ???
+ * 
+ * @author Wesley Ebisuzaki @date 10/2015
+ */
 int f_AAIGlong(ARG0) {
 
     size_t i, j;
@@ -113,11 +163,11 @@ int f_AAIGlong(ARG0) {
     fprintf(out,"xllcenter %lf\n", lon[0] > 180.0 ? lon[0]-360.0 : lon[0]);
     fprintf(out,"yllcenter %lf\n", lat[0]);
     if (cellsize > 0.0) {
-      fprintf(out,"cellsize %lf\n", cellsize);
+        fprintf(out,"cellsize %lf\n", cellsize);
     }
     else {
-      fprintf(out,"dx       %lf\n", dlon);
-      fprintf(out,"dy       %lf\n", dlat);
+        fprintf(out,"dx       %lf\n", dlon);
+        fprintf(out,"dy       %lf\n", dlat);
     }
     fprintf(out,"NODATA_VALUE 9.999e20\n");
     for (j = 0; j < ny_; j++) {

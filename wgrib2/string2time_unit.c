@@ -1,16 +1,20 @@
+/** @file
+ * @brief Convert GrADS time units to grib2 units.
+ * @author Public Domain: Wesley Ebisuzaki @date 12/2019
+ */
 #include <stdio.h>
 #include <string.h>
 #include "wgrib2.h"
 
-/*
- * string2time_unit
+/**
+ * Convert a string representation of time units (GrADS) to an integer representation (grib2).
  *
- * convert GrADS time units to grib2 units
- *
- * 12/2019 Public Domain Wesley Ebisuzaki
- *
+ * @param string The string representation of the time unit.
+ * 
+ * @return The integer representation of the time unit.
+ * 
+ * @author Wesley Ebisuzaki @date 12/2019
  */
-
 int string2time_unit(char *string) {
     int unit;
     unit = -1;

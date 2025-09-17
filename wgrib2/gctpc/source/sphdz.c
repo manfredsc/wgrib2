@@ -1,70 +1,64 @@
-/*******************************************************************************
-NAME                           SPHDZ 
+/** @file
+ * @brief Assign spheroid parameters.
+ * 
+ * PURPOSE: This function assigns values to the semimajor axis, semiminor
+ *          axis, and radius of sphere. If the spheroid code is negative,
+ *          the first two values in the parameter array (parm) are used
+ *          to define the values as follows:
+ *
+ * 			-- If parm[0] is a non-zero value and parm[1] is greater than
+ * 			   one, the semimajor axis and radius are set to parm[0] and
+ * 			   the semiminor axis is set to parm[1].
+ *
+ * 			-- If parm[0] is nonzero and parm[1] is greater than zero but
+ * 			   less than or equal to one, the semimajor axis and radius
+ * 			   are set to parm[0] and the semiminor axis is computed
+ * 			   from the eccentricity squared value parm[1].  This
+ * 			   algorithm is given below.
+ *
+ * 			-- If parm[0] is nonzero and parm[1] is equal to zero, the
+ * 			   semimajor axis, radius, and semiminor axis are set to
+ * 			   parm[0].
+ *
+ * 			-- If parm[0] equals zero and parm[1] is greater than zero,
+ * 			   the default Clarke 1866 is used to assign values to the
+ * 			   semimajor axis, radius and semiminor axis.
+ *
+ * 			-- If parm[0] and parm[1] equals zero, the semimajor axis
+ * 			   and radius are set to 6370997.0 (This value is represented
+ * 			   as the last value in the spheroid code array) and the
+ * 			   semiminor axis is set to zero.
+ *
+ *		if a spheroid code is zero or greater, the semimajor and
+ *		semiminor axis are defined by the spheroid code, listed below
+ *		in the array assignment, and the radius is set to 6370997.0.
+ *		If the spheroid code is greater than SPHDCT the default
+ *		spheroid, Clarke 1866, is used to define the semimajor
+ *		and semiminor axis and radius is set to 6370997.0.
+ *
+ *		The algorithm to define the semiminor axis using the
+ *		eccentricity squared value is as follows:
+ *
+ *		      semiminor = sqrt(1.0 - ES) * semimajor   where
+ *		      ES = eccentricity squared
+ * @author T. Mittan @date March, 1993
+ * 
+ * ### Algorithm References
+ * 1. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ *
+ * 2. Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
+ *    U.S. Geological Survey Professional Paper 1453 , United State Government
+ *    Printing Office, Washington D.C., 1989.
+ */
 
-PURPOSE:	This function assigns values to the semimajor axis, semiminor
-		axis, and radius of sphere.  If the spheroid code is negative,
-		the first two values in the parameter array (parm) are used
-		to define the values as follows:
-
-		--If parm[0] is a non-zero value and parm[1] is greater than
-		  one, the semimajor axis and radius are set to parm[0] and
-		  the semiminor axis is set to parm[1]. 
-
-		--If parm[0] is nonzero and parm[1] is greater than zero but
-		  less than or equal to one, the semimajor axis and radius
-		  are set to parm[0] and the semiminor axis is computed
-		  from the eccentricity squared value parm[1].  This
-		  algorithm is given below.
-
-		--If parm[0] is nonzero and parm[1] is equal to zero, the
-		  semimajor axis, radius, and semiminor axis are set to
-		  parm[0].
-
-		--If parm[0] equals zero and parm[1] is greater than zero,
-		  the default Clarke 1866 is used to assign values to the
-		  semimajor axis, radius and semiminor axis.
-
-		--If parm[0] and parm[1] equals zero, the semimajor axis
-		  and radius are set to 6370997.0 (This value is represented
-	 	  as the last value in the spheroid code array) and the
-		  semiminor axis is set to zero.
-
-		if a spheroid code is zero or greater, the semimajor and
-		semiminor axis are defined by the spheroid code, listed below
-		in the array assignment, and the radius is set to 6370997.0.
-		If the spheroid code is greater than SPHDCT the default
-		spheroid, Clarke 1866, is used to define the semimajor
-		and semiminor axis and radius is set to 6370997.0.
-
-		The algorithm to define the semiminor axis using the
-		eccentricity squared value is as follows:
-
-		      semiminor = sqrt(1.0 - ES) * semimajor   where
-		      ES = eccentricity squared
-
-		
-
-PROGRAMMER              DATE
-----------              ----
-T. Mittan	      MARCH, 1993
-
-ALGORITHM REFERENCES
-
-1.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-2.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
-    U.S. Geological Survey Professional Paper 1453 , United State Government
-    Printing Office, Washington D.C., 1989.
-*******************************************************************************/
-
-/* Assign the radius value to the radius argument if a spheroid is assigned */
+/** Assign the radius value to the radius argument if a spheroid is assigned */
 #define RADVAL 19
 
 #include "cproj.h"
 
-	/* Semi-Major axis of supported Spheroids */
+/** Semi-Major axis of supported Spheroids */
 static double major[SPHDCT] = {
 		6378206.4,		/* 0: Clarke 1866 (default) */
 		6378249.145,		/* 1: Clarke 1880 */
@@ -98,7 +92,7 @@ static double major[SPHDCT] = {
 		6378160.0,		/* 29: South American 1969 */
 		6378165.0};		/* 30: WGS 60 */
 
-	/* Semi-Minor axis of supported Spheroids */
+/** Semi-Minor axis of supported Spheroids */
 static double minor[SPHDCT] = {
 		6356583.8,		/* 0: Clarke 1866 (default) */
 		6356514.86955,		/* 1: Clarke 1880 */
@@ -133,8 +127,17 @@ static double minor[SPHDCT] = {
 		6356783.287};		/* 30: WGS 60 */
 
 
-/* Finds the correct ellipsoid axis
----------------------------------*/
+/** 
+ * Finds the correct ellipsoid axis.
+ * 
+ * @param isph Spheroid code number.
+ * @param parm Pointer to list of projection parameters.
+ * @param r_major Pointer to major axis.
+ * @param r_minor Pointer to minor axis.
+ * @param radius Pointer to radius.
+ *
+ * @author T. Mittan @date March, 1993
+ */
 void sphdz(long isph, double *parm, double *r_major, double *r_minor,
         double *radius) {
 //void sphdz(isph,parm,r_major,r_minor,radius)

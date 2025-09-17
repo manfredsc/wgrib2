@@ -1,3 +1,23 @@
+/** @file
+ * @brief Convert between (i,j) and (lon, lat) coordinates.
+ *
+ * Adapted from grib2ctl.pl
+ *
+ * As of 7/2021, this routine is not used by wgrib2.
+ *
+ * However, want code that goes from (i,j) -> (lon, lat) and (lon, lat) -> (i,j)
+ * for all the projections. This is good for 
+ *
+ * 1) speedup closest()   - find nearest neighbor
+ * 2) future interpolation that doesn't depend on ipolates
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 2005 | W. Ebisuzaki | Initial
+ * 7/2021 | W. Ebisuzaki | Added OpenMP
+ * @author Public Domain: Wesley Ebisuzaki @date 2005
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,42 +26,56 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/* 10/2024   Public Domain   Wesley Ebisuzaki */
-
+/** Flag to indicate lat-lon grid processing. */
 extern int latlon;
-extern double *lon, *lat;
+
+/** Pointer to array of longitude values. */
+extern double *lon;
+
+/** Pointer to array of latitude values. */
+extern double *lat;
+
+/** Current output order type. */
 extern enum output_order_type output_order;
 
 /* M_PI, M_PI_2, M_PI_4, and M_SQRT2 are not ANSI C but are commonly defined */
 /* values from GNU C library version of math.h copyright Free Software Foundation, Inc. */
 
 #ifndef M_PI
-#define M_PI           3.14159265358979323846  /* pi */
+#define M_PI           3.14159265358979323846  /**< pi */
 #endif
 #ifndef M_PI_2
-#define M_PI_2         1.57079632679489661923  /* pi/2 */
+#define M_PI_2         1.57079632679489661923  /**< pi/2 */
 #endif
 #ifndef M_PI_4
-#define M_PI_4         0.78539816339744830962  /* pi/4 */
+#define M_PI_4         0.78539816339744830962  /**< pi/4 */
 #endif
 #ifndef M_SQRT2
-#define M_SQRT2        1.41421356237309504880  /* sqrt(2) */
+#define M_SQRT2        1.41421356237309504880  /**< sqrt(2) */
 #endif
 
-
-/* adapted from grib2ctl.pl
- *
- * as of 7/2021, this routine is not used by wgrib2
- *
+/**
+ * Convert from (i,j) to (lon,lat) and (lon,lat) to (i,j) for regular grids.
+ * 
+ * As of 7/2021, this routine is not used by wgrib2.
+ * 
  * However, want code that goes from (i,j) -> (lon, lat) and (lon, lat) -> (i,j)
  * for all the projections. This is good for 
  *
  * 1) speedup closest()   - find nearest neighbor
  * 2) future interpolation that doesn't depend on ipolates
  *
- * 7/2021 added OpenMP
+ * Adapted from grib2ctl.pl
+ * 
+ * @param sec Pointer to GRIB sections.
+ * @param lat Pointer to array of latitude values.
+ * @param lon Pointer to array of longitude values.
+ * @param n Number of points.
+ * 
+ * @return Always returns 0.
+ * 
+ * @author Wesley Ebisuzaki @date 2005
  */
-
 int rot_regular2ij(unsigned char **sec, double **lat, double **lon, int n) {
 
 
@@ -94,5 +128,5 @@ int rot_regular2ij(unsigned char **sec, double **lat, double **lon, int n) {
         tlat[i] = glat;
         tlon[i] = glon;
     }
-   return 0;
+    return 0;
 }
