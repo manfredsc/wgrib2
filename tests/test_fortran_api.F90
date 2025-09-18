@@ -1,5 +1,7 @@
 program test_fortran_api
+
    use wgrib2api
+   use, intrinsic :: iso_c_binding, only: c_char, c_int
    implicit none
 
    character(len=*), parameter :: GRB2_FILE = 'data/gdaswave.t00z.wcoast.0p16.f000.grib2'
@@ -10,6 +12,15 @@ program test_fortran_api
    logical :: ret
    integer :: iret
 
+   interface 
+      function compare_files(file1, file2) bind(c)
+         use intrinsic :: iso_c_binding, only: c_char, c_int
+         character(kind=c_char), dimension(*), intent(in) :: file1
+         character(kind=c_char), dimension(*), intent(in) :: file2
+         integer(c_int) :: compare_files
+      end function compare_files
+   end interface
+   
    print *, "Testing Fortran API..."
 
    print *, "Testing grb2_DEFINED_VAL() and grb2_UNDEFINED_VAL()..."

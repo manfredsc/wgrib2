@@ -23,7 +23,7 @@ function(copy_test_data name)
 endfunction()
 
 function(build_c_api_test name)
-  add_executable(${name} ${name}.c)
+  add_executable(${name} ${name}.c wgrib2_c_test_util.c)
   target_link_libraries(${name} PUBLIC wgrib2_c_api)
   add_test(NAME ${name} COMMAND ${name})
 endfunction()
