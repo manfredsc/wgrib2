@@ -1,7 +1,10 @@
-/* This header file may be used by other packages to learn about this
+/** @file
+ * @brief This header file may be used by other packages to learn about this
  * wgrib2 build.
  *
- * Edward Hartnett 3/29/24 */
+ * @author Public Domain: Edward Hartnett @date 3/29/24 
+*/
+
 #ifndef _WGRIB2_META_H
 #define _WGRIB2_META_H
 

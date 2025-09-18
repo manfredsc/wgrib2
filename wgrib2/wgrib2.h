@@ -1,7 +1,13 @@
-/*
- * public domain 12/2006 wesley ebisuzaki
- *               1/2007 M. Schwarb
- *               5/2016 G. Schnee
+/** @file
+ * @brief Header file for wgrib2.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 12/2006 | W. Ebisuzaki | Initial
+ * 1/2007 | M. Schwarb | unsigned int ndata
+ * 5/2016 | G. Schnee | -
+ * @author Public Domain: Wesley Ebisuzaki @date 12/2006
  */
 
 #ifndef _WGRIB2_H_
@@ -24,178 +30,226 @@
 
 #ifdef USE_OPENMP
 #if _OPENMP >= 201307
-  #define IS_OPENMP_3_1
+  #define IS_OPENMP_3_1     /**< OpenMP 3.1 support */
 #endif
 #if _OPENMP >= 201307
-  #define IS_OPENMP_4_0
+  #define IS_OPENMP_4_0     /**< OpenMP 4.0 support */
 #endif
 #if _OPENMP >= 201511
-  #define IS_OPENMP_4_5
+  #define IS_OPENMP_4_5     /**< OpenMP 4.5 support */
 #endif
 #if _OPENMP >= 201811
-  #define IS_OPENMP_5_0
+  #define IS_OPENMP_5_0     /**< OpenMP 5.0 support */
 #endif
 #endif
 
+#define MATCH_MAX 2000      /**< Max number of regular expressions and fixed string matches used. */
+#define GREP_MAX 200        /**< Max number of grep options used. */
+#define MATCH_EXTRA_FN 10   /**< Max number of inv functions that can be added to match_inv. */
 
-/*  1/2007 M. Schwarb unsigned int ndata */
+#define MAX_IF  10          /**< Max number of nested if blocks. */
 
-/* max number of regular expressions used, max number of fs (fixed string) matches used */
-#define MATCH_MAX 2000
-#define GREP_MAX 200
-/* maximum number of inv functions that can be added to match_inv */
-#define MATCH_EXTRA_FN 10
+#define UNDEFINED       9.999e20    /**< Undefined value - if bitmap. */
+#define UNDEFINED_LOW   9.9989e20    /**< Floor of undefined value. */
+#define UNDEFINED_HIGH  9.9991e20    /**< Ceiling of undefined value. */
 
-/* max number of nested if blocks */
-#define MAX_IF  10
-
-#define UNDEFINED       9.999e20
-#define UNDEFINED_LOW   9.9989e20
-#define UNDEFINED_HIGH  9.9991e20
+/** Check if a value is undefined. */
 #define UNDEFINED_VAL(x) ((x) >= UNDEFINED_LOW && (x) <= UNDEFINED_HIGH)
+
+/** Check if a value is defined. */
 #define DEFINED_VAL(x) ((x) < UNDEFINED_LOW || (x) > UNDEFINED_HIGH)
-#define UNDEFINED_ANGLE 999.0
 
+#define UNDEFINED_ANGLE 999.0           /**< Undefined angle value. */
 
-/* formatting length for function names for help screen */
-#define HELP_NAME_LEN	15
-#define N_ARGLIST	10000
-struct ARGLIST {int fn; int i_argc;};
-#define STRING_SIZE	200
-#define INV_STRING_SIZE	600
-#define EXT_TABLE_SIZE  (8*1024)
+#define HELP_NAME_LEN	15              /**< Formatting length for function names for help screen */
+#define N_ARGLIST	10000               /**< Max number of arguments for in wgrib2 arglist. */
+struct ARGLIST {int fn; int i_argc;};   /**< Argument list structure. */
+#define STRING_SIZE	200                 /**< Max string size. */
+#define INV_STRING_SIZE	600             /**< Max inventory string size. */
+#define EXT_TABLE_SIZE  (8*1024)        /**< Size of external table. */
 
-#define N_mem_buffers 30
-#define N_RPN_REGS    20
+#define N_mem_buffers 30                /**< Max number of memory buffers. */
+#define N_RPN_REGS    20                /**< Max number of RPN registers. */
 
-#define DEFAULT_G2CLIB	1		/* use g2clib emulation by default */
+#define DEFAULT_G2CLIB	1		        /**< Use g2clib emulation by default. */
 // #define DEFAULT_GCTPC	0		/* use gctpc for geolocation */
-#define DEFAULT_GCTPC	1		/* use gctpc for geolocation */
-#define DEFAULT_PROJ4	1		/* use Proj4 for geolocation */
+#define DEFAULT_GCTPC	1		        /**< Use gctpc for geolocation. */
+#define DEFAULT_PROJ4	1		        /**< Use Proj4 for geolocation. */
 
-#define CACHE_LINE_BITS	1024		/* size of cache line in bits for openmp, needs to be a multiple of 8 */
-					/* want to prevent false sharing.  Note: x86 cache line = 64 bytes = 512 bits */
-					/* but no harm if double this value.  */
-					/* if not right but multiple of 8, may be slower */
+/** 
+ * Size of cache line in bits for openmp, needs to be a multiple of 8.
+ *
+ * Want to prevent false sharing.  Note: x86 cache line = 64 bytes = 512 bits, but no harm if 
+ * double this value. If not right but multiple of 8, may be slower.
+ */
+#define CACHE_LINE_BITS	1024		
 
 /* calling arguments for function API */
 
+/** Base calling arguments for function API. */
 #define ARG     int mode, unsigned char **sec, float *data, unsigned int ndata, char *inv_out, void **local
+/** Calling arguments for function API - zero additional arguments. */
 #define ARG0	ARG, const char *dum1, const char *dum2, const char *dum3, const char *dum4, const char *dum5, const char *dum6, const char *dum7, const char *dum8
+/** Calling arguments for function API - one additional argument. */
 #define ARG1	ARG, const char *arg1, const char *dum2, const char *dum3, const char *dum4, const char *dum5, const char *dum6, const char *dum7, const char *dum8
+/** Calling arguments for function API - two additional arguments. */
 #define ARG2	ARG, const char *arg1, const char *arg2, const char *dum3, const char *dum4, const char *dum5, const char *dum6, const char *dum7, const char *dum8
+/** Calling arguments for function API - three additional arguments. */
 #define ARG3	ARG, const char *arg1, const char *arg2, const char *arg3, const char *dum4, const char *dum5, const char *dum6, const char *dum7, const char *dum8
+/** Calling arguments for function API - four additional arguments. */
 #define ARG4	ARG, const char *arg1, const char *arg2, const char *arg3, const char *arg4, const char *dum5, const char *dum6, const char *dum7, const char *dum8
+/** Calling arguments for function API - five additional arguments. */
 #define ARG5	ARG, const char *arg1, const char *arg2, const char *arg3, const char *arg4, const char *arg5, const char *dum6, const char *dum7, const char *dum8
+/** Calling arguments for function API - six additional arguments. */
 #define ARG6	ARG, const char *arg1, const char *arg2, const char *arg3, const char *arg4, const char *arg5, const char *arg6, const char *dum7, const char *dum8
+/** Calling arguments for function API - seven additional arguments. */
 #define ARG7	ARG, const char *arg1, const char *arg2, const char *arg3, const char *arg4, const char *arg5, const char *arg6, const char *arg7, const char *dum8
+/** Calling arguments for function API - eight additional arguments. */
 #define ARG8	ARG, const char *arg1, const char *arg2, const char *arg3, const char *arg4, const char *arg5, const char *arg6, const char *arg7, const char *arg8
 
 
 /* buf = buffer our text out from function */
 /* void **local, pointer for static data */
 
+/** Macro for creating function API argument list- zero additional arguments. */
 #define call_ARG0(inv_out,local)	        mode, sec, data, ndata, inv_out, local, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+/** Macro for creating function API argument list- one additional argument. */
 #define call_ARG1(inv_out,local,arg1)	        mode, sec, data, ndata, inv_out, local, arg1, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+/** Macro for creating function API argument list- two additional arguments. */
 #define call_ARG2(inv_out,local,arg1,arg2)	mode, sec, data, ndata, inv_out, local, arg1, arg2, NULL, NULL, NULL, NULL, NULL, NULL
+/** Macro for creating function API argument list- three additional arguments. */
 #define call_ARG3(inv_out,local,arg1,arg2,arg3)	mode, sec, data, ndata, inv_out, local, arg1, arg2, arg3, NULL, NULL, NULL, NULL, NULL
+/** Macro for creating function API argument list- four additional arguments. */
 #define call_ARG4(inv_out,local,arg1,arg2,arg3,arg4)	mode, sec, data, ndata, inv_out, local, arg1, arg2, arg3, arg4, NULL, NULL, NULL, NULL
+/** Macro for creating function API argument list- five additional arguments. */
 #define call_ARG5(inv_out,local,arg1,arg2,arg3,arg4,arg5) mode, sec, data, ndata, inv_out, local, arg1, arg2, arg3, arg4, arg5, NULL, NULL, NULL
+/** Macro for creating function API argument list- six additional arguments. */
 #define call_ARG6(inv_out,local,arg1,arg2,arg3,arg4,arg5,arg6) mode, sec, data, ndata, inv_out, local, arg1, arg2, arg3, arg4, arg5, arg6, NULL, NULL
+/** Macro for creating function API argument list- seven additional arguments. */
 #define call_ARG7(inv_out,local,arg1,arg2,arg3,arg4,arg5,arg6,arg7) mode, sec, data, ndata, inv_out, local, arg1, arg2, arg3, arg4, arg5, arg6, arg7, NULL
+/** Macro for creating function API argument list- eight additional arguments. */
 #define call_ARG8(inv_out,local,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8) mode, sec, data, ndata, inv_out, local, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8
 
+/** Macro for creating function API initialization argument list- zero additional arguments. */
 #define init_ARG0(inv_out,local)	        -1, NULL, NULL, 0, inv_out, local, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+/** Macro for creating function API initialization argument list- one additional argument. */
 #define init_ARG1(inv_out,local,arg1)	        -1, NULL, NULL, 0, inv_out, local, arg1, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+/** Macro for creating function API initialization argument list- two additional arguments. */
 #define init_ARG2(inv_out,local,arg1,arg2)	-1, NULL, NULL, 0, inv_out, local, arg1, arg2, NULL, NULL, NULL, NULL, NULL, NULL
+/** Macro for creating function API initialization argument list- three additional arguments. */
 #define init_ARG3(inv_out,local,arg1,arg2,arg3)	-1, NULL, NULL, 0, inv_out, local, arg1, arg2, arg3, NULL, NULL, NULL, NULL, NULL
+/** Macro for creating function API initialization argument list- four additional arguments. */
 #define init_ARG4(inv_out,local,arg1,arg2,arg3,arg4)	-1, NULL, NULL, 0, inv_out, local, arg1, arg2, arg3, arg4, NULL, NULL, NULL, NULL
+/** Macro for creating function API initialization argument list- five additional arguments. */
 #define init_ARG5(inv_out,local,arg1,arg2,arg3,arg4,arg5) -1, NULL, NULL, 0, inv_out, local, arg1, arg2, arg3, arg4, arg5, NULL, NULL, NULL
+/** Macro for creating function API initialization argument list- six additional arguments. */
 #define init_ARG6(inv_out,local,arg1,arg2,arg3,arg4,arg5,arg6) -1, NULL, NULL, 0, inv_out, local, arg1, arg2, arg3, arg4, arg5, arg6, NULL, NULL
+/** Macro for creating function API initialization argument list- seven additional arguments. */
 #define init_ARG7(inv_out,local,arg1,arg2,arg3,arg4,arg5,arg6,arg7) -1, NULL, NULL, 0, inv_out, local, arg1, arg2, arg3, arg4, arg5, arg6, arg7, NULL
+/** Macro for creating function API initialization argument list- eight additional arguments. */
 #define init_ARG8(inv_out,local,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8) -1, NULL, NULL, 0, inv_out, local, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8
 
+/** Macro for creating function API finalization argument list- zero additional arguments. */
 #define fin_ARG0(inv_out,local)	        -2, NULL, NULL, 0, inv_out, local, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+/** Macro for creating function API finalization argument list- one additional argument. */
 #define fin_ARG1(inv_out,local,arg1)	        -2, NULL, NULL, 0, inv_out, local, arg1, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+/** Macro for creating function API finalization argument list- two additional arguments. */
 #define fin_ARG2(inv_out,local,arg1,arg2)	-2, NULL, NULL, 0, inv_out, local, arg1, arg2, NULL, NULL, NULL, NULL, NULL, NULL
+/** Macro for creating function API finalization argument list- three additional arguments. */
 #define fin_ARG3(inv_out,local,arg1,arg2,arg3)	-2, NULL, NULL, 0, inv_out, local, arg1, arg2, arg3, NULL, NULL, NULL, NULL, NULL
+/** Macro for creating function API finalization argument list- four additional arguments. */
 #define fin_ARG4(inv_out,local,arg1,arg2,arg3,arg4)	-2, NULL, NULL, 0, inv_out, local, arg1, arg2, arg3, arg4, NULL, NULL, NULL, NULL
+/** Macro for creating function API finalization argument list- five additional arguments. */
 #define fin_ARG5(inv_out,local,arg1,arg2,arg3,arg4,arg5) -2, NULL, NULL, 0, inv_out, local, arg1, arg2, arg3, arg4, arg5, NULL, NULL, NULL
+/** Macro for creating function API finalization argument list- six additional arguments. */
 #define fin_ARG6(inv_out,local,arg1,arg2,arg3,arg4,arg5,arg6) -2, NULL, NULL, 0, inv_out, local, arg1, arg2, arg3, arg4, arg5, arg6, NULL, NULL
+/** Macro for creating function API finalization argument list- seven additional arguments. */
 #define fin_ARG7(inv_out,local,arg1,arg2,arg3,arg4,arg5,arg6,arg7) -2, NULL, NULL, 0, inv_out, local, arg1, arg2, arg3, arg4, arg5, arg6, arg7, NULL
+/** Macro for creating function API finalization argument list- eight additional arguments. */
 #define fin_ARG8(inv_out,local,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8) -2, NULL, NULL, 0, inv_out, local, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8
 
 /* delayed errors */
-#define DELAYED_NONERROR_END		1
-#define DELAYED_PDT_SIZE_ERR		2
-#define DELAYED_LOCAL_GRIBTABLE_ERR	4
-#define DELAYED_GRID_SIZE_ERR		8
-#define DELAYED_FTIME_ERR		16
-#define DELAYED_MISC			32
+#define DELAYED_NONERROR_END		1   /**< No error occurred. */
+#define DELAYED_PDT_SIZE_ERR		2   /**< Problem with Product Definition Template size. */
+#define DELAYED_LOCAL_GRIBTABLE_ERR	4   /**< Problem with local GRIB table. */
+#define DELAYED_GRID_SIZE_ERR		8   /**< Problem with grid size. */
+#define DELAYED_FTIME_ERR		16      /**< Problem with forecast time. */
+#define DELAYED_MISC			32      /**< Miscellaneous error. */
 
+/** Enumeration for input device types. */
 enum input_dev_type {DISK, PIPE, MEM, NOT_OPEN};
+/** Enumeration for input modes. */
 enum input_type {inv_mode, dump_mode, all_mode};
+/** Enumeration for output order types. */
 enum output_order_type {raw,wesn,wens};
+/** Enumeration for output GRIB packing types. */
 enum output_grib_type {jpeg,ieee_packing,simple,complex1,complex2,complex3,aec};
+/** Enumeration for wind rotation types. */
 enum wind_rotation_type {grid, earth, undefined};
+/** Enumeration for geolocation types. */
 enum geolocation_type {proj4, gctpc, internal, external, not_used};
+/** Enumeration for new grid format types. */
 enum new_grid_format_type {bin, ieee, grib};
 
+/** Structure for sequential file access. */
 struct seq_file {
-    enum input_dev_type file_type;
-    FILE *cfile;
-    int n_mem_buffer;
+    enum input_dev_type file_type;      /**< Type of input device. */
+    FILE *cfile;                        /**< Pointer to the file. */
+    int n_mem_buffer;                   /**< Number of memory buffers. */
     /* the rest of these values are used by rd_grib2_msg for sequential reads */
-    unsigned char unget_buf[10];
-    int unget_cnt;
-    long int buffer_size;
-    unsigned char *buffer;
-    char filename[STRING_SIZE];
-    long pos;
+    unsigned char unget_buf[10];        /**< Buffer for unget character. */
+    int unget_cnt;                      /**< Count of unget characters. */
+    long int buffer_size;               /**< Size of the buffer. */
+    unsigned char *buffer;              /**< Pointer to the buffer. */
+    char filename[STRING_SIZE];         /**< Name of the file. */
+    long pos;                           /**< Current position in the file. */
 };
 
+const char *output_order_name(void);			/**< Returns text string of output order. */
 
+#define INV_BUFFER	100000                      /**< Maximum length of an inventory line. */
+#define NAMELEN		50                          /**< Maximum length of a name. */
 
-const char *output_order_name(void);			/* returns text string of output order */
+#define SET_PDT_SIZE  3000                      /**< Maximum size of PDT. */
+#define SET_GDT_SIZE  3000                      /**< Maximum size of GDT. */
 
-/* maximum length of an inventory line */
-#define INV_BUFFER	100000
-/* maximum length of a name */
-#define NAMELEN		50
-
-/* maximum size of PDT in update_pdt.c */
-#define SET_PDT_SIZE  3000
-#define SET_GDT_SIZE  3000
 int update_sec3(unsigned char **sec, unsigned char *sec3);
 int update_sec4(unsigned char **sec, unsigned char *sec4);
 
-#define ONES	(~ (int) 0)
+#define ONES	(~ (int) 0)                     /**< Bitmask with all bits set. */
 
+/** Structure for full date representation. */
 struct full_date {
-   int year, month, day, hour, minute, second;
+   int year;        /**< Year. */
+   int month;       /**< Month. */
+   int day;         /**< Day. */
+   int hour;        /**< Hour. */
+   int minute;      /**< Minute. */
+   int second;      /**< Second. */
 };
 
+/** Structure for GRIB table representation. */
 struct gribtable_s {
-  int disc;   /* Section 0 Discipline                                */
-  int mtab_set;    /* Section 1 Master Tables Version Number used by set_var      */
-  int mtab_low;    /* Section 1 Master Tables Version Number low range of tables  */
-  int mtab_high;   /* Section 1 Master Tables Version Number high range of tables */
-  int cntr;   /* Section 1 originating centre, used for local tables */
-  int ltab;   /* Section 1 Local Tables Version Number               */
-  int pcat;   /* Section 4 Template 4.0 Parameter category           */
-  int pnum;   /* Section 4 Template 4.0 Parameter number             */
-  const char *name;
-  const char *desc;
-  const char *unit;
+  int disc;             /**< Section 0 - Discipline */
+  int mtab_set;         /**< Section 1 - Master Tables Version Number used by set_var */
+  int mtab_low;         /**< Section 1 - Master Tables Version Number low range of tables */
+  int mtab_high;        /**< Section 1 - Master Tables Version Number high range of tables */
+  int cntr;             /**< Section 1 - originating centre, used for local tables */
+  int ltab;             /**< Section 1 - Local Tables Version Number */
+  int pcat;             /**< Section 4 - Template 4.0 Parameter category */
+  int pnum;             /**< Section 4 - Template 4.0 Parameter number */
+  const char *name;     /**< Section 4 - Template 4.0 Parameter name */
+  const char *desc;    /**< Section 4 - Template 4.0 Parameter description */
+  const char *unit;    /**< Section 4 - Template 4.0 Parameter unit */
 };
 
 /* Ens_processing.c: ens_processing grid allocation
  * need to save grids for ens_proceesing
  * first allocation  npts * ENS_PROCESSING_NGRID0
- * next realloc ENS_PROCESSING_NGRID_FACTER * old_allocation
+ * next realloc ENS_PROCESSING_NGRID_FACTOR * old_allocation
  */
-#define ENS_PROCESSING_NGRID0 		8
-#define ENS_PROCESSING_NGRID_FACTOR 	2
+#define ENS_PROCESSING_NGRID0 		8           /**< Initial number of grids for ensemble processing */
+#define ENS_PROCESSING_NGRID_FACTOR 	2       /**< Factor by which to increase the number of grids */
 
 void init_globals(void);
 double Int_Power(double x, int y);
@@ -467,13 +521,14 @@ int to_we_ns_scan(float *data, int scan, unsigned int npnts, int nx, int ny, int
 int to_we_sn_scan(float *data, int scan, unsigned int npnts, int nx, int ny, int save_translation);
 int get_latlon(unsigned char **sec, double **lon, double **lat);
 void fatal_error(const char *fmt, ...);
-#define fatal_error_i  fatal_error
-#define fatal_error_ii  fatal_error
-#define fatal_error_u fatal_error
-#define fatal_error_lu fatal_error
-#define fatal_error_li fatal_error
-#define fatal_error_uu fatal_error
-#define fatal_error_ss fatal_error
+
+#define fatal_error_i  fatal_error      /**< Fatal error for integer values */
+#define fatal_error_ii  fatal_error      /**< Fatal error for integer values */
+#define fatal_error_u fatal_error        /**< Fatal error for unsigned values */
+#define fatal_error_lu fatal_error       /**< Fatal error for long unsigned values */
+#define fatal_error_li fatal_error       /**< Fatal error for long integer values */
+#define fatal_error_uu fatal_error       /**< Fatal error for unsigned long values */
+#define fatal_error_ss fatal_error       /**< Fatal error for signed short values */
 void set_mode(int new_mode);
 int latlon_0(unsigned char **sec);
 int new_gds(unsigned char **sec);
@@ -692,15 +747,15 @@ int JMA_Nr(unsigned char **sec);
 int set_metadata_string(ARG1);
 #ifdef USE_IPOLATES
 void ipolates_grib2_single_field(int *interpol, int *ipopt, int *gdt_in, int *gdttmpl_in, int *gdttmpl_size_in,
-  int *gdt_out, int *gdttmpl_out, int *gdttmpl_size_out, int *mi, int *mo, int *km,
-  int *ibi, unsigned char *bitmap, double *data_in, int *n_out, double *rlat, double *rlon,
-   int *ibo, unsigned char *bitmap_out, double *data_out, int *iret);
+    int *gdt_out, int *gdttmpl_out, int *gdttmpl_size_out, int *mi, int *mo, int *km,
+    int *ibi, unsigned char *bitmap, double *data_in, int *n_out, double *rlat, double *rlon,
+    int *ibo, unsigned char *bitmap_out, double *data_out, int *iret);
 
 void ipolatev_grib2_single_field(int *interpol, int *ipopt, int *gdt_in, int *gdttmpl_in, int *gdttmpl_size_in,
-  int *gdt_out, int *gdttmpl_out, int *gdttmpl_size_out, int *mi, int *mo, int *km,
-  int *ibi, unsigned char *bitmap, double *u_in, double *v_in, int *n_out, double *rlat, double *rlon,
-   double *crot, double *srot, int *ibo, unsigned char *bitmap_out,
-   double *u_out, double *v_out, int *iret);
+    int *gdt_out, int *gdttmpl_out, int *gdttmpl_size_out, int *mi, int *mo, int *km,
+    int *ibi, unsigned char *bitmap, double *u_in, double *v_in, int *n_out, double *rlat, double *rlon,
+    double *crot, double *srot, int *ibo, unsigned char *bitmap_out,
+    double *u_out, double *v_out, int *iret);
 
 void use_ncep_post_arakawa(void);
 #endif /* USE_IPOLATES */
