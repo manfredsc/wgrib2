@@ -67,6 +67,7 @@ static double cosaz;		/**< Cos of azimuth */
  * - 202 :: Input data error
  * 
  * @author T. Mittan @date March, 1993
+ *         W. Ebisuzaki Sep 2025 define f
  */
 long omerinvint(double r_maj, double r_min, double scale_fact, double azimuth,
         double lon_orig, double lat_orig, double false_east, double false_north,
@@ -118,6 +119,9 @@ if (fabs(lat_origin) < EPSLN)
    ts = 1.0;
    d = 1.0;
    el = 1.0;
+   /* W. Ebisuzaki: define f  */
+   /* when ts==1 and d==1 then f=1 to be consistent with else .. endif */
+   f = 1.0;
    }
 else
    {
