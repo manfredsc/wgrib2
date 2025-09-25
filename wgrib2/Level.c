@@ -61,12 +61,12 @@ const char *level_table[192] = {
 /* 28 */ "reserved",
 /* 29 */ "reserved",
 /* 30 */ "specified radius from center of sun",
-/* 31 */ "ionosphere D-region level",
-/* 32 */ "ionosphere E-region level",
-/* 33 */ "reserved",
-/* 34 */ "reserved",
-/* 35 */ "reserved",
-/* 36 */ "reserved",
+/* 31 */ "solar photosphere",
+/* 32 */ "ionosphere D-region level",
+/* 33 */ "ionosphere E-region level",
+/* 34 */ "ionosphere F1-region level",
+/* 35 */ "ionosphere F2-region level",
+/* 36 */ "stratopause",
 /* 37 */ "reserved",
 /* 38 */ "reserved",
 /* 39 */ "reserved",
@@ -196,7 +196,7 @@ const char *level_table[192] = {
 /* 163 */ "bottom of sediment layer",
 /* 164 */ "bottom of thermally active sediment layer",
 /* 165 */ "bottom of sediment layer penetrated by thermal wave",
-/* 166 */ "maxing layer",
+/* 166 */ "mixing layer",
 /* 167 */ "bottom of root zone",
 /* 168 */ "ocean model level %g",
 /* 169 */ "ocean level %g (kg*m-3) density difference to near surface",
@@ -539,12 +539,12 @@ int level1(int mode, int type, int undef_val, float val, int center, int subcent
 
     /* local table for NCEP */
     if (center == NCEP && type >= 192 && type <= 254) {
-        if (type == 235) val *= 0.01;  // C -> 0.1C
+        if (type == 235) val *= 0.1;  // 0.1C -> C
         sprintf(inv_out,ncep_level_table[type-192], val);
     }
 
     else if (center == KMA && type >= 192 && type <= 254) {
-        if (type == 235) val *= 0.01;  // C -> 0.1C
+        if (type == 235) val *= 0.1;  // 0.1C -> C
         sprintf(inv_out,kma_level_table[type-192], val);
     }
 
