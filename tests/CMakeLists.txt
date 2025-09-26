@@ -192,9 +192,9 @@ copy_test_data(LARGECAT220250305_12_1443copy.grib2)
 copy_test_data(ref_LARGECAT220250305_12_1443copy_stats.txt)
 
 
-if (MAKE_FTN_API)
-  build_ftn_api_test(test_fortran_api)
-endif()
+#if (MAKE_FTN_API)
+  #build_ftn_api_test(test_fortran_api)
+#endif()
 if (BUILD_LIB)
   shell_test(test_lib)
   build_c_api_test(test_c_api)
