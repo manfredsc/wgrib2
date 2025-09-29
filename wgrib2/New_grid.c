@@ -1542,6 +1542,8 @@ int f_new_grid(ARG4) {
 
 #ifndef USE_IPOLATES
 int f_new_grid_vectors(ARG1) {
+    (void) UV_vectors;
+    (void) no_vectors;
     fprintf(stderr,"IPOLATES package is not installed\n");
     return 1;
 }

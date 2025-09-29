@@ -42,6 +42,9 @@ int f_spectral_bands_extname(ARG0) {
     double c=299792458.;
     double minwave=9e19, maxwave=-9e19, sumwave=0, wl, fq;
 
+    (void) agency;
+    (void) longname;
+
     int multisat=0, multipol=0;
 
     if (mode < 0) return 0;

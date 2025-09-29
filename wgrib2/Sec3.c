@@ -990,7 +990,7 @@ int f_grid(ARG0) {
                 sprintf(inv_out,"sat. altitude=infinity (equatorial radii) grid_origin Xo=%d Yo=%d", 
                         GDS_Space_x0(gds), GDS_Space_y0(gds));
 
-                break;
+            break;
             case 100: sprintf(inv_out,"Triangular grid based on icosahedron");
                 break;
 
