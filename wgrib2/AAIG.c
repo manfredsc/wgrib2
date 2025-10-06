@@ -67,7 +67,7 @@ extern enum output_order_type output_order_wanted;
  * If RT is different than VT:
  *      output = NAME.LEVEL.RT.VT.asc
  *
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function. See @ref ARG0.
  *
  * @return 0 for success, error code otherwise.
  *
