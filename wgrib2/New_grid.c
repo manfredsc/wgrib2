@@ -796,7 +796,9 @@ unsigned char blank_sec1[21] = { 0,0,0,21,1,
  * - the mercator grid description is over specified. User must make sure (nx,dy) is consistent 
  * with lonn as well as (ny,dy) is consistent with latn
  * 
- * @param ARG4 ???
+ * @param ARG4 List of function arguments set by wgrib2's main() function (see @ref ARG4). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 

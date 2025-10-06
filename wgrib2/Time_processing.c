@@ -897,7 +897,9 @@ static int do_ave(struct ave_struct *save) {
  * times the sum was incremented. So it is possible for the fast averaging could use up too 
  * much memory. 
  * 
- * @param ARG4 ???
+ * @param ARG4 List of function arguments set by wgrib2's main() function (see @ref ARG4). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
  * 
