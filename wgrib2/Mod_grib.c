@@ -683,7 +683,9 @@ extern struct codetable_4_230  codetable_4_230_table[];
  * 
  * To find the values of X, use: wgrib2 - -set help all
  * 
- * @param ARG2 ???
+ * @param ARG2 List of function arguments set by wgrib2's main() function (see @ref ARG2). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 

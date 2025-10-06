@@ -372,7 +372,9 @@ int Proj4_ll2i(int n, double *lon, double *lat, unsigned int *ipnt) {
  * ## Usage
  * -proj4_ll2ij lon lat
  *
- * @param ARG2 ???
+ * @param ARG2 List of function arguments set by wgrib2's main() function (see @ref ARG2). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  *
  * @return 0 on success, error code otherwise
  *
@@ -510,7 +512,9 @@ int Proj4_xy2ll(int n, double *x, double *y, double *lon, double *lat) {
  * ## Usage
  * -proj4_ij2ll i j
  * 
- * @param ARG2 ???
+ * @param ARG2 List of function arguments set by wgrib2's main() function (see @ref ARG2). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  *
  * @return 0 on success, error code otherwise
  *
@@ -549,7 +553,9 @@ int f_proj4_ij2ll(ARG2) {
  * ## Usage
  * -proj4_ll2i lon lat
  * 
- * @param ARG2 ???
+ * @param ARG2 List of function arguments set by wgrib2's main() function (see @ref ARG2). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  *
  * @return 0 on success, error code otherwise
  *

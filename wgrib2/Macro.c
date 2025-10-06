@@ -273,7 +273,9 @@ int f_s_out(ARG1) {
  * CLEN = integer, the length of the character string
  * FILE = output file
  * 
- * @param ARG3 ???
+ * @param ARG3 List of function arguments set by wgrib2's main() function (see @ref ARG3). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 

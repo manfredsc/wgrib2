@@ -119,7 +119,9 @@ int f_sys(ARG1) {
  * The use of the UDF options is limited and the UDF options should, IMHO, not be enabled 
  * unless the UDF options are needed. 
  * 
- * @param ARG2 ???
+ * @param ARG2 List of function arguments set by wgrib2's main() function (see @ref ARG2). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws a fatal_error() on failure.
  * 
@@ -197,7 +199,9 @@ int f_udf_arg(ARG2) {
  * The use of the UDF options is limited and the UDF options should, IMHO, not be enabled 
  * unless the UDF options are needed. 
  * 
- * @param ARG2 ???
+ * @param ARG2 List of function arguments set by wgrib2's main() function (see @ref ARG2). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws a fatal_error() on failure.
  * 

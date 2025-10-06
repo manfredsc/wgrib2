@@ -108,7 +108,9 @@
  * of the input file, you get a limit of 999 -if_fs/-ave clauses. To speed up the code, the 
  * evaluation of the -if_fs options is done in parallel. 
  * 
- * @param ARG2 ???
+ * @param ARG2 List of function arguments set by wgrib2's main() function (see @ref ARG2). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
  * 
@@ -184,7 +186,9 @@ int f_ave(ARG2) {
  * of the input file, you get a limit of 999 -if_fs/-ave clauses. To speed up the code, the 
  * evaluation of the -if_fs options is done in parallel. 
  * 
- * @param ARG2 ???
+ * @param ARG2 List of function arguments set by wgrib2's main() function (see @ref ARG2). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
  * 

@@ -74,7 +74,9 @@ extern unsigned int npnts;
  * i = 1 .. nx
  * j = 1 .. ny
  * 
- * @param ARG2 ???
+ * @param ARG2 List of function arguments set by wgrib2's main() function (see @ref ARG2). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -146,7 +148,9 @@ int f_ij(ARG2) {
  * i = 1 .. nx
  * j = 1 .. ny
  * 
- * @param ARG2 ???
+ * @param ARG2 List of function arguments set by wgrib2's main() function (see @ref ARG2). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -317,7 +321,9 @@ int f_ilat(ARG1) {
  * you about 1600 -lon options you can run on one line. Of course, limitations such as the maximum line 
  * length or maximum number of continuations may stop you first. 
  * 
- * @param ARG2 ???
+ * @param ARG2 List of function arguments set by wgrib2's main() function (see @ref ARG2). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 

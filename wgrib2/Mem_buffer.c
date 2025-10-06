@@ -431,7 +431,9 @@ int wgrib2_set_mem_buffer(const unsigned char *my_buffer, size_t size, int n) {
  * N = 0 to 19
  * FILE = output file name
  * 
- * @param ARG2 ???
+ * @param ARG2 List of function arguments set by wgrib2's main() function (see @ref ARG2). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -486,7 +488,9 @@ int f_mem_final(ARG2) {
  * N = 0 to 19
  * FILE = input file name
  * 
- * @param ARG2 ???
+ * @param ARG2 List of function arguments set by wgrib2's main() function (see @ref ARG2). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
