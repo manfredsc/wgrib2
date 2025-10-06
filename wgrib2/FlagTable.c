@@ -34,7 +34,9 @@ extern char *stagger_description[];
  * ## Usage
  * -flag_table_3.3
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success
  * 
@@ -159,7 +161,9 @@ unsigned char *flag_table_3_3_location(unsigned char **sec) {
  * ## Usage
  * -vector_dir
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success
  * 
@@ -190,7 +194,9 @@ int f_vector_dir(ARG0) {
  * ## Usage
  * -flag_table_3.4
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success
  * 
@@ -328,7 +334,9 @@ unsigned char *flag_table_3_4_location(unsigned char **sec) {
  * ## Usage
  * -flag_table_3.5
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success
  * 
@@ -404,7 +412,9 @@ unsigned char *flag_table_3_5_location(unsigned char **sec) {
  * ## Usage
  * -flag_table_3.9
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success
  * 
@@ -453,7 +463,9 @@ int flag_table_3_9(unsigned char **sec) {
  * ## Usage
  * -flag_table_3.10
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success
  * 

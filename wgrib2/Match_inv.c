@@ -168,7 +168,9 @@ extern int ftime_mode;
  * default verbosity mode (-v0). It is possible that this break a few pieces of code. However, 
  * I think that the match facility shouldn't be dependent on the verbosity mode. 
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -206,7 +208,9 @@ int f_match_inv(ARG0) {
  * ## Usage
  * -Match_inv
  *
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -224,7 +228,9 @@ int f_Match_inv(ARG0) {
  * Prints the inventory with the specified date code format.
  * 
  * @param type_datecode The type of date code to use. 0 for short, 1 for long.
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 

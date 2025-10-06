@@ -231,7 +231,9 @@ int nc_grads_compatible = 0;
  * ## Usage
  * -nc_grads
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return Always returns 0
  * 
@@ -254,7 +256,9 @@ int f_nc_grads(ARG0)
  * ## Usage
  * -no_nc_grads
  *
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  *
  * @return Always returns 0
  * 
@@ -384,7 +388,9 @@ int f_nc_pack(ARG1)
  * ## Usage
  * -no_nc_pack
  *
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  *
@@ -1172,7 +1178,9 @@ if( nc_table->lt )
  * ## Usage
  * -no_nc_table
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -1327,7 +1335,9 @@ printf("nc_time: time_step_value=%d, type=%s, val_sec=%.1lf\n",dt_val,dt_type,nc
  * ## Usage
  * -no_nc_time
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return Always returns 0
  * 
@@ -1356,7 +1366,9 @@ int nc4 = 0;
  * ## Usage
  * -nc4
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return Always returns 0
  * 
@@ -1378,7 +1390,9 @@ int f_nc4(ARG0)
  * ## Usage
  * -nc3
  *
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  *
  * @return Always returns 0
  *
