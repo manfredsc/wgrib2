@@ -98,23 +98,23 @@ struct ARGLIST {int fn; int i_argc;};   /**< Argument list structure. */
  */
 #define ARG     int mode, unsigned char **sec, float *data, unsigned int ndata, char *inv_out, void **local
 
-/** Calling arguments for function API - zero additional arguments. See @ref ARG0 for base calling arguments.*/
+/** Calling arguments for function API - zero additional arguments. See @ref ARG for base calling arguments.*/
 #define ARG0	ARG, const char *dum1, const char *dum2, const char *dum3, const char *dum4, const char *dum5, const char *dum6, const char *dum7, const char *dum8
-/** Calling arguments for function API - one additional argument. See @ref ARG0 for base calling arguments.*/
+/** Calling arguments for function API - one additional argument. See @ref ARG for base calling arguments.*/
 #define ARG1	ARG, const char *arg1, const char *dum2, const char *dum3, const char *dum4, const char *dum5, const char *dum6, const char *dum7, const char *dum8
-/** Calling arguments for function API - two additional arguments. See @ref ARG0 for base calling arguments.*/
+/** Calling arguments for function API - two additional arguments. See @ref ARG for base calling arguments.*/
 #define ARG2	ARG, const char *arg1, const char *arg2, const char *dum3, const char *dum4, const char *dum5, const char *dum6, const char *dum7, const char *dum8
-/** Calling arguments for function API - three additional arguments. See @ref ARG0 for base calling arguments.*/
+/** Calling arguments for function API - three additional arguments. See @ref ARG for base calling arguments.*/
 #define ARG3	ARG, const char *arg1, const char *arg2, const char *arg3, const char *dum4, const char *dum5, const char *dum6, const char *dum7, const char *dum8
-/** Calling arguments for function API - four additional arguments. See @ref ARG0 for base calling arguments.*/
+/** Calling arguments for function API - four additional arguments. See @ref ARG for base calling arguments.*/
 #define ARG4	ARG, const char *arg1, const char *arg2, const char *arg3, const char *arg4, const char *dum5, const char *dum6, const char *dum7, const char *dum8
-/** Calling arguments for function API - five additional arguments. See @ref ARG0 for base calling arguments.*/
+/** Calling arguments for function API - five additional arguments. See @ref ARG for base calling arguments.*/
 #define ARG5	ARG, const char *arg1, const char *arg2, const char *arg3, const char *arg4, const char *arg5, const char *dum6, const char *dum7, const char *dum8
-/** Calling arguments for function API - six additional arguments. See @ref ARG0 for base calling arguments.*/
+/** Calling arguments for function API - six additional arguments. See @ref ARG for base calling arguments.*/
 #define ARG6	ARG, const char *arg1, const char *arg2, const char *arg3, const char *arg4, const char *arg5, const char *arg6, const char *dum7, const char *dum8
-/** Calling arguments for function API - seven additional arguments. See @ref ARG0 for base calling arguments.*/
+/** Calling arguments for function API - seven additional arguments. See @ref ARG for base calling arguments.*/
 #define ARG7	ARG, const char *arg1, const char *arg2, const char *arg3, const char *arg4, const char *arg5, const char *arg6, const char *arg7, const char *dum8
-/** Calling arguments for function API - eight additional arguments. See @ref ARG0 for base calling arguments.*/
+/** Calling arguments for function API - eight additional arguments. See @ref ARG for base calling arguments.*/
 #define ARG8	ARG, const char *arg1, const char *arg2, const char *arg3, const char *arg4, const char *arg5, const char *arg6, const char *arg7, const char *arg8
 
 /* buf = buffer our text out from function */
