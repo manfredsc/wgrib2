@@ -139,7 +139,9 @@ extern enum output_order_type output_order;
  * 0 - do not use gctpc for geolocation
  * 1 - enabled gctpc for geolocation (default)
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  *
  * @return 0 for success
  * 

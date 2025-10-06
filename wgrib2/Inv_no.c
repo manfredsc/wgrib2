@@ -115,7 +115,9 @@ extern int for_n_step;
  * -for_n I::K         same as for n = I to MAX_INTEGER by K
  * -for_n I            same as for n = I to MAX_INTEGER by 1
  *
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  *
@@ -159,7 +161,9 @@ int f_for_n(ARG1)  {
  * -if_n I::K         same as for n = I to MAX_INTEGER by K
  * -if_n I            same as for n = I to MAX_INTEGER by 1
  *
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  *

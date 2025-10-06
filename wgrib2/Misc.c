@@ -220,7 +220,9 @@ int f_i(ARG0) {
  * wgrib2 -i_file FILE.inv FILE.grb -match UGRD -bin data.bin 
  * @endcode
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -493,7 +495,9 @@ int f_nl(ARG0) {
  * ## Usage
  * -nl_out FILE
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -534,7 +538,9 @@ int f_nl_out(ARG1) {
  * ## Usage
  * -print "string"
  *
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  *
  * @return 0 for success, error code otherwise
  *
@@ -622,7 +628,9 @@ int f_print_out(ARG2) {
  * 
  * The colon character will be replace with "string" in the output.
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -786,7 +794,9 @@ int f_no_append(ARG0) {
  * ## Usage
  * -inv FILE
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -906,7 +916,9 @@ int f_big_endian(ARG0) {
  * Some distributions will seg fault using this option. Files from non-NCEP sources may have the 
  * wrong constant values.
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 

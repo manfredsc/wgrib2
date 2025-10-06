@@ -125,7 +125,9 @@ int f_ftime(ARG0) {
 /**
  * Same as set_ftime2. See documentation for the -set_ftime2 option.
  *
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
