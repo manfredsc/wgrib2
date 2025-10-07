@@ -108,7 +108,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
     )
     variant(
         "netcdf", 
-        default=False, 
+        default=True, 
         description="Link in netcdf library to write netcdf files",
         when="@3.4:"
     )
