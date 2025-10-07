@@ -108,8 +108,8 @@ class Wgrib2(MakefilePackage, CMakePackage):
     )
     variant(
         "netcdf", 
-        default=False, 
-        description="Link in netcdf4 library to write netcdf3/4 files",
+        default=True, 
+        description="Link in netcdf library to write netcdf files",
         when="@3.4:"
     )
     variant(
@@ -200,7 +200,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
     depends_on("lapack", when="@develop +ipolates")
     depends_on("libaec@1.0.6:", when="@3.2: +aec")
     depends_on("netcdf-c", when="@3.2: +netcdf4")
-
+    depends_on("netcdf-c", when="@3.4: +netcdf")
     depends_on("jasper@:2", when="@3.2:3.4 +jasper")
     depends_on("g2c@2.2.0: +jasper", when="@3.4:3.7 +jasper")
     depends_on("zlib-api", when="@3.2:3.4 +png")
