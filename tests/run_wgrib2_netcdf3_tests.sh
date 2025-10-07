@@ -6,6 +6,8 @@
 set -e 
 set -x
 
+exit 1
+
 echo "*** Testing converting from grib to netcdf to grib"
 # make template
 ../wgrib2/wgrib2 data/ref_simple_packing.grib2 -rpn 0 -grib_out junk_netcdf.template
