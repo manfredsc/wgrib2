@@ -46,7 +46,9 @@ extern int inv_no;
  * 
  * sprintf(inv_out, "%8d %8u %8u %8u %8d %8d",inv_no,npnts,nx_,ny_,msg_no, submsg)
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success
  * 

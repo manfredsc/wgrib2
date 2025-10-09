@@ -95,7 +95,9 @@ enum processing_type {ave, acc, max, min};
  * time unit:  the forecast time unit, hr, dy, mo, etc (If you want to process A-B hour acc fcst, then N=1, time unit=hr)
  * I : 1
  * 
- * @param ARG3 ???
+ * @param ARG3 List of function arguments set by wgrib2's main() function (see @ref ARG3). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
  * 

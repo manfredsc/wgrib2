@@ -548,7 +548,9 @@ static int wrt_ens_qc(unsigned char **sec, struct ens_qc_struct *save) {
  * QC_VERSION = the type of QC to be run
  *      1  only acceptable value (1/2021)
  * 
- * @param ARG4 ???
+ * @param ARG4 List of function arguments set by wgrib2's main() function (see @ref ARG4). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
