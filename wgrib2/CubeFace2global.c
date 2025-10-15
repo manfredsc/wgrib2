@@ -63,7 +63,9 @@ extern enum output_grib_type grib_type;
  * 
  * Where faces is the list of faces to exclude (0-6)
  * 
- * @param ARG2 ???
+ * @param ARG2 List of function arguments set by wgrib2's main() function (see @ref ARG2). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success, error code otherwise.
  * 

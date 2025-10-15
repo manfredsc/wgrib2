@@ -231,7 +231,9 @@ int parse_level1(unsigned char **sec, const char *string, int *table_4_5, int *s
  * "%gC ocean isotherm%n", NCEP only
  * "atmos col"
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -500,7 +502,9 @@ int names;
  *                         var10_2_1_7_0_11
  * 1/2021 | W. Ebisuzaki | added ecmwf tables
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -627,7 +631,9 @@ int f_set_var(ARG1) {
  * 
  * C and S are center/subcenter numbers
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  *
  * @return 0 for success, error code otherwise.
  * 
@@ -677,7 +683,9 @@ extern struct codetable_4_230  codetable_4_230_table[];
  * 
  * To find the values of X, use: wgrib2 - -set help all
  * 
- * @param ARG2 ???
+ * @param ARG2 List of function arguments set by wgrib2's main() function (see @ref ARG2). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -1022,7 +1030,9 @@ int f_set(ARG2) {
  * 
  * Eventually the version 1 routines will be removed. 
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -1436,7 +1446,9 @@ int f_set_ave(ARG1) {
  * ## Usage
  * -set_flag_table_3_3 X
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -1457,7 +1469,9 @@ int f_set_flag_table_3_3(ARG1) {
  * ## Usage
  * -set_flag_table_3_4 X
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 

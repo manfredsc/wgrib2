@@ -143,7 +143,9 @@ static void interpolate(float *in, int n_in, float *out, int n_out, enum interpo
  * 
  * INTERPOLATION = linear, neighbor, linear-extrapolate, neighbor-extrapolate
  * 
- * @param ARG3 ???
+ * @param ARG3 List of function arguments set by wgrib2's main() function (see @ref ARG3). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success, error code otherwise
  * 

@@ -70,7 +70,9 @@ extern int header;
  * 
  * @note Grid size (if it can be determined) must match the current grid.
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -156,7 +158,9 @@ int f_import_text(ARG1) {
  * 
  * @note Grid size (if it can be determined) must match the current grid.
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -231,7 +235,9 @@ int f_import_ieee(ARG1) {
  * 
  * @note Grid size (if it can be determined) must match the current grid.
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 

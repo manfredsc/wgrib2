@@ -30,7 +30,9 @@
  * ## Usage
  * -code_table_0.0
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -91,7 +93,9 @@ unsigned char *code_table_0_0_location(unsigned char **sec) {
  * ## Usage
  * -code_table_1.0
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -144,7 +148,9 @@ unsigned char *code_table_1_0_location(unsigned char **sec) {
  * ## Usage
  * -code_table_1.1
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -197,7 +203,9 @@ unsigned char *code_table_1_1_location(unsigned char **sec) {
  * ## Usage
  * -code_table_1.2
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -257,7 +265,9 @@ unsigned char *code_table_1_2_location(unsigned char **sec) {
  * ## Usage
  * -code_table_1.3
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  *
@@ -318,7 +328,9 @@ unsigned char *code_table_1_3_location(unsigned char **sec) {
  * ## Usage
  * -code_table_1.4
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -378,7 +390,9 @@ unsigned char *code_table_1_4_location(unsigned char **sec) {
  * ## Usage
  * -code_table_1.5
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -432,7 +446,9 @@ unsigned char *code_table_1_5_location(unsigned char **sec) {
  * ## Usage
  * -code_table_1.6
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -487,7 +503,9 @@ unsigned char *code_table_1_6_location(unsigned char **sec) {
  * ## Usage
  * -code_table_3.0
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -524,7 +542,9 @@ int code_table_3_0(unsigned char **sec) {
  * ## Usage
  * -code_table_3.1
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -568,7 +588,9 @@ int code_table_3_1(unsigned char **sec) {
  * ## Usage
  * -code_table_3.2
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -662,7 +684,9 @@ unsigned char *code_table_3_2_location(unsigned char **sec) {
  * ## Usage
  * -code_table_3.6
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -703,7 +727,9 @@ int code_table_3_6(unsigned char **sec) {
  * ## Usage
  * -code_table_3.7
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -744,7 +770,9 @@ int code_table_3_7(unsigned char **sec) {
  * ## Usage
  * -code_table_3.8
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -794,7 +822,9 @@ int code_table_3_8(unsigned char **sec) {
  * ## Usage
  * -code_table_3.11
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -846,7 +876,9 @@ int code_table_3_11(unsigned char **sec) {
  * ## Usage
  * -code_table_3.15
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -914,7 +946,9 @@ unsigned char *code_table_3_15_location(unsigned char **sec) {
  * ## Usage
  * -code_table_3.20
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -980,7 +1014,9 @@ unsigned char *code_table_3_20_location(unsigned char **sec) {
  * ## Usage
  * -code_table_3.21
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -1030,7 +1066,9 @@ int code_table_3_21(unsigned char **sec) {
  * ## Usage
  * -code_table_4.0
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -1074,7 +1112,9 @@ int code_table_4_0(unsigned char **sec) {
  * ## Usage
  * -code_table_4.1
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -1139,7 +1179,9 @@ unsigned char *code_table_4_1_location(unsigned char **sec) {
  * ## Usage
  * -code_table_4.2
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -1205,7 +1247,9 @@ unsigned char *code_table_4_2_location(unsigned char **sec) {
  * ## Usage
  * -code_table_4.3
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -1356,7 +1400,9 @@ unsigned char *code_table_4_3_location(unsigned char **sec) {
  * ## Usage
  * -code_table_4.4
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -1528,7 +1574,9 @@ int code_table_4_4_not_used(unsigned char **sec) {
  * ## Usage
  * -code_table_4.5a
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -1684,7 +1732,9 @@ unsigned char *code_table_4_5a_location(unsigned char **sec) {
  * ## Usage
  * -code_table_4.5b
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -1839,7 +1889,9 @@ unsigned char *code_table_4_5b_location(unsigned char **sec) {
  * ## Usage
  * -code_table_4.6
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -1917,7 +1969,9 @@ unsigned char *code_table_4_6_location(unsigned char **sec) {
  * ## Usage
  * -code_table_4.7
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -1991,7 +2045,9 @@ unsigned char *code_table_4_7_location(unsigned char **sec) {
  * ## Usage
  * -code_table_4.8
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -2062,7 +2118,9 @@ unsigned char *code_table_4_8_location(unsigned char **sec) {
  * ## Usage
  * -code_table_4.9
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -2132,7 +2190,9 @@ unsigned char *code_table_4_9_location(unsigned char **sec) {
  * ## Usage
  * -code_table_4.10
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  *
@@ -2227,7 +2287,9 @@ unsigned char *code_table_4_10_location(unsigned char **sec) {
  * ## Usage
  * -code_table_4.11
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -2260,7 +2322,9 @@ int f_code_table_4_11(ARG0) {
  * ## Usage
  * -code_table_4.11s
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -2347,7 +2411,9 @@ unsigned char *code_table_4_11_location(unsigned char **sec) {
  * ## Usage
  * -code_table_4.15
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -2416,7 +2482,9 @@ unsigned char *code_table_4_15_location(unsigned char **sec) {
  * ## Usage
  * -code_table_4.16
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -2485,7 +2553,9 @@ unsigned char *code_table_4_16_location(unsigned char **sec) {
  * ## Usage
  * -code_table_4.91
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -2560,7 +2630,9 @@ unsigned char *code_table_4_91_location(unsigned char **sec) {
  * ## Usage
  * -code_table_4.91b
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -2735,7 +2807,9 @@ extern struct codetable_4_230  codetable_4_230_table[];
  * ## Usage
  * -code_table_4.230
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -2818,7 +2892,9 @@ unsigned char *code_table_4_230_location(unsigned char **sec) {
  * ## Usage
  * -code_table_4.233
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -2901,7 +2977,9 @@ unsigned char *code_table_4_233_location(unsigned char **sec) {
  * ## Usage
  * -code_table_4.235
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -2949,7 +3027,9 @@ int code_table_4_235(unsigned char **sec) {
  * ## Usage
  * -code_table_4.240
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -3024,7 +3104,9 @@ unsigned char *code_table_4_240_location(unsigned char **sec) {
  * ## Usage
  * -code_table_4.241
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -3087,7 +3169,9 @@ unsigned char *code_table_4_241_location(unsigned char **sec) {
  * ## Usage
  * -code_table_4.242
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -3150,7 +3234,9 @@ unsigned char *code_table_4_242_location(unsigned char **sec) {
  * ## Usage
  * -code_table_5.0
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -3196,7 +3282,9 @@ int code_table_5_0(unsigned char **sec) {
  * ## Usage
  * -code_table_5.1
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -3256,7 +3344,9 @@ int code_table_5_1(unsigned char **sec) {
  * ## Usage
  * -code_table_5.4
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -3295,7 +3385,9 @@ int code_table_5_4(unsigned char **sec) {
  * ## Usage
  * -code_table_5.5
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -3334,7 +3426,9 @@ int code_table_5_5(unsigned char **sec) {
  * ## Usage
  * -code_table_5.6
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  *
@@ -3373,7 +3467,9 @@ int code_table_5_6(unsigned char **sec) {
  * ## Usage
  * -code_table_5.7
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -3412,7 +3508,9 @@ int code_table_5_7(unsigned char **sec) {
  * ## Usage
  * -code_table_6.0
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 

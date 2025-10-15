@@ -101,7 +101,9 @@ static int same_sec(unsigned char *seca, unsigned char *secb) {
  * 
  * NOTE: OUTPUT_FILE cannot be a pipe.
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
  *
@@ -129,7 +131,9 @@ int f_tosubmsg(ARG1) {
 /**
  * Initialize the submessage structure (mode = -1).
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * @param save Pointer to the submessage structure.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
@@ -165,7 +169,9 @@ int init_tosubmsg(ARG1, struct submsg *save) {
 /**
  * Process each (sub)message (mode = 0,1,2).
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * @param save Pointer to the submessage structure.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
@@ -253,7 +259,9 @@ int write_tosubmsg(ARG1, struct submsg *save) {
 /**
  * Cleanup the submessage structure (mode = -2).
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * @param save Pointer to the submessage structure.
  * 
  * @return 0 on success. Throws fatal_error() on failure.

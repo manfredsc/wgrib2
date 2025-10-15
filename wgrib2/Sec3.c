@@ -66,7 +66,9 @@ int *raw_variable_dim = NULL;
  * ## Usage
  * -Sec3
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -309,7 +311,9 @@ int get_nxny_(unsigned char **sec, unsigned int *nx, unsigned int *ny, unsigned 
  * ## Usage
  * -nxny
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return Always returns 0
  * 
@@ -407,7 +411,9 @@ const char *scan_order[] = {
  * ## Usage
  * -scan
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -449,7 +455,9 @@ const char *jma_scan_order[] = {	// JMA 3.1 bits 1-3
  * ## Usage
  * -nlons
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -562,7 +570,9 @@ int f_nlons(ARG0) {
  * ## Usage
  * -grid
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
