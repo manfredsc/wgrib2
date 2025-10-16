@@ -81,7 +81,7 @@ int unpk_grib(unsigned char **sec, float *data) {
 #endif
 
 #if G2_AEC_ENABLED == 1
-    int i, len, nbits, flags, block_size, rsi;
+    int total_out, len, flags, block_size, rsi;
     int numBitsNeeded, size;
 #endif
 
@@ -354,9 +354,9 @@ int unpk_grib(unsigned char **sec, float *data) {
 
         if ((c = (unsigned char *) malloc(size)) == NULL) fatal_error("unpk: allocation error", "");
 
-        i = g2c_dec_aec(sec[7]+5, len, nbits, flags, block_size, rsi, (unsigned char *)c, size);
+        total_out = g2c_dec_aec(sec[7]+5, len, nbits, flags, block_size, rsi, (unsigned char *)c, size);
 
-        if (i < 0) fatal_error_i("unpk: aec decode error %d", i);
+        if (total_out < 0) fatal_error_i("unpk: aec decode error %d", total_out);
 
         mask_pointer = (bitmap_flag == 255) ? NULL : sec[6] + 6;
 
