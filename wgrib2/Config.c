@@ -197,9 +197,6 @@ int f_config(ARG0) {
 #if G2_JPEG2000_ENABLED == 1
     strcat(inv_out, ", jpeg2000");
 #endif
-#if G2_AEC_ENABLED == 1
-    strcat(inv_out, ", CCSDS AEC");
-#endif
     strcat(inv_out, "\n");
 
     filename = getenv("GRIB2TABLE");
