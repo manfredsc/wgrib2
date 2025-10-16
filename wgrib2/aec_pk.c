@@ -33,6 +33,9 @@
 #include "grb2.h"
 #include "wgrib2.h"
 #include "fnlist.h"
+#ifdef USE_G2CLIB_LOW
+#include <grib2.h>
+#endif
 
 #if G2_AEC_ENABLED == 1
 
