@@ -11,7 +11,7 @@
 #include "fnlist.h"
 
 /*
- * HEADER:400:spatial_proc:inv:0:show spacial processing, pdt=4.15
+ * HEADER:400:spatial_proc:inv:0:show spatial processing, pdt=4.15
  */
 
 /**
