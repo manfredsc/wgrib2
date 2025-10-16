@@ -406,8 +406,8 @@ int f_set_lev(ARG1) {
         return 0;
     }
 
-    if (strcmp("atmos col", arg1) == 0 ||	// wgrib2 compatible
-            strcmp("Entire atmosphere (considered as a single layer)", arg1) == 0) {
+    if (strcmp("atmos col", arg1) == 0 ||	// wgrib compatible
+            strcmp("entire atmosphere (considered as a single layer)", arg1) == 0) {
         if (p2 == NULL) fatal_error("set_lev: PDT has only 1 fixed surface, set_lev needs 2","");
         p1[0] = 1;
         p2[0] = 8;
