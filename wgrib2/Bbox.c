@@ -118,7 +118,9 @@ static int get_cindex (int i, int nx) {
  * j1:j2:dj specifies the y-dimension, where j1 is the starting index, j2 is the ending index, and dj is the increment.
  * output_file is written in the specified format (e.g., "bin", "text", "spread").
  * 
- * @param ARG4 ???
+ * @param ARG4 List of function arguments set by wgrib2's main() function (see @ref ARG4). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 

@@ -85,7 +85,9 @@ extern enum output_grib_type grib_type;
  * the data by finding the nearest grid point, etc. (At this point, the latitudes and longitudes have not been 
  * specified.) 
  * 
- * @param ARG5 ???
+ * @param ARG5 List of function arguments set by wgrib2's main() function (see @ref ARG5). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 

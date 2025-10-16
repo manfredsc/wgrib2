@@ -28,7 +28,9 @@
  * ## Usage:
  * -radius
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success, error code otherwise.
  * 
@@ -84,7 +86,9 @@ int f_radius(ARG0) {
  *      X=major axis Y=minor axis (oblate spheroid), X, Y in m
  *      Code Table 3.2 is set to 7
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success, error code otherwise.
  * 

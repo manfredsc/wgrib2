@@ -57,7 +57,9 @@ extern unsigned int npnts;
  * I = 1 to NX
  * J = 1 to NY
  * 
- * @param ARG3 ???
+ * @param ARG3 List of function arguments set by wgrib2's main() function (see @ref ARG3). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
  * 
@@ -125,7 +127,9 @@ int f_set_ijval(ARG3) {
  * I, I1, .. In is the grid point from 1 to npnts
  * VAL, VAL1, .. VALn are floating point values
  * 
- * @param ARG3 ???
+ * @param ARG3 List of function arguments set by wgrib2's main() function (see @ref ARG3). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
  * 
