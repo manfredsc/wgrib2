@@ -44,9 +44,7 @@ int grb2_wrtVA(const char *grb, const char *template, int msgno, float *data,
     char *option, *str_arg;
     int i, ierr;
     long long int ival8;
-    size_t bufsize;
     char line[100];
-    char buffer[71];
 
     /* copy data to register 9, check for size mismatch is internal to wgrib2(..)  */
 
