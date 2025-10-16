@@ -186,7 +186,7 @@ int aec_grib_out(unsigned char ** sec, float *data, unsigned int ndata, int use_
         sec7 = (unsigned char *) malloc(outbuflen + 5);
         if (sec7 == NULL) fatal_error("aes_pk: memory allocation","");
 
-        ret = g2c_enc_aec(inbuffer, inbuflen,, nbits, ccsds_flags, ccsds_block_size, ccsds_rsi, sec7 + 5,  outbuflen);
+        ret = g2c_enc_aec(inbuffer, inbuflen, nbits, ccsds_flags, ccsds_block_size, ccsds_rsi, sec7 + 5,  outbuflen);
 
         if (ret < 0) fatal_error_i("aec_buffer_encode %d", ret);
 
