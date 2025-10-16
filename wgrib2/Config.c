@@ -69,7 +69,7 @@ int f_config(ARG0) {
     strcat(inv_out, "g2clib v" );
     strcat(inv_out, G2C_VERSION " is installed\n" );
 #endif
-#ifdef USE_AEC
+#if G2_AEC_ENABLED == 1
     strcat(inv_out, "AEC is installed\n" );
 #endif
 
@@ -188,7 +188,7 @@ int f_config(ARG0) {
 #if G2_JPEG2000_ENABLED == 1
     strcat(inv_out, ", jpeg2000");
 #endif
-#ifdef USE_AEC
+#if G2_AEC_ENABLED == 1
     strcat(inv_out, ", CCSDS AEC");
 #endif
     strcat(inv_out, "\n");
@@ -197,7 +197,7 @@ int f_config(ARG0) {
 #if G2_JPEG2000_ENABLED == 1
     strcat(inv_out, ", jpeg2000");
 #endif
-#ifdef USE_AEC
+#if G2_AEC_ENABLED == 1
     strcat(inv_out, ", CCSDS AEC");
 #endif
     strcat(inv_out, "\n");
