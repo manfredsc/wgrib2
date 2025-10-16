@@ -43,7 +43,9 @@
  * X, Y, Z, A, or B can have the value "". When the value "" is used, the previous value is not 
  * changed.
  * 
- * @param ARG5 ???
+ * @param ARG5 List of function arguments set by wgrib2's main() function (see @ref ARG5). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
  * 

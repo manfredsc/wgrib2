@@ -133,7 +133,9 @@ extern struct seq_file inv_file;
  * string. The date is printed out using the "ndates_fmt" format.  The default format is 
  * " %s".  (C format)
  *
- * @param ARG3 ???
+ * @param ARG3 List of function arguments set by wgrib2's main() function (see @ref ARG3). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -339,7 +341,9 @@ int f_ndates(ARG3) {
  * C_FORMAT is a C-language format which includes a %s to print the date code. The only back 
  * slash sequences allowed are \n, \t, and \\. Only one %s is supported.
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 

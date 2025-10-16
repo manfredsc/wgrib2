@@ -90,7 +90,9 @@ int is_match_fs(const char *s) {
  * This option works the same as:
  * -set_regex 1 -match "string"
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -150,7 +152,9 @@ int f_match_fs(ARG1)  {
  *      -not ":n=10:vt=2011111500:"               bad (item before :vt=)
  *      -match ":RH:975 mb:anl::vt=2010050806:"   bad (item before :vt=)
  *
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -186,7 +190,9 @@ int f_not_fs(ARG1)  {
  * 
  * X is a fixed string, not a regular expression.
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -235,7 +241,9 @@ int f_if_fs(ARG1) {
  * 
  * X is a fixed string, not a regular expression.
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -338,7 +346,9 @@ int f_not_if_fs(ARG1) {
  * X is a fixed string (not a regular expression)
  * 
  * Note: -set_regex does not modify the type of regex for these options
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -426,7 +436,9 @@ int f_fgrep(ARG1)  {
  * X is a fixed string (not a regular expression)
  * 
  * Note: -set_regex does not modify the type of regex for these options
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 

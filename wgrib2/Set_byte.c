@@ -35,7 +35,9 @@
  * STARTING_OCTET_LOCATION >= 1
  * I-M = Mth octet
  *
- * @param ARG3 ???
+ * @param ARG3 List of function arguments set by wgrib2's main() function (see @ref ARG3). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
  * 
@@ -107,7 +109,9 @@ int f_set_byte(ARG3) {
  * STARTING_OCTET_LOCATION = 1 to N
  * I-M = Mth octet as a 2 digit hex number
  * 
- * @param ARG3 ???
+ * @param ARG3 List of function arguments set by wgrib2's main() function (see @ref ARG3). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
  * 
@@ -196,7 +200,9 @@ int f_set_hex(ARG3) {
  * STARTING_OCTET_LOCATION = 1 to N
  * I-M = Mth integer
  * 
- * @param ARG3 ???
+ * @param ARG3 List of function arguments set by wgrib2's main() function (see @ref ARG3). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
  * 
@@ -258,7 +264,9 @@ int f_set_int(ARG3) {
  * STARTING_OCTET_LOCATION = 1 to N
  * I-M = Mth integer
  * 
- * @param ARG3 ???
+ * @param ARG3 List of function arguments set by wgrib2's main() function (see @ref ARG3). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
  * 
@@ -312,7 +320,9 @@ int f_set_int2(ARG3) {
  * STARTING_OCTET_LOCATION = 1 to N
  * I-M = Mth floating point number
  *
- * @param ARG3 ???
+ * @param ARG3 List of function arguments set by wgrib2's main() function (see @ref ARG3). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  *
  * @return 0 on success. Throws fatal_error() on failure.
  *
@@ -364,7 +374,9 @@ int f_set_ieee(ARG3) {
  * OCTET = starting octet to start printing, OCTET ≥ 1
  * NUMBER = number of bytes to print
  * 
- * @param ARG3 ???
+ * @param ARG3 List of function arguments set by wgrib2's main() function (see @ref ARG3). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
  * 
@@ -434,7 +446,9 @@ int f_get_byte(ARG3) {
  * OCTET = starting octet to print
  * NUMBER = number of octets/bytes to print
  * 
- * @param ARG3 ???
+ * @param ARG3 List of function arguments set by wgrib2's main() function (see @ref ARG3). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
  * 
@@ -499,7 +513,9 @@ int f_get_hex(ARG3) {
  * OCTET = the octet number to print
  * N = number of integers to print
  * 
- * @param ARG3 ???
+ * @param ARG3 List of function arguments set by wgrib2's main() function (see @ref ARG3). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
  * 
@@ -560,7 +576,9 @@ int f_get_int(ARG3) {
  * OCTET = the octet number to print
  * N = number of integers to print
  * 
- * @param ARG3 ???
+ * @param ARG3 List of function arguments set by wgrib2's main() function (see @ref ARG3). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
  * 
@@ -615,7 +633,9 @@ int f_get_int2(ARG3) {
  * OCTET = the octet number to print
  * N = number of IEEE float to print (4 octets per IEEE number)
  * 
- * @param ARG3 ???
+ * @param ARG3 List of function arguments set by wgrib2's main() function (see @ref ARG3). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
  * 
