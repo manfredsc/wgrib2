@@ -90,7 +90,9 @@ static const char *UV_vectors[] = { "UGRD", "VGRD", NULL };
  * 
  * Example UV list: "UGRD:VGRD:UICE:VICE"
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  *
@@ -268,7 +270,9 @@ enum wind_rotation_type wind_rotation;
  * U wind goes from grid (i,j) to (i+1,j) which is not eastward in a Lambert-conformal or polar 
  * stereographic grids
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -357,7 +361,9 @@ static int ipopt[20] = {-1,-1,0, 0,0,0, 0,0,0, 0};
  * 
  * If undefined values are found, bilinear interpolation is used.
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -429,7 +435,9 @@ int f_new_grid_interpolation(ARG1) {
  *   - bin: native single precision format like -bin
  *   - ieee: IEEE single precision like -ieee
  *
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -508,7 +516,9 @@ int f_new_grid_format(ARG1) {
  * 
  * X = integer or integer:integer
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -786,7 +796,9 @@ unsigned char blank_sec1[21] = { 0,0,0,21,1,
  * - the mercator grid description is over specified. User must make sure (nx,dy) is consistent 
  * with lonn as well as (ny,dy) is consistent with latn
  * 
- * @param ARG4 ???
+ * @param ARG4 List of function arguments set by wgrib2's main() function (see @ref ARG4). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -1542,6 +1554,8 @@ int f_new_grid(ARG4) {
 
 #ifndef USE_IPOLATES
 int f_new_grid_vectors(ARG1) {
+    (void) UV_vectors;
+    (void) no_vectors;
     fprintf(stderr,"IPOLATES package is not installed\n");
     return 1;
 }

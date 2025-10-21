@@ -124,7 +124,9 @@ extern int version_ftime;
  * option does not support all metadata. The format of the levels and ftime are the same was used 
  * by wgrib2 inventories. 
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
  * 
@@ -174,7 +176,9 @@ int f_set_metadata(ARG1) {
  * 
  * metadata is a string
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
  * 
@@ -194,7 +198,9 @@ int f_set_metadata_str(ARG1) {
 /**
  * Reads metadata from a string and sets the appropriate fields in the GRIB message.
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 
  * - 0 :: success

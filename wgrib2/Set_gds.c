@@ -24,7 +24,9 @@
  *
  * X is the size of the new GDS in bytes.
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
  * 
@@ -37,8 +39,12 @@ int f_set_gds(ARG1) {
 
     if (mode < 0) return 0;
     size_new_sec3 = atoi(arg1);
-    if (size_new_sec3 <  5) fatal_error("set_gdt: X=length of GDT (Sec 3)","");
-    new_sec3 = (unsigned char *) malloc(sizeof(unsigned char) * (size_t) size_new_sec3);
+    if (size_new_sec3 <  5) {
+        fatal_error("set_gdt: X=length of GDT (Sec 3)","");
+        /* is needed to remove compiler warning */
+        exit(1);
+    }
+    new_sec3 = (unsigned char *) malloc((size_t) (sizeof(unsigned char) * size_new_sec3));
     if (new_sec3 == NULL) fatal_error("new_gds: memory allocation","");
 
     /* size of sec3 */

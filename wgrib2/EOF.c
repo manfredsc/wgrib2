@@ -62,7 +62,9 @@ extern int file_append;
  * ## Usage
  * -err_bin file integer
  * 
- * @param ARG2 ???
+ * @param ARG2 List of function arguments set by wgrib2's main() function (see @ref ARG2). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, 1 if err_file can't be opened
  * 
@@ -109,7 +111,9 @@ void err_bin(int error) {
  * ## Usage
  * -err_string file string
  * 
- * @param ARG2 ???
+ * @param ARG2 List of function arguments set by wgrib2's main() function (see @ref ARG2). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, 1 if err_str_file can't be opened
  * 
@@ -159,7 +163,9 @@ void err_string(int error) {
  * ## Usage
  * -eof_bin file integer
  * 
- * @param ARG2 ???
+ * @param ARG2 List of function arguments set by wgrib2's main() function (see @ref ARG2). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, 1 if err_file can't be opened
  * 
@@ -192,7 +198,9 @@ int f_eof_bin(ARG2) {
  * ## Usage
  * -eof_string file string
  * 
- * @param ARG2 ???
+ * @param ARG2 List of function arguments set by wgrib2's main() function (see @ref ARG2). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, 1 if err_file can't be opened
  * 

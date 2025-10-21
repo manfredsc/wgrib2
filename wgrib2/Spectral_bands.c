@@ -23,7 +23,9 @@ extern char *nl;
  * ## Usage
  * -spectral_bands_extname
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return Always returns 0.
  * 
@@ -41,6 +43,9 @@ int f_spectral_bands_extname(ARG0) {
     const char *shortname1=NULL, *satellite1=NULL, *pol1=NULL;
     double c=299792458.;
     double minwave=9e19, maxwave=-9e19, sumwave=0, wl, fq;
+
+    (void) agency;
+    (void) longname;
 
     int multisat=0, multipol=0;
 
@@ -154,7 +159,9 @@ int f_spectral_bands_extname(ARG0) {
  * ## Usage
  * -spectral_bands
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return Always returns 0.
  * 
