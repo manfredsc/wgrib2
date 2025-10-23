@@ -132,8 +132,8 @@ int f_spectral_bands_extname(ARG0) {
         if(minwave*1.01<maxwave)
             sprintf(inv_out,"%d bands: %.3g to %.3g m-1 ",nb,minwave,maxwave);
         else {
-            wl=1.e6/value;
-            fq=c*value/1e9;
+            wl=1.e6/sumwave;
+            fq=c*sumwave/1e9;
             if     (wl>0.1  && wl<100 )  sprintf(inv_out,"%.2f um ",wl);
             else if(fq>1    && fq<1000)  sprintf(inv_out,"%.2f GHz ",fq);
             else                         sprintf(inv_out,"%.3g m-1 ",minwave);
