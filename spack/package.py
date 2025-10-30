@@ -221,7 +221,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
     depends_on("g2c +png", when="@3.5: +png")
     depends_on("openjpeg", when="@3.2:3.4 +openjpeg")
     depends_on("g2c +openjpeg", when="@3.5: +openjpeg")
-    requires("^g2c@1.9:", when="@3.5:3.7 ^g2c")
+    requires("^g2c@1.9:", when="@3.5: ^g2c")
 
     @when("@:2 ^gmake@4.2:")
 
