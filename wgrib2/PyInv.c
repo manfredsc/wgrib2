@@ -22,7 +22,7 @@ extern unsigned int nx_;
 extern unsigned int ny_;
 
 /*
- * HEADER:200:pyinv:inv:0:miscelaneous metadata for pywgrib2_XXX (experimental)
+ * HEADER:200:pyinv:inv:0:miscellaneous metadata for pywgrib2_XXX (experimental)
  */
 
 /**

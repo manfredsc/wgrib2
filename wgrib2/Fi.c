@@ -11,7 +11,7 @@
 #include "fnlist.h"
 
 /*
- * HEADER:100:fi:output:0:depreceated, used in old IF structure
+ * HEADER:100:fi:output:0:deprecated, used in old IF structure
  */
 
 /**
