@@ -244,7 +244,6 @@ class Wgrib2(MakefilePackage, CMakePackage):
 
         return (flags, None, None)
 
-
 class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
     # Disable parallel build
     parallel = False
