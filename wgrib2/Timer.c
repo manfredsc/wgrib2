@@ -37,7 +37,9 @@ static int n_time;
  * Note: There is only one instance of timer_time. timer_time is set to 0 in the initialization 
  * of wgrib2.
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return Always returns 0.
  * 
@@ -75,7 +77,9 @@ int f_start_timer(ARG0) {
  * Note: There is only one instance of timer_time. timer_time is set to 0 in the initialization 
  * of wgrib2.
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return Always returns 0.
  * 

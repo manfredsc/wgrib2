@@ -102,7 +102,9 @@ static unsigned int idx(int ix, int iy, int nx, int ny, int cyclic_grid);
  * 
  * By default, (i,j) is the South-West corner.
  *
- * @param ARG3 ???
+ * @param ARG3 List of function arguments set by wgrib2's main() function (see @ref ARG3). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
  *
@@ -431,7 +433,9 @@ extern int GDS_change_no;
  * LonE must have a numerical value greater than LonW. For example for left boundary=20W and the right 
  * boundary=60E, you can use LonE=340 and LonW=420. You can also use LonE=-20 and LonW=60. 
  * 
- * @param ARG3 ???
+ * @param ARG3 List of function arguments set by wgrib2's main() function (see @ref ARG3). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
  * 

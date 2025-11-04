@@ -243,7 +243,9 @@ static void reg_wt(double *val, double *wt, float *data, int i, int j, int nx, i
  * Why an RPN calculator? Well, wgrib2 is heavily influenced by the stack language Forth. It's only 
  * natural that the calculator would be based on reverse Polish notation. 
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -1361,7 +1363,9 @@ int push(int top, unsigned int ndata, int type, float f, float *ff, double *d) {
  * 
  * X is a list of register names, ex. 1:2 or 2:4:7
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -1423,7 +1427,9 @@ int f_if_reg(ARG1) {
  * 
  * N = 0 to 9
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -1469,7 +1475,9 @@ int f_rpn_rcl(ARG1) {
  * 
  * N = 0 to 9
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 

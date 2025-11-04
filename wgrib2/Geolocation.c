@@ -60,7 +60,9 @@ extern enum geolocation_type geolocation;
  * 
  * If wgrib2 does not need the geolocation information, the geolocation routines will not be called.
  *
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success
  * 

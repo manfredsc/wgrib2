@@ -93,6 +93,7 @@ char buf[100];		/* buffer for error messages */
 double r_maj,r_min,scale_fact,center_lon;
 double center_lat,false_east,false_north;
 double azimuth,lat_orig,lon_orig,lon1,lat1,lon2,lat2;
+int err;
 long mode,iflg;
 FILE *ptr;
 
@@ -150,10 +151,13 @@ if (ptr == NULL)
    p_error("Error opening State Plane parameter file","state-inv");
    return(22);
    }
-fseek(ptr,ind  * 432, 0);
-fread(pname,sizeof(char),32,ptr);
-fread(&id,sizeof(long),1,ptr);
-fread(table,sizeof(double),9,ptr);
+err=fseek(ptr,ind  * 432, 0);
+if (err) return(ERROR);
+err=fread(pname,sizeof(char),32,ptr);
+if (err) return(ERROR);
+err=fread(&id,sizeof(long),1,ptr);
+if (err) return(ERROR);
+err=fread(table,sizeof(double),9,ptr);
 fclose(ptr);
    
 if (id <= 0)

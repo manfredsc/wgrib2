@@ -11,7 +11,7 @@
 #include "fnlist.h"
 
 /*
- * HEADER:100:fi:output:0:depreceated, used in old IF structure
+ * HEADER:100:fi:output:0:deprecated, used in old IF structure
  */
 
 /**
@@ -23,7 +23,9 @@
  * recommended that the new IF blocks be used because the scripts will be easier to read by 
  * future users. Note that the old and new IF blocks cannot be mixed.
  *
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return Always returns 0
  *

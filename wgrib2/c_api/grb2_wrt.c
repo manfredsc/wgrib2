@@ -1,11 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <limits.h>
-#include "c_wgrib2api.h"
-
-/* 3/2018 Public Domain, Wesley Ebisuzaki
- *
+/**
+ * @file
+ * @brief Routine to write grib files for C API.
+ * 
  * This is part of c_wgrib2api: grb2_wrt(...)
  *
  * To support a variable number of search strings,
@@ -16,29 +12,49 @@
  *      from c_wgrib2api.h
  *   2) Change calls to grb2_wrt(...) to grb2_wrtVA(...,NULL)
  *   The call code to grb2_wrtVA() will work in C99 systems.
- *
- * v0.99 3/2018
+ * 
+ * @author Public Domain: Wesley Ebisuzaki @date 3/2018
  */
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <limits.h>
+#include <string.h>
+#include "c_wgrib2api.h"
 
+int wgrib2_set_reg(float *data, size_t size, int reg);
+
+/**
+ * This function writes a grib message to a specified file.
+ * 
+ * @param grb Name of the grib file to write.
+ * @param template Name of the grib file that is used as a template for the new grib file.
+ * @param msgno Message number.
+ * @param data Pointer to the data array.
+ * @param ndata Number of data points.
+ * @param ... Additional optional arguments.
+ *
+ * @return 0 on success, error code otherwise.
+ *
+ * @author Wesley Ebisuzaki @date 3/2018
+ */
 int grb2_wrtVA(const char *grb, const char *template, int msgno, float *data, 
-         unsigned int ndata, ...) {
+        unsigned int ndata, ...) {
     va_list valist;
     char *option, *str_arg;
     int i, ierr;
     long long int ival8;
-    size_t bufsize;
     char line[100];
-    char buffer[71];
 
     /* copy data to register 9, check for size mismatch is internal to wgrib2(..)  */
 
     if (ndata == 0) {
-	fprintf(stderr,"grb2_wrt error: ndata == 0\n");
+        fprintf(stderr,"grb2_wrt error: ndata == 0\n");
         return 1;
     }
     ierr = wgrib2_set_reg(data, ndata, 9);
     if (ierr) {
-	fprintf(stderr,"grb2_wrt error: saving data to reg_9\n");
+        fprintf(stderr,"grb2_wrt error: saving data to reg_9\n");
         return 1;
     }
 
@@ -72,72 +88,72 @@ int grb2_wrtVA(const char *grb, const char *template, int msgno, float *data,
     while (option) {
         if (strcmp(option,"lev") == 0) {
             wgrib2_add_cmd("-set_lev");
-	    str_arg = (char *) va_arg(valist, char * );
+            str_arg = (char *) va_arg(valist, char * );
             wgrib2_add_cmd(str_arg);
         }
         else if (strcmp(option,"grib_type") == 0) {
             wgrib2_add_cmd("-set_grib_type");
-	    str_arg = (char *) va_arg(valist, char * );
+            str_arg = (char *) va_arg(valist, char * );
             wgrib2_add_cmd(str_arg);
         }
         else if (strcmp(option,"ftime") == 0) {
             wgrib2_add_cmd("-set_ftime");
-	    str_arg = (char *) va_arg(valist, char * );
+            str_arg = (char *) va_arg(valist, char * );
             wgrib2_add_cmd(str_arg);
         }
         else if (strcmp(option,"var") == 0) {
             wgrib2_add_cmd("-set_var");
-	    str_arg = (char *) va_arg(valist, char * );
+            str_arg = (char *) va_arg(valist, char * );
             wgrib2_add_cmd(str_arg);
         }
         else if ( (strcmp(option,"meta") == 0) || (strcmp(option,"metadata_str") == 0) ) {
             wgrib2_add_cmd("-set_metadata_str");
-	    str_arg = (char *) va_arg(valist, char * );
+            str_arg = (char *) va_arg(valist, char * );
             wgrib2_add_cmd(str_arg);
         }
         else if (strcmp(option,"bin_prec") == 0) {
             wgrib2_add_cmd("-set_bin_prec");
-	    i = (int) va_arg(valist, int );
-	    sprintf(line,"%d",i);
+            i = (int) va_arg(valist, int );
+            sprintf(line,"%d",i);
             wgrib2_add_cmd(line);
-	    fprintf(stderr,"binprec: %s\n",line);
+            fprintf(stderr,"binprec: %s\n",line);
         }
         else if (strcmp(option,"percentile") == 0) {
             wgrib2_add_cmd("-set_percentile");
-	    i = (int) va_arg(valist, int );
-	    sprintf(line,"%d",i);
+            i = (int) va_arg(valist, int );
+            sprintf(line,"%d",i);
             wgrib2_add_cmd(line);
         }
         else if (strcmp(option,"set") == 0) {
-	    str_arg = (char *) va_arg(valist, char * );
-	    if (strcmp(str_arg,"model_version_date") == 0) {
-	        ival8 = (long long int) va_arg(valist, long long int );
-	        sprintf(line,"%lld",ival8);
+            str_arg = (char *) va_arg(valist, char * );
+            if (strcmp(str_arg,"model_version_date") == 0) {
+                ival8 = (long long int) va_arg(valist, long long int );
+                sprintf(line,"%lld",ival8);
                 wgrib2_add_cmd("-set");
-		wgrib2_add_cmd("model_version_date");
-	        sprintf(line,"%lld",ival8);
+                wgrib2_add_cmd("model_version_date");
+                sprintf(line,"%lld",ival8);
                 wgrib2_add_cmd(line);
-	    }
-	    else {
+            }
+            else {
                 wgrib2_add_cmd("-set");
                 wgrib2_add_cmd(str_arg);
-	        i = (int) va_arg(valist, int );
-	        sprintf(line,"%d",i);
+                i = (int) va_arg(valist, int );
+                sprintf(line,"%d",i);
                 wgrib2_add_cmd(line);
-	    }
+            }
         }
         else if (strcmp(option,"date") == 0) {
             wgrib2_add_cmd("-set_date");
-	    ival8 = (long long int) va_arg(valist, long long int );
-	    sprintf(line,"%lld",ival8);
+            ival8 = (long long int) va_arg(valist, long long int );
+            sprintf(line,"%lld",ival8);
             wgrib2_add_cmd(line);
-	    fprintf(stderr,"date: %s\n",line);
+            fprintf(stderr,"date: %s\n",line);
         }
-	else {  
-	    printf("unknown option=%s\n",option);
-	    str_arg = (char *) va_arg(valist, char * );
-	}
-	option = (char *) va_arg(valist, char * );
+        else {  
+            printf("unknown option=%s\n",option);
+            str_arg = (char *) va_arg(valist, char * );
+        }
+        option = (char *) va_arg(valist, char * );
     }
     va_end(valist);
     wgrib2_list_cmd();

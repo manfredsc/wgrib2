@@ -85,6 +85,10 @@ if(MAKE_FTN_API)
   add_subdirectory(ftn_api)
 endif()
 
+if (BUILD_LIB)
+  add_subdirectory(c_api)
+endif()
+
 # make this an object lib so we can re-use most of object files
 add_library(obj_lib OBJECT ${lib_src})
 target_compile_definitions(obj_lib PUBLIC ${definitions_list}) 
@@ -169,8 +173,8 @@ target_link_libraries(wgrib2_exe PRIVATE obj_lib)
 
 if(BUILD_LIB)
   set(headers wgrib2_api.h wgrib2.h ${CMAKE_BINARY_DIR}/wgrib2/wgrib2_meta.h)
-  target_link_libraries(wgrib2_lib PUBLIC gctpc -lm)
   set_target_properties(wgrib2_lib PROPERTIES PUBLIC_HEADER "${headers}")
+  target_link_libraries(wgrib2_lib PUBLIC gctpc -lm)
   target_compile_definitions(wgrib2_lib PUBLIC ${definitions_list})
   
   install(

@@ -19,7 +19,9 @@
  * -endif structure for conditional execution of wgrib2 options. More details are in
  * the -if documentation.
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success
  * 
