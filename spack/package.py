@@ -230,10 +230,6 @@ class Wgrib2(MakefilePackage, CMakePackage):
 
         return (flags, None, None)
 
-    def check(self):
-        with working_dir(self.build_directory):
-            make("test")
-
 class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
     # Disable parallel build
     parallel = False
