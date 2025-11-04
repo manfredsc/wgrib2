@@ -1,74 +1,91 @@
-/*******************************************************************************
-NAME                           GCTP 
+/** @file
+ * @brief General Cartographic Transformation Package (GCTP)
+ * 
+ * In initialization test, before the init functions were called for State Plane
+ * every time. Now, initialization will only be done if zone, spheroid, or
+ * the parameter array changes which is consistant with the other projections.
+ *
+ * For the UTM inverse projections the 1st 2 elements of a temporary projection
+ * array were being assigned to a lat and long that lies in that zone area. This
+ * has been eliminated. UTM will be initialized the same as the other
+ * projections for inverse transformations. For forward transformations the
+ * temporary array still exists.
+ * 
+ * @author T. Mittan @date Feb, 1993
+ * 
+ * ### Algorithm References
+ * 1. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ *
+ * 2. Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
+ *    U.S. Geological Survey Professional Paper 1453 , United State Government
+ *    Printing Office, Washington D.C., 1989.
+ * 
+ * ### Program History Log
+ * Version | Date | Programmer | Comments
+ * -------|-----|------------|---------
+ *  | 2-26-93 | T. Mittan | Conversion from FORTRAN to C
+ * | 12-14-93 | S. Nelson | Added assignments to inunit and outunit for State Plane purposes.
+ * c.1.0 | 9-15-94 | S. Nelson | Added outdatum parameter call.
+ * c.1.1 | 11-94 | S. Nelson | Modified code so that UTM can accept any spheroid code.
+ *                             Changed State Plane legislated distance units, for NAD83, to be 
+ *                             consistant with FORTRAN version of GCTP.  Unit codes are specified 
+ *                             by state laws as of 2/1/92.
+ * c.1.5 | 1-98 | S. Nelson | Changed the name datum to spheroid.
+ */
 
-VERSION	PROGRAMMER      DATE
--------	----------      ----
-	T. Mittan	2-26-93		Conversion from FORTRAN to C
-	S. Nelson	12-14-93	Added assignments to inunit and 
-					outunit for State Plane purposes.
-c.1.0	S. Nelson	9-15-94		Added outdatum parameter call.
-c.1.1	S. Nelson	11-94		Modified code so that UTM can accept
-					any spheroid code.  Changed State
-					Plane legislated distance units,
-					for NAD83, to be consistant with
-					FORTRAN version of GCTP.  Unit codes
-					are specified by state laws as of
-					2/1/92.
-c.1.5	S. Nelson	 1-98		Changed the name datum to spheroid.
-
-					In initialize test, before the init
-					functions were called for State Plane
-					every time.  Now, initialization will
-					only be done if zone, spheroid, or
-					the parameter array changes which is
-					consistant with the other projections.
-
-					For the UTM inverse projections the 1st
-					2 elements of a temporary projection
-					array were being assigned to a lat and
-					long that lies in that zone area.  This
-					has been eliminated.  UTM will be
-					initialized the same as the other
-					projections for inverse transformations.
-					For forward transformations the
-					temporary array still exists.
-  
-ALGORITHM REFERENCES
-
-1.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-2.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
-    U.S. Geological Survey Professional Paper 1453 , United State Government
-    Printing Office, Washington D.C., 1989.
-*******************************************************************************/
 #include "cproj.h"
 
-#define TRUE 1
-#define FALSE 0
+#define TRUE 1    /**< True boolean value */
+#define FALSE 0   /**< False boolean value */
 
-static long iter = 0;			/* First time flag		*/
-static long inpj[MAXPROJ + 1];		/* input projection array	*/
-static long indat[MAXPROJ + 1];		/* input dataum array		*/
-static long inzn[MAXPROJ + 1];		/* input zone array		*/
-static double pdin[MAXPROJ + 1][COEFCT];/* input projection parm array	*/
-static long outpj[MAXPROJ + 1];		/* output projection array	*/
-static long outdat[MAXPROJ + 1];	/* output dataum array		*/
-static long outzn[MAXPROJ + 1];		/* output zone array		*/
-static double pdout[MAXPROJ+1][COEFCT];	/* output projection parm array	*/
-static long (*for_trans[MAXPROJ + 1])(double,double,double *,double *);/* forward function pointer array*/
-static long (*inv_trans[MAXPROJ + 1])(double,double,double *,double *);/* inverse function pointer array*/
+static long iter = 0;			/**< First time flag		*/
+static long inpj[MAXPROJ + 1];		/**< input projection array	*/
+static long indat[MAXPROJ + 1];		/**< input datum array		*/
+static long inzn[MAXPROJ + 1];		/**< input zone array		*/
+static double pdin[MAXPROJ + 1][COEFCT];/**< input projection parm array	*/
+static long outpj[MAXPROJ + 1];		/**< output projection array	*/
+static long outdat[MAXPROJ + 1];	/**< output datum array		*/
+static long outzn[MAXPROJ + 1];		/**< output zone array		*/
+static double pdout[MAXPROJ+1][COEFCT];	/**< output projection parm array	*/
+static long (*for_trans[MAXPROJ + 1])(double,double,double *,double *);/**< forward function pointer array*/
+static long (*inv_trans[MAXPROJ + 1])(double,double,double *,double *);/**< inverse function pointer array*/
 
-			/* Table of unit codes as specified by state
-			   laws as of 2/1/92 for NAD 1983 State Plane
-			   projection, 1 = U.S. Survey Feet, 2 = Meters,
-			   5 = International Feet	*/
-
+/** Table of unit codes as specified by state laws as of 2/1/92 for NAD 1983 State Plane projection.
+ * - 1 = U.S. Survey Feet
+ * - 2 = Meters
+ * - 5 = International Feet
+ */
 static long NADUT[134] = {1, 5, 1, 1, 5, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 2, 2,
 			  1, 1, 5, 2, 1, 2, 5, 1, 2, 2, 2, 1, 1, 1, 5, 2, 1, 5,
 			  2, 2, 5, 2, 1, 1, 5, 2, 2, 1, 2, 1, 2, 2, 1, 2, 2, 2};
 
+/**
+ * Initializes projection transformation parameters and performs transformations.
+ * 
+ * @param incoor Input coordinate array
+ * @param insys Input projection code
+ * @param inzone Input zone number
+ * @param inparm Input projection parameter array
+ * @param inunit Input units
+ * @param inspheroid Input spheroid
+ * @param ipr Printout flag for error messages (0=screen, 1=file, 2=both)
+ * @param efile Error file name
+ * @param jpr Printout flag for projection parameters (0=screen, 1=file, 2=both)
+ * @param pfile Projection file name
+ * @param outcoor Output coordinates
+ * @param outsys Output projection code
+ * @param outzone Output zone
+ * @param outparm Output projection array
+ * @param outunit Output units
+ * @param outspheroid Output spheroid
+ * @param fn27 File name of NAD 1927 parameter file
+ * @param fn83 File name of NAD 1983 parameter file
+ * @param iflg Error flag
+ * 
+ * @author T. Mittan @date Feb, 1993
+ */
 void gctp(double *incoor, long *insys, long *inzone, double *inparm,
         long *inunit, long *inspheroid, long *ipr, char *efile, long *jpr,
         char *pfile, double *outcoor, long *outsys, long *outzone,

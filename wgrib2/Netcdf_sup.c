@@ -1,4 +1,10 @@
-/******************************************************************************************
+/** @file
+ * @brief NetCDF support.
+ * @author Sergey Varlamov, Kristian Nilssen, Wesley Ebisuzaki 
+ * @date 2/18/2008
+ */
+
+/*
 
 vsm: test compilation with undefined USE_NETCDF...
 
@@ -28,8 +34,15 @@ vsm: test compilation with undefined USE_NETCDF...
 
 #if defined USE_NETCDF
 
-/*
+/**
  * Create time string (UTC) from time
+ *
+ * @param utime Unix time in seconds
+ * @param date_str Pointer to a string buffer to hold the formatted date
+ * 
+ * @return Pointer to the date string
+ *
+ * @author Sergey Varlamov @date 2/18/2008
  */
 char * get_unixdate(double utime, char * date_str)
 {
@@ -44,8 +57,15 @@ char * get_unixdate(double utime, char * date_str)
 }
 
 
-/*
- * check if strings match
+/**
+ * Check if strings match.
+ *
+ * @param s Pointer to the input string
+ * @param match Pointer to the string to match against
+ * 
+ * @return 1 if the strings match, 0 otherwise
+ * 
+ * @author Sergey Varlamov @date 2/18/2008
  */
 int match_str(const char *s, const char *match) {
    while (*match) {
@@ -54,11 +74,14 @@ int match_str(const char *s, const char *match) {
    return 1;
 }
  
-
-/*
-* makes units COARDS compliant: C -> Celsius, g -> gram, prob -> 1, gpm -> m
-*/
-
+/**
+ * Makes units COARDS compliant: C -> Celsius, g -> gram, prob -> 1, gpm -> m
+ * 
+ * @param s Pointer to the units string
+ * @param n Length of the units string
+ *
+ * @author Sergey Varlamov @date 2/18/2008
+ */
 void fix_units(char *s, int n)
 {
 // seems to be risky incrementing the pointer s...
@@ -120,6 +143,17 @@ void fix_units(char *s, int n)
   *s = 0;
 }
 
+/**
+ * Get the netCDF conversion table index for a given variable name and level.
+ *
+ * @param name Pointer to the variable name string
+ * @param level Pointer to the variable level string
+ * @param nc_table Pointer to the netCDF conversion table
+ *
+ * @return The index of the variable in the netCDF conversion table, or -1 if not found
+ *
+ * @author Sergey Varlamov @date 2/18/2008
+ */
 int get_nc_conv_table(const char * name, const char * level,
                       const g2nc_table * nc_table)
 {
@@ -132,6 +166,15 @@ int get_nc_conv_table(const char * name, const char * level,
   return -1;
 }
 
+/**
+ * Free the netCDF conversion table.
+ *
+ * @param nc_table Pointer to the netCDF conversion table
+ *
+ * @return 0 on success, error code otherwise
+ *
+ * @author Sergey Varlamov @date 2/18/2008
+ */
 int free_nc_table( g2nc_table * nc_table )
 {
   // cleanup
@@ -157,6 +200,7 @@ fprintf(stderr,"nc_table: cleaned-up...\n");
   return 0;
 }
 
+/** 4D level types for netCDF */
 g2nc_4Dlt nc_4Dlt[G2NC_NUM_4DLT] = {
   { 20,"klevel","K level","K",1.,},             //"%g K level",
   {100,"plevel","pressure level","mb",0.01,},   //"%g hPa",
@@ -166,12 +210,35 @@ g2nc_4Dlt nc_4Dlt[G2NC_NUM_4DLT] = {
   {160,"depth","ocean depth","m",1.,},          //"%g m below sea level",
 };
 
+/** NetCDF conversion table */
 g2nc_table * nc_table = NULL; /* table undefined */
+
 /*
  * HEADER:100:nc_grads:setup:0:require netcdf file to be grads v1.9b4 compatible (fixed time step only)
  */
+
+/** NetCDF compatibility flag. */
 int nc_grads_compatible = 0;
 
+/**
+ * Activates some tests for the created netcdf file to be GrADS (version 1.9b4) compatible, 
+ * or to be open by sdfopen in gradsnc or gradsdods. The GrADS support only COARDS convention 
+ * netcdf files; it do not support non-constant data time stepping and silently generates 
+ * wrong time stamps for such netcdf files. Packing to byte also is not directly recognized 
+ * by GrADS v1.9b4. With this option an error is raised and processing stops if any of 
+ * criterias above is determined. 
+ * 
+ * ## Usage
+ * -nc_grads
+ * 
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return Always returns 0
+ * 
+ * @author Sergey Varlamov @date 2/18/2008
+ */
 int f_nc_grads(ARG0)
 {
   if (mode == -1) nc_grads_compatible = 1;
@@ -180,6 +247,22 @@ int f_nc_grads(ARG0)
 
 /*
  * HEADER:100:no_nc_grads:setup:0:netcdf file may be not grads v1.9b4 compatible, variable time step
+ */
+/**
+ * NetCDF file may not be grads v1.9b4 compatible, variable time step.
+ *
+ * Opposite of -nc_grads option.
+ *
+ * ## Usage
+ * -no_nc_grads
+ *
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ *
+ * @return Always returns 0
+ * 
+ * @author Sergey Varlamov @date 2/18/2008
  */
 int f_no_nc_grads(ARG0)
 {
@@ -194,12 +277,60 @@ int f_no_nc_grads(ARG0)
  * initially defined packing parameters are used. min and max are used to estimate appropriate offset and scaling,
  * if both are zero - automatic scaling goes.
  */
+
+/** NetCDF packing flag. */
 int nc_pack = 0;
+
+/** NetCDF packing offset. */
 float nc_pack_offset = 0.;
+
+/** NetCDF packing scale. */
 float nc_pack_scale = 1.;
-float nc_valid_min = 0.;
+
+/** NetCDF valid range minimum. */
+float nc_valid_min = 0.;    
+
+/** NetCDF valid range maximum. */
 float nc_valid_max = 0.;
 
+/**
+ * Pack/check limits of all NEW input variables. 
+ * 
+ * NEW means that if some variable was already defined in the netcdf file and now is appended 
+ * to it (-append mode) initially defined packing parameters are used. min and max are used 
+ * to estimate appropriate offset and scaling, if both are zero - automatic scaling goes.
+ * 
+ * The -nc_pack option makes it possible to limit the range of defined values and pack data 
+ * in the netcdf file specifying data range and packing type as min:max[:float|byte|short]. 
+ * Type float here is default and do not assume data packing, only data range is checked. 
+ * Data outside of specified range are replaced by missing value code for all types of packing. 
+ * This replacement is done in the local copy of unpacked data, so main data array stays unchanged. 
+ * Values of min and max could be any signed float. Packing is applied to all new variables in 
+ * the input stream. If some variable was already defined in the netcdf file and now is appended 
+ * to it in the -append mode the initially defined and fixed in the netcdf file valid range and 
+ * packing parameters are used. 
+ * 
+ * The packing is possible to the short (2 bytes) or byte (1 byte) values with potential loss of 
+ * precision. Both zero values of min and max packing parameters for the short or byte packing 
+ * activate 'auto' packing when min and max values are defined from the first entered field. 
+ * 
+ * PS: packing in 'byte' is not directly accepted by GrADS v1.9b4 if netcdf file is open with 
+ * 'sdfopen' command. But by some reasons using the GrADS data description file (catalog) for 
+ * the same netcdf file helps in this situation. 
+ * 
+ * ## Usage
+ * -nc_pack X
+ *
+ * X = min:max[:byte|short|float]
+ * 
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return 0 for success, error code otherwise
+ *
+ * @author Sergey Varlamov @date 2/18/2008
+ */
 int f_nc_pack(ARG1)
 {
   char * pack_to=NULL;
@@ -252,6 +383,21 @@ int f_nc_pack(ARG1)
  * HEADER:100:no_nc_pack:setup:0:no packing in netcdf for NEW variables
  *
  */
+
+/**
+ * No packing in netcdf for NEW variables.
+ * 
+ * ## Usage
+ * -no_nc_pack
+ *
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return 0 for success, error code otherwise
+ *
+ * @author Sergey Varlamov @date 2/18/2008
+ */
 int f_no_nc_pack(ARG0)
 {
   if (mode == -1)
@@ -268,8 +414,58 @@ int f_no_nc_pack(ARG0)
 /*
  * HEADER:100:nc_nlev:setup:1:netcdf, X = max LEV dimension for {TIME,LEV,LAT,LON} data
  */
+
+/** NetCDF maximum LEV dimension. */
 int nc_nlev = 0;
 
+/**
+ * Set the maximum LEV dimension for {TIME,LEV,LAT,LON} data in netCDF files.
+ * 
+ * This option is needed to export data to netcdf as 4D data defined in {TIME,LEV,LAT,LON} 
+ * space. It must be followed by integer max_number_of_vertical_levels which defines the 
+ * vertical dimension size of 4D data exported to the netcdf file. This value can not be found 
+ * from each single grib2 message or sub-message, usually it has to be scanned the entire grib2 
+ * file or even number of files. It is the reason why the max_number_of_vertical_levels value 
+ * must be provided by user. 
+ * 
+ * Grib2 types of vertical levels eligible for export to the netcdf as 4D data are defined in 
+ * the wgrib2 internal table and now include next types of GRIB2 levels: 
+ * 
+ * 20	:	K level
+ * 100	:	pressure level
+ * 104	:	sigma level
+ * 105	:	hybrid level
+ * 107	:	K isentropic level
+ * 160	:	ocean depth below sea level
+ * 
+ * Data for the first found eligible level type are treated as 4D and vertical level information 
+ * is not added to the variable names. Error is generetad if data for other then first found 
+ * eligible level type are met in the input stream. Data on the non-eligible levels are treated 
+ * as 3D data defined in the {TIME,LAT,LON} space with the possible level information included 
+ * into the variable names or with the user-specified names (see -nc_table option description 
+ * below for how to do it). 
+ * 
+ * The -nc_nlev option has not -no_... option, please use instead the max_number_of_vertical_levels 
+ * equal to 0. In this case all data from the input stream will be threated as 3D. 
+ * 
+ * When existing netcdf file is updated in the -append mode the value of max_number_of_vertical_levels 
+ * must not exceed initial value provided when the netcdf file was first created (defined). By 
+ * default when first creating the netcdf file, vertical level values are not fixed (are undefined) 
+ * and these are defined one-by-one when data at new level are added to the netcdf file, up to the 
+ * max_number_of_vertical_levels. To overcome this feature please use the -nc_table option. 
+ * 
+ * ## Usage
+ * 
+ * -nc_lev LEVEL
+ * 
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return 0 for success, error code otherwise
+ *
+ * @author Sergey Varlamov @date 2/18/2008
+ */
 int f_nc_nlev(ARG1)
 {
   if (mode == -1)
@@ -288,6 +484,123 @@ int f_nc_nlev(ARG1)
 
 /*
  * HEADER:100:nc_table:setup:1:X is conversion_to_netcdf_table file name
+ */
+
+/**
+ * Set conversion_to_netcdf_table file name.
+ * 
+ * The -nc_table option followed by the file_name is most usefull for the advanced users as it 
+ * specifies the file where user can customize many features of created netcdf file. Next 
+ * examples demonstrate which directives and conversion rules could be given in the -nc_table 
+ * file. Almost all of them are optional with exception of $nlev for the case when user 
+ * explicitly specifies the vertical level values $levs. 
+ * 
+ * @code{.sh}
+ * $lev_type 100:pressure:pressure level:mb:0.01
+ * @endcode
+ * 
+ * This directive explicitly defines the type of vertical level in the grib2 file that becomes 
+ * eligible for treating data at these levels as 4D data and some it attributes for netcdf file. 
+ * Default, first found level type listed in the wgrib2 build-in table of eligible levels is 
+ * selected if no $lev_type directive found. 
+ * 
+ * Fields here include: 
+ * 100	-	the grib2 level type code number for treating data as 4D. In this example it is the 
+ * code number for pressure levels, integer
+ * pressure	-	short_name for the vertical axis in the netcdf file, string
+ * pressure level	-	long_name for the vertical axis in the netcdf file, string, could include 
+ * spaces
+ * mb	-	vertical axis units as written in the netcdf file, string
+ * 0.01	-	decimal scale to convert grib2 level values to the netcdf-stored values, float. In 
+ * this example we convert Pa to mb (hPa). It is default conversion scale for the pressure levels 
+ * when exporting to the netcdf file
+ * 
+ * @code{.sh}
+ * $nlev X
+ * @endcode
+ * 
+ * This directive is an equivalent of the -nc_nlev command line option but value in the -nc_table 
+ * file has precedence over the command line option if both are found. It is required if next 
+ * $levs directive is specified. 
+ * 
+ * @code{.sh}
+ * $levs lev(1) lev(2) lev(3)...
+ * ...lev(I-1) lev(I) lev(I+1)...
+ * ...lev(X-1) lev(X)
+ * @endcode
+ * 
+ * This directive explicitly specifies the vertical level values to be exported to the netcdf 
+ * file, in the netcdf units. If this directive exists in the -nc_table file and there is 
+ * found the grib2 data eligible for the 4D presentation but defined on other then listed 
+ * level - these data are skipped from export and work is silently continued. All data conversion 
+ * parameters are checked before the $levs is checked. List of level values could consist of 
+ * multiple lines; max line length in the -nc_table file is limited by _MAX_PATH symbols (about 
+ * 255 symbols); use space, ',', ';' or ':' as lev(i) fields separator. 
+ * 
+ * Impact of $nlev and $levs directives is different depending on does the netcdf file is first 
+ * created or it is updated. When the netcdf file is first created these values are written to 
+ * the netcdf file fixing 4D data vertical structure. When updating an existing netcdf file in 
+ * the -append mode these parameters will work like filter limiting possible updates of 4D data 
+ * by these that satisfy to the given $levs only and ignoring other. 3D (TIME,LAT,LON) data are 
+ * not affected by these directives. 
+ * 
+ * The $nlev and $levs directives could be necessary if records in the grib2 file have randomly 
+ * changing vertical level values that makes it impossible sequentionally define valid order of 
+ * vertical levels. 
+ * 
+ * @code{.sh}
+ * $grads 1
+ * @endcode
+ * 
+ * This directive is an equivalent of the -nc_grads command line option if passed value is 1 or 
+ * to the -no_nc_grads if value is 0. Directive in the -nc_table file has precedence over the 
+ * command line option. 
+ * 
+ * @code{.sh}
+ * wgib2_name:wgrib2_level|*:nc_name|ignore[:ignore|no|float|short|byte[:min:max]]
+ * @endcode
+ * 
+ * All non-empty lines in the -nc_table file not starting from the '$' symbol or from the comment 
+ * mark '#' are treated as grib2 to netcdf conversion rules for the specified variables. In 
+ * these strings the wgib2_name and wgrib2_level are strings as returned by the wgrib2 inventory; 
+ * * used as the wgrib2_level will apply to all levels not given explicitly. The valid range and 
+ * packing information is optional but it overwrites common packing rule if such is specified 
+ * by the -nc_pack command line option. Absence of packing information means no packing for 
+ * this variable. Min and max values are any signed float values. Both could be omitted or put 
+ * to zero. Last case means that automatic scaling will be estimated from the first entered 
+ * wgib2_name field at the wgrib2_level or at the first level in case of * as level value. 
+ * 
+ * If the keyword ignore is found as a netcdf variable name or as a packing type value, the 
+ * corresponding data are ignored and do not written to the netcdf file. Impact from this keyword 
+ * is similar to the wgrib2 -not option or filtering data with the grep utility. 
+ * 
+ * The ignore keyword is recommended if the data from the same grib2 file are exported in number 
+ * of output files (netcdf or other) by the same wgrib2 process. Then the same decoded data could 
+ * be passed for the output in other file of any supported type. Doing export to the single netcdf 
+ * file it is not recommended to use the ignore keyword as corresponding data are first decoded 
+ * and after that skipped from writing to the netcdf file. 
+ * 
+ * In the next example two lines from the -nc_table file instruct the wgrib2 utility export to 
+ * the netcdf file the geopotential height changing name from HGT (wgrib2) to geopotential in 
+ * the netcdf file, at all levels except at 975 mb if these data would be found in the grib2 
+ * decoded input data stream: 
+ * 
+ * HGT:*:geopotential
+ * HGT:975 mb:ignore
+ * 
+ * All other variables not listed in the -nc_table file but found in the input stream are 
+ * processed as regular 3D data. 
+ * 
+ * ## Usage
+ * -nc_table <FILE_NAME
+ * 
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return 0 for success, error code otherwise
+ * 
+ * @author Sergey Varlamov @date 2/18/2008
  */
 int f_nc_table(ARG1)
 {
@@ -472,7 +785,7 @@ wgib2_name:wgrib2_level|*:nc_name|ignore[:ignore|no|float|deflate{0-9}|[short|by
 
 
           tptr = (char *) malloc((strlen(nn)+1)*sizeof(char));
-	  if (tptr) strcpy(tptr,nn);
+      if (tptr) strcpy(tptr,nn);
           else ierr = 1;
           nc_table->lt->sname = tptr;
 
@@ -864,6 +1177,21 @@ if( nc_table->lt )
 /*
  * HEADER:100:no_nc_table:setup:0:disable previously defined conversion_to_netcdf_table
  */
+
+/**
+ * Disable the previously defined conversion to netcdf table.
+ * 
+ * ## Usage
+ * -no_nc_table
+ * 
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return 0 for success, error code otherwise
+ * 
+ * @author Sergey Varlamov @date 2/18/2008
+ */
 int f_no_nc_table(ARG0)
 {
   if (mode == -1)
@@ -883,10 +1211,32 @@ int f_no_nc_table(ARG0)
  * HEADER:100:nc_time:setup:1:netcdf, [[-]yyyymmddhhnnss]:[dt{s[ec]|m[in]|h[our]|d[ay]}], [-] is for time alignment only
  */
 //nc_time option [+|-]{yyyymmddhhnn}:{dt}[mn|hr|dy]
-double nc_date0 = 0;      /* undefined value... */
-int    nc_date0_type = 0; /* undefined; 1 for absolute, -1 for relative (alignment only) */
-double nc_dt = 0;         /* not initialized; -1 will be used for variable (undefined) step */
 
+/** NetCDF date. 0 for undefined.*/
+double nc_date0 = 0;      /* undefined value... */
+
+/** NetCDF date type. 0 for undefined; 1 for absolute, -1 for relative (alignment only) */
+int    nc_date0_type = 0; 
+
+/** NetCDF time step. 0 for not initialized; -1 will be used for variable (undefined) step*/
+double nc_dt = 0; 
+
+/**
+ * NetCDF time setup.
+ * 
+ * ## Usage
+ * -nc_time [+|-]{yyyymmddhhnn}:{dt}[mn|hr|dy]
+ *
+ * [-] is for time alignment only
+ * 
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return 0 for success, error code otherwise
+ * 
+ * @author Sergey Varlamov @date 2/18/2008
+ */
 int f_nc_time(ARG1)
 {
   char chr;
@@ -982,8 +1332,24 @@ printf("nc_time: time_step_value=%d, type=%s, val_sec=%.1lf\n",dt_val,dt_type,nc
   }
   return 0;
 }
+
 /*
  * HEADER:100:no_nc_time:setup:0:netcdf, disable previously defined initial or relative date and time step
+ */
+
+/**
+ * Disable previously defined initial or relative date and time step.
+ * 
+ * ## Usage
+ * -no_nc_time
+ * 
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return Always returns 0
+ * 
+ * @author Sergey Varlamov @date 2/18/2008
  */
 int f_no_nc_time(ARG0)
 {
@@ -998,15 +1364,47 @@ int f_no_nc_time(ARG0)
 /*
  * HEADER:100:nc4:setup:0:use netcdf4 (compressed, controlled endianness etc)
  */
+
+/** NetCDF version 4 flag */
 int nc4 = 0;
 
+/**
+ * Use NetCDF version 4 (compressed, controlled endianness etc).
+ * 
+ * ## Usage
+ * -nc4
+ * 
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return Always returns 0
+ * 
+ * @author Sergey Varlamov @date 2/18/2008
+ */
 int f_nc4(ARG0)
 {
   if (mode == -1) nc4 = 1;
   return 0;
 }
+
 /*
  * HEADER:100:nc3:setup:0:use netcdf3 (classic)
+ */
+
+/**
+ * Use NetCDF version 3 (classic).
+ * 
+ * ## Usage
+ * -nc3
+ *
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ *
+ * @return Always returns 0
+ *
+ * @author Sergey Varlamov @date 2/18/2008  
  */
 int f_nc3(ARG0)
 {

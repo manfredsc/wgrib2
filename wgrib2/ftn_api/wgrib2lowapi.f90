@@ -1,3 +1,8 @@
+!> @file
+!> @brief Module containing interfaces to the C functions used by the Fortran API.
+!> @author Public Domain: Wesley Ebisuzaki @date 10/2015
+
+!
 ! fortran lowapi for reading and writing grib2
 ! 10/2015  Wesley Ebisuzaki   Public Domain
 !
@@ -40,56 +45,56 @@
 
 
 module wgrib2lowapi
-    USE ISO_C_BINDING
-    interface
-        integer (C_SIZE_T) function wgrib2_get_reg_size(reg) bind(C)
-            USE ISO_C_BINDING
-            integer (C_INT), value :: reg
-        end function wgrib2_get_reg_size
+   USE ISO_C_BINDING
 
-        integer (C_INT) function wgrib2_get_reg_data(data, ndata, reg) bind(C)
-            USE ISO_C_BINDING
-            integer (C_SIZE_T), value :: ndata
-            integer (C_INT), value :: reg
-            real (C_FLOAT) :: data(ndata)
-        end function wgrib2_get_reg_data
+   interface
+      integer (C_SIZE_T) function wgrib2_get_reg_size(reg) bind(C)
+         USE ISO_C_BINDING
+         integer (C_INT), value :: reg
+      end function wgrib2_get_reg_size
 
-        integer (C_INT) function wgrib2_set_reg(data, ndata, reg) bind(C)
-            USE ISO_C_BINDING
-            integer (C_SIZE_T), value :: ndata
-            integer (C_INT), value :: reg
-            real (C_FLOAT) :: data(ndata)
-        end function wgrib2_set_reg
+      integer (C_INT) function wgrib2_get_reg_data(data, ndata, reg) bind(C)
+         USE ISO_C_BINDING
+         integer (C_SIZE_T), value :: ndata
+         integer (C_INT), value :: reg
+         real (C_FLOAT) :: data(ndata)
+      end function wgrib2_get_reg_data
 
-        integer (C_SIZE_T) function wgrib2_get_mem_buffer_size(n) bind(C)
-            USE ISO_C_BINDING
-            integer (C_INT), value :: n
-        end function wgrib2_get_mem_buffer_size
+      integer (C_INT) function wgrib2_set_reg(data, ndata, reg) bind(C)
+         USE ISO_C_BINDING
+         integer (C_SIZE_T), value :: ndata
+         integer (C_INT), value :: reg
+         real (C_FLOAT) :: data(ndata)
+      end function wgrib2_set_reg
 
-	integer (C_INT) function wgrib2_get_mem_buffer(buffer, size_buffer, n) bind(C)
-            USE ISO_C_BINDING
-            integer (C_INT), value :: n
-            integer (C_SIZE_T), value :: size_buffer
-	    character (kind=c_signed_char) :: buffer(*)
-        end function wgrib2_get_mem_buffer
+      integer (C_SIZE_T) function wgrib2_get_mem_buffer_size(n) bind(C)
+         USE ISO_C_BINDING
+         integer (C_INT), value :: n
+      end function wgrib2_get_mem_buffer_size
 
-	integer (C_INT) function wgrib2_set_mem_buffer(buffer, size_buffer, n) bind(C)
-            USE ISO_C_BINDING
-            integer (C_INT), value :: n
-            integer (C_SIZE_T), value :: size_buffer
-	    character (kind=c_signed_char) :: buffer(*)
-        end function wgrib2_set_mem_buffer
+      integer (C_INT) function wgrib2_get_mem_buffer(buffer, size_buffer, n) bind(C)
+         USE ISO_C_BINDING
+         integer (C_INT), value :: n
+         integer (C_SIZE_T), value :: size_buffer
+         character (kind=c_signed_char) :: buffer(*)
+      end function wgrib2_get_mem_buffer
 
-        integer (C_INT) function wgrib2_free_file(string) bind(C)
-            USE ISO_C_BINDING
-            character (kind=c_char) :: string(*)
-        end function wgrib2_free_file
+      integer (C_INT) function wgrib2_set_mem_buffer(buffer, size_buffer, n) bind(C)
+         USE ISO_C_BINDING
+         integer (C_INT), value :: n
+         integer (C_SIZE_T), value :: size_buffer
+         character (kind=c_signed_char) :: buffer(*)
+      end function wgrib2_set_mem_buffer
 
-	integer (C_INT) function wgrib2c(n, buffer, len) bind(C)
-	    USE ISO_C_BINDING
-            integer (C_INT), value :: n, len
-	    character (kind=c_char) :: buffer(*)
-	end function wgrib2c
+      integer (C_INT) function wgrib2_free_file(string) bind(C)
+         USE ISO_C_BINDING
+         character (kind=c_char) :: string(*)
+      end function wgrib2_free_file
 
-    end interface
+      integer (C_INT) function wgrib2c(n, buffer, len) bind(C)
+         USE ISO_C_BINDING
+         integer (C_INT), value :: n, len
+         character (kind=c_char) :: buffer(*)
+      end function wgrib2c
+   end interface
 end module

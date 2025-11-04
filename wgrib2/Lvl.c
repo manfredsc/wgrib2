@@ -1,3 +1,8 @@
+/** @file
+ * @brief Level processing functions.
+ * @author Public Domain: Wesley Ebisuzaki @date 2023
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,16 +11,27 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/* Lvl.c
- *   2023: public domain wesley ebisuzaki
- */
-
+/** Item delimiter string. */
 extern const char *item_deliminator;
 
 /*
  * HEADER:200:lvl:inv:0:level raw format (type,missing,scale,factor)
  */
 
+/**
+ * Prints the level information (Code Table 4.5) in raw format (type,missing,scale,factor).
+ * 
+ * ## Usage
+ * -lvl
+ * 
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return 0 for success, error code otherwise
+ * 
+ * @author Wesley Ebisuzaki @date 2023
+ */
 int f_lvl(ARG0) {
     int level_type1, level_type2;
     float val1, val2;
@@ -42,6 +58,21 @@ int f_lvl(ARG0) {
 
 /*
  * HEADER:200:set_lvl1:misc:1:X=(type,missing,scale,factor) set level 1 raw format
+ */
+
+/**
+ * Set level 1 (Code Table 4.5) raw format.
+ * 
+ * ## Usage
+ * -set_lvl1 (type,missing,scale,factor)
+ * 
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return 0 for success, error code otherwise
+ * 
+ * @author Wesley Ebisuzaki @date 2023
  */
 int f_set_lvl1(ARG1) {
 
@@ -81,6 +112,21 @@ int f_set_lvl1(ARG1) {
 
 /*
  * HEADER:200:set_lvl2:misc:1:X=(type,missing,scale,factor) set level 2 raw format
+ */
+
+/**
+ * Set level 2 (Code Table 4.5) raw format.
+ * 
+ * ## Usage
+ * -set_lvl2 (type,missing,scale,factor)
+ * 
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return 0 for success, error code otherwise
+ * 
+ * @author Wesley Ebisuzaki @date 2023
  */
 int f_set_lvl2(ARG1) {
 

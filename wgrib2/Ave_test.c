@@ -1,3 +1,19 @@
+/** @file
+ * @brief This file contains the implementation of the -ave0 option and some helper functions.
+ * The -ave0 option is the old (v2.0.6) version of the -ave option.
+ * @author Public Domain: Wesley Ebisuzaki @date 04/2009
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 04/2009 | W. Ebisuzaki | Initial
+ * 04/2010 | W. Ebisuzaki | add means of means
+ * 04/2013 | W. Ebisuzaki | added pdt 4.11 (ensemble)
+ * 12/2014 | W. Ebisuzaki | set use_scale to zero, optimizations
+ * 01/2015 | W. Ebisuzaki | removed set use_scale
+ * 03/2016 | W. Ebisuzaki | added pdt 2 and 12
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,42 +23,84 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/*
- * ave
- *
- *  v 0.1 experimental
- *
- * 4/2009: Public Domain: Wesley Ebisuzaki
- * 4/2010: add means of means
- * 4/2013: added pdt 4.11 (ensemble)
- * 12/2014: set use_scale to zero, optimizations
- * 1/2015: removed set use_scale
- * 3/2016: added pdt 2 and 12
- *
- */
+/** Decode grib file flag  */
+extern int decode;
 
-// #define DEBUG
+/** Append grib file flag. */
+extern int file_append;
 
-extern int decode, file_append, nx, ny, save_translation;
+/** Number of grid points in the x direction. */
+extern int nx;
+
+/** Number of grid points in the y direction. */
+extern int ny;
+
+/** Flag to indicate whether to save translation information. */
+extern int save_translation;
+
+/** Flush of output flag. */
 extern int flush_mode;
+
+/** Pointer to the translation array. */
 extern unsigned int *translation;
-extern int use_scale, dec_scale, bin_scale, wanted_bits, max_bits;
+
+/** Use scaling flag. */
+extern int use_scale;
+
+/** Decimal scaling. */
+extern int dec_scale;
+
+/** Binary scaling. */
+extern int bin_scale;
+
+/** Number of bits wanted. */
+extern int wanted_bits;
+
+/** Maximum number of bits. */
+extern int max_bits;
+
+/** Output GRIB type. */
 extern enum output_grib_type grib_type;
 
+/** Structure to hold average calculation data. */
 struct ave_struct {
-    double *sum;
-    int *n;
-    unsigned int n_sum;      
-    int has_val, n_fields, n_missing;
-    int dt, dt_unit, nx, ny;
-    unsigned char *first_sec[9];
-    unsigned char *next_sec[9];
-    int use_scale, dec_scale, bin_scale, wanted_bits, max_bits;
-    enum output_grib_type grib_type;
-    int year0, month0, day0, hour0, minute0, second0;
-    int year1, month1, day1, hour1, minute1, second1;
-    int year2, month2, day2, hour2, minute2, second2;  // verification time
-    struct seq_file out;
+    double *sum; /**< Sum of values. */
+    int *n; /**< Count of values. */
+    unsigned int n_sum; /**< Total number of values. */
+    int has_val; /**< Flag to indicate if values are present. */
+    int n_fields; /**< Number of fields. */
+    int n_missing; /**< Number of missing values. */
+    int dt; /**< Time interval. */
+    int dt_unit; /**< Time unit. */
+    int nx; /**< Number of grid points in the x direction. */
+    int ny; /**< Number of grid points in the y direction. */
+    unsigned char *first_sec[9]; /**< First section data. */
+    unsigned char *next_sec[9]; /**< Next section data. */
+    int use_scale; /**< Flag to indicate whether to use scaling. */
+    int dec_scale; /**< Flag to indicate the decoding scale. */
+    int bin_scale; /**< Flag to indicate the binary scale. */
+    int wanted_bits; /**< Flag to indicate the number of bits wanted. */
+    int max_bits; /**< Flag to indicate the maximum number of bits. */
+    enum output_grib_type grib_type; /**< Flag to indicate the output GRIB type. */
+    int year0; /**< Year of the lowest reference time. */
+    int month0; /**< Month of the lowest reference time. */
+    int day0; /**< Day of the lowest reference time. */
+    int hour0; /**< Hour of the lowest reference time. */
+    int minute0; /**< Minute of the lowest reference time. */
+    int second0; /**< Second of the lowest reference time. */
+    int year1; /**< Year of the current reference time. */
+    int month1; /**< Month of the current reference time. */
+    int day1; /**< Day of the current reference time. */
+    int hour1; /**< Hour of the current reference time. */
+    int minute1; /**< Minute of the current reference time. */
+    int second1; /**< Second of the current reference time. */
+    int year2; /**< Year of the verification time. */
+    int month2; /**< Month of the verification time. */
+    int day2; /**< Day of the verification time. */
+    int hour2; /**< Hour of the verification time. */
+    int minute2; /**< Minute of the verification time. */
+    int second2; /**< Second of the verification time. */
+    struct seq_file out; /**< Output file structure. */
 };
 
 static int do_ave(struct ave_struct *save);
@@ -50,7 +108,15 @@ static int free_ave_struct(struct ave_struct *save);
 static int init_ave_struct(struct ave_struct *save, unsigned int ndata);
 static int add_to_ave_struct(struct ave_struct *save, unsigned char **sec, float *data, unsigned int ndata,int missing);
 
-
+/**
+ * Frees the memory allocated for the ave_struct.
+ * 
+ * @param save Pointer to the ave_struct to be freed.
+ * 
+ * @return 0 on success, does not return error codes.
+ * 
+ * @author Wesley Ebisuzaki @date 04/2009
+ */
 static int free_ave_struct(struct ave_struct *save) {
     if (save->has_val == 1) {
         free(save->sum);
@@ -62,6 +128,16 @@ static int free_ave_struct(struct ave_struct *save) {
     return 0;
 }
 
+/**
+ * Initializes the ave_struct with the given number of data points.
+ * 
+ * @param save Pointer to the ave_struct.
+ * @param ndata Number of data points.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 04/2009
+ */
 static int init_ave_struct(struct ave_struct *save, unsigned int ndata) {
     unsigned int i;
     if (save->has_val == 0 || save->n_sum != ndata) {
@@ -88,7 +164,20 @@ static int init_ave_struct(struct ave_struct *save, unsigned int ndata) {
     return 0;
 }
 
-static int add_to_ave_struct(struct ave_struct *save, unsigned char **sec, float *data, unsigned int ndata,int missing) {
+/**
+ * Adds data to the ave_struct.
+ * 
+ * @param save Pointer to the ave_struct.
+ * @param sec Pointer to the section data.
+ * @param data Pointer to the data array.
+ * @param ndata Number of data points.
+ * @param missing Number of missing data points.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 04/2009
+ */
+static int add_to_ave_struct(struct ave_struct *save, unsigned char **sec, float *data, unsigned int ndata, int missing) {
     unsigned int i;
 
     if (save->n_sum != ndata) fatal_error("add_to_ave: dimension mismatch","");
@@ -136,7 +225,15 @@ static int add_to_ave_struct(struct ave_struct *save, unsigned char **sec, float
 }
 
 
-
+/**
+ * Performs the average calculation based on the data stored in the ave_struct.
+ * 
+ * @param save Pointer to the ave_struct containing the data.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 04/2009
+ */
 static int do_ave(struct ave_struct *save) {
     int j, n, pdt;
     unsigned int i, ndata;
@@ -319,6 +416,23 @@ static int do_ave(struct ave_struct *save) {
  * HEADER:000:ave0:output:2:average X=time step, Y=output grib file needs file is special order
  */
 
+/**
+ * Calculates temporal averages of grib data and writes the results to a specified output file.
+ * This is the old version (v2.0.6) of the -ave option.
+ * 
+ * ## Usage
+ * -ave0 (time interval) (output grib file)
+ * 
+ * The time interval is the delta time for averaging (e.g., "6hr", "1dy").
+ * 
+ * @param ARG2 List of function arguments set by wgrib2's main() function (see @ref ARG2). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 04/2009
+ */
 int f_ave0(ARG2) {
 
     struct ave_struct *save;

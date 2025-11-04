@@ -1,3 +1,17 @@
+/** @file
+ * @brief Routines for setting the Product Definition Template (PDT).
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 9/2008 | W. Ebisuzaki | Initial
+ * 10/2013 | W. Ebisuzaki | use update_sec4()
+ * 7/2014 | W. Ebisuzaki | added copy more metadata when making new pdt
+ * 5/2017 | W. Ebisuzaki | update for better handling of statistical processing
+ * 2/2022 | W. Ebisuzaki | fix misc problems
+ * 3/2022 | W. Ebisuzaki | fix code, add misc_arg
+ * @author Public Domain: Wesley Ebisuzaki @date 9/2008
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -8,25 +22,45 @@
 #include "fnlist.h"
 
 /*
- * the -set_pdt
- *
- * routines make a generic PDT
- *   option to copy metadata
- *
- * 9/2008 Public Domain by Wesley Ebisuzaki
- * 10/2013 use update_sec4()
- * 7/2014 added copy more metadata when making new pdt
- *        if copying metadata, check for number of time ranges, make larger if needed
- * 5/2017 update for better handling of statistical processing
- * 2/2022 fix misc problems
- * 3/2022: fix code, add misc_arg
- */
-
-/*
  * HEADER:100:set_pdt:misc:1:makes new pdt, X=(+)PDT_number or X=(+)PDT_number:size of PDT in octets, +=copy metadata
  */
 
-
+/**
+ * Set the Product Definition Template (PDT).
+ * 
+ * Section 4 of a grib message contains the product definition and the product is defined 
+ * through the Product Definition Template (PDT). There are many different PDTs but only some 
+ * are in common usage. The -set_pdt option changes the current PDT to another. For example, 
+ * you want to add ensemble information to a forecast with no ensemble information. To do this, 
+ * you have to change the template to one that has ensemble information and then fill in the 
+ * various parts of the PDT. Another use of the -set_pdt option is when you have a PDT that is 
+ * unsupported by a program such as GrADS. You can use this option to convert an unsupported PDT 
+ * to a supported PDT. To retain metadata, prefix the PDT with a plus sign. The amount of metadata 
+ * copied depends on the version of wgrib2. 
+ * 
+ * ## Usage
+ * X = PDT number (ex: 8, not 4.8)
+ * Y = byte size of PDT if variable-sized PDT (optional)
+ * 
+ * -set_pdt X           default size, PDT is cleared
+ *
+ * -set_pdt +X          copy metadata from current PDT, size may vary
+ *
+ * -set_pdt X:Y         PDT is cleared
+ *
+ * -set_pdt +X:Y        copy metadata (Note: using wrong value of Y can produce errors)
+ *
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return 0 on success. Throws fatal_error() on failure.
+ * 
+ * ## Example
+ * ???
+ *
+ * @author Wesley Ebisuzaki @date 9/2008
+ */
 int f_set_pdt(ARG1) {
 
     unsigned char new_sec4[SET_PDT_SIZE];
@@ -55,7 +89,7 @@ int f_set_pdt(ARG1) {
 
     i = sscanf(p,"%d%n", &len, &n);
     if (i == 0 || i == EOF || n == 0) {
-	len = -1;
+        len = -1;
     }
     else p += n;
     if (*p == ':') p++;
@@ -66,12 +100,12 @@ int f_set_pdt(ARG1) {
     if (j+2 >= STRING_SIZE) fatal_error("set_pdt, arg (%s) too long", arg1);
 
     if (j == 0) {
-	misc_arg[0] = 0;
+        misc_arg[0] = 0;
     }
     else {
-	for (i = 0; i < j; i++) {
-	    misc_arg[i] = p[i] == ':' ? '\n' : p[i];
-	}
+        for (i = 0; i < j; i++) {
+            misc_arg[i] = p[i] == ':' ? '\n' : p[i];
+        }
         if (p[j-1] != ':') misc_arg[i++] = '\n';
         misc_arg[i] = '\0';
     }
@@ -81,32 +115,36 @@ int f_set_pdt(ARG1) {
     return i;
 }
 
-/*
- * new_pdt
- * sec4[] -> new_sec4[]
+/**
+ * Makes a new Section 4 (Product Definition Section).
  *
- * some metadata affects the size of the new pdt
- *      specify the various parameters that affect the length of the new pdt
- *      low to high
- *         default (minimum size)
- *         parameter from initial sec if copy_metadata == 1
- *         from misc_arg
+ * Some metadata affects the size of the new pdt. 
+ * 
+ * Specify the various parameters that affect the length of the new pdt:
+ *      - default (minimum size)
+ *      - parameter from initial sec if copy_metadata == 1
+ *      - from misc_arg
  *
- * once these parameters are specified, the length of the pdt can be determine by
+ * Once these parameters are specified, the length of the pdt can be determined by:
  *    1. specified length (old way), needed for pdt not in the code
  *    2. let code calculate the length of the pdt
  *
- * Copying metadata:
+ * ## Copying Metadata
  *
- * The parameters that affect the pdt size are always set (assuming in code)
- * if copy_metadata == 1, much of the metadata is copied from 1st sec[][]
+ * The parameters that affect the pdt size are always set (assuming in code). If 
+ * copy_metadata == 1, much of the metadata is copied from 1st sec[][].
  *
- * pdt = new pdt
- * len = -1 or len of sec4
- * copy_metadata = 1 (yes) 0 (no)
- * misc_args: string with new parameters for size of pdt
+ * @param sec Pointer to the current GRIB section 4 data.
+ * @param new_sec4 Pointer to the new Section 4 data.
+ * @param pdt New Product Definition Template number.
+ * @param len Length of the new Section 4 data or -1 for default size.
+ * @param copy_metadata Flag indicating whether to copy metadata (1 = yes, 0 = no).
+ * @param misc_arg String with new parameters for size of pdt.
+ * 
+ * @return 0 on success. Throws fatal_error() on failure.
+ * 
+ * @author Wesley Ebisuzaki @date 9/2008
  */
-
 int new_pdt(unsigned char **sec, unsigned char *new_sec4, int pdt, int len, int copy_metadata, char *misc_arg) {
 
     int i, k, len_old, pdt_old;
@@ -172,18 +210,18 @@ int new_pdt(unsigned char **sec, unsigned char *new_sec4, int pdt, int len, int 
 
 // fprintf(stderr, "prior n=%d nb=%d ncat=%d np=%d np_dp=%d vert_corr=%d\n", n, nb, ncat, np, np_dp, vert_coor);
     while (*p) {
-	i = sscanf(p, "n=%d", &n);
-	if (i != 1) i = sscanf(p, "nb=%d", &nb);
-	if (i != 1) i = sscanf(p, "ncat=%d", &ncat);
-	if (i != 1) i = sscanf(p, "nfcluster=%d", &nfcluster);
-	if (i != 1) i = sscanf(p, "np=%d", &np);
-	if (i != 1) i = sscanf(p, "np_dp=%d", &np_dp);
-	if (i != 1) i = sscanf(p, "vert_coor=%d", &vert_coor);
-	if (i != 1) fatal_error("new_pdt: misc_arg unknown variable: %s\n", p);
+        i = sscanf(p, "n=%d", &n);
+        if (i != 1) i = sscanf(p, "nb=%d", &nb);
+        if (i != 1) i = sscanf(p, "ncat=%d", &ncat);
+        if (i != 1) i = sscanf(p, "nfcluster=%d", &nfcluster);
+        if (i != 1) i = sscanf(p, "np=%d", &np);
+        if (i != 1) i = sscanf(p, "np_dp=%d", &np_dp);
+        if (i != 1) i = sscanf(p, "vert_coor=%d", &vert_coor);
+        if (i != 1) fatal_error("new_pdt: misc_arg unknown variable: %s\n", p);
 
-	/* skip to next line */
-	while (*p && *p != '\n') p++;
-	if (*p == '\n') p++;
+        /* skip to next line */
+        while (*p && *p != '\n') p++;
+        if (*p == '\n') p++;
     }
 // fprintf(stderr, "post n=%d nb=%d ncat=%d np=%d np_dp=%d vert_coor=%d\n", n, nb, ncat, np, np_dp, vert_coor);
 
@@ -206,21 +244,21 @@ int new_pdt(unsigned char **sec, unsigned char *new_sec4, int pdt, int len, int 
     /* if len is not specified then determine the len of the new pdt */
 
     if (len <= 0) {
-	len = pdt_len(NULL, pdt);
+        len = pdt_len(NULL, pdt);
 // fprintf(stderr,"calc size of pdt befor additions %d\n",len);
-	if (len <= 0) fatal_error_i("pdt_len: pdt=%d is not supported", pdt);
+        if (len <= 0) fatal_error_i("pdt_len: pdt=%d is not supported", pdt);
 
-	// increase len for additional time ranges
-	len += (n_new - 1) * 12;
+        // increase len for additional time ranges
+        len += (n_new - 1) * 12;
 
-	// increase len for vertical coordinte values
-	len += 4*vert_coor_new;
+        // increase len for vertical coordinte values
+        len += 4*vert_coor_new;
 
-	len += 11*nb_new;
-	len += 12*ncat_new;
-	len += nfcluster_new;
-	len += 2*np_new;
-	len += 5*np_dp_new;
+        len += 11*nb_new;
+        len += 12*ncat_new;
+        len += nfcluster_new;
+        len += 2*np_new;
+        len += 5*np_dp_new;
     }
 
 // fprintf(stderr,"set_pdt: n_new %d vert_coor_new %d\n", n_new, vert_coor_new);
@@ -264,63 +302,63 @@ int new_pdt(unsigned char **sec, unsigned char *new_sec4, int pdt, int len, int 
 
     /* copy statistical processing terms */
     if (n_new >= 1 && n_new == n_old) {
-	p_old = stat_proc_verf_time_location(sec);
-	p_new = stat_proc_verf_time_location(new_sec);
-	if (p_old != NULL && p_new != NULL) {
-	    k = (58-34) + 12*(n_new-1);
-	    for (i = 0; i < k; i++) p_new[i] = p_old[i];
-	}
+        p_old = stat_proc_verf_time_location(sec);
+        p_new = stat_proc_verf_time_location(new_sec);
+        if (p_old != NULL && p_new != NULL) {
+            k = (58-34) + 12*(n_new-1);
+            for (i = 0; i < k; i++) p_new[i] = p_old[i];
+        }
     }
 // fprintf(stderr,"new_pdtA: n_old %d, n %d, n_new %d\n", n_old, n, n_new);
 
     /* copy vertical coordinates */
     if (vert_coor_new == vert_coor_old && vert_coor_new > 0 ) {
-	// copy 4*vert_coor bytes from end of 
-	for (i = 0; i < 4*vert_coor; i++) 
-	    new_sec4[i + len-4*vert_coor] = sec[4][i + len_old-4*vert_coor];
+        // copy 4*vert_coor bytes from end of 
+        for (i = 0; i < 4*vert_coor; i++) 
+            new_sec4[i + len-4*vert_coor] = sec[4][i + len_old-4*vert_coor];
     }
 
     /* copy satellite spectral band info */
     if (nb_new == nb_old && nb_new > 0) {
-	p_old = number_of_contributing_spectral_bands_location(sec);
-	p_new = number_of_contributing_spectral_bands_location(new_sec);
-	/* assumes spectral data follows nb */
-	for (i = 1; i <= 11*nb_new; i++) p_new[i] = p_old[i];
+        p_old = number_of_contributing_spectral_bands_location(sec);
+        p_new = number_of_contributing_spectral_bands_location(new_sec);
+        /* assumes spectral data follows nb */
+        for (i = 1; i <= 11*nb_new; i++) p_new[i] = p_old[i];
     }
 // fprintf(stderr,"new_pdtA: 2\n");
 
     /* copy ncat . number of categories */
     if (ncat_old == ncat_new && ncat_new > 0) {
-	p_old = number_of_categories_location(sec);
-	p_new = number_of_categories_location(new_sec);
-	for (i = 1; i <= 12*ncat_new; i++) p_new[i] = p_old[i];
+        p_old = number_of_categories_location(sec);
+        p_new = number_of_categories_location(new_sec);
+        for (i = 1; i <= 12*ncat_new; i++) p_new[i] = p_old[i];
     }
 
     /* number of forecasts in cluster */
     if (nfcluster_old == nfcluster_new && nfcluster_new > 0) {
-	p_old = list_of_nc_ensemble_forecast_numbers_location(sec);
-	p_new = list_of_nc_ensemble_forecast_numbers_location(new_sec);
-	for (i = 1; i <= nfcluster_new; i++) p_new[i] = p_old[i];
+        p_old = list_of_nc_ensemble_forecast_numbers_location(sec);
+        p_new = list_of_nc_ensemble_forecast_numbers_location(new_sec);
+        for (i = 1; i <= nfcluster_new; i++) p_new[i] = p_old[i];
     }
 // fprintf(stderr,"new_pdtA: 3\n");
 
     /* copy np . number of partitions */
     if (np_old == np_new && np_new > 0) {
-	p_old = number_of_partitions_location(sec);
-	p_new = number_of_partitions_location(new_sec);
-	for (i = 1; i <= 2*np_new; i++) p_new[i] = p_old[i];
+        p_old = number_of_partitions_location(sec);
+        p_new = number_of_partitions_location(new_sec);
+        for (i = 1; i <= 2*np_new; i++) p_new[i] = p_old[i];
     }
 
     /* copy number_of_following_distribution_parameters_np */
     if (np_dp_old == np_dp_new && np_dp_new > 0) {
-	p_old = number_of_following_distribution_parameters_np_location(sec);
-	p_new = number_of_following_distribution_parameters_np_location(new_sec);
-	for (i = 1; i <= 5*np_new; i++) p_new[i] = p_old[i];
+        p_old = number_of_following_distribution_parameters_np_location(sec);
+        p_new = number_of_following_distribution_parameters_np_location(new_sec);
+        for (i = 1; i <= 5*np_new; i++) p_new[i] = p_old[i];
     }
 // fprintf(stderr,"new_pdtA: 5\n");
 
 // if (mode == 99) fprintf(stderr,"set_pdt: c\n");
-    new_sec4[9] = sec[4][9];		// parmmeter category 4.1
+    new_sec4[9] = sec[4][9];		// parameter category 4.1
     new_sec4[10] = sec[4][10];		// parameter number   4.2
 
     p_old = code_table_4_3_location(sec);
@@ -330,38 +368,38 @@ int new_pdt(unsigned char **sec, unsigned char *new_sec4, int pdt, int len, int 
     p_old = code_table_4_4_location(sec);
     p_new = code_table_4_4_location(new_sec);
     if (p_old != NULL && p_new != NULL) {
-	for (i = 0; i < 5; i++) p_new[i] = p_old[i];
+        for (i = 0; i < 5; i++) p_new[i] = p_old[i];
     }
 
     p_old = code_table_4_5a_location(sec);
     p_new = code_table_4_5a_location(new_sec);
     if (p_old != NULL && p_new != NULL) {
-	for (i = 0; i < 6; i++) p_new[i] = p_old[i];
+        for (i = 0; i < 6; i++) p_new[i] = p_old[i];
     }
 
     p_old = code_table_4_5b_location(sec);
     p_new = code_table_4_5b_location(new_sec);
     if (p_old != NULL && p_new != NULL) {
-	for (i = 0; i < 6; i++) p_new[i] = p_old[i];
+        for (i = 0; i < 6; i++) p_new[i] = p_old[i];
     }
 
-	p_old = code_table_4_6_location(sec);
-	p_new = code_table_4_6_location(new_sec);
-	if (p_old != NULL && p_new != NULL) *p_new = *p_old;
+    p_old = code_table_4_6_location(sec);
+    p_new = code_table_4_6_location(new_sec);
+    if (p_old != NULL && p_new != NULL) *p_new = *p_old;
 
-	p_old = code_table_4_7_location(sec);
-	p_new = code_table_4_7_location(new_sec);
-	if (p_old != NULL && p_new != NULL) *p_new = *p_old;
+    p_old = code_table_4_7_location(sec);
+    p_new = code_table_4_7_location(new_sec);
+    if (p_old != NULL && p_new != NULL) *p_new = *p_old;
 
-	p_old = code_table_4_8_location(sec);
-	p_new = code_table_4_8_location(new_sec);
-	if (p_old != NULL && p_new != NULL) *p_new = *p_old;
+    p_old = code_table_4_8_location(sec);
+    p_new = code_table_4_8_location(new_sec);
+    if (p_old != NULL && p_new != NULL) *p_new = *p_old;
 
     /* probabilty info */
     p_old = code_table_4_9_location(sec);
     p_new = code_table_4_9_location(new_sec);
     if (p_old != NULL && p_new != NULL) {
-	for (i = -2; i < 11; i++) p_new[i] = p_old[i];
+        for (i = -2; i < 11; i++) p_new[i] = p_old[i];
     }
 
     p_old = code_table_4_10_location(sec);
@@ -380,75 +418,74 @@ int new_pdt(unsigned char **sec, unsigned char *new_sec4, int pdt, int len, int 
     p_old = code_table_4_230_location(sec);
     p_new = code_table_4_230_location(new_sec);
     if (p_old != NULL && p_new != NULL) {
-	*p_new++ = *p_old++;
-	*p_new = *p_old;
+        *p_new++ = *p_old++;
+        *p_new = *p_old;
     }
 
     /* aerosol type */
     p_old = code_table_4_233_location(sec);
     p_new = code_table_4_233_location(new_sec);
     if (p_old != NULL && p_new != NULL) {
-	*p_new++ = *p_old++;
-	*p_new = *p_old;
+        *p_new++ = *p_old++;
+        *p_new = *p_old;
     }
 
     if (pdt_old == 20 && pdt == 20) {			// radar products
-	for (i = 9; i < 42; i++) new_sec[4][i] = sec[4][i];
+        for (i = 9; i < 42; i++) new_sec[4][i] = sec[4][i];
     }
 
+    p_old = perturbation_number_location(sec);
+    p_new = perturbation_number_location(new_sec);
+    if (p_old != NULL && p_new != NULL) *p_new = *p_old;
 
-	p_old = perturbation_number_location(sec);
-	p_new = perturbation_number_location(new_sec);
-	if (p_old != NULL && p_new != NULL) *p_new = *p_old;
+    p_old = number_of_forecasts_in_the_ensemble_location(sec);
+    p_new = number_of_forecasts_in_the_ensemble_location(new_sec);
+    if (p_old != NULL && p_new != NULL) *p_new = *p_old;
 
-	p_old = number_of_forecasts_in_the_ensemble_location(sec);
-	p_new = number_of_forecasts_in_the_ensemble_location(new_sec);
-	if (p_old != NULL && p_new != NULL) *p_new = *p_old;
+    p_old = background_generating_process_identifier_location(sec);
+    p_new = background_generating_process_identifier_location(new_sec);
+    if (p_old != NULL && p_new != NULL) *p_new = *p_old;
 
-	p_old = background_generating_process_identifier_location(sec);
-	p_new = background_generating_process_identifier_location(new_sec);
-	if (p_old != NULL && p_new != NULL) *p_new = *p_old;
+    p_old = analysis_or_forecast_generating_process_identifier_location(sec);
+    p_new = analysis_or_forecast_generating_process_identifier_location(new_sec);
+    if (p_old != NULL && p_new != NULL) *p_new = *p_old;
 
-	p_old = analysis_or_forecast_generating_process_identifier_location(sec);
-	p_new = analysis_or_forecast_generating_process_identifier_location(new_sec);
-	if (p_old != NULL && p_new != NULL) *p_new = *p_old;
+    p_old = hours_of_observational_data_cutoff_after_reference_time_location(sec);
+    p_new = hours_of_observational_data_cutoff_after_reference_time_location(new_sec);
+    if (p_old != NULL && p_new != NULL) {
+        *p_new++ = *p_old++;
+        *p_new = *p_old;
+    }
 
-	p_old = hours_of_observational_data_cutoff_after_reference_time_location(sec);
-	p_new = hours_of_observational_data_cutoff_after_reference_time_location(new_sec);
-	if (p_old != NULL && p_new != NULL) {
-	    *p_new++ = *p_old++;
-	    *p_new = *p_old;
-	}
+    p_old = observation_generating_process_identifier_location(sec);
+    p_new = observation_generating_process_identifier_location(new_sec);
+    if (p_old != NULL && p_new != NULL) *p_new = *p_old;
 
-	p_old = observation_generating_process_identifier_location(sec);
-	p_new = observation_generating_process_identifier_location(new_sec);
-	if (p_old != NULL && p_new != NULL) *p_new = *p_old;
+    /* year of model version */
+    p_old = year_of_model_version_date_location(sec);
+    p_new = year_of_model_version_date_location(new_sec);
+    if (p_old != NULL && p_new != NULL) {
+        for (i = 0; i < 7; i++) p_new[i] = p_old[i];
+    }
 
-	/* year of model version */
-	p_old = year_of_model_version_date_location(sec);
-	p_new = year_of_model_version_date_location(new_sec);
-	if (p_old != NULL && p_new != NULL) {
-	    for (i = 0; i < 7; i++) p_new[i] = p_old[i];
-	}
+    /* percentile values */
+    p_old = percentile_value_location(sec);
+    p_new = percentile_value_location(new_sec);
+    if (p_old != NULL && p_new != NULL) *p_new = *p_old;
 
-	/* percentile values */
-	p_old = percentile_value_location(sec);
-	p_new = percentile_value_location(new_sec);
-	if (p_old != NULL && p_new != NULL) *p_new = *p_old;
+    /* aerosol type */
+    p_old = code_table_4_233_location(sec);
+    p_new = code_table_4_233_location(new_sec);
+    if (p_old != NULL && p_new != NULL) {
+        *p_new++ = *p_old++;
+        *p_new = *p_old;
+    }
 
-        /* aerosol type */
-	p_old = code_table_4_233_location(sec);
-	p_new = code_table_4_233_location(new_sec);
-	if (p_old != NULL && p_new != NULL) {
-	    *p_new++ = *p_old++;
-	    *p_new = *p_old;
-	}
-
-	/* 1st aerosol size */
-	p_old = code_table_4_91_location(sec);
-	p_new = code_table_4_91_location(new_sec);
-	if (p_old != NULL && p_new != NULL) {
-	    for (i = 0; i < 11; i++) p_new[i] = p_old[i];
-	}
+    /* 1st aerosol size */
+    p_old = code_table_4_91_location(sec);
+    p_new = code_table_4_91_location(new_sec);
+    if (p_old != NULL && p_new != NULL) {
+        for (i = 0; i < 11; i++) p_new[i] = p_old[i];
+    }
     return 0;
 }

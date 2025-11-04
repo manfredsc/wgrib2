@@ -1,3 +1,27 @@
+/** @file
+ * @brief Find nearest-neighbor grid point for a given latitude/longitude.
+ * 
+ * Based on algorithms from:
+ * LRIT/HRIT Global Specification, Coordination Group for Meteorological Satellites
+ * Doc No CGMS 03 isssue 2.6
+ * Date - 12 August 1999
+ * 
+ * This document assumed certain constants: satellite height radius (pole/equator) which 
+ * differed from the values in the grib file. I attempted to replace the constants with the 
+ * grib-specified values.
+ * 
+ * I used a different test to see if the grid point is visible than suggested by the code 
+ * MSG_navigation_v1.01.c by EUMETSAT.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 4/2011 | W. Ebisuzaki | Initial
+ * 9/2017 | W. Ebisuzaki | fix defintion of lop (was using lap = 0.0)
+ *                         correct conversion of lap, lop to radians
+ * @author Public Domain: Wesley Ebisuzaki @date 4/11/2011
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -6,61 +30,88 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/*
- * spaceview2ij.c
- *
- * 2011-4-11 Public Domain Wesley Ebisuzaki
- *
- * this routine finds nearest neighbor grid point to a lat-lon coordinates
- *   If the lat-lon is outside of the domain, then the location is set to -1.
- *
- * based on algorithms from
- *
- * LRIT/HRIT Global Specification, Coordinatin Group for Meteorological Satellites
- * Doc No CGMS 03 isssue 2.6
- * date 12 August 1999
- *
- * This document assumed certain constants: satellite height
- *  radius (pole/equator) which differed from the values in the grib file
- *  I attempted to replace the constants with the grib-specified values.
- *
- * used a different test to see if the grid point is visible than suggested
- * by the code MSG_navigation_v1.01.c  by EUMETSAT
- * 
- * code limited to orientation == 0 and satellite location = 0N
- *  v1.0 4-2011
- *
- *  v1.1 9/2017 fix defintion of lop (was using lap = 0.0)
- *              correct conversion of lap, lop to radians
- */
-
-
-
 /* M_PI, M_PI_2, M_PI_4, and M_SQRT2 are not ANSI C but are commonly defined */
 /* values from GNU C library version of math.h copyright Free Software Foundation, Inc. */
 
 #ifndef M_PI
-#define M_PI           3.14159265358979323846  /* pi */
+#define M_PI           3.14159265358979323846  /**< pi */
 #endif
 #ifndef M_PI_2
-#define M_PI_2         1.57079632679489661923  /* pi/2 */
+#define M_PI_2         1.57079632679489661923  /**< pi/2 */
 #endif
 #ifndef M_PI_4
-#define M_PI_4         0.78539816339744830962  /* pi/4 */
+#define M_PI_4         0.78539816339744830962  /**< pi/4 */
 #endif
 #ifndef M_SQRT2
-#define M_SQRT2        1.41421356237309504880  /* sqrt(2) */
+#define M_SQRT2        1.41421356237309504880  /**< sqrt(2) */
 #endif
+
+/** Error tolerance for floating point comparisons. */
 #define ERROR 0.0001
 
-extern double *lat, *lon;
+/** Pointer to array of latitude values. */
+extern double *lat;
+
+/** Pointer to array of longitude values. */
+// static double *lon;
+
+/** Current output order type. */
 extern enum output_order_type output_order;
 
-static unsigned int nnx, nny;
-static double sat_height, r_pol, r_eq, r_pol_eq, factor_10, lap, lop, 
-	inv_rx, inv_ry;
-static double xp, yp, dx, dy;
+/** Number of grid points in the x-direction. */
+static unsigned int nnx;
 
+/** Number of grid points in the y-direction. */
+static unsigned int nny;
+
+/** Satellite height. */
+static double sat_height;
+
+/** Satellite radius from pole. */
+static double r_pol;
+
+/** Satellite radius from equator. */
+static double r_eq;
+
+/** Effective radius (r_pol * r_eq). */
+static double r_pol_eq;
+
+/** Factor for converting between grid lengths and Earth-centered coordinates. */
+static double factor_10;
+
+/** Latitude of the sub-satellite point. */
+static double lap;
+
+/** Longitude of the sub-satellite point. */
+static double lop;
+
+/** Inverse of horizontal angular resolution of the sensor. */
+static double inv_rx;
+
+/** Inverse of vertical angular resolution of the sensor. */
+static double inv_ry;
+
+/** x-coordinate of the sub-satellite point. */
+static double xp;
+
+/** y-coordinate of the sub-satellite point. */
+static double yp;
+
+/** Apparent diameter of Earth in grid lengths, in x-direction. */
+static double dx;
+
+/** Apparent diameter of Earth in grid lengths, in y-direction. */
+static double dy;
+
+/**
+ * Initialize the space view projection for nearest-neighbor grid point search.
+ * 
+ * @param sec Pointer to the GRIB section.
+ * 
+ * @return 0 on success. Throws fatal_error() on failure.
+ * 
+ * @author Wesley Ebisuzaki @date 4/2011
+ */
 int space_view_init(unsigned char **sec) {
 
     double major, minor, orient_angle, angular_size;
@@ -68,7 +119,7 @@ int space_view_init(unsigned char **sec) {
     int nres, nscan;
     unsigned int nnpnts;
 
-fprintf(stderr,"ALPHA: experimental space_view2ij\n");
+    fprintf(stderr,"ALPHA: experimental space_view2ij\n");
     if (sec == NULL || sec[3] == NULL) fatal_error("space_view_init: sec/sec[3] == NULL","");
  
     if (code_table_3_1(sec) != 90) fatal_error("space_view_init: not space view grid","");
@@ -148,6 +199,19 @@ fprintf(stderr,"ALPHA: experimental space_view2ij\n");
     return 0;
 }
 
+/**
+ * Find the closest grid point in the space view projection using nearest-neighbor search.
+ * 
+ * Code limited to orientation == 0 and satellite location = 0N.
+ *
+ * @param sec Pointer to the GRIB section.
+ * @param plat Latitude of the point to search for.
+ * @param plon Longitude of the point to search for.
+ * 
+ * @return The index of the closest grid point, or -1 if not found.
+ * 
+ * @author Wesley Ebisuzaki @date 4/2011
+ */
 long int space_view_closest(unsigned char **sec, double plat, double plon) {
 
     double phi_e, cos_phi_e, r_e;
@@ -202,7 +266,7 @@ long int space_view_closest(unsigned char **sec, double plat, double plon) {
     ix = floor(x + 0.5);
     iy = floor(y + 0.5);
     if (ix < 0 || ix >= nnx || iy < 0 || iy >= nny) {
-	return -1;
+        return -1;
     }
     return (ix + iy*nnx);
 }

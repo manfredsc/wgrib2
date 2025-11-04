@@ -1,39 +1,45 @@
-/*******************************************************************************
-NAME                  		SINUSOIDAL
+/** @file
+ * @brief Sinusoidal - Inverse Transformation
+ *
+ * PURPOSE: Transforms input Easting and Northing to longitude and
+ *          latitude for the Sinusoidal projection. The Easting and 
+ *          Northing must be in meters. The longitude and latitude 
+ *          values will be returned in radians.
+ *
+ * This function was adapted from the Sinusoidal projection code (FORTRAN) in the
+ * General Cartographic Transformation Package software which is available from
+ * the U.S. Geological Survey National Mapping Division.
+ * @author D. Steinwand, EROS @date May, 1991
+ *
+ * ### Algorithm References
+ * 1. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ *
+ * 2. "Software Documentation for GCTP General Cartographic Transformation
+ *    Package", U.S. Geological Survey National Mapping Division, May 1982.
+ */
 
-PURPOSE:	Transforms input Easting and Northing to longitude and
-		latitude for the Sinusoidal projection.  The
-		Easting and Northing must be in meters.  The longitude
-		and latitude values will be returned in radians.
-
-PROGRAMMER              DATE            
-----------              ----           
-D. Steinwand, EROS      May, 1991     
-
-This function was adapted from the Sinusoidal projection code (FORTRAN) in the 
-General Cartographic Transformation Package software which is available from 
-the U.S. Geological Survey National Mapping Division.
- 
-ALGORITHM REFERENCES
-
-1.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-2.  "Software Documentation for GCTP General Cartographic Transformation
-    Package", U.S. Geological Survey National Mapping Division, May 1982.
-*******************************************************************************/
 #include "cproj.h"
 
-/* Variables common to all subroutines in this code file
-  -----------------------------------------------------*/
-static double lon_center;	/* Center longitude (projection center) */
-static double R;		/* Radius of the earth (sphere) 	*/
-static double false_easting;	/* x offset in meters			*/
-static double false_northing;	/* y offset in meters			*/
+/* Variables common to all subroutines in this code file */
+static double lon_center;	/**< Center longitude (projection center) */
+static double R;		/**< Radius of the earth (sphere) 	*/
+static double false_easting;	/**< x offset in meters			*/
+static double false_northing;	/**< y offset in meters			*/
 
-/* Initialize the Sinusoidal projection
-  ------------------------------------*/
+/**
+ * Initialize the Sinusoidal projection for inverse transformation.
+ * 
+ * @param r Radius of the earth (sphere).
+ * @param center_long Center longitude.
+ * @param false_east X offset in meters.
+ * @param false_north Y offset in meters.
+ *
+ * @return Always returns 0
+ *
+ * @author D. Steinwand @date May, 1991
+ */
 long sininvint(double r, double center_long, double false_east,
         double false_north) {
 //long sininvint(r, center_long,false_east,false_north) 
@@ -58,8 +64,18 @@ offsetp(false_easting,false_northing);
 return(OK);
 }
 
-/* Sinusoidal inverse equations--mapping x,y to lat,long 
-  -----------------------------------------------------*/
+/** 
+ * Sinusoidal inverse equations--mapping x,y to lat,long
+ *
+ * @param x X projection coordinate.
+ * @param y Y projection coordinate.
+ * @param lon Pointer to store longitude.
+ * @param lat Pointer to store latitude.
+ * 
+ * @return
+ * - 0 :: Success
+ * - 164 :: Input data error
+ */
 long sininv(double x, double y, double *lon, double *lat) {
 //long sininv(x, y, lon, lat)
 //double x;		/* (I) X projection coordinate */

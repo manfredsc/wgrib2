@@ -1,3 +1,16 @@
+/**
+ * @file
+ * @brief Take a rectangular box of data from a rectangular grid and 
+ * write it to a file.
+ * @author Arlindo da Silva @date 3/2008
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 3/2008 | A. da Silva | Initial
+ * 1/2011 | W. Ebisuzaki | replace new_GDS by GDS_change_no, WNE
+ */
+
 /*
 
     Copyright (C) 2008 by Arlindo da Silva <dasilva@opengrads.org>
@@ -29,31 +42,59 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/*
- * 3/2008 values inside index-space bounding box; based on Lola.c
- * 1/2011 replace new_GDS by GDS_change_no, WNE
- */
+/** Decode grib file flag. */
+extern int decode;
 
-extern int decode, flush_mode;
+/** Flush of output flag. */
+extern int flush_mode;
+
+/** Append grib file flag. */
 extern int file_append;
 
-extern int nx, ny, GDS_change_no, scan;
+/** Number of grid points in the x direction. */
+extern int nx;
 
+/** Number of grid points in the y direction. */
+extern int ny;
+
+/** GDS change number. */
+extern int GDS_change_no;
+
+/** Scan mode flag. */
+extern int scan;
+
+/** File header flag. */
 extern int header;
+
+/** Pointer to text format. */
 extern char *text_format;
+
+/** Number of columns in text output. */
 extern int text_column;
 
+/** Struct to hold bounding box information. */
 struct Bbox {
-    FILE *out;
-    int i1, i2, di, ni;
-    int j1, j2, dj, nj;
-    int *iptr;
-    int last_GDS_change_no;
+    FILE *out; /**< Output file pointer. */
+    int i1; /**< Starting index in the x direction. */
+    int i2; /**< Ending index in the x direction. */
+    int di; /**< Increment in the x direction. */
+    int ni; /**< Number of grid points in the x direction. */
+    int j1; /**< Starting index in the y direction. */
+    int j2; /**< Ending index in the y direction. */
+    int dj; /**< Increment in the y direction. */
+    int nj; /**< Number of grid points in the y direction. */
+    int *iptr; /**< Pointer to the grid data. */
+    int last_GDS_change_no; /**< Last GDS change number. */
 };
 
-/* return c-style index, with wrapping; on input i is a fortran-style
-   index and nx is the */
-
+/**
+ * Get the C-style index with wrapping.
+ * 
+ * @param i Index in Fortran-style (1-offset).
+ * @param nx Number of grid points in the x direction.
+ * 
+ * @return C index
+ */
 static int get_cindex (int i, int nx) { 
     int j;
     j = (i - 1) % nx;
@@ -66,6 +107,28 @@ static int get_cindex (int i, int nx) {
  * HEADER:100:ijbox:output:4:grid values in bounding box  X=i1:i2[:di] Y=j1:j2[:dj] Z=file A=[bin|text|spread]
  */
 
+/**
+ * Takes a rectangular box of data from a rectangular grid and writes it out in either text, bin, 
+ * or spread (sheet) format. The extracted box can have every point or every n-th point. 
+ * 
+ * ## Usage
+ * -ijbox i1:i2:di j1:j2:dj output_file format
+ * 
+ * i1:i2:di specifies the x-dimension, where i1 is the starting index, i2 is the ending index, and di is the increment.
+ * j1:j2:dj specifies the y-dimension, where j1 is the starting index, j2 is the ending index, and dj is the increment.
+ * output_file is written in the specified format (e.g., "bin", "text", "spread").
+ * 
+ * @param ARG4 List of function arguments set by wgrib2's main() function (see @ref ARG4). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * ## Example: 
+ * ???
+ * 
+ * @author Arlindo da Silva @date 3/2008
+ */
 int f_ijbox(ARG4) {
 
     int i1, i2, di, ni;

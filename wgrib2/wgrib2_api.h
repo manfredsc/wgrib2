@@ -1,4 +1,7 @@
-/* used by C and fortran callable_wgrib2 API  10/2024 Public Domain  Wesley Ebisuzaki */
+/** @file
+ * @brief Header file used by C and Fortran API for wgrib2.
+ * @author Public Domain: Wesley Ebisuzaki @date 10/2015
+ */
 
 int wgrib2(int argc, const char **argv);
 int wgrib2a(char *arg1, ...);

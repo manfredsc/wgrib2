@@ -1,39 +1,47 @@
-/*******************************************************************************
-NAME                        INTERRUPTED MOLLWEIDE
+/** @file
+ * @brief Interrupted Mollweide - Inverse Transformation
+ * 
+ * PURPOSE: Transforms input Easting and Northing to longitude and
+ *          latitude for the Interrupted Mollweide projection.  The
+ *          Easting and Northing must be in meters.  The longitude
+ *          and latitude values will be returned in radians.
+ * 
+ * @author D. Steinwand, EROS @date June, 1991
+ * 
+ * ### Algorithm References
+ * 1. Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
+ *    U.S. Geological Survey Professional Paper 1453 , United State Government
+ *    Printing Office, Washington D.C., 1989.
+ *
+ * 2. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 6/1991 | D. Steinwand, EROS | Initial development
+ * 6/1993 | S. Nelson, EDC | Changed precision for values to determine regions 
+ *                           and if coordinates are in the break, and for the 
+ *                           values in the conversion algorithm.
+ */
 
-PURPOSE:        Transforms input Easting and Northing to longitude and
-                latitude for the Interrupted Mollweide projection.  The
-                Easting and Northing must be in meters.  The longitude
-                and latitude values will be returned in radians.
-
-PROGRAMMER              DATE		REASON
-----------              ----		------
-D. Steinwand, EROS      June, 1991	Initial Development
-S. Nelson, EDC		June, 1993	Changed precision for values to
-					determine regions and if coordinates
-					are in the break, and for the values
-					in the conversion algorithm.
-
-ALGORITHM REFERENCES
-
-1.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
-    U.S. Geological Survey Professional Paper 1453 , United State Government
-    Printing Office, Washington D.C., 1989.
-
-2.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-*******************************************************************************/
 #include "cproj.h"
 
-/* Variables common to all subroutines in this code file
-  -----------------------------------------------------*/
-static double R;		/* Radius of the earth (sphere) */
-static double lon_center[6];	/* Central meridians, one for each region */
-static double feast[6];		/* False easting, one for each region */
+/* Variables common to all subroutines in this code file */
+static double R;		/**< Radius of the earth (sphere) */
+static double lon_center[6];	/**< Central meridians, one for each region */
+static double feast[6];		/**< False easting, one for each region */
 
-/* Initialize the Interrupted Mollweide projection
-  --------------------------------------------*/
+/** 
+ * Initialize the Interrupted Mollweide projection for inverse transformation.
+ * 
+ * @param r Radius of the earth (sphere)
+ * 
+ * @return Always returns 0
+ * 
+ * @author D. Steinwand, EROS @date June, 1991
+ */
 long imolwinvint(double r) {
 //long imolwinvint(r) 
 //double r; 			/* (I) Radius of the earth (sphere) */
@@ -66,6 +74,19 @@ ptitle("INTERRUPTED MOLLWEIDE EQUAL-AREA");
 radius(r);
 return(OK);
 }
+
+/**
+ * Interrupted Mollweide inverse equations--mapping x,y to lat,long
+ * 
+ * @param x X projection coordinate
+ * @param y Y projection coordinate
+ * @param lon Pointer to store the Longitude
+ * @param lat Pointer to store the Latitude
+ * 
+ * @return Always returns 0
+ * 
+ * @author D. Steinwand, EROS @date June, 1991
+ */
 long imolwinv(double x, double y, double *lon, double *lat) {
 //long imolwinv(x, y, lon, lat)
 //double x;		/* (I) X projection coordinate */

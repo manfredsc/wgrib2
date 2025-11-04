@@ -1,3 +1,8 @@
+/** @file
+ * @brief Updates Section 4 (Product Definition Section).
+ * @author Public Domain: Wesley Ebisuzaki @date 10/2013
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -7,18 +12,23 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/*
- * use this routine to update sec4/pdt
- * NOTE: this routine assumes that nobody
- * will use the old sec4
- * NOT thread safe, can only be used for one **sec
- *
- * 10/2013 Public Domain by Wesley Ebisuzaki
- */
-
-
+/** Pointer to the new Section 4. */
 static unsigned char new_sec4[SET_PDT_SIZE];
 
+/**
+ * Routine to update Section 4 (Product Definition Section).
+ *
+ * This routine assumes that nobody will use the old Section 4.
+ *
+ * NOT thread safe! Can only be used for on **sec.
+ *
+ * @param sec Pointer to GRIB sections containing the new Section 4.
+ * @param sec4 Pointer to the new Section 4.
+ * 
+ * @return 0 on success. Throws fatal_error() on failure.
+ *
+ * @author Wesley Ebisuzaki @date 10/2013
+ */
 int update_sec4(unsigned char **sec, unsigned char *sec4) {
     unsigned int sec4_size, i;
 

@@ -1,51 +1,63 @@
-/*******************************************************************************
-NAME                            TRANSVERSE MERCATOR
+/** @file
+ * @brief Transverse Mercator - Forward Transformation
+ * 
+ * PURPOSE: Transforms input longitude and latitude to Easting and
+ *          Northing for the Transverse Mercator projection. The
+ *          longitude and latitude must be in radians. The Easting
+ *          and Northing values will be returned in meters.
+ * @author D. Steinwand, EROS @date Nov, 1991
+ *
+ * ### Algorithm References
+ * 1. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ *
+ * 2. Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
+ *    U.S. Geological Survey Professional Paper 1453 , United State Government
+ *    Printing Office, Washington D.C., 1989.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 11/1991 | D. Steinwand | Original Development
+ * 3/1993 | T. Mittan | Update
+ * 2/1995 | S. Nelson | Divided tmfor.c into two files, one for UTM (utmfor.c) and 
+ *                      one for TM (tmfor.c).  This was a necessary change to run 
+ *                      forward projection conversions for both UTM and TM in the 
+ *                      same process.
+ */
 
-PURPOSE:	Transforms input longitude and latitude to Easting and
-		Northing for the Transverse Mercator projection.  The
-		longitude and latitude must be in radians.  The Easting
-		and Northing values will be returned in meters.
-
-PROGRAMMER              DATE		REASON
-----------              ----		------
-D. Steinwand, EROS      Nov, 1991
-T. Mittan		Mar, 1993
-S. Nelson		Feb, 1995	Divided tmfor.c into two files, one
-                                        for UTM (utmfor.c) and one for 
-					TM (tmfor.c).  This was a
-                                        necessary change to run forward
-                                        projection conversions for both UTM
-					and TM in the same process.
-
-ALGORITHM REFERENCES
-
-1.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-2.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
-    U.S. Geological Survey Professional Paper 1453 , United State Government
-    Printing Office, Washington D.C., 1989.
-*******************************************************************************/
 #include "cproj.h"
 
-/* Variables common to all subroutines in this code file
-  -----------------------------------------------------*/
-static double r_major;		/* major axis 				*/
-static double r_minor;		/* minor axis 				*/
-static double scale_factor;	/* scale factor				*/
-static double lon_center;	/* Center longitude (projection center) */
-static double lat_origin;	/* center latitude			*/
-static double e0,e1,e2,e3;	/* eccentricity constants		*/
-static double e,es,esp;		/* eccentricity constants		*/
-static double ml0;		/* small value m			*/
-static double false_northing;	/* y offset in meters			*/
-static double false_easting;	/* x offset in meters			*/
-static double ind;		/* spherical flag			*/
+/* Variables common to all subroutines in this code file */
+static double r_major;		/**< major axis 				*/
+static double r_minor;		/**< minor axis 				*/
+static double scale_factor;	/**< scale factor				*/
+static double lon_center;	/**< Center longitude (projection center) */
+static double lat_origin;	/**< center latitude			*/
+static double e0,e1,e2,e3;	/**< eccentricity constants		*/
+static double e,es,esp;		/**< eccentricity constants		*/
+static double ml0;		/**< small value m			*/
+static double false_northing;	/**< y offset in meters			*/
+static double false_easting;	/**< x offset in meters			*/
+static double ind;		/**< spherical flag			*/
 
 
-/* Initialize the Transverse Mercator (TM) projection
-  -------------------------------------------------*/
+/** 
+ * Initialize the Transverse Mercator (TM) projection for forward transformation.
+ *
+ * @param r_maj Major axis radius
+ * @param r_min Minor axis radius
+ * @param scale_fact Scale factor
+ * @param center_lon Center longitude
+ * @param center_lat Center latitude
+ * @param false_east X offset in meters
+ * @param false_north Y offset in meters
+ * 
+ * @return Always returns 0
+ * 
+ * @author D. Steinwand @date Nov, 1991
+ */
 long tmforint(double r_maj, double r_min, double scale_fact,
         double center_lon, double center_lat, double false_east,
         double false_north) {
@@ -98,10 +110,23 @@ offsetp(false_easting,false_northing);
 return(OK);
 }
 
-/* Transverse Mercator forward equations--mapping lat,long to x,y
-   Note:  The algorithm for TM is exactly the same as UTM and therefore
-	  if a change is implemented, also make the change to UTMFOR.c
-  --------------------------------------------------------------*/
+/**
+ * Transverse Mercator forward equations--mapping lat,long to x,y
+ *
+ * @note The algorithm for TM is exactly the same as UTM and therefore
+ *       if a change is implemented, also make the change to UTMFOR.c
+ * 
+ * @param lon Longitude
+ * @param lat Latitude
+ * @param x Pointer to store X projection coordinate
+ * @param y Pointer to store Y projection coordinate
+ * 
+ * @return 
+ * - 0 :: Success
+ * - 93 :: Point projects into infinity
+ *
+ * @author D. Steinwand @date Nov, 1991
+ */
 long tmfor(double lon, double lat, double *x, double *y) {
 //long tmfor(lon, lat, x, y)
 //double lon;			/* (I) Longitude 		*/

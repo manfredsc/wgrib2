@@ -1,18 +1,30 @@
+/** @file
+ * @brief Routines for reading IEEE floating point files.
+ * @author Public Domain: Wesley Ebisuzaki @date 10/2008
+ */
+
 #include <stdio.h>
 #include <stddef.h>
 #include "wgrib2.h"
 
-/*
- * rdieee_file: reads a big/little endian ieee file with optional header
- *
- * 10/2008 Public domain Wesley Ebisuzaki
- */
-
-/* BSIZ number of floats to process at one time */
+ /** Number of floats to process at one time. */
 #define BSIZ 8*4096
 
+/** IEEE little-endian flag */
 extern int ieee_little_endian;
 
+/**
+ * Reads a big/little endian IEEE file with optional header.
+ *
+ * @param array Pointer to the output array.
+ * @param n Number of floats to read.
+ * @param header Flag indicating if a header is present.
+ * @param input Pointer to the input file struct.
+ * 
+ * @return 0 on success, error code otherwise
+ *
+ * @author Wesley Ebisuzaki @date 10/2008
+ */
 int rdieee_file(float *array, unsigned int n, int header, struct seq_file *input) {
 
     unsigned int i, j, l;
@@ -23,32 +35,32 @@ int rdieee_file(float *array, unsigned int n, int header, struct seq_file *input
     nbytes = n*4;
 
     if (header) {
-	if (nbytes >> 32) fatal_error("rdieee: grid too large for 4 byte header","");
-	if (fread_file(h4,1,4,input) != 4) fatal_error("rdieee: header read","");
-	if (ieee_little_endian) 
-	    l = (h4[3] << 24) | (h4[2] << 16) | (h4[1] << 8) | h4[0];
-	else
-	    l = (h4[0] << 24) | (h4[1] << 16) | (h4[2] << 8) | h4[3];
-	
-	if (l != nbytes) fatal_error("rdieee: bad header","");
+        if (nbytes >> 32) fatal_error("rdieee: grid too large for 4 byte header","");
+        if (fread_file(h4,1,4,input) != 4) fatal_error("rdieee: header read","");
+        if (ieee_little_endian) 
+            l = (h4[3] << 24) | (h4[2] << 16) | (h4[1] << 8) | h4[0];
+        else
+            l = (h4[0] << 24) | (h4[1] << 16) | (h4[2] << 8) | h4[3];
+        
+        if (l != nbytes) fatal_error("rdieee: bad header","");
     }
 
     for (i = 0; i < n; i += BSIZ) {
-	j = n-i > BSIZ ? BSIZ : n-i;
-	if (fread_file(buff,1,4*j,input) != 4*j) fatal_error("rdieee: data read","");
-	if (ieee_little_endian) swap_buffer(buff, 4*j);
+        j = n-i > BSIZ ? BSIZ : n-i;
+        if (fread_file(buff,1,4*j,input) != 4*j) fatal_error("rdieee: data read","");
+        if (ieee_little_endian) swap_buffer(buff, 4*j);
 #ifdef USE_OPENMP
 #pragma omp parallel for private(l) schedule(static)
 #endif
-	for (l = 0; l < j; l++) {
-	    array[i+l] = ieee2flt(buff + 4*l);
-  	}
+        for (l = 0; l < j; l++) {
+            array[i+l] = ieee2flt(buff + 4*l);
+        }
     }
 
     if (header) {
-	if (fread_file(t4,1,4,input) != 4) fatal_error("rdieee: trailer read","");
-	if (h4[0] != t4[0] || h4[1] != t4[1] || h4[2] != t4[2] || h4[3] != t4[3])
-	   fatal_error("rdieee: bad trailer","");
+        if (fread_file(t4,1,4,input) != 4) fatal_error("rdieee: trailer read","");
+        if (h4[0] != t4[0] || h4[1] != t4[1] || h4[2] != t4[2] || h4[3] != t4[3])
+        fatal_error("rdieee: bad trailer","");
     }
 
     return 0;

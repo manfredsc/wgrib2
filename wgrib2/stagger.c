@@ -1,3 +1,8 @@
+/** @file
+ * @brief Staggered grid calculation.
+ * @author Public Domain: Wesley Ebisuzaki @date 1/2014
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,9 +12,6 @@
 #include "fnlist.h"
 
 /*
- * stagger.c Public domain 1/2014 Wesley Ebisuzaki
- *
- *
  * usually x[0] = y[0] = 0.0
  *
  *  usually x[] and y[] are integers (except when grids are shiffed +/- 1/2)
@@ -22,24 +24,40 @@
  *  version: proposal 5
  */
 
-extern double *lat, *lon;
+/** Pointer to array of latitude values. */
+extern double *lat;
+
+/** Pointer to array of longitude values. */
+extern double  *lon;
+
+/** Current output order type. */
 extern enum output_order_type output_order;
+
+/** Scan mode. */
 extern int scan;
 
-/*
- * stagger fills x[] and y[], lo1 and la1 have X==0 and Y==0
+/**
+ * Staggered grid calculation.
  *
- * assumed_npnts is number if grid points that the calling program thinks is right
- *  this is for error checking.  use -1 if don't know
+ * Fills x[] and y[], lo1 and la1 have X==0 and Y==0.
+ *
+ * To perform a grid transformation:
+ * 1. Setup grid transform (proj4 library for example).
+ * 2. Call stagger() to get the x() and y() values of the grid.
+ * 3. Transform x() and y() to lon() and lat().
+ *
+ * Like many other programs, stagger requires the grid to be in west-east, south-north order.
  * 
- * to a grid transform:
- *   setup grid transform (proj4 library for example(
- *   call stagger() to get the x() and y() values of the grid
- *     transform x() and y() to lon() and lat()
+ * @param sec Pointer to the GRIB sections.
+ * @param assumed_npnts Number of grid points that the calling program thinks is right. Use -1 
+ * if don't know. For error checking.
+ * @param x Pointer to the array of x coordinates.
+ * @param y Pointer to the array of y coordinates.
+ * 
+ * @return 0 for success. Throws fatal_error() on failure.
  *
- * like many programs, stagger requires grid to be on we:sn order
+ * @author Wesley Ebisuzaki @date 1/2014
  */
-
 int stagger(unsigned char **sec, unsigned int assumed_npnts, double *x, double *y) {
     int nx, ny, res, scan;
     unsigned int npnts;
@@ -68,8 +86,8 @@ int stagger(unsigned char **sec, unsigned int assumed_npnts, double *x, double *
  
     if (dy < 0 && ((ny % 2) == 0)) { // swap even and odd rows if ns to sn and even number of rows
         i = dx_off_odd;
-	dx_off_odd = dx_off_even;
-	dx_off_even = i;
+        dx_off_odd = dx_off_even;
+        dx_off_even = i;
     }
 
     dx_offset_odd  = reduced_grid ? 0.5 * dx_off_odd  : 0.5 * dx_off_odd  * dx;
@@ -90,18 +108,18 @@ int stagger(unsigned char **sec, unsigned int assumed_npnts, double *x, double *
 
 #ifdef WMO_VALIDATION
     if (code_table_3_1(sec) == 60) {		/* cubed sphere */
-	if (GDS_Gnom_tile(sec[3]) == 0) {	/* global - 6 faces */
-	    n = n*6;
-	}
-	fprintf(stderr,"stagger: n=%d assume %d sec3 %d\n", n,assumed_npnts, GB2_Sec3_npts(sec));
+        if (GDS_Gnom_tile(sec[3]) == 0) {	/* global - 6 faces */
+            n = n*6;
+        }
+        fprintf(stderr,"stagger: n=%d assume %d sec3 %d\n", n,assumed_npnts, GB2_Sec3_npts(sec));
     }
 #endif
 
     // check to number of points
     if (assumed_npnts != n) 
-	fatal_error_ii("stagger: program error think npnts=%d assumed npnts=%d",n, (int) assumed_npnts);
+        fatal_error_ii("stagger: program error think npnts=%d assumed npnts=%d",n, (int) assumed_npnts);
     if (n != GB2_Sec3_npts(sec)) 
-	fatal_error_ii("stagger: program error think npnts=%d, Sec3 gives %d",n, GB2_Sec3_npts(sec));
+        fatal_error_ii("stagger: program error think npnts=%d, Sec3 gives %d",n, GB2_Sec3_npts(sec));
 
     if (x == NULL || y == NULL) return 1;
 
@@ -114,30 +132,30 @@ int stagger(unsigned char **sec, unsigned int assumed_npnts, double *x, double *
 #pragma omp parallel for private(ix,iy,even,i,dx_offset, nnx)
 #endif
     for (iy = 0; iy < ny; iy++) {
-	// even = iy % 2;		// first row is odd .. iy % 2 == 0
-	even = (iy & 1);		// first row is odd
-	i = even ?  nx2*(iy >> 1) + nx_odd : nx2*(iy >> 1);
-	nnx = even ? nx_even : nx_odd;
-	dx_offset = even ? dx_offset_even : dx_offset_odd;
-	for (ix = 0; ix < nnx; ix++) {
-	    x[i + ix] = x0 + dx_offset + ix;
-	    y[i + ix] = y0 + dy_offset + iy;
-	}
+        // even = iy % 2;		// first row is odd .. iy % 2 == 0
+        even = (iy & 1);		// first row is odd
+        i = even ?  nx2*(iy >> 1) + nx_odd : nx2*(iy >> 1);
+        nnx = even ? nx_even : nx_odd;
+        dx_offset = even ? dx_offset_even : dx_offset_odd;
+        for (ix = 0; ix < nnx; ix++) {
+            x[i + ix] = x0 + dx_offset + ix;
+            y[i + ix] = y0 + dy_offset + iy;
+        }
     }
 
 #ifdef WMO_VALIDATION
     if (code_table_3_1(sec) == 60) {			/* cubed sphere */
-	if (GDS_Gnom_tile(sec[3]) == 0) {		/* global - 6 faces */
-	    /* calculated X, Y for one face, duplicate for all 8 faces */
-	    n = n / 6;
+        if (GDS_Gnom_tile(sec[3]) == 0) {		/* global - 6 faces */
+            /* calculated X, Y for one face, duplicate for all 8 faces */
+            n = n / 6;
 #ifdef USE_OPENMP
 #pragma omp parallel for private(i)
 #endif
-	    for (i = 0; i < n; i++) {
-		x[i+n] = x[i+2*n] = x[i+3*n] = x[i+4*n] = x[i+5*n] = x[i];
-		y[i+n] = y[i+2*n] = y[i+3*n] = y[i+4*n] = y[i+5*n] = y[i];
-	    }
-	}
+            for (i = 0; i < n; i++) {
+                x[i+n] = x[i+2*n] = x[i+3*n] = x[i+4*n] = x[i+5*n] = x[i];
+                y[i+n] = y[i+2*n] = y[i+3*n] = y[i+4*n] = y[i+5*n] = y[i];
+            }
+        }
     }
 #endif
 

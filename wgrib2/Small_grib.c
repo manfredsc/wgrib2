@@ -1,3 +1,14 @@
+/** @file
+ * @brief Functions for creating small GRIB files.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 5/2008 | W. Ebisuzaki | Initial
+ * 8/2011 | W. Ebisuzaki | added mercator, rotated lat-lon, redundant test for we:sn order
+ * 1/2012 | W. Ebisuzaki | added Gaussian grid
+ * @author Public Domain: Wesley Ebisuzaki @date 5/2008
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -6,77 +17,153 @@
 #include "fnlist.h"
 // #include <omp.h>
 
-// #define DEBUG
-/*
- * small_grib
- *
- * 5/2008 Public Domain by Wesley Ebisuzaki
- * v1.1 8/2011 WNE added mercator, rotated lat-lon, redundant test for we:sn order
- * v1.2 1/2012 WNE added Gaussian grid
- */
+/** Decode grib file flag. */
+extern int decode;
 
+/** Flag to indicate lat-lon grid processing. */
+extern int latlon;
 
-extern int decode, latlon;
-extern int flush_mode, file_append;
+/** Flush of output flag. */
+extern int flush_mode;
+
+/** Append grib file flag. */
+extern int file_append;
+
+/** Current output order type. */
 extern enum output_order_type output_order;
-extern int use_scale, dec_scale, bin_scale, wanted_bits, max_bits;
+
+/** Use scaling flag. */
+extern int use_scale;
+
+/** Decimal scaling. */
+extern int dec_scale;
+
+/** Binary scaling. */
+extern int bin_scale;
+
+/** Number of bits wanted. */
+extern int wanted_bits;
+
+/** Maximum number of bits. */
+extern int max_bits;
+
+/** Current output GRIB type. */
 extern enum output_grib_type grib_type;
-extern double *lat, *lon;
-extern int npts, nx, ny, scan;
-extern unsigned int nx_, ny_;
+
+/** Pointer to array of latitude values. */
+extern double *lat;
+
+/** Pointer to array of longitude values. */
+extern double *lon;
+
+/** Number of points in the grid. */
+extern int npts;
+
+/** Number of grid points in the x-direction. */
+extern int nx;
+
+/** Number of grid points in the y-direction. */
+extern int ny;
+
+/** Scan mode of the grid. */
+extern int scan;
+
+/** Number of grid points in the x-direction (unsigned). */
+extern unsigned int nx_;
+
+/** Number of grid points in the y-direction (unsigned). */
+extern unsigned int ny_;
+
 static unsigned int idx(int ix, int iy, int nx, int ny, int cyclic_grid);
 
 /*
  * HEADER:100:ijsmall_grib:output:3:make small domain grib file X=ix0:ix1 Y=iy0:iy1 Z=file
  */
 
-
+/**
+ * Writes the grid values to a grib2 file with the same grid spacing but a smaller domain. 
+ * It is similar to the -small_grib option except it uses i,j values rather than lat-lon values. 
+ * The grid point locations are unchanged. This option is used to make a regional subset and 
+ * only works for certain grids such as the lat-lon, rotated lat-lon, Mercator and Lambert 
+ * conformal. 
+ * 
+ * ## Limitations
+ * 1. rotated lat-lon grid: must use WMO grid template and not the NCEP locally defined grid 
+ * template
+ * 2. staggered grids are not supported 
+ * 
+ * ## Usage
+ * -ijsmall_grib ix0:ix1 iy0:iy1 file_name
+ * 
+ * Where:
+ * file_name == output grib2 file
+ * 1 <= ix0 < ix1 < nx
+ * 1 <= iy0 < iy1 < ny
+ * 
+ * By default, (i,j) is the South-West corner.
+ *
+ * @param ARG3 List of function arguments set by wgrib2's main() function (see @ref ARG3). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return 0 on success. Throws fatal_error() on failure.
+ *
+ * @author Wesley Ebisuzaki @date 5/2008
+ */
 int f_ijsmall_grib(ARG3) {
 
     struct local_struct {
         struct seq_file out;
-	int ix0, iy0, ix1, iy1;
+        int ix0, iy0, ix1, iy1;
     };  
     struct local_struct *save; 
 
     if (mode == -1) {
-	decode = latlon = 1;
+        decode = latlon = 1;
 
         *local = save = (struct local_struct *)malloc( sizeof(struct local_struct));
         if (save == NULL) fatal_error("ijsmall_grib  memory allocation ","");
 
-	if (sscanf(arg1,"%d:%d", &(save->ix0), &(save->ix1)) != 2) 
-		fatal_error("ijsmall_grib: ix0:ix1 = %s?", arg1);
-	if (sscanf(arg2,"%d:%d", &(save->iy0), &(save->iy1)) != 2) 
-		fatal_error("ijsmall_grib: iy0:iy1 = %s?", arg2);
+        if (sscanf(arg1,"%d:%d", &(save->ix0), &(save->ix1)) != 2) 
+            fatal_error("ijsmall_grib: ix0:ix1 = %s?", arg1);
+        if (sscanf(arg2,"%d:%d", &(save->iy0), &(save->iy1)) != 2) 
+            fatal_error("ijsmall_grib: iy0:iy1 = %s?", arg2);
         if (fopen_file(&(save->out), arg3, file_append ? "ab" : "wb") != 0) {
             free(save);
             fatal_error("Could not open %s", arg2);
         }
-	if (save->iy0 <= 0) fatal_error_i("ijsmall_grib: iy0=%d <= 0", save->iy0);
-	if (save->iy0 > save->iy1) fatal_error("ijsmall_grib: iy0 > iy1","");
-	if (save->ix0 > save->ix1) fatal_error("ijsmall_grib: ix0 > ix1","");
+        if (save->iy0 <= 0) fatal_error_i("ijsmall_grib: iy0=%d <= 0", save->iy0);
+        if (save->iy0 > save->iy1) fatal_error("ijsmall_grib: iy0 > iy1","");
+        if (save->ix0 > save->ix1) fatal_error("ijsmall_grib: ix0 > ix1","");
     }
     else if (mode == -2) {
-	save = (struct local_struct *) *local;
-	fclose_file(&(save->out));
-	free(save);
+        save = (struct local_struct *) *local;
+        fclose_file(&(save->out));
+        free(save);
     }
     else if (mode >= 0) {
-	save = (struct local_struct *) *local;
+        save = (struct local_struct *) *local;
         if (output_order != wesn) fatal_error("ijsmall_grib: data must be in we:sn order","");
-	if (GDS_Scan_staggered(scan)) fatal_error("ijsmall_grib: does not work for staggered grids","");
-	if (nx_ == 0 || ny_ == 0) fatal_error("small_grib: does not work for thinned grids","");
-	small_grib(sec,mode,data,lon,lat, ndata,save->ix0,save->ix1,save->iy0,save->iy1,&(save->out));
+        if (GDS_Scan_staggered(scan)) fatal_error("ijsmall_grib: does not work for staggered grids","");
+        if (nx_ == 0 || ny_ == 0) fatal_error("small_grib: does not work for thinned grids","");
+        small_grib(sec,mode,data,lon,lat, ndata,save->ix0,save->ix1,save->iy0,save->iy1,&(save->out));
     }
     return 0;
 }
 
-/*
-   index into a we:sn array(1:nx,1:ny)
-   set cyclic_grid = 1 for a an array that is cyclic in longitude
+/**
+ * Index into a we:sn array(1:nx,1:ny)
+ *
+ * @param ix Index in x-direction (1 to nx).
+ * @param iy Index in y-direction (1 to ny).
+ * @param nx Number of grid points in x-direction.
+ * @param ny Number of grid points in y-direction.
+ * @param cyclic_grid Set to 1 for an array that is cyclic in longitude.
+ * 
+ * @return Index into the array (0 to nx*ny-1). Throws fatal_error() on failure.
+ * 
+ * @author Wesley Ebisuzaki @date 5/2008
  */
-
 static unsigned int idx(int ix, int iy, int nx, int ny, int cyclic_grid) {
     int i;
     
@@ -96,14 +183,32 @@ static unsigned int idx(int ix, int iy, int nx, int ny, int cyclic_grid) {
     return (unsigned int) (i + (iy-1)*nx);
 }
 
-/*
- * small_grib
- *   makes a subset of certain grids
+/**
+ * Makes a subset of certain grids. Must be in we:sn order.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 5/2008 | W. Ebisuzaki | Initial
+ * 8/2011 | W. Ebisuzaki | added mercator and rotated lat-lon grid
+ * 1/2012 | W. Ebisuzaki | added Gaussian grid
+ * 
+ * @param sec Pointer to the GRIB sections.
+ * @param mode Processing mode (e.g., -1 for initialization, -2 for cleanup, 0 for processing).
+ * @param data Pointer to array of values to encode into GRIB2.
+ * @param lon Pointer to array of longitude values.
+ * @param lat Pointer to array of latitude values.
+ * @param ndata Number of data values.
+ * @param ix0 Starting index in x-direction.
+ * @param ix1 Ending index in x-direction.
+ * @param iy0 Starting index in y-direction.
+ * @param iy1 Ending index in y-direction.
+ * @param out Pointer to the output file struct.
  *
- * NOTE: the data must be in we:sn order
- * v1.1 added mercator and rotated lat-lon grid
+ * @return 0 on success. Throws fatal_error() on failure.
+ * 
+ * @author Wesley Ebisuzaki @date 5/2008
  */
-
 int small_grib(unsigned char **sec, int mode, float *data, double *lon, double *lat, unsigned int ndata,
 	int ix0, int ix1, int iy0, int iy1, struct seq_file *out) {
 
@@ -147,52 +252,52 @@ int small_grib(unsigned char **sec, int mode, float *data, double *lon, double *
     if (can_subset) {
         cyclic_grid = cyclic(sec);
 
-	// lat-lon grid - no thinning
+        // lat-lon grid - no thinning
         if ((grid_template == 0 && sec3_len == 72) || (grid_template == 1 && sec3_len == 84)) {
-	    if (grid_template == 1) {
-		/* need *lat, and *lon in rotated coordinates */
-		i =  regular2ll(sec, &tmp_lat, &tmp_lon);
-		if (i != 0) fatal_error("small_grib: regulat2ll failed");
-	    }
-	    uint_char(new_nx,sec3+30);		// nx
-	    uint_char(new_ny,sec3+34);		// ny
+            if (grid_template == 1) {
+                /* need *lat, and *lon in rotated coordinates */
+                i =  regular2ll(sec, &tmp_lat, &tmp_lon);
+                if (i != 0) fatal_error("small_grib: regulat2ll failed");
+            }
+            uint_char(new_nx,sec3+30);		// nx
+            uint_char(new_ny,sec3+34);		// ny
 
-	    basic_ang = GDS_LatLon_basic_ang(sec3);
-	    sub_ang = GDS_LatLon_sub_ang(sec3);
-	    if (basic_ang != 0) {
-        	units = (double) basic_ang / (double) sub_ang;
-	    }
-	    else {
-	        units = 0.000001;
-	    }
-	    if (grid_template == 1) {
-	        i = tmp_lat[ idx(ix0,iy0,nx,ny,cyclic_grid) ] / units;		// lat1
-	        j = tmp_lon[ idx(ix0,iy0,nx,ny,cyclic_grid) ] / units;		// lon1
-	    } else {
-	        i = lat[ idx(ix0,iy0,nx,ny,cyclic_grid) ] / units;		// lat1
-	        j = lon[ idx(ix0,iy0,nx,ny,cyclic_grid) ] / units;		// lon1
-	    }
-	    int_char(i,sec3+46);
-	    int_char(j,sec3+50);
+            basic_ang = GDS_LatLon_basic_ang(sec3);
+            sub_ang = GDS_LatLon_sub_ang(sec3);
+            if (basic_ang != 0) {
+                units = (double) basic_ang / (double) sub_ang;
+            }
+            else {
+                units = 0.000001;
+            }
+            if (grid_template == 1) {
+                i = tmp_lat[ idx(ix0,iy0,nx,ny,cyclic_grid) ] / units;		// lat1
+                j = tmp_lon[ idx(ix0,iy0,nx,ny,cyclic_grid) ] / units;		// lon1
+            } else {
+                i = lat[ idx(ix0,iy0,nx,ny,cyclic_grid) ] / units;		// lat1
+                j = lon[ idx(ix0,iy0,nx,ny,cyclic_grid) ] / units;		// lon1
+            }
+            int_char(i,sec3+46);
+            int_char(j,sec3+50);
 
-	    if (grid_template == 1) {
-	        i = tmp_lat[ idx(ix1,iy1,nx,ny,cyclic_grid) ] / units;		// lat2
-	        j = tmp_lon[ idx(ix1,iy1,nx,ny,cyclic_grid) ] / units;		// lon2
-	    } else {
-		i = lat[ idx(ix1,iy1,nx,ny,cyclic_grid) ] / units;		// lat2
-	        j = lon[ idx(ix1,iy1,nx,ny,cyclic_grid) ] / units;		// lon2
-	    }
-	    int_char(i,sec3+55);
-	    int_char(j,sec3+59);
-	    if (grid_template == 1) {
-	        free(tmp_lon);
-	        free(tmp_lat);
-	    }
+            if (grid_template == 1) {
+                i = tmp_lat[ idx(ix1,iy1,nx,ny,cyclic_grid) ] / units;		// lat2
+                j = tmp_lon[ idx(ix1,iy1,nx,ny,cyclic_grid) ] / units;		// lon2
+            } else {
+                i = lat[ idx(ix1,iy1,nx,ny,cyclic_grid) ] / units;		// lat2
+                j = lon[ idx(ix1,iy1,nx,ny,cyclic_grid) ] / units;		// lon2
+            }
+            int_char(i,sec3+55);
+            int_char(j,sec3+59);
+            if (grid_template == 1) {
+                free(tmp_lon);
+                free(tmp_lat);
+            }
         }
 
         else if ((grid_template == 40 && sec3_len == 72)) { // full Gaussian grid
-	    uint_char(new_nx,sec3+30);		// nx
-	    uint_char(new_ny,sec3+34);		// ny
+            uint_char(new_nx,sec3+30);		// nx
+            uint_char(new_ny,sec3+34);		// ny
 
             basic_ang = GDS_Gaussian_basic_ang(sec3);
             sub_ang = GDS_Gaussian_sub_ang(sec3);
@@ -215,58 +320,58 @@ int small_grib(unsigned char **sec, int mode, float *data, double *lon, double *
 
 	// polar-stereo graphic, lambert conformal , no thinning
         else if ((grid_template == 20 && sec3_len == 65) || 		// polar stereographic
-        		(grid_template == 30 && sec3_len == 81)) {	// lambert conformal
-	    uint_char(new_nx,sec3+30);		// nx
-	    uint_char(new_ny,sec3+34);		// ny
+                    (grid_template == 30 && sec3_len == 81)) {	// lambert conformal
+            uint_char(new_nx,sec3+30);		// nx
+            uint_char(new_ny,sec3+34);		// ny
 
-	    i = (int) (lat[ idx(ix0,iy0,nx,ny,cyclic_grid) ] * 1000000.0);		// lat1
-	    int_char(i,sec3+38);
-	    i = (int) (lon[ idx(ix0,iy0,nx,ny,cyclic_grid) ] * 1000000.0);		// lon1
-	    int_char(i,sec3+42);
+            i = (int) (lat[ idx(ix0,iy0,nx,ny,cyclic_grid) ] * 1000000.0);		// lat1
+            int_char(i,sec3+38);
+            i = (int) (lon[ idx(ix0,iy0,nx,ny,cyclic_grid) ] * 1000000.0);		// lon1
+            int_char(i,sec3+42);
         }
 
-	// mercator, no thinning
+        // mercator, no thinning
         else if (grid_template == 10 && sec3_len == 72) { 		// mercator
 
-	    uint_char(new_nx,sec3+30);		// nx
-	    uint_char(new_ny,sec3+34);		// ny
+            uint_char(new_nx,sec3+30);		// nx
+            uint_char(new_ny,sec3+34);		// ny
 
-	    units = 0.000001;
-	    i = lat[ idx(ix0,iy0,nx,ny,cyclic_grid) ] / units;		// lat1
-	    int_char(i,sec3+38);
-	    i = lon[ idx(ix0,iy0,nx,ny,cyclic_grid) ] / units;		// lon1
-	    int_char(i,sec3+42);
-	    i = lat[ idx(ix1,iy1,nx,ny,cyclic_grid) ] / units;		// lat2
-	    int_char(i,sec3+51);
-	    i = lon[ idx(ix1,iy1,nx,ny,cyclic_grid) ] / units;		// lon2
-	    int_char(i,sec3+55);
-	}
+            units = 0.000001;
+            i = lat[ idx(ix0,iy0,nx,ny,cyclic_grid) ] / units;		// lat1
+            int_char(i,sec3+38);
+            i = lon[ idx(ix0,iy0,nx,ny,cyclic_grid) ] / units;		// lon1
+            int_char(i,sec3+42);
+            i = lat[ idx(ix1,iy1,nx,ny,cyclic_grid) ] / units;		// lat2
+            int_char(i,sec3+51);
+            i = lon[ idx(ix1,iy1,nx,ny,cyclic_grid) ] / units;		// lon2
+            int_char(i,sec3+55);
+        }
 
         else {
-	    can_subset = 0;
-	}
+            can_subset = 0;
+        }
     }
 
     // copy data to a new array
 
     if (can_subset) {
-	uint_char(new_ndata, sec3+6);
-	new_data = (float *) malloc(sizeof(float) * (size_t) new_ndata);
+        uint_char(new_ndata, sec3+6);
+        new_data = (float *) malloc(sizeof(float) * (size_t) new_ndata);
 
 #ifdef USE_OPENMP
 #pragma omp parallel for private(i,j,k)
 #endif
-	for(j = iy0; j <= iy1; j++) {
+        for(j = iy0; j <= iy1; j++) {
             k = (j-iy0) * (size_t) (ix1-ix0+1);
-	    for(i = ix0; i <= ix1; i++) {
-	  	new_data[(i-ix0) + k ] = data[ idx(i,j,nx,ny,cyclic_grid) ];
-	    }
-	}
+            for(i = ix0; i <= ix1; i++) {
+                new_data[(i-ix0) + k ] = data[ idx(i,j,nx,ny,cyclic_grid) ];
+            }
+        }
     }
     else {
-	new_ndata = ndata;
-	new_data = (float *) malloc(sizeof(float) * (size_t) new_ndata);
-	for (k = 0; k < ndata; k++) new_data[k] = data[k];
+        new_ndata = ndata;
+        new_data = (float *) malloc(sizeof(float) * (size_t) new_ndata);
+        for (k = 0; k < ndata; k++) new_data[k] = data[k];
         new_nx = nx;
         new_ny = ny;
     }
@@ -274,7 +379,7 @@ int small_grib(unsigned char **sec, int mode, float *data, double *lon, double *
     set_order(new_sec, output_order);
 
     grib_wrt(new_sec, new_data, new_ndata, new_nx, new_ny, use_scale, dec_scale, 
-	bin_scale, wanted_bits, max_bits, grib_type, out);
+            bin_scale, wanted_bits, max_bits, grib_type, out);
 
     if (flush_mode) fflush_file(out);
 
@@ -287,61 +392,112 @@ int small_grib(unsigned char **sec, int mode, float *data, double *lon, double *
  * HEADER:100:small_grib:output:3:make small domain grib file X=lonW:lonE Y=latS:latN Z=file
  */
 
+/** GDS change number. */
 extern int GDS_change_no;
+
+/**
+ * Writes the grid values to a grib2 file with the same grid spacing but a smaller domain. 
+ * 
+ * The grid point locations are unchanged. This option is used to make a regional subset and 
+ * only works for certain grids such as the lat-lon, rotated lat-lon, Mercator, Lambert 
+ * conformal, and polar stereographic. 
+ * 
+ * When -small_grib option has problems, the grid is not subsetted and the original grid is 
+ * written. Some reasons for problems are:
+ * 1. Unsupported grid type
+ * 2. Thinned grid
+ * 3. The bounding box is outside of the grid domain
+ * 4. The bounding box is too small and does not include a grid point
+ * 5. The bounding box definition is not right (ex. LatN < LatS) 
+ * 
+ * The -ijsmall_grib option is similar to the -small_grib option except it uses the grid coordinates. 
+ * The former is faster as it doesn't have to compute the latitudes and longitudes of the grid points 
+ * and find a bounding box. 
+ * 
+ * There are other ways of making a grib file which only includes the data for a subregion. You can 
+ * set the points outside of your region of interest to UNDEFINED using the -undefine or -ijundefine 
+ * options. Once the grid points are set to UNDEFINED, many of the packing methods will reduce the 
+ * size of the new grib file. (Complex packing without bitmaps is very good.) One can also interpolate 
+ * the field to a new grid using the -new_grid option. 
+ * 
+ * 
+ * ## Limitations
+ * 1. rotated lat-lon grids: must use WMO grid template and not the NCEP locally defined template
+ * 2. rotated lat-lon grids: lat and lon values must be in the rotated coordinates
+ * 3. staggered grids are not supported
+ * 
+ * ## Usage
+ * -small_grib LonW:LonE LatS:LatN file_name
+ * 
+ * For west longitudes and south latitudes, you can use negative values. The file_name is the output file. 
+ * LonE must have a numerical value greater than LonW. For example for left boundary=20W and the right 
+ * boundary=60E, you can use LonE=340 and LonW=420. You can also use LonE=-20 and LonW=60. 
+ * 
+ * @param ARG3 List of function arguments set by wgrib2's main() function (see @ref ARG3). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return 0 on success. Throws fatal_error() on failure.
+ * 
+ * ## Example
+ * ???
+ * 
+ * @author Wesley Ebisuzaki @date 5/2008
+ */
 int f_small_grib(ARG3) {
 
     struct local_struct {
         struct seq_file out;
-	double lonE, lonW, latS, latN;
-	int GDS_change_no;
-	int ix0, ix1, iy0, iy1;
-
+        double lonE, lonW, latS, latN;
+        int GDS_change_no;
+        int ix0, ix1, iy0, iy1;
     };  
     struct local_struct *save; 
 
     if (mode == -1) {
-	decode = latlon = 1;
+        decode = latlon = 1;
 
         *local = save = (struct local_struct *)malloc( sizeof(struct local_struct));
         if (save == NULL) fatal_error("small_grib  memory allocation ","");
 
-	save->GDS_change_no = 0;
-	save->ix0 = save->ix1 = save->iy0 = save->iy1 = 0;
+        save->GDS_change_no = 0;
+        save->ix0 = save->ix1 = save->iy0 = save->iy1 = 0;
 
-	if (sscanf(arg1,"%lf:%lf", &(save->lonW), &(save->lonE)) != 2) 
-		fatal_error("small_grib: lonW:lonE = %s?", arg1);
-	if (sscanf(arg2,"%lf:%lf", &(save->latS), &(save->latN)) != 2) 
-		fatal_error("small_grib: latS:latN = %s?", arg2);
+        if (sscanf(arg1,"%lf:%lf", &(save->lonW), &(save->lonE)) != 2) 
+            fatal_error("small_grib: lonW:lonE = %s?", arg1);
+        if (sscanf(arg2,"%lf:%lf", &(save->latS), &(save->latN)) != 2) 
+            fatal_error("small_grib: latS:latN = %s?", arg2);
         if (fopen_file(&(save->out), arg3, file_append ? "ab" : "wb") != 0) {
             free(save);
             fatal_error("Could not open %s", arg2);
         }
-	if (save->latS > save->latN) fatal_error("small_grib: latS > latN","");
-	if (save->lonW > save->lonE) fatal_error("small_grib: lonW > lonE","");
+        if (save->latS > save->latN) fatal_error("small_grib: latS > latN","");
+        if (save->lonW > save->lonE) fatal_error("small_grib: lonW > lonE","");
 
     }
     else if (mode == -2) {
         save = (struct local_struct *) *local;
-	fclose_file(&(save->out));
-	free(save);
-	return 0;
+        fclose_file(&(save->out));
+        free(save);
+        return 0;
     }
     else if (mode >= 0) {
         save = (struct local_struct *) *local;
-	if (GDS_Scan_staggered(scan)) fatal_error("small_grib: does not work for staggered grids","");
+        if (GDS_Scan_staggered(scan)) fatal_error("small_grib: does not work for staggered grids","");
 
-	if (GDS_change_no != save->GDS_change_no) {
-	    small_domain(sec, save->lonW,save->lonE,save->latS,save->latN,
-		&(save->ix0), &(save->ix1), &(save->iy0), &(save->iy1));
-	    save->GDS_change_no = GDS_change_no;
-	}
+        if (GDS_change_no != save->GDS_change_no) {
+            small_domain(sec, save->lonW,save->lonE,save->latS,save->latN,
+            &(save->ix0), &(save->ix1), &(save->iy0), &(save->iy1));
+            save->GDS_change_no = GDS_change_no;
+        }
 
         if (output_order != wesn) fatal_error("small_grib: data must be in we:sn order","");
-	if (nx_ == 0 || ny_ == 0) fatal_error("small_grib: does not work for thinned grids","");
-	small_grib(sec,mode,data,lon,lat, ndata,save->ix0,save->ix1,save->iy0,save->iy1,&(save->out));
+        if (nx_ == 0 || ny_ == 0) fatal_error("small_grib: does not work for thinned grids","");
+        small_grib(sec,mode,data,lon,lat, ndata,save->ix0,save->ix1,save->iy0,save->iy1,&(save->out));
     }
     return 0;
 }
+
 /*
  * finds smallest rectangular domain for a set of lat-lon grid points
  *
@@ -356,6 +512,30 @@ int f_small_grib(ARG3) {
  * assumes that thinned grids are not passed to small_domain(..)
  */
 
+/**
+ * Finds smallest rectangular domain for a set of lat-lon grid points.
+ * 
+ * For lat-lon and mercator grids: this code finds the biggest grid(i0:i1,j0:j1) that will fit 
+ * within the lat/lon specifications.
+ *
+ * For any other grid: it will find a grid(i0:i1,j0:j1) that is smaller.
+ *
+ * This routine assumes that thinned grids are not passed to small_domain(..).
+ *
+ * @param sec Pointer to GRIB sections.
+ * @param lonW Western longitude boundary.
+ * @param lonE Eastern longitude boundary.
+ * @param latS Southern latitude boundary.
+ * @param latN Northern latitude boundary.
+ * @param ix0 Pointer to the variable for the x0 index.
+ * @param ix1 Pointer to the variable for the x1 index.
+ * @param iy0 Pointer to the variable for the y0 index.
+ * @param iy1 Pointer to the variable for the y1 index.
+ *
+ * @return 0 on success. Throws fatal_error() on failure.
+ * 
+ * @author Wesley Ebisuzaki @date 5/2008
+ */
 int small_domain(unsigned char **sec, double lonW, double lonE, double latS, double latN,
        int *ix0, int *ix1, int *iy0, int *iy1) {
 
@@ -373,11 +553,11 @@ printf("\n>> small_domain: lon lat %f:%f %f:%f\n", lonW, lonE, latS, latN);
     if (GDS_Scan_staggered(scan)) fatal_error("small_domain: does not work for staggered grids","");
 
     if (lat == NULL || lon == NULL) {		// no lat-lon information return full grid
-	*ix0 = 1;
-	*ix1 = nx;
-	*iy0 = 1;
-	*iy1 = ny;
-	return 1;
+        *ix0 = 1;
+        *ix1 = nx;
+        *iy0 = 1;
+        *iy1 = ny;
+        return 1;
     }
 
     if (lonE < lonW) lonE += 360.0;
@@ -400,17 +580,17 @@ printf(">> small_domain: nx %d ny %d\n", nx, ny);
         X1 = nx;
         Y0 = 1;
         Y1 = ny;
-	w = e = s = n = -1;
+        w = e = s = n = -1;
 //        time0 = omp_get_wtime();
         for (i = 1; i <= nx; i++) {
-	    lon_pt = lon[i-1];
-	    if (lon_pt < lonW) lon_pt += 360.0;
-	    if (lon_pt < lonW) lon_pt += 360.0;
+            lon_pt = lon[i-1];
+            if (lon_pt < lonW) lon_pt += 360.0;
+            if (lon_pt < lonW) lon_pt += 360.0;
             // lon_pt  > lonW
             if (lon_pt <= lonE) {
                 if (flag0 == 0) {
                     X0 = X1 = i;
-		    w = e = lon_pt;
+                    w = e = lon_pt;
                     flag0 = 1;
                 }
                 if (lon_pt > e) {
@@ -423,9 +603,9 @@ printf(">> small_domain: nx %d ny %d\n", nx, ny);
                 }
             }
         }
-	for (j = 1; j <= ny; j++) {
-	    lat_pt = lat[(j-1)*nx];
-	    if ((lat_pt >= latS) && (lat_pt <= latN)) {
+        for (j = 1; j <= ny; j++) {
+            lat_pt = lat[(j-1)*nx];
+            if ((lat_pt >= latS) && (lat_pt <= latN)) {
                 if (flag1 == 0) {
                     Y0 = Y1 = j;
                     n = s = lat_pt;
@@ -446,20 +626,20 @@ printf(">> small_domain: nx %d ny %d\n", nx, ny);
 //        time1 = omp_get_wtime();
 //        fprintf(stderr,"small_domain fast time=%lf %d %d %d %d flags=%d %d\n", time1-time0, X0, X1, Y0, Y1, flag0, flag1);
 
-	if (flag0 == 1 && flag1 == 1) {
-	    *ix0 = X0;
-	    *ix1 = X1;
-	    *iy0 = Y0;
-	    *iy1 = Y1;
-	    return 0;
-	}
-	else {
-	    *ix0 = 1;
-	    *ix1 = nx;
-	    *iy0 = 1;
-	    *iy1 = ny;
-	    return 1;
-	}
+        if (flag0 == 1 && flag1 == 1) {
+            *ix0 = X0;
+            *ix1 = X1;
+            *iy0 = Y0;
+            *iy1 = Y1;
+            return 0;
+        }
+        else {
+            *ix0 = 1;
+            *ix1 = nx;
+            *iy0 = 1;
+            *iy1 = ny;
+            return 1;
+        }
     }
 
     flag0 = 0;					// initial point on grid
@@ -477,59 +657,59 @@ printf(">> small_domain: nx %d ny %d\n", nx, ny);
         flag = 0;				// initial point on latitude
         for (i = 1; i <= nx; i++) {
             k = (i-1) + (j-1)*nx;
-	    lon_pt = lon[k];
-	    lat_pt = lat[k];
-	    if (lon_pt < lonW) lon_pt += 360.0;
-	    if (lon_pt < lonW) lon_pt += 360.0;
+            lon_pt = lon[k];
+            lat_pt = lat[k];
+            if (lon_pt < lonW) lon_pt += 360.0;
+            if (lon_pt < lonW) lon_pt += 360.0;
 
-	    // lon_pt  > lonW
-	    if ( (lon_pt <= lonE) && (lat_pt >= latS) && (lat_pt <= latN)) {
-		if (flag == 0) {
-		    x0 = x1 = i;
-		    y0 = y1 = j;
-		    w = e = lon_pt;
-		    n = s = lat_pt;
-		    flag = 1;
-		}
-		if (lat_pt < s) {
-		    s = lat_pt;
-		    y0 = j;
-		}
-		else if (lat_pt > n) {
-		    n = lat_pt;
-		    y1 = j;
-		}
-		if (lon_pt > e) {
-		    e = lon_pt;
-		    x1 = i;
-		}
-		if (lon_pt < w) {
-		    w = lon_pt;
-		    x0 = i;
-		}
-	    }
-	}
-	if (flag) {		// found points
+            // lon_pt  > lonW
+            if ( (lon_pt <= lonE) && (lat_pt >= latS) && (lat_pt <= latN)) {
+                if (flag == 0) {
+                    x0 = x1 = i;
+                    y0 = y1 = j;
+                    w = e = lon_pt;
+                    n = s = lat_pt;
+                    flag = 1;
+                }
+                if (lat_pt < s) {
+                    s = lat_pt;
+                    y0 = j;
+                }
+                else if (lat_pt > n) {
+                    n = lat_pt;
+                    y1 = j;
+                }
+                if (lon_pt > e) {
+                    e = lon_pt;
+                    x1 = i;
+                }
+                if (lon_pt < w) {
+                    w = lon_pt;
+                    x0 = i;
+                }
+            }
+        }
+        if (flag) {		// found points
             if (x1 < x0 && cyclic(sec)) x1 += nx;
 #ifdef USE_OPENMP
 #pragma omp critical
 #endif
-	    {
-	    if (flag0 ==  0) {
-		X0 = x0;
-		X1 = x1;
-		Y0 = y0;
-		Y1 = y1;
-		flag0 = 1;
-	    }
-	    else {
-		X0 = (x0 < X0) ? x0 : X0;
-		X1 = (x1 > X1) ? x1 : X1;
-		Y0 = (y0 < Y0) ? y0 : Y0;
-		Y1 = (y1 > Y1) ? y1 : Y1;
-	    }
-	    }
-	}
+            {
+                if (flag0 ==  0) {
+                    X0 = x0;
+                    X1 = x1;
+                    Y0 = y0;
+                    Y1 = y1;
+                    flag0 = 1;
+                }
+                else {
+                    X0 = (x0 < X0) ? x0 : X0;
+                    X1 = (x1 > X1) ? x1 : X1;
+                    Y0 = (y0 < Y0) ? y0 : Y0;
+                    Y1 = (y1 > Y1) ? y1 : Y1;
+                }
+            }
+        }
     }
 //    time1 = omp_get_wtime();
 //    fprintf(stderr,"small_domain slow time=%lf %d %d %d %d flag0 %d\n", time1-time0, X0, X1, Y0, Y1, flag0);
@@ -539,11 +719,11 @@ printf(">> small domain: flag0 %d flag %d\n", flag0, flag);
 #endif
     if (flag0 && X1 < X0)  flag0 = 0;
     if (flag0 == 0) {
-	*ix0 = 1;
-	*ix1 = nx;
-	*iy0 = 1;
-	*iy1 = ny;
-	return 1;
+        *ix0 = 1;
+        *ix1 = nx;
+        *iy0 = 1;
+        *iy1 = ny;
+        return 1;
     }
 #ifdef DEBUG
 printf(">> small domain: ix %d:%d iy %d:%d\n", X0, X1, Y0, Y1);

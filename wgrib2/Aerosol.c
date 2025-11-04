@@ -1,3 +1,14 @@
+/** @file
+ * @brief Functions for handling aerosol size and wavelength in GRIB files.
+ * @author Public Domain: Wesley Ebisuzaki @date 02/2012
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 02/2012 | W. Ebisuzaki | Initial
+ * 10/2024 | W. Ebisuzaki | Fix to handle all pdts
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include "grb2.h"
@@ -5,14 +16,27 @@
 #include "fnlist.h"
 
 /*
- * 2/2012 Public Domain: Wesley Ebisuzaki
- * 10/2024               fix to handle all pdts Wesley Ebisuzaki
- */
-
-/*
  * HEADER:200:aerosol_size:inv:0:optical properties of an aerosol
  */
 
+/**
+ * Prints the size of the aerosol particle if applicable. This product applies to Product Definition 
+ * Template 4.44-4.48. This option is part of the standard inventory.
+ * 
+ * ## Usage
+ * -aerosol_size
+ * 
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ *
+ * @return 0 for success, does not return error codes.
+ * 
+ * ## Example: 
+ * ???
+ * 
+ * @author Wesley Ebisuzaki @date 02/2012
+ */
 int f_aerosol_size(ARG0) {
     unsigned char *ptr;
     double size1, size2;
@@ -34,6 +58,24 @@ int f_aerosol_size(ARG0) {
  * HEADER:200:aerosol_wavelength:inv:0:optical properties of an aerosol
  */
 
+/**
+ * Prints the optical properties of the aerosol particle. This option is part of the standard inventory.
+ * 
+ * 
+ * ## Usage
+ * -aerosol_wavelength
+ * 
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ *
+ * @return 0 for success, does not return error codes.
+ * 
+ * ## Example: 
+ * ???
+ * 
+ * @author Wesley Ebisuzaki @date 02/2012
+ */
 int f_aerosol_wavelength(ARG0) {
     unsigned char *ptr;
     double wave1, wave2;

@@ -1,3 +1,8 @@
+/** @file
+ * @brief Smoothing of a field by doing a box average
+ * @author Public Domain: Wesley Ebisuzaki @date 3/2018
+ */
+
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -30,14 +35,62 @@
  *             
  */
 
+/** Decode grib file flag. */
+extern int decode;
+
+/** Append grib file flag. */
+extern int file_append;
+
+/** Flag to indicate whether to save translation information. */
+extern int save_translation;
+
+/** Scan mode flag. */
+extern int scan;
+
+/** Number of grid points in the x-direction. */
+extern unsigned int nx_;
+
+/** Number of grid points in the y-direction. */
+extern unsigned int ny_;
 
 /*
  * HEADER:000:box_ave:misc:3:box average X=odd integer (lon) Y=odd integer (lat) critical_weight
  */
 
-extern int decode, file_append, save_translation, scan;
-extern unsigned int nx_, ny_;
-
+/**
+ * Does a spatial smoothing by doing a simple box average of the data field.
+ * Amount of smoothing can be controlled by the size of the box. Can be used on regional
+ * and global fields. To identify global fields, you can use the option -cyclic.
+ * 
+ * ## Usage
+ * -box_ave DX DY CRITICAL_WEIGHT
+ * 
+ * DX=width of box (in grid points), DX has to be an odd positive integer
+ * DY=height of box (in grid points), DY has to be an odd positive integer
+ * 
+ * The box average is the mean value for a box of DX x DY centered on the grid point.
+ *
+ * CRITICAL_WEIGHT
+ *    -1: grid(i,j) = UNDEFINED    if original grid(i,j) is undefined
+ *                    = box average  if original grid(i,j) is defined
+ *    not -1: let wt = number of grid points that are defined in the box
+ *        grid(i,j) = UNDEFINED     if wt <= WT
+ *          = box average   if wt > WT
+ * 
+ * @param ARG3 List of function arguments set by wgrib2's main() function (see @ref ARG3). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * @note The speed of -box_ave is O(NX*NY*DY). The O(NX*NY) method was slower because of 
+ * poor cache utilization and false sharing.
+ * 
+ * ## Example:
+ * ???
+ * 
+ * @author Wesley Ebisuzaki @date 3/2018
+ */
 int f_box_ave(ARG3) {
 
     unsigned int i,j,k, j0, j1, m;

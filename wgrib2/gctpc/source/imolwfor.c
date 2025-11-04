@@ -1,41 +1,49 @@
-/*******************************************************************************
-NAME                        INTERRUPTED MOLLWEIDE
+/** @file
+ * @brief Interrupted Mollweide - Forward Transformation
+ * 
+ * PURPOSE: Transforms input longitude and latitude to Easting and
+ *          Northing for the Interrupted Mollweide projection.  The
+ *          longitude and latitude must be in radians.  The Easting
+ *          and Northing values will be returned in meters.
+ * 
+ * @author D. Steinwand, EROS @date June, 1991
+ * 
+ * ### Algorithm References
+ * 1. Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
+ *    U.S. Geological Survey Professional Paper 1453 , United State Government
+ *    Printing Office, Washington D.C., 1989.
+ *
+ * 2. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 6/1991 | D. Steinwand, EROS | Initial development
+ * 2/1993 | T. Mittan, EDC | Adapted format to be used by the "C" version of GCTP.
+ * 6/1993 | S. Nelson, EDC | Changed precision of radians in assigning the region, 
+ *                           and in the conversion algorithm.
+ * 2/1994 | S. Nelson, EDC | changed perror to p_error.
+ */
 
-PURPOSE:        Transforms input longitude and latitude to Easting and
-                Northing for the Interrupted Mollweide projection.  The
-                longitude and latitude must be in radians.  The Easting
-                and Northing values will be returned in meters.
-
-PROGRAMMER              DATE		REASON
-----------              ----		------
-D. Steinwand, EROS      June, 1991	Initial development
-T. Mittan, EDC		Feb, 1993	Adapted format to be used by the "C"
-					version of GCTP.
-S. Nelson, EDC		June, 1993	Changed precisian of radians in
-					assigning the region, and in the
-					conversion algorithm.
-S. Nelson, EDC		Feb, 1994	changed perror to p_error.
-
-ALGORITHM REFERENCES
-
-1.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
-    U.S. Geological Survey Professional Paper 1453 , United State Government
-    Printing Office, Washington D.C., 1989.
-
-2.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-*******************************************************************************/
 #include "cproj.h"
 
-/* Variables common to all subroutines in this code file
-  -----------------------------------------------------*/
-static double R;		/* Radius of the earth (sphere) */
-static double lon_center[6];	/* Central meridians, one for each region */
-static double feast[6];		/* False easting, one for each region */
+/* Variables common to all subroutines in this code file */
+static double R;		/**< Radius of the earth (sphere) */
+static double lon_center[6];	/**< Central meridians, one for each region */
+static double feast[6];		/**< False easting, one for each region */
 
-/* Initialize the Interrupted Mollweide projection
-  --------------------------------------------*/
+
+/** 
+ * Initialize the Interrupted Mollweide projection for forward transformation.
+ * 
+ * @param r Radius of the earth (sphere)
+ * 
+ * @return Always returns 0
+ * 
+ * @author D. Steinwand, EROS @date June, 1991
+ */
 long imolwforint(double r) {
 //long imolwforint(r) 
 //double r; 			/* (I) Radius of the earth (sphere) */
@@ -69,8 +77,20 @@ radius(r);
 return(OK);
 }
 
-/* Interrupted Mollweide forward equations--mapping lat,long to x,y
-  -------------------------------------------------------------*/
+
+
+/**
+ * Interrupted Mollweide forward equations--mapping lat,long to x,y
+ * 
+ * @param lon Longitude
+ * @param lat Latitude
+ * @param x Pointer to store the X projection coordinate
+ * @param y Pointer to store the Y projection coordinate
+ * 
+ * @return Always returns 0
+ * 
+ * @author D. Steinwand, EROS @date June, 1991
+ */
 long imolwfor(double lon, double lat, double *x, double *y) {
 //long imolwfor(lon, lat, x, y)
 //double lon;			/* (I) Longitude */

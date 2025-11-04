@@ -1,3 +1,21 @@
+/** @file
+ * @brief Computes the mean and variance using the Welford method (one-pass):
+ * http://jonisalonen.com/2013/deriving-welfords-method-for-computing-variance/
+ * 
+ * Based on Ave_test.c
+ * 
+ * @note variance(samples):
+ *   M := 0
+ *   S := 0
+ *   for k from 1 to N:
+ *     x := samples[k]
+ *     oldM := M
+ *     M := M + (x-M)/k
+ *     S := S + (x-M)*(x-oldM)
+ * return S/(N-1)
+ *
+ * @author Public Domain: Wesley Ebisuzaki @date 12/2016
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,53 +25,71 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/*
- * ave_var
- *
- *  v 0.1
- *
- * 12/2016: Public Domain: Wesley Ebisuzaki
- *         based on Ave_test.c public domain (Wesley Ebisuzaki)
- *
- * ave_var, computes the mean and variance using the Welford method (one-pass)
- */
+/** Decode grib file flag. */
+extern int decode;
 
-/*  from http://jonisalonen.com/2013/deriving-welfords-method-for-computing-variance/
+/** Append grib file flag. */
+extern int file_append;
 
-variance(samples):
-  M := 0
-  S := 0
-  for k from 1 to N:
-    x := samples[k]
-    oldM := M
-    M := M + (x-M)/k
-    S := S + (x-M)*(x-oldM)
-  return S/(N-1)
+/** Number of grid points in the x direction. */
+extern int nx;
 
- */
+/** Number of grid points in the y direction. */
+extern int ny;
 
-// #define DEBUG
+/** Flag to indicate whether to save translation information. */
+extern int save_translation;
 
-extern int decode, file_append, nx, ny, save_translation;
+/** Flush of output flag. */
 extern int flush_mode;
+
+/** Pointer to the translation array. */
 extern unsigned int *translation;
-extern int use_scale, dec_scale, bin_scale, wanted_bits, max_bits;
+
+/** Use scaling flag. */
+extern int use_scale;
+
+/** Decimal scaling. */
+extern int dec_scale;
+
+/** Binary scaling. */
+extern int bin_scale;
+
+/** Number of bits wanted. */
+extern int wanted_bits;
+
+/** Maximum number of bits. */
+extern int max_bits;
+
+/** Output GRIB type. */
 extern enum output_grib_type grib_type;
 
+/** Structure to hold average calculation data. */
 struct ave_var_struct {
-    double *M, *S;
-    float *min, *max;
-    unsigned int ndata;
-
-    struct full_date time0, time1, time2; // time2 = verf time
-
-    int has_val, n_fields, n_missing;
-    int dt, dt_unit, nx, ny;
-    unsigned char *first_sec[9];
-    unsigned char *next_sec[9];
-    int use_scale, dec_scale, bin_scale, wanted_bits, max_bits;
-    enum output_grib_type grib_type;
-    struct seq_file out;
+    double *M; /**< Mean values. */
+    double *S; /**< Variance values. */
+    float *min; /**< Minimum values. */
+    float *max; /**< Maximum values. */
+    unsigned int ndata; /**< Number of data points. */
+    struct full_date time0; /**< Lowest reference time. */
+    struct full_date time1; /**< Current reference time. */
+    struct full_date time2; /**< Verification time. */
+    int has_val; /**< Flag to indicate if values are present. */
+    int n_fields; /**< Number of fields processed. */
+    int n_missing; /**< Number of missing values. */
+    int dt; /**< Time step in seconds. */
+    int dt_unit; /**< Time unit for the time step. */
+    int nx; /**< Number of grid points in the x direction. */
+    int ny; /**< Number of grid points in the y direction. */
+    unsigned char *first_sec[9]; /**< First section data. */
+    unsigned char *next_sec[9]; /**< Next section data. */
+    int use_scale; /**< Flag to indicate whether to use scaling. */
+    int dec_scale; /**< Flag to indicate the decoding scale. */
+    int bin_scale; /**< Flag to indicate the binary scale. */
+    int wanted_bits; /**< Flag to indicate the number of bits wanted. */
+    int max_bits; /**< Flag to indicate the maximum number of bits. */
+    enum output_grib_type grib_type; /**< Flag to indicate the output GRIB type. */
+    struct seq_file out; /**< Output sequence file. */
 };
 
 static int write_ave_var(struct ave_var_struct *save);
@@ -61,7 +97,15 @@ static int free_ave_var_struct(struct ave_var_struct *save);
 static int init_ave_var_struct(struct ave_var_struct *save, unsigned int ndata);
 static int update_ave_var_struct(struct ave_var_struct *save, unsigned char **sec, float *data, unsigned int ndata,int missing);
 
-
+/**
+ * Frees the memory allocated for the ave_var_struct.
+ * 
+ * @param save Pointer to the ave_var_struct to be freed.
+ * 
+ * @return 0 on success
+ * 
+ * @author Wesley Ebisuzaki @date 12/2016
+*/
 static int free_ave_var_struct(struct ave_var_struct *save) {
     if (save->has_val == 1) {
         free(save->M);
@@ -75,6 +119,16 @@ static int free_ave_var_struct(struct ave_var_struct *save) {
     return 0;
 }
 
+/** 
+ * Initializes the ave_var_struct with the given number of data points.
+ * 
+ * @param save Pointer to the ave_var_struct.
+ * @param ndata Number of data points.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 12/2016
+*/
 static int init_ave_var_struct(struct ave_var_struct *save, unsigned int ndata) {
     unsigned int i;
 
@@ -109,6 +163,19 @@ static int init_ave_var_struct(struct ave_var_struct *save, unsigned int ndata) 
     return 0;
 }
 
+/** 
+ * Updates the ave_var_struct with new data.
+ * 
+ * @param save Pointer to the ave_var_struct.
+ * @param sec Pointer to the section data.
+ * @param data Pointer to the data array.
+ * @param ndata Number of data points.
+ * @param missing Number of missing values.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 12/2016
+ */
 static int update_ave_var_struct(struct ave_var_struct *save, unsigned char **sec, float *data, unsigned int ndata,int missing) {
 
     unsigned int i, ii;
@@ -177,6 +244,15 @@ static int update_ave_var_struct(struct ave_var_struct *save, unsigned char **se
     return 0;
 }
 
+/** 
+ * Writes the average and variance data to a GRIB file.
+ * 
+ * @param save Pointer to the ave_var_struct.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 12/2016
+ */
 static int write_ave_var(struct ave_var_struct *save) {
     int j, n, pdt, i_ave;
     unsigned int i, ndata;
@@ -399,6 +475,33 @@ static int write_ave_var(struct ave_var_struct *save) {
 
 /*
  * HEADER:000:ave_var:output:2:average/std dev/min/max X=time step, Y=output
+ */
+
+/**
+ * Computes the mean, standard deviation, minimum, and maximum for each grid point 
+ * and writes the results to a specified output file.
+ * 
+ * The options and expected sequence of fields is the same as with the -ave option. 
+ * 
+ * ## Usage
+ * -ave_var (time interval)  (output grib file)
+ * 
+ * The time interval is the delta time for averaging in the form (integer)(units) 
+ * (e.g., "6hr", "1dy"). Units are hr, dy, mo, yr.
+ * 
+ * @param ARG2 List of function arguments set by wgrib2's main() function (see @ref ARG2). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * @note Welford's method for computing the mean and variance was used because it is a 
+ * one-pass scheme with the accuracy of a two-pass algorithm. 
+ * 
+ * ## Example: 
+ * ???
+ * 
+ * @author Wesley Ebisuzaki @date 12/2016
  */
 int f_ave_var(ARG2) {
 
