@@ -201,7 +201,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
     conflicts("+netcdf3", when="+netcdf4")
     conflicts("+netcdf3", when="+netcdf")
     conflicts("+openmp", when="%apple-clang")
-    conflicts("-g2c_low", when="+g2c_high")
+    conflicts("~g2c_low", when="+g2c_high")
 
     depends_on("c", type="build")
     depends_on("fortran", type="build")
