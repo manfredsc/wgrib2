@@ -90,7 +90,7 @@ if(USE_NETCDF)
 endif()
 
 if(USE_G2CLIB_HIGH OR USE_G2CLIB_LOW)
-  find_package(g2c 2.2.0 CONFIG REQUIRED)
+  find_package(g2c 2.3.0 CONFIG REQUIRED)
 endif()
 
 message(STATUS "Checking if the user want to use OpenMP...")
