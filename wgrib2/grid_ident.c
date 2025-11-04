@@ -1,8 +1,6 @@
-/*
- * grid_id.c  Public Domain 6/2012 Wesley Ebisuzaki
- *
- * grib2 specific routine to identify a grid
- *
+/** @file
+ * @brief GRIB2 specific  routine to identify a grid.
+ * @author Public Domain: Wesley Ebisuzaki @date 6/2012
  */
 
 #include <stdio.h>
@@ -22,6 +20,21 @@
         use -1 for variable or not rectangular grid
 */
 
+/**
+ * Identify the grid type and parameters from the GRIB2 message.
+ * 
+ * @param sec Pointer to the section of the GRIB2 message.
+ * @param r_major Pointer to the major axis of the Earth.
+ * @param r_minor Pointer to the minor axis of the Earth.
+ * @param proj_id Pointer to the projection type.
+ * @param proj_args Pointer to the projection arguments.
+ * @param n_proj_args Number of projection arguments.
+ * @param grid_defn Pointer to the grid definition structure.
+ *
+ * @return 0 for success, error code otherwise.
+ *
+ * @author Wesley Ebisuzaki @date 6/2012
+ */
 int grid_id(GRID_ID_ARGS) {
 
     int gdt, res, scan, nx, ny;
@@ -31,12 +44,12 @@ int grid_id(GRID_ID_ARGS) {
 
     gdt = code_table_3_1(sec);
     switch (gdt) {
-	case 0: *proj_id = p_latlon; break;
-	case 1: *proj_id = p_rotated_latlon; break;
-	case 10: *proj_id = p_mercator; break;
-	case 20: *proj_id = p_polar_stereographic; break;
-	case 30: *proj_id = p_lambert_conic; break;
-	default: *proj_id = p_unknown; break;
+        case 0: *proj_id = p_latlon; break;
+        case 1: *proj_id = p_rotated_latlon; break;
+        case 10: *proj_id = p_mercator; break;
+        case 20: *proj_id = p_polar_stereographic; break;
+        case 30: *proj_id = p_lambert_conic; break;
+        default: *proj_id = p_unknown; break;
     }
 
     /* get nx, ny */
@@ -48,8 +61,6 @@ int grid_id(GRID_ID_ARGS) {
 
     /* get xy_list */
     grid_defn->valid_xy_list = 0;
-
-
 
     return 0;
 }

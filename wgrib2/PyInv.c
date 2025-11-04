@@ -1,3 +1,7 @@
+/** @file
+ * @brief Function to dump GRIB metadata as Python dictionary.
+ * @author Public Domain: George Trojan @date 8/2020
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,15 +9,35 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
+/** Item delimiter string. */
 extern const char *item_deliminator;
-extern unsigned int npnts, nx_, ny_;
-/*
- * function to dump GRIB metadata as Python dictionary
- * public domain 8/2020 George Trojan
- */
+
+/** Number of points in the grid. */
+extern unsigned int npnts;
+
+/** Number of grid points in the x direction. */
+extern unsigned int nx_;
+
+/** Number of grid points in the y direction. */
+extern unsigned int ny_;
 
 /*
- * HEADER:200:pyinv:inv:0:miscelaneous metadata for pywgrib2_XXX (experimental)
+ * HEADER:200:pyinv:inv:0:miscellaneous metadata for pywgrib2_XXX (experimental)
+ */
+
+/**
+ * Function to dump GRIB metadata as Python dictionary. For pywgrib2_XXX (experimental).
+ * 
+ * ## Usage 
+ * -pyinv
+ * 
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return 0 for success, error code otherwise
+ *
+ * @author George Trojan @date 8/2020
  */
 int f_pyinv(ARG0)
 {
@@ -43,15 +67,17 @@ int f_pyinv(ARG0)
         char tmp[20];
         int ctr = GB2_Center(sec);
         int subctr = GB2_Subcenter(sec);
+        int ctrsubctr;
         switch (ctr) {
 #include "code_table0.dat"
         }
         inv_out += sprintf(inv_out, ",'centre':'%d - %s'", ctr, string);
         string = NULL;
-        if (ctr == 7) {
-            switch (subctr) {
-#include "ncep_tableC.dat"
-            }
+        if (subctr > 0) {  /* a lot of messages have no sub-centre declared */
+          ctrsubctr = (ctr<<16)+subctr;
+          switch (ctrsubctr) {
+#include "CommonCodeTable_12.dat"
+          }
         }
         if (string == NULL) {
             inv_out += sprintf(inv_out, ",'subcentre':'%d'", subctr);

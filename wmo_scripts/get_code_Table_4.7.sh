@@ -1,6 +1,11 @@
 #!/bin/sh
-# 10/2024 Public Domain   Manfred Schwarb <schwarb@meteodat.ch>
-# This script updates wgrib2 with WMO code info.
+
+## @file
+## @brief This script updates wgrib2 with WMO code info.
+## @author Public Domain: Manfred Schwarb <schwarb@meteodat.ch>
+## @date 10/2024
+
+## @cond
 
 urlbase="https://github.com/wmo-im/GRIB2"
 
@@ -17,8 +22,7 @@ wget -nv "$urlbase/raw/master/GRIB2_CodeFlag_4_7_CodeTable_en.csv" -O- | sed '{
   {
     num=$3; name=$5
     if (num !="" && num !~ "-" && num !~ "Code") {
-      printf "case %5d: string=\"%s\"; break;\n",num,name
-      if (num==9) {  # append custom NCEP entries after case 9
+      if (num==255) {  # prepend custom NCEP entries before case 255
         print "case   192: if (center == NCEP) string=\"Unweighted Mode of All Members\"; break;"
         print "case   193: if (center == NCEP) string=\"Percentile value (10%) of All Members\"; break;"
         print "case   194: if (center == NCEP) string=\"Percentile value (50%) of All Members\"; break;"
@@ -26,7 +30,10 @@ wget -nv "$urlbase/raw/master/GRIB2_CodeFlag_4_7_CodeTable_en.csv" -O- | sed '{
         print "case   196: if (center == NCEP) string=\"Statistically decided weights for each ensemble member\"; break;"
         print "case   197: if (center == NCEP) string=\"Climate Percentile (percentile values from climate distribution)\"; break;"
       }
+      printf "case %5d: string=\"%s\"; break;\n",num,name
     }
   }' > "$outfile"
 
 exit
+
+## @endcond

@@ -1,3 +1,8 @@
+/** @file
+ * @brief Routines for Version 2 of IF blocks.
+ * @author Public Domain: Wesley Ebisuzaki @date 2/2019
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,30 +10,57 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/* 2/2019 in public domain Wesley Ebisuzaki */
-/* routines for version 2 of if blocks */
-
 /* runtime flags */
 
-int run_flag, if_run, else_allowed;		/* current flags */
+/* current flags */
 
-static struct { int run_flag, if_run, else_allowed; }  if_state[MAX_IF];	/* old flags */
+/** Run flag. (Current State) */
+int run_flag;
+
+/** Flag indicating a branch in IF block has already been executed. (Current State) */
+int if_run;
+
+/** Flag indicating if additional -elif or -else branches are allowed in current block. (Current State) */
+int else_allowed;		
+
+/* old flags */
+
+/** Struct holding the state of IF block. */
+static struct { 
+    int run_flag; /**< Run flag. */
+    int if_run;   /**< Flag indicating a branch in IF block has already been executed. */
+    int else_allowed; /**< Flag indicating if additional -elif or -else branches are allowed in current block. */
+}  if_state[MAX_IF];
+
+/** Pointer to current IF block state. */
 static int if_state_top;
 
-static int check_state[MAX_IF];		/* 1..N IF, 0 = NULL, ELSE_NOT_ALLOWED */
+/** Used to validate the IF block structure. 1 to N, 0 = NULL, ELSE_NOT_ALLOWED */
+static int check_state[MAX_IF];
+
+/** Pointer to current position in check_state. */
 static int check_state_top;
 
+/** Flag indicating if Version 2 of IF block is being used. */
 static int is_v2_if;
+
+/** Flag indicating if a -fi option has been encountered. */
 static int has_fi;
 
+/**
+ * Initialize variables for check_v1_v2.
+ *
+ * @return Always returns 0.
+ *
+ * @author Wesley Ebisuzaki @date 2/2019
+ */
 int init_check_v1_v2(void) {
-
-   if_state_top = -1;
-   has_fi = 0;
-   check_state_top = 0;
-   check_state[check_state_top] = 0;
-   is_v2_if = 0;
-   return 0;
+    if_state_top = -1;
+    has_fi = 0;
+    check_state_top = 0;
+    check_state[check_state_top] = 0;
+    is_v2_if = 0;
+    return 0;
 }
 
 /* check correctness of if/else/elseif/endif structure
@@ -103,62 +135,75 @@ int init_check_v1_v2(void) {
  *
  */
 
+/**
+ * Check correctness of if/else/elseif/endif structure.
+ * 
+ * @param type The type of function (If, Else, Elseif, Endif, or other).
+ * @param name Pointer to the name of the function (used to check for -fi).
+ * 
+ * @return Always returns 0. Throws fatal_error() on failure.
+ */
 int check_v1_v2(enum fntype type, const char *name) {
 
     switch(type) {
-	case If: 
-		/* push IF */
-		if (check_state[check_state_top] > 0) {
-		     check_state[check_state_top]++;
-		}
-		else {
-		     if (++check_state_top == MAX_IF) fatal_error("too many nested -if/else","");
-		     check_state[check_state_top] = 1;
-		}
+        case If: 
+            /* push IF */
+            if (check_state[check_state_top] > 0) {
+                check_state[check_state_top]++;
+            }
+            else {
+                if (++check_state_top == MAX_IF) fatal_error("too many nested -if/else","");
+                check_state[check_state_top] = 1;
+            }
 // fprintf(stderr, "if state[%d]=%d  ", check_state_top, check_state[check_state_top]);
-		break;
+            break;
 
-	case Else:
-		if (check_state[check_state_top] < 1) fatal_error("unexpected -else","");
-		if (++check_state_top == MAX_IF) fatal_error("too many nested -if/else","");
-		check_state[check_state_top] = -1;
-		is_v2_if = 1;
+        case Else:
+            if (check_state[check_state_top] < 1) fatal_error("unexpected -else","");
+            if (++check_state_top == MAX_IF) fatal_error("too many nested -if/else","");
+            check_state[check_state_top] = -1;
+            is_v2_if = 1;
 // fprintf(stderr, "else state[%d]=%d  ", check_state_top, check_state[check_state_top]);
-		break;
+            break;
 
-	case Elseif:
-		if (check_state[check_state_top] < 1) fatal_error("unexected -elseif","");
-		is_v2_if = 1;
+        case Elseif:
+            if (check_state[check_state_top] < 1) fatal_error("unexected -elseif","");
+            is_v2_if = 1;
 // fprintf(stderr,"elseif state[%d]=%d  ", check_state_top, check_state[check_state_top]);
-		break;
+            break;
 
-	case Endif:
-		if (check_state[check_state_top] == -1) {
-		    check_state_top--;
-		}
-		if (check_state[check_state_top] < 1) fatal_error_i("unexpected -endif (%d)",check_state[check_state_top]);
-		if (check_state[check_state_top] == 1)  check_state_top--;
-		else check_state[check_state_top]--;
+        case Endif:
+            if (check_state[check_state_top] == -1) {
+                check_state_top--;
+            }
+            if (check_state[check_state_top] < 1) fatal_error_i("unexpected -endif (%d)",check_state[check_state_top]);
+            if (check_state[check_state_top] == 1)  check_state_top--;
+            else check_state[check_state_top]--;
 // fprintf(stderr,"endif state[%d]=%d  ", check_state_top, check_state[check_state_top]);
-		is_v2_if = 1;
-		break;
-	default:
-		if (strcmp(name,"fi") == 0) has_fi = 1;
-	        return 0;
+            is_v2_if = 1;
+            break;
+        default:
+            if (strcmp(name,"fi") == 0) has_fi = 1;
+                return 0;
     }
     return 0;
 }
 
-/*
- * return   0 if version 1 of if structure
- *          1 if version 2 of if structure
- *
+/**
+ * Check if the current if structure is version 1 or 2.
+ * 
+ * @return
+ * - 0 :: Version 1
+ * - 1 :: Version 2
+ * 
+ * Throws fatal_error() on failure.
+ * 
+ * @author Wesley Ebisuzaki @date 2/2019
  */
 int is_v1_v2(void) {
-
-	if (is_v2_if && has_fi) fatal_error("unexepected -fi","");
-	if (is_v2_if && check_state_top != 0) fatal_error("too many-if","");
-	return is_v2_if;
+    if (is_v2_if && has_fi) fatal_error("unexepected -fi","");
+    if (is_v2_if && check_state_top != 0) fatal_error("too many-if","");
+    return is_v2_if;
 }
 
 /* if_block states
@@ -201,6 +246,13 @@ int is_v1_v2(void) {
  *
  */
 
+/**
+ * Begins a new nested IF block using Version 2 logic.
+ * 
+ * Throws fatal_error() on failure.
+ * 
+ * @author Wesley Ebisuzaki @date 2/2019
+ */
 void v1_if(void) {
     if (++if_state_top == MAX_IF) fatal_error("too many ifs","");
     // push state
@@ -211,6 +263,13 @@ void v1_if(void) {
     else_allowed = 1;
 }
 
+/**
+ * Ends the current nested IF block using Version 2 logic.
+ * 
+ * Throws fatal_error() on failure.
+ * 
+ * @author Wesley Ebisuzaki @date 2/2019
+ */
 void v1_endif(void) {
     if (if_state_top < 0) fatal_error("programming error: if_state_top","");
     // pop state
@@ -220,13 +279,28 @@ void v1_endif(void) {
     if_state_top--;
 }
 
+/**
+ * Executes the -else branch of the current IF block.
+ * 
+ * Throws fatal_error() on failure.
+ * 
+ * @author Wesley Ebisuzaki @date 2/2019
+ */
 void v1_else(void) {
     else_allowed = 0;
     if (if_state[if_state_top].run_flag == 1) {
-	if_run = if_run | run_flag;
+        if_run = if_run | run_flag;
         run_flag = if_run == 0 ? 1 : 0;
     }
 }
+
+/**
+ * Executes the -elseif branch of the current IF block.
+ * 
+ * Throws fatal_error() on failure.
+ * 
+ * @author Wesley Ebisuzaki @date 2/2019
+ */
 void v1_elseif(void) {
     if (if_state[if_state_top].run_flag == 1) {
         if_run = if_run | run_flag;

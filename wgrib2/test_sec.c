@@ -1,3 +1,8 @@
+/** @file
+ * @brief Some routines to check whether two GRIB fields are the same.
+ * @author Public Domain: Wesley Ebisuzaki @date 2005
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,10 +10,16 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/* test_sec.c        10/2024  Public Domain Wesley Ebisuzaki
-   some routines to check whether two fields are the same */
-
-
+/**
+ * Compare two GRIB section 0 fields for equality.
+ * 
+ * @param sec_a Pointer to the first GRIB sections.
+ * @param sec_b Pointer to the second GRIB sections.
+ * 
+ * @return Returns 1 if the sections are identical, 0 otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 2005
+ */
 int same_sec0(unsigned char **sec_a, unsigned char **sec_b) {
 
     unsigned char *a, *b;
@@ -16,28 +27,47 @@ int same_sec0(unsigned char **sec_a, unsigned char **sec_b) {
     a = sec_a[0];
     b = sec_b[0];
     for (i = 0; i < 8; i++) {
-	if (*a++ != *b++) return 0;
+        if (*a++ != *b++) return 0;
     }
     return 1;
 }
 
-/* test if same sec0 .. not grib variable */
-
+/**
+ * Compare two GRIB section 0 fields for equality, ignoring the GRIB variable.
+ * 
+ * @param mode If non-zero, print debug information to stderr.
+ * @param sec_a Pointer to the first GRIB sections.
+ * @param sec_b Pointer to the second GRIB sections.
+ * 
+ * @return Returns 1 if the sections are identical, 0 otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 2005
+ */
 int same_sec0_not_var(int mode, unsigned char **sec_a, unsigned char **sec_b) {
     unsigned char *a, *b;
     int i;
     a = sec_a[0];
     b = sec_b[0];
     for (i = 0; i < 8; i++) {
-	if (i == 6) continue;
-	if (*a++ != *b++) {
-	    if (mode) fprintf(stderr,"same_sec0_not_var:i=%d\n", i);
-	    return 0;
-	}
+        if (i == 6) continue;
+        if (*a++ != *b++) {
+            if (mode) fprintf(stderr,"same_sec0_not_var:i=%d\n", i);
+            return 0;
+        }
     }
     return 1;
 }
 
+/**
+ * Compare two GRIB section 1 fields for equality.
+ * 
+ * @param sec_a Pointer to the first GRIB sections.
+ * @param sec_b Pointer to the second GRIB sections.
+ * 
+ * @return Returns 1 if the sections are identical, 0 otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 2005
+ */
 int same_sec1(unsigned char **sec_a, unsigned char **sec_b) {
     unsigned char *a, *b;
     unsigned int i;
@@ -46,13 +76,22 @@ int same_sec1(unsigned char **sec_a, unsigned char **sec_b) {
     a = sec_a[1];
     b = sec_b[1];
     while (i--) {
-	if (*a++ != *b++) return 0;
+        if (*a++ != *b++) return 0;
     }
     return 1;
 }
 
-// test to see if same sec1 but don't do time stamp
-
+/**
+ * Compare two GRIB section 1 fields for equality, ignoring the time stamp.
+ * 
+ * @param mode If non-zero, print debug information to stderr.
+ * @param sec_a Pointer to the first GRIB sections.
+ * @param sec_b Pointer to the second GRIB sections.
+ * 
+ * @return Returns 1 if the sections are identical, 0 otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 2005
+ */
 int same_sec1_not_time(int mode, unsigned char **sec_a, unsigned char **sec_b) {
     unsigned char *a, *b;
     unsigned int i, j;
@@ -61,22 +100,33 @@ int same_sec1_not_time(int mode, unsigned char **sec_a, unsigned char **sec_b) {
     a = sec_a[1];
     b = sec_b[1];
     for (j = 0; j < 12; j++) {
-	if (a[j] != b[j]) {
-	    if (mode) fprintf(stderr,"same_sec1_not_time: sec 1 octet %d = %u vs %u\n", j+1, a[j],b[j]);
-	    return 0;
-	}
+        if (a[j] != b[j]) {
+            if (mode) fprintf(stderr,"same_sec1_not_time: sec 1 octet %d = %u vs %u\n", j+1, a[j],b[j]);
+            return 0;
+        }
     }
     for (j = 19; j < i; j++) {
-	if (a[j] != b[j]) {
-	    if (mode) fprintf(stderr,"same_sec1_not_time: sec 1 octet %d = %u vs %u\n", j+1, a[j],b[j]);
-	    return 0;
-	}
+        if (a[j] != b[j]) {
+            if (mode) fprintf(stderr,"same_sec1_not_time: sec 1 octet %d = %u vs %u\n", j+1, a[j],b[j]);
+            return 0;
+        }
     }
     return 1;
 }
 
 /* see if same sec1 except for grib variable */
 
+/**
+ * Compare two GRIB section 1 fields for equality, ignoring the GRIB variable.
+ * 
+ * @param mode If non-zero, print debug information to stderr.
+ * @param sec_a Pointer to the first GRIB sections.
+ * @param sec_b Pointer to the second GRIB sections.
+ * 
+ * @return Returns 1 if the sections are identical, 0 otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 2005
+ */
 int same_sec1_not_var(int mode, unsigned char **sec_a, unsigned char **sec_b) {
     unsigned char *a, *b;
     unsigned int i, j;
@@ -86,17 +136,25 @@ int same_sec1_not_var(int mode, unsigned char **sec_a, unsigned char **sec_b) {
     a = sec_a[1];
     b = sec_b[1];
     for (j = 0; j < 12; j++) {
-	if (j == 9 || j == 10) continue;	// mastertable or local table
-	if (a[j] != b[j]) {
-	    if (mode) fprintf(stderr,"same_sec1_not_var: sec 1 octet %d = %u vs %u\n", j+1, a[j],b[j]);
-	    return 0;
-	}
+        if (j == 9 || j == 10) continue;	// mastertable or local table
+        if (a[j] != b[j]) {
+            if (mode) fprintf(stderr,"same_sec1_not_var: sec 1 octet %d = %u vs %u\n", j+1, a[j],b[j]);
+            return 0;
+        }
     }
     return 1;
 }
 
-// test for same sec2 (local)
-
+/**
+ * Compare two GRIB section 2 fields for equality.
+ * 
+ * @param sec_a Pointer to the first GRIB sections.
+ * @param sec_b Pointer to the second GRIB sections.
+ * 
+ * @return Returns 1 if the sections are identical, 0 otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 2005
+ */
 int same_sec2(unsigned char **sec_a, unsigned char **sec_b) {
     unsigned char *a, *b;
     unsigned int i;
@@ -110,8 +168,16 @@ int same_sec2(unsigned char **sec_a, unsigned char **sec_b) {
     return 1;
 }
 
-// test for same sec3 (grid)
-
+/**
+ * Compare two GRIB section 3 fields for equality.
+ * 
+ * @param sec_a Pointer to the first GRIB sections.
+ * @param sec_b Pointer to the second GRIB sections.
+ * 
+ * @return Returns 1 if the sections are identical, 0 otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 2005
+ */
 int same_sec3(unsigned char **sec_a, unsigned char **sec_b) {
     unsigned char *a, *b;
     unsigned int i;
@@ -125,8 +191,16 @@ int same_sec3(unsigned char **sec_a, unsigned char **sec_b) {
     return 1;
 }
 
-// test for same sec3 (pdt)
-
+/**
+ * Compare two GRIB section 4 fields for equality.
+ * 
+ * @param sec_a Pointer to the first GRIB sections.
+ * @param sec_b Pointer to the second GRIB sections.
+ * 
+ * @return Returns 1 if the sections are identical, 0 otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 2005
+ */
 int same_sec4(unsigned char **sec_a, unsigned char **sec_b) {
     unsigned char *a, *b;
     unsigned int i;
@@ -141,13 +215,24 @@ int same_sec4(unsigned char **sec_a, unsigned char **sec_b) {
     return 1;
 }
 
-/*
-   check to see if the two section 4 are the same
-   this version ignores time code (fcst hour and the time code in the stat processing)
-   returns 1 if the same.
-   modified 8/2013
+/**
+ * Compare two GRIB section 4 fields for equality, ignoring the time code (fcst hour and the 
+ * time code in the stat processing).
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 2005 | W. Ebisuzaki | Initial
+ * 8/2013 | W. Ebisuzaki | Modified
+ *
+ * @param mode If non-zero, print debug information to stderr.
+ * @param sec_a Pointer to the first GRIB sections.
+ * @param sec_b Pointer to the second GRIB sections.
+ * 
+ * @return Returns 1 if the sections are identical, 0 otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 2005
  */
-
 int same_sec4_not_time(int mode, unsigned char **sec_a, unsigned char **sec_b) {
  
     unsigned char *a, *b, *p;
@@ -173,29 +258,29 @@ int same_sec4_not_time(int mode, unsigned char **sec_a, unsigned char **sec_b) {
     /* statistical processing */
     if (stat_time) {
         p = code_table_4_4_location(sec_a);
-	if (p == NULL) fatal_error_i("same_sec4_not_time, prog error 1 pdt=%d", pdt);
-	code_4_4 = p - a;
+        if (p == NULL) fatal_error_i("same_sec4_not_time, prog error 1 pdt=%d", pdt);
+        code_4_4 = p - a;
 
         if (code_4_4 > stat_time) fatal_error_i("same_sec4_not_time, prog error 2 pdt=%d", pdt);
 
-	for (j = 0; j < code_4_4; j++) {
-	    if (a[j] != b[j]) {
-	        if (mode) fprintf(stderr,"same_sec4_not_time: sec 4 octet %d = %u vs %u pdt=%d\n", j+1, a[j],b[j],pdt);
-		return 0;
-	    }
-	}
-	for (j = code_4_4 + 5; j < stat_time; j++) {
-	     if (a[j] != b[j]) {
-	        if (mode) fprintf(stderr,"same_sec4_not_time: sec 4 octet %d = %u vs %u pdt=%d\n", j+1, a[j],b[j],pdt);
-		return 0;
-             }
-	}
-	for (j = stat_time + 7; j < i; j++) {
-	    if (a[j] != b[j]) {
-	        if (mode) fprintf(stderr,"same_sec4_not_time: sec 4 octet %d = %u vs %u pdt=%d\n", j+1, a[j],b[j],pdt);
-		return 0;
-	    }
-	}
+        for (j = 0; j < code_4_4; j++) {
+            if (a[j] != b[j]) {
+                if (mode) fprintf(stderr,"same_sec4_not_time: sec 4 octet %d = %u vs %u pdt=%d\n", j+1, a[j],b[j],pdt);
+                return 0;
+            }
+        }
+        for (j = code_4_4 + 5; j < stat_time; j++) {
+            if (a[j] != b[j]) {
+                if (mode) fprintf(stderr,"same_sec4_not_time: sec 4 octet %d = %u vs %u pdt=%d\n", j+1, a[j],b[j],pdt);
+                return 0;
+            }
+        }
+        for (j = stat_time + 7; j < i; j++) {
+            if (a[j] != b[j]) {
+                if (mode) fprintf(stderr,"same_sec4_not_time: sec 4 octet %d = %u vs %u pdt=%d\n", j+1, a[j],b[j],pdt);
+                return 0;
+            }
+        }
         return 1;
     }
 
@@ -204,47 +289,51 @@ int same_sec4_not_time(int mode, unsigned char **sec_a, unsigned char **sec_b) {
     code_4_4 = p ? p - a : 0;
 
     if (code_4_4 == 0) {		/* no code table 4.4 (forecast time) ex radar, satellite prod*/
-	for (j = 0; j < i; j++) {
-	    if (a[j] != b[j]) {
-	        if (mode) fprintf(stderr,"same_sec4_not_time: sec 4 octet %d = %u vs %u pdt=%d\n", j+1, a[j],b[j],pdt);
-		return 0;
-	    }
-	}
-	return 1;
+        for (j = 0; j < i; j++) {
+            if (a[j] != b[j]) {
+                if (mode) fprintf(stderr,"same_sec4_not_time: sec 4 octet %d = %u vs %u pdt=%d\n", j+1, a[j],b[j],pdt);
+                return 0;
+            }
+        }
+        return 1;
     }
     else {				/* has forecast time but not stat processing */
 
+        for (j = 0; j < code_4_4; j++) {
+            if (a[j] != b[j]) {
+                if (mode) fprintf(stderr,"same_sec4_not_time: sec 4 octet %d = %u vs %u pdt=%d\n", j+1, a[j],b[j],pdt);
+                return 0;
+            }
+        }
 
-	for (j = 0; j < code_4_4; j++) {
-	    if (a[j] != b[j]) {
-	        if (mode) fprintf(stderr,"same_sec4_not_time: sec 4 octet %d = %u vs %u pdt=%d\n", j+1, a[j],b[j],pdt);
-		return 0;
-	    }
-	}
-
-	for (j = code_4_4 + 5; j < i; j++) {
-	    if (a[j] != b[j]) {
-	        if (mode) fprintf(stderr,"same_sec4_not_time: sec 4 octet %d = %u vs %u pdt=%d\n", j+1, a[j],b[j],pdt);
-		return 0;
-	    }
-	}
-	return 1;
+        for (j = code_4_4 + 5; j < i; j++) {
+            if (a[j] != b[j]) {
+                if (mode) fprintf(stderr,"same_sec4_not_time: sec 4 octet %d = %u vs %u pdt=%d\n", j+1, a[j],b[j],pdt);
+                return 0;
+            }
+        }
+        return 1;
     }
 
     if (warning == 0) {
-	warning = 1;
-	fprintf(stderr,"same_sec4_not_time does not handle pdt=%d",pdt);
+        warning = 1;
+        fprintf(stderr,"same_sec4_not_time does not handle pdt=%d",pdt);
     }
     return 0;
 }
 
-/*
- *  check to see if sec4 is the same except allowing for different ave/acc period
- *   if different, return 0
- *   if not statistically processed PDT, return 0
- *   if same, return 1
+/**
+ * Compare two GRIB section 4 fields for equality, ignoring the ave/acc period.
+ * 
+ * @param mode If non-zero, print debug information to stderr.
+ * @param sec_a Pointer to the first GRIB sections.
+ * @param sec_b Pointer to the second GRIB sections.
+ * 
+ * @return Returns 1 if the sections are identical, 0 if different or not statistically 
+ * processed PDT.
+ * 
+ * @author Wesley Ebisuzaki @date 2005
  */
-
 int same_sec4_diff_ave_period(unsigned char **sec_a, unsigned char **sec_b) {
     unsigned char *a, *b;
     unsigned int size, j;
@@ -258,26 +347,35 @@ int same_sec4_diff_ave_period(unsigned char **sec_a, unsigned char **sec_b) {
 
     // check for data up to year of end of overall time interval
     for (j = 0; j < idx - 7 ; j++) {
-	if (a[j] != b[j]) return 0;
+        if (a[j] != b[j]) return 0;
     }
 
     //  skip time of end of overall time interval * 7 bytes
 
     // check n time ranges to secoded code table 4.4
     for (j = idx; j < idx+8;  j++) {
-	if (a[j] != b[j]) return 0;
+        if (a[j] != b[j]) return 0;
     }
 
     //  skip length of time range
 
     for (j = idx+12; j < size; j++) {
-	if (a[j] != b[j]) return 0;
+        if (a[j] != b[j]) return 0;
     }
     return 1;
 }
 
-// test for same sec4 merge
-
+/**
+ * Compare two GRIB section 4 fields for equality - for merging.
+ * 
+ * @param mode If non-zero, print debug information to stderr.
+ * @param sec_a Pointer to the first GRIB sections.
+ * @param sec_b Pointer to the second GRIB sections.
+ * 
+ * @return Returns 1 if the sections are identical, 0 otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 2005
+ */
 int same_sec4_for_merge(int mode, unsigned char **sec_a, unsigned char **sec_b) {
     unsigned char *a, *b;
     unsigned int j, size, code_4_4;
@@ -295,45 +393,54 @@ int same_sec4_for_merge(int mode, unsigned char **sec_a, unsigned char **sec_b) 
 
     // up to and including code table 4.4
     for (j = 0; j <= code_4_4; j++) {
-	if (a[j] != b[j]) {
-	     if (mode) fprintf(stderr,"same_sec4_merge: sec 4 octet %d = %u vs %u pdt=%d\n", j+1, a[j],b[j],pdt);
-	     return 0;
-	}
+        if (a[j] != b[j]) {
+            if (mode) fprintf(stderr,"same_sec4_merge: sec 4 octet %d = %u vs %u pdt=%d\n", j+1, a[j],b[j],pdt);
+            return 0;
+        }
     }
 
     // ignore forecast hour
     for (j = code_4_4+5; j < idx + 35 - 42; j++) {
-	if (a[j] != b[j]) {
-	     if (mode) fprintf(stderr,"same_sec4_merge: sec 4 octet %d = %u vs %u pdt=%d\n", j+1, a[j],b[j],pdt);
-	     return 0;
-	}
+        if (a[j] != b[j]) {
+            if (mode) fprintf(stderr,"same_sec4_merge: sec 4 octet %d = %u vs %u pdt=%d\n", j+1, a[j],b[j],pdt);
+            return 0;
+        }
     }
 
     // ignore time of end of overall time interval
 
     for (j = idx; j < size;  j++) {
-	if (a[j] != b[j]) {
-	     if (mode) fprintf(stderr,"same_sec4_merge: sec 4 octet %d = %u vs %u pdt=%d\n", j+1, a[j],b[j],pdt);
-	     return 0;
-	}
+        if (a[j] != b[j]) {
+            if (mode) fprintf(stderr,"same_sec4_merge: sec 4 octet %d = %u vs %u pdt=%d\n", j+1, a[j],b[j],pdt);
+            return 0;
+        }
     }
 
     return 1;
 }
 
-// test for same sec4 but different ensemble member
-//
-// v1: true if same execept for ensemble member number
-//     or true if same (no ensemble number)
-//
-// v2: support for LAF ensembles
-//     code that calls must check for same verification time
-//     true if same except for ensemble member number or forecast time
-//
-// v3: support for different types of ensemble forecasts (code_table 4.4)
-//     can include perturbed members as well as control run
-
-
+/**
+ * Compare two GRIB section 4 fields for equality, ignoring the ensemble member number.
+ * 
+ * ### Program History Log
+ * Version | Programmer | Comments
+ * -----|------------|---------
+ * v1 | W. Ebisuzaki | true if same except for ensemble member number, or true if same (no 
+ *                     ensemble number)
+ * v2 | W. Ebisuzaki | support for LAF ensembles
+ *                     code that calls must check for same verification time
+ *                     true if same except for ensemble member number or forecast time
+ * v3 | W. Ebisuzaki | support for different types of ensemble forecasts (code_table 4.4)
+ *                     can include perturbed members as well as control run
+ *
+ * @param mode If non-zero, print debug information to stderr.
+ * @param sec_a Pointer to the first GRIB sections.
+ * @param sec_b Pointer to the second GRIB sections.
+ * 
+ * @return Returns 1 if the sections are identical, 0 otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 2005
+ */
 int same_sec4_but_ensemble(int mode, unsigned char **sec_a, unsigned char **sec_b) {
     unsigned int i, size;
     unsigned char *p, *fcst_time, *f1, *f2, *f3, *f4, *pert;
@@ -350,34 +457,44 @@ int same_sec4_but_ensemble(int mode, unsigned char **sec_a, unsigned char **sec_
     fcst_time =  forecast_time_in_units_location(sec_a, &fcst_size);
     f1 = f2 = f3 = f4 = NULL;
     if (fcst_time) {
-	/* size should be 2 or 4 */
-	f1 =  fcst_time + 0;
-	f2 =  fcst_time + 1;
+        /* size should be 2 or 4 */
+        f1 =  fcst_time + 0;
+        f2 =  fcst_time + 1;
         if (fcst_size == 4) {
-	   f3 =  fcst_time + 2;
-	   f4 =  fcst_time + 3;
-	}
+            f3 =  fcst_time + 2;
+            f4 =  fcst_time + 3;
+        }
     }
     if (mode == 98) {
-	 if (pert) fprintf(stderr,"same_sec4_but_ensemble: pert=%ld\n",pert-sec_a[4]);
-	 if (code_4_4) fprintf(stderr,"same_sec4_but_ensemble: code_4.4=%ld\n",code_4_4-sec_a[4]);
-	 fprintf(stderr,"same_sec4_but_ensemble: size=%d\n",size);
+        if (pert) fprintf(stderr,"same_sec4_but_ensemble: pert=%ld\n",pert-sec_a[4]);
+        if (code_4_4) fprintf(stderr,"same_sec4_but_ensemble: code_4.4=%ld\n",code_4_4-sec_a[4]);
+        fprintf(stderr,"same_sec4_but_ensemble: size=%d\n",size);
     }
 
     for (i = 0; i < size; i++) {
         p = sec_a[4]+i;
         if (p != pert && p != code_4_4 && p != code_4_6 && p != f1 && p != f2 && p != f3 && p != f4) {
-	    if (*p != sec_b[4][i]) {
-	        if (mode) fprintf(stderr,"same_sec4_but_ensemble: i=%d", i);
-		return 0;
-	    }
+            if (*p != sec_b[4][i]) {
+                if (mode) fprintf(stderr,"same_sec4_but_ensemble: i=%d", i);
+                return 0;
+            }
             if (mode == 98) fprintf(stderr,"same_sec4_but_ensemble: byte %d is ok\n",i);
-	}
-    } return 1;
+        }
+    }
+    return 1;
 }
 
-// test sec4 .. do not test for variable
-
+/**
+ * Compare two GRIB section 4 fields for equality, ignoring the variable.
+ * 
+ * @param mode If non-zero, print debug information to stderr.
+ * @param sec_a Pointer to the first GRIB sections.
+ * @param sec_b Pointer to the second GRIB sections.
+ * 
+ * @return Returns 1 if the sections are identical, 0 otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 2005
+ */
 int same_sec4_not_var(int mode, unsigned char **sec_a, unsigned char **sec_b) {
     unsigned int i, j;
     unsigned char *code_4_1, *code_4_2, *a, *b;
@@ -392,41 +509,49 @@ int same_sec4_not_var(int mode, unsigned char **sec_a, unsigned char **sec_b) {
     b = sec_b[4];
 
     for (j = 0; j < i; j++) {
-	if (a+j == code_4_1 || a+j == code_4_2) continue;
-	if (a[j] != b[j]) {
-	    if (mode) fprintf(stderr,"same_sec4_not_var: i=%d", j);
-	    return 0;
-	}
+        if (a+j == code_4_1 || a+j == code_4_2) continue;
+        if (a[j] != b[j]) {
+            if (mode) fprintf(stderr,"same_sec4_not_var: i=%d", j);
+            return 0;
+        }
     }
     return 1;
 }
 
-/*
- *  check to see if sec4 for -update
- *  1) must be statistically processed PDT else return 0
- *  2) must have same start time
- *  3) must have same fcst time
+/**
+ * Compare two GRIB section 4 fields for equality - for unmerge_fcst.
+ * 
+ * 1. Must be statistically processed PDT (otherwise return 0)
+ * 2. Must have same start time.
+ * 3. Must have same forecast time.
+ * 
+ * @param mode If non-zero, print debug information to stderr.
+ * @param sec_a Pointer to the first GRIB sections.
+ * @param sec_b Pointer to the second GRIB sections.
+ * 
+ * @return Returns 1 if the sections are identical, 0 otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 2005
  */
-
 int same_sec4_unmerge_fcst(int mode, unsigned char **sec_a, unsigned char **sec_b) {
 
     unsigned char *verf_time, *a, *b;
     int i, size, offset, offset2;
     if (GB2_ProdDefTemplateNo(sec_a) != GB2_ProdDefTemplateNo(sec_b) ) {
         if (mode) fprintf(stderr,"same_sec4_unmerge_fcst: diff pdt ");
-	return 0;
+        return 0;
     }
 
     /* number of time ranges must be 1 */
     offset = stat_proc_n_time_ranges_index(sec_a);
     if (offset < 0 || sec_a[4][offset] != 1) {
         if (mode) fprintf(stderr,"same_sec4_unmerge_fcst: n!=1 offset=%d n=%u ",offset, sec_a[4][offset]);
-	return 0;
+        return 0;
     }
     /* number of time ranges must be 1 .. same pdt .. same offset  */
     if (sec_b[4][offset] != 1) {
         if (mode) fprintf(stderr,"same_sec4_unmerge_fcst: n!=1 offset=%d n=%u ",offset, sec_b[4][offset]);
-	return 0;
+        return 0;
     }
 
     verf_time = stat_proc_verf_time_location(sec_a);
@@ -443,10 +568,10 @@ int same_sec4_unmerge_fcst(int mode, unsigned char **sec_a, unsigned char **sec_
     for (i = 0; i < size; i++) {
         if (i >= offset && i <= offset + 5) continue;
         if (i >= offset2 && i <= offset2 + 3) continue;
-	if (a[i] != b[i]) {
-	    if (mode) fprintf(stderr,"same_sec4_unmerge_fcst: i=%d val_a %u val_b %u ", i,a[i],b[i]);
-	    return 0;
-	}
+        if (a[i] != b[i]) {
+            if (mode) fprintf(stderr,"same_sec4_unmerge_fcst: i=%d val_a %u val_b %u ", i,a[i],b[i]);
+            return 0;
+        }
     }
     return 1;
 }

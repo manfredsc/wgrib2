@@ -1,3 +1,8 @@
+/** @file
+ * @brief Options for showing cluster information.
+ * @author Public Domain: Wesley Ebisuzaki @date 2006
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,16 +10,24 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/* Cluster.c    10/2024  Public Domain  Wesley Ebisuzaki
- *
- * options for showing cluster information
- *
- */
-
 /*
  * HEADER:-1:cluster:inv:0:cluster identifier
  */
 
+/**
+ * Display the cluster identifier.
+ * 
+ * ## Usage:
+ * -cluster
+ * 
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return 0 for success, does not return an error code.
+ *
+ * @author Wesley Ebisuzaki @date 2006
+ */
 int f_cluster(ARG0) {
     int i;
 
@@ -29,7 +42,20 @@ int f_cluster(ARG0) {
  * HEADER:-1:N_clusters:inv:0:number of clusters
  */
 
-
+/**
+ * Display the number of clusters.
+ * 
+ * ## Usage:
+ * -N_clusters
+ * 
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return 0 for success, does not return an error code.
+ *
+ * @author Wesley Ebisuzaki @date 2006
+ */
 int f_N_clusters(ARG0) {
     int i;
 
@@ -43,7 +69,25 @@ int f_N_clusters(ARG0) {
 /*
  * HEADER:-1:cluster_info:inv:0:cluster information
  */
+
+/** Newline character */
 extern char *nl;
+
+/**
+ * Display information about the cluster, including the cluster identifier,
+ * number of forecasts in the cluster, and other related data.
+ * 
+ * ## Usage:
+ * -cluster_info
+ * 
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return 0 for success, does not return an error code.
+ * 
+ * @author Wesley Ebisuzaki @date 2006
+ */
 int f_cluster_info(ARG0) {
 
     unsigned char *nc, *cluster;
@@ -67,11 +111,11 @@ int f_cluster_info(ARG0) {
     inv_out += strlen(inv_out);
 
     if (nc[1] != 255 || nc[2] != 255 || nc[3] != 255 || nc[4] != 255 || nc[5] != 255) {
-	sprintf(inv_out, "%sstd_dev_cluster_members=%lf", nl, scaled2flt(INT1(nc[1]), int4(nc+2)));
+        sprintf(inv_out, "%sstd_dev_cluster_members=%lf", nl, scaled2flt(INT1(nc[1]), int4(nc+2)));
         inv_out += strlen(inv_out);
     }
     if (nc[6] != 255 || nc[7] != 255 || nc[8] != 255 || nc[9] != 255 || nc[10] != 255) {
-	sprintf(inv_out, "%sdist_cluster_to_e.m.=%lf", nl, scaled2flt(INT1(nc[6]), int4(nc+7)));
+        sprintf(inv_out, "%sdist_cluster_to_e.m.=%lf", nl, scaled2flt(INT1(nc[6]), int4(nc+7)));
         inv_out += strlen(inv_out);
     }
     inv_out += strlen(inv_out);

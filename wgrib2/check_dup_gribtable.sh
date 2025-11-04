@@ -1,10 +1,12 @@
 #!/bin/sh
-#   10/2024    Public Domain  Wesley Ebisuzaki
-#
-# This script checks parameter info for wgrib2. This is a test script
-# that is manually run when updating the grib2 table from the NCO web
-# pages.
-# 
+## @file
+## @brief This script checks parameter info for wgrib2. This is a test script
+## that is manually run when updating the grib2 table from the NCO web
+## pages.
+##
+## Checks for duplicate names.
+## @author Public Domain: Wesley Ebisuzaki @date 10/2024
+
 export LC_ALL=C
 
 # check for duplicate names

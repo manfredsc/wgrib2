@@ -1,3 +1,8 @@
+/** @file
+ * @brief Uses Cressman analysis to create a LOngitude LAtitude grid.
+ * @author Public Domain: Wesley Ebisuzaki @date 09/2005
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,38 +10,120 @@
 #include "grb2.h"
 #include "wgrib2.h"
 #include "fnlist.h"
-/*
- * Cress_lola.c                  10/2024  Public Domain  Wesley Ebisuzaki
- *  use Cressman analysis to create a LOngitude LAtitude grid
- *
- */
 
 /* M_PI is not ANSI C but are commonly defined */
 /* values from GNU C library version of math.h copyright Free Software Foundation, Inc. */
 
 #ifndef M_PI
-#define M_PI           3.14159265358979323846  /* pi */
+#define M_PI           3.14159265358979323846  /**< pi */
 #endif
 
+/** Decode grib file flag. */
+extern int decode;
 
-extern int decode, flush_mode;
+/** Flush of output flag. */
+extern int flush_mode;
+
+/** Append grib file flag. */
 extern int file_append;
 
-extern double *lat, *lon;
+/** Pointer to array of latitude values. */
+extern double *lat;
+
+/** Pointer to array of longitude values. */
+extern double *lon;
+
+/** Flag to indicate lat-lon grid processing. */
 extern int latlon;
+
+/** Number of points in the grid. */
 extern unsigned int npnts;
+
+/** GDS change number. */
 extern int GDS_change_no;
 
-extern int use_scale, dec_scale, bin_scale, wanted_bits, max_bits;
+/** Use scale flag. */
+extern int use_scale;
+
+/** Decimal scaling. */
+extern int dec_scale;
+
+/** Binary scaling. */
+extern int bin_scale;
+
+/** Number of bits wanted.*/
+extern int wanted_bits;
+
+/** Maximum number of bits. */
+extern int max_bits;
+
+/** Output GRIB type. */
 extern enum output_grib_type grib_type;
 
+/** Maximum number of scans. */
 #define MAX_SCANS 10
+
+/** Square distance calculation macro. */
 #define DIST_SQ(x,y,z) ((x)*(x) + (y)*(y) + (z)*(z))
 
 /*
  * HEADER:111:cress_lola:output:4:lon-lat grid values X=lon0:nlon:dlon Y=lat0:nlat:dlat Z=file A=radius1:radius2:..:radiusN
  */
 
+/**
+ * Creates a regular LOngitude LAtitude grid using Cressman analysis and writes the output to a file.
+ * 
+ * This option is similar to the -lola option, which uses a nearest-neighbor interpolation.
+ * 
+ * You need to specify the lower left corner of the grid, the number of points in the zonal and meridional directions 
+ * and the latitude/longitude increments. Finally you need to specify the output file and the format. 
+ * 
+ * The interpolation to the lola grid is by a Cressman analysis. The Cressman analysis is a multipass system which uses 
+ * a user-specified "radius" for each pass. A Cressman analysis can be computationally expensive so you may want to explore 
+ * multiprocessing techniques. (see the -for_n and -n options).
+ * 
+ * ## Prelim - Cressman Analysis
+ * definition: 
+ *     input grid = observations = grid from the input grib file 
+ *     output grid = grid as defined by  LonSW:#lon:dlon LatSW:#lat:dlat
+ * 
+ * (1) compute mean of observations,save mean on background grid (output)
+ *     background(i,j) = average(observation)
+ * 
+ * (2) Repeat N times:  PASS-M
+ *     (a) find background value for observations by bilinear interpolation of background grid
+ *     (b) remove the background from the observations: obs' = obs - interpolated_background
+ *     (c) inc'(i,j)  = weighted average of obs'
+ *         inc'(i,j) is increment on output grid
+ *         weighted average of obs' depends on the distance between grid point and observation
+ *     (d) new background = background + inc'
+ * 
+ * Warning, this scheme doesn't handle handle rotated winds in a useful manner. There will also be problem with analyzing winds 
+ * near the poles. 
+ * 
+ * ## Usage
+ * -cress_lola LonSW:#lon:dlon LatSW:#lat:dlat file radius1:radius2:..:radiusN
+ * 
+ * LonSW - longitude of the South-West point, values from 0 .. 360
+ * #lon - number of longitude points
+ * dlon - spacing of the points in the zonal direction in degrees
+ * LatSW -  Latitude of the South-West point, values from -90 .. 90
+ * #lat - number of latitude points
+ * dlat - spacing of the points in the meridional direction in degrees
+ * file - name of output grib file
+ * radiusM - the radius in km for M-th pass
+ * 
+ * @param ARG4 List of function arguments set by wgrib2's main() function (see @ref ARG4). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * @note WARNING: winds and other vector fields will not be rotated. If the vector fields use a grid relative orientation, 
+ * then your interpolated winds will be using the original grid. 
+ * 
+ * @author Wesley Ebisuzaki @date 09/2005
+*/
 int f_cress_lola(ARG4) {
 
     int n, nx, ny, nxny, ix, iy, i, j, k, m, iradius;
@@ -49,12 +136,12 @@ int f_cress_lola(ARG4) {
         int nlat, nlon, nRadius;
         double lat0, lon0, dlat, dlon, latn, lonn;
         struct seq_file out;
-	int last_GDS_change_no;
-	double Radius[MAX_SCANS];
-	double R_earth;
+        int last_GDS_change_no;
+        double Radius[MAX_SCANS];
+        double R_earth;
         double *in_x, *in_y, *in_z;
         double *out_x, *out_y, *out_z;
-	char *mask;
+        char *mask;
     };
     struct local_struct *save;
 
@@ -96,68 +183,68 @@ int f_cress_lola(ARG4) {
             fatal_error("Could not open %s", arg3);
         }
 
-	iradius = 0;
-	save->mask = NULL;
-	k = sscanf(arg4, "%lf%n", &tmp, &m);
+        iradius = 0;
+        save->mask = NULL;
+        k = sscanf(arg4, "%lf%n", &tmp, &m);
         while (k == 1) {
             if (iradius >= MAX_SCANS) fatal_error("cres_lola: too many radius parameters","");
             save->Radius[iradius++] = tmp;
-	    if (tmp < 0.0 && save->mask == NULL) {
-		save->mask = (char *) malloc(((size_t) nxny) * sizeof(char));
-		if (save->mask == NULL) fatal_error("cress_lola memory allocation ","");
-	    }
+            if (tmp < 0.0 && save->mask == NULL) {
+                save->mask = (char *) malloc(((size_t) nxny) * sizeof(char));
+                if (save->mask == NULL) fatal_error("cress_lola memory allocation ","");
+            }
             arg4 += m;
             k = sscanf(arg4, ":%lf%n", &tmp, &m);
-	}
-	save->nRadius = iradius;
+        }
+        save->nRadius = iradius;
 
 // fprintf(stderr,"nRadius=%d nx=%d ny=%d\n",save->nRadius, nx, ny);
 
-	save->out_x = (double *) malloc(((size_t) nxny) * sizeof(double));
-	save->out_y = (double *) malloc(((size_t) nxny) * sizeof(double));
-	save->out_z = (double *) malloc(((size_t) nxny) * sizeof(double));
-	if (save->out_x == NULL || save->out_y == NULL || save->out_z == NULL) 
-		fatal_error("cress_lola: memory allocation","");
+        save->out_x = (double *) malloc(((size_t) nxny) * sizeof(double));
+        save->out_y = (double *) malloc(((size_t) nxny) * sizeof(double));
+        save->out_z = (double *) malloc(((size_t) nxny) * sizeof(double));
+        if (save->out_x == NULL || save->out_y == NULL || save->out_z == NULL) 
+            fatal_error("cress_lola: memory allocation","");
 
-	save->in_x = save->in_y = save->in_z = NULL;
-	save->last_GDS_change_no = 0;
+        save->in_x = save->in_y = save->in_z = NULL;
+        save->last_GDS_change_no = 0;
 
 	/* out_x, out_y, out_z have the 3-d coordinates of the lola grid */
 
-	cos_lon = (double *) malloc(((size_t) nx) * sizeof(double));
-	sin_lon = (double *) malloc(((size_t) nx) * sizeof(double));
-	if (cos_lon == NULL || sin_lon == NULL) fatal_error("cress_lola: memory allocation","");
-	for (i = 0; i < nx; i++) {
-	    x = (x0 + i*dx) * (M_PI / 180.0);
-	    cos_lon[i] = cos(x);
-	    sin_lon[i] = sin(x);
-	}
+        cos_lon = (double *) malloc(((size_t) nx) * sizeof(double));
+        sin_lon = (double *) malloc(((size_t) nx) * sizeof(double));
+        if (cos_lon == NULL || sin_lon == NULL) fatal_error("cress_lola: memory allocation","");
+        for (i = 0; i < nx; i++) {
+            x = (x0 + i*dx) * (M_PI / 180.0);
+            cos_lon[i] = cos(x);
+            sin_lon[i] = sin(x);
+        }
 
         for (k = j = 0; j < ny; j++) {
-	    y = (y0 + j*dy) * (M_PI / 180.0);
+            y = (y0 + j*dy) * (M_PI / 180.0);
             s = sin(y);
             c = sqrt(1.0 - s * s);
-	    for (i = 0; i < nx; i++) {
+            for (i = 0; i < nx; i++) {
                 save->out_z[k] = s;
                 save->out_x[k] = c * cos_lon[i];
                 save->out_y[k] = c * sin_lon[i];
-		k++;
-	    }
-	}
-	free(cos_lon);
-	free(sin_lon);
+                k++;
+            }
+        }
+        free(cos_lon);
+        free(sin_lon);
         return 0;
     }
 
     save = (struct local_struct *) *local;
     if (mode == -2) {
-	fclose_file(&(save->out));
-	free(save);
+        fclose_file(&(save->out));
+        free(save);
         return 0;
     }
 
     /* processing phase */
-fprintf(stderr,">>processing\n");
+    fprintf(stderr,">>processing\n");
 
     nx = save->nlon;
     ny = save->nlat;
@@ -171,28 +258,28 @@ fprintf(stderr,">>processing\n");
 
     /* Calculate x, y and z of input grid if new grid */
     if (save->last_GDS_change_no != GDS_change_no || save->in_x == NULL) {
-	save->last_GDS_change_no = GDS_change_no;
+        save->last_GDS_change_no = GDS_change_no;
         if (lat == NULL || lon == NULL || data == NULL) fatal_error("cress_lola: no lat, lon, or data","");
 
-	save->R_earth  =  radius_earth(sec);
+        save->R_earth  =  radius_earth(sec);
 
-	if (save->in_x) free(save->in_x);
-	if (save->in_y) free(save->in_y);
-	if (save->in_z) free(save->in_z);
+        if (save->in_x) free(save->in_x);
+        if (save->in_y) free(save->in_y);
+        if (save->in_z) free(save->in_z);
 
-	save->in_x = (double *) malloc(((size_t) npnts) * sizeof(double));
-	save->in_y = (double *) malloc(((size_t) npnts) * sizeof(double));
-	save->in_z = (double *) malloc(((size_t) npnts) * sizeof(double));
-	if (save->in_x == NULL || save->in_y == NULL || save->in_z == NULL)
-	    fatal_error("cress_lola: memory allocation","");
+        save->in_x = (double *) malloc(((size_t) npnts) * sizeof(double));
+        save->in_y = (double *) malloc(((size_t) npnts) * sizeof(double));
+        save->in_z = (double *) malloc(((size_t) npnts) * sizeof(double));
+        if (save->in_x == NULL || save->in_y == NULL || save->in_z == NULL)
+            fatal_error("cress_lola: memory allocation","");
 
-	for (i = 0; i < npnts; i++) {
-	    tmp = lon[i];
-	    if (tmp < save->lon0) tmp += 360.0;
-	    if (lat[i] >= 999.0 || lat[i] > save->latn || lat[i] < save->lat0 || tmp > save->lonn) {
-		save->in_x[i] = 999.9;
-	    }
-	    else {
+        for (i = 0; i < npnts; i++) {
+            tmp = lon[i];
+            if (tmp < save->lon0) tmp += 360.0;
+            if (lat[i] >= 999.0 || lat[i] > save->latn || lat[i] < save->lat0 || tmp > save->lonn) {
+                save->in_x[i] = 999.9;
+            }
+            else {
                 s = sin(lat[i] * (M_PI / 180.0));
                 c = sqrt(1.0 - s * s);
                 save->in_z[i] = s;
@@ -200,7 +287,7 @@ fprintf(stderr,">>processing\n");
                 save->in_y[i] = c * sin(lon[i] * (M_PI / 180.0));
             }
         }
-fprintf(stderr,"done new gds processing npnts=%u\n", npnts);
+        fprintf(stderr,"done new gds processing npnts=%u\n", npnts);
     }
 
     /* at this point x, y, and z of input and output grids have been made */
@@ -216,95 +303,95 @@ fprintf(stderr,"done new gds processing npnts=%u\n", npnts);
     /* make background = ave value */
     for (i = 0; i < npnts; i++) {
         if (save->in_x[i] < 999.0  && ! UNDEFINED_VAL(data[i]) ) {
-	    n++;
-	    sum += data[i];
-	}
+            n++;
+            sum += data[i];
+        }
     }
     if (n == 0) {
-	/* write undefined grid */
-	for (i = 0; i < nxny; i++) background[i] = UNDEFINED;
+        /* write undefined grid */
+        for (i = 0; i < nxny; i++) background[i] = UNDEFINED;
         grib_wrt(new_sec, background, nxny, nx, ny, use_scale, dec_scale, bin_scale,
                 wanted_bits, max_bits, grib_type, &(save->out));
         if (flush_mode) fflush_file(&(save->out));
-	free(background);
-	free(tmpv);
-	free(inc);
-	free(wt);
-	return 0;
+        free(background);
+        free(tmpv);
+        free(inc);
+        free(wt);
+        return 0;
     }
     sum /= n;
     for (i = 0; i < nxny; i++) background[i] = sum;
-fprintf(stderr,">>sum=%lf n %d background[1] %lf\n", sum, n, background[1]);
+    fprintf(stderr,">>sum=%lf n %d background[1] %lf\n", sum, n, background[1]);
 
     for (iradius = 0; iradius < save->nRadius; iradius++) {
-fprintf(stderr,">>radias=%lf nxny %d npnts %u\n", save->Radius[iradius],nxny, npnts);
-	/* save->Radius has units of km */
-	/* normalize to a sphere of unit radius */
-	r_sq = save->Radius[iradius] / (save->R_earth / 1000.0);
-	r_sq = r_sq * r_sq;
-	/* wt = inc = 0.0; */
-	for (k = 0; k < nxny; k++) inc[k] = wt[k] = 0.0;
+        fprintf(stderr,">>radias=%lf nxny %d npnts %u\n", save->Radius[iradius],nxny, npnts);
+        /* save->Radius has units of km */
+        /* normalize to a sphere of unit radius */
+        r_sq = save->Radius[iradius] / (save->R_earth / 1000.0);
+        r_sq = r_sq * r_sq;
+        /* wt = inc = 0.0; */
+        for (k = 0; k < nxny; k++) inc[k] = wt[k] = 0.0;
 
-	for (j = 0; j < npnts; j++) {
-	    if (save->in_x[j] > 999.0 || UNDEFINED_VAL(data[j]) ) continue;
+        for (j = 0; j < npnts; j++) {
+            if (save->in_x[j] > 999.0 || UNDEFINED_VAL(data[j]) ) continue;
 
-	    /* find the background value */
-	    x = lon[j] - save->lon0;
-	    x = (x < 0.0) ? (x + 360.0) / save->dlon : x / save->dlon;
-	    y = (lat[j] - save->lat0) / save->dlat;
+            /* find the background value */
+            x = lon[j] - save->lon0;
+            x = (x < 0.0) ? (x + 360.0) / save->dlon : x / save->dlon;
+            y = (lat[j] - save->lat0) / save->dlat;
 
-	    ix = floor(x);
-	    iy = floor(y);
-	    if ((double) ix == x && ix == nx-1) ix--;
-	    if ((double) iy == y && iy == ny-1) iy--;
+            ix = floor(x);
+            iy = floor(y);
+            if ((double) ix == x && ix == nx-1) ix--;
+            if ((double) iy == y && iy == ny-1) iy--;
 
-	    if (ix < 0 || iy < 0 || ix >= nx || iy >= ny) fatal_error("cress_lola: prog error ix, iy","");
+            if (ix < 0 || iy < 0 || ix >= nx || iy >= ny) fatal_error("cress_lola: prog error ix, iy","");
 
-	    x = x - ix;
-	    y = y - iy;
+            x = x - ix;
+            y = y - iy;
 
-	    /* find background value */
+            /* find background value */
 
-	    tmp = background[ix+iy*nx] * (1-x)*(1-y) +
-		  background[ix+1+iy*nx] * (x)*(1-y) +
-		  background[ix+(iy+1)*nx] * (1-x)*(y) +
-		  background[(ix+1)+(iy+1)*nx] * (x)*(y);
+            tmp = background[ix+iy*nx] * (1-x)*(1-y) +
+            background[ix+1+iy*nx] * (x)*(1-y) +
+            background[ix+(iy+1)*nx] * (1-x)*(y) +
+            background[(ix+1)+(iy+1)*nx] * (x)*(y);
 
 // fprintf(stderr,"obs: lat/lon %lf %lf, ix %d / %d iy %d data %lf, background %lf\n", lat[j],lon[j], ix, nx, iy, data[j], tmp);
-	    /* data increment */
-	    tmp = data[j] - tmp;
+            /* data increment */
+            tmp = data[j] - tmp;
 
-	    x = save->in_x[j];
-	    y = save->in_y[j];
-	    z = save->in_z[j];
+            x = save->in_x[j];
+            y = save->in_y[j];
+            z = save->in_z[j];
 
-	    for (k = 0; k < nxny; k++) {
-		tmpv[k] = DIST_SQ(x-save->out_x[k], y-save->out_y[k], z-save->out_z[k]);
-		if (tmpv[k] < r_sq) {
-		    tmpv[k] = (r_sq - tmpv[k]) / (r_sq + tmpv[k]);
-		    wt[k] += tmpv[k];
-		    inc[k] += tmpv[k] * tmp;
-		}
-	    }
-	}		
+            for (k = 0; k < nxny; k++) {
+                tmpv[k] = DIST_SQ(x-save->out_x[k], y-save->out_y[k], z-save->out_z[k]);
+                if (tmpv[k] < r_sq) {
+                    tmpv[k] = (r_sq - tmpv[k]) / (r_sq + tmpv[k]);
+                    wt[k] += tmpv[k];
+                    inc[k] += tmpv[k] * tmp;
+                }
+            }
+        }		
 
-	/* make mask or update background */
+        /* make mask or update background */
 
-	if (save->Radius[iradius] < 0.0) {
-	    for (k = 0; k < nxny; k++) save->mask[k] = (wt[k] > 0) ? 1 : 0;
-	}
-	for (k = 0; k < nxny; k++) {
-	    if (wt[k] > 0) background[k] += inc[k]/wt[k];
-	}
+        if (save->Radius[iradius] < 0.0) {
+            for (k = 0; k < nxny; k++) save->mask[k] = (wt[k] > 0) ? 1 : 0;
+        }
+        for (k = 0; k < nxny; k++) {
+            if (wt[k] > 0) background[k] += inc[k]/wt[k];
+        }
     }
 
     if (save->mask) {
-	for (k = 0; k < nxny; k++) {
-	    if (save->mask[k] == 0) background[k] = UNDEFINED;
-	}
+        for (k = 0; k < nxny; k++) {
+            if (save->mask[k] == 0) background[k] = UNDEFINED;
+        }
     }
     grib_wrt(new_sec, background, nxny, nx, ny, use_scale, dec_scale, bin_scale,
-	wanted_bits, max_bits, grib_type, &(save->out));
+        wanted_bits, max_bits, grib_type, &(save->out));
 
     if (flush_mode) fflush_file(&(save->out));
     free(background);

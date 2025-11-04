@@ -1,51 +1,58 @@
-/*******************************************************************************
-NAME                Projection support routines listed below.
+/** @file
+ * @brief Projection support routines.
+ * 
+ * PURPOSE:	The following functions are included in CPROJ.C.
+ *
+ * - SINCOS: Calculates the sine and cosine.
+ * - ASINZ: Eliminates roundoff errors.
+ * - MSFNZ: Computes the constant small m for Oblique Equal Area.
+ * - QSFNZ: Computes the constant small q for Oblique Equal Area.
+ * - PHI1Z: Computes phi1 for Albers Conical Equal-Area.
+ * - PHI2Z: Computes the latitude angle, phi2, for Lambert
+ *   Conformal Conic and Polar Stereographic.
+ * - PHI3Z: Computes the latitude, phi3, for Equidistant Conic.
+ * - PHI4Z: Computes the latitude, phi4, for Polyconic.
+ * - PAKCZ: Converts a 2 digit alternate packed DMS format to standard packed DMS format.
+ * - PAKR2DM: Converts radians to 3 digit packed DMS format.
+ * - TSFNZ: Computes the small t for Lambert Conformal Conic and Polar Stereographic.
+ * - SIGN: Returns the sign of an argument.
+ * - ADJUST_LON:  Adjusts a longitude angle to range -180 to 180.
+ * - E0FN, E1FN, E2FN, E3FN: Computes the constants e0,e1,e2,and e3 for calculating the distance along a meridian.
+ * - E4FN: Computes e4 used for Polar Stereographic.
+ * - MLFN: Computes M, the distance along a meridian.
+ * - CALC_UTM_ZONE: Calculates the UTM zone number.
+ *
+ * @author D. Steinwand, EROS @date July, 1991
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 7/1991 | D. Steinwand, EROS | Initial development
+ * 5/1993 | T. Mittan, EROS | Modified from Fortran GCTP for C GCTP
+ * 6/1993 | S. Nelson, EROS | Added inline comments
+ * 11/1993 | S. Nelson, EROS | Added loop counter in ADJUST_LON
+ * 1/1998 | S. Nelson, EROS | Changed misspelled error message
+ */
 
-PURPOSE:	The following functions are included in CPROJ.C.
-
-		SINCOS:	  Calculates the sine and cosine.
-		ASINZ:	  Eliminates roundoff errors.
-		MSFNZ:	  Computes the constant small m for Oblique Equal Area.
-		QSFNZ:	  Computes the constant small q for Oblique Equal Area.
-		PHI1Z:	  Computes phi1 for Albers Conical Equal-Area.
-		PHI2Z:	  Computes the latitude angle, phi2, for Lambert
-			  Conformal Conic and Polar Stereographic.
-		PHI3Z:	  Computes the latitude, phi3, for Equidistant Conic.
-		PHI4Z:	  Computes the latitude, phi4, for Polyconic.
-		PAKCZ:	  Converts a 2 digit alternate packed DMS format to
-			  standard packed DMS format.
-		PAKR2DM:  Converts radians to 3 digit packed DMS format.
-		TSFNZ:	  Computes the small t for Lambert Conformal Conic and
-			  Polar Stereographic.
-		SIGN:	  Returns the sign of an argument.
-		ADJUST_LON:  Adjusts a longitude angle to range -180 to 180.
-		E0FN, E1FN, E2FN, E3FN:
-			  Computes the constants e0,e1,e2,and e3 for
-			  calculating the distance along a meridian.
-		E4FN:	  Computes e4 used for Polar Stereographic.
-		MLFN:	  Computes M, the distance along a meridian.
-		CALC_UTM_ZONE:	Calculates the UTM zone number.
-
-PROGRAMMER              DATE		REASON
-----------              ----		------
-D. Steinwand, EROS      July, 1991	Initial development
-T. Mittan, EROS		May, 1993	Modified from Fortran GCTP for C GCTP
-S. Nelson, EROS		June, 1993	Added inline comments
-S. Nelson, EROS		Nov, 1993	Added loop counter in ADJUST_LON
-S. Nelson, EROS		Jan, 1998	Changed misspelled error message
-
-*******************************************************************************/
 #include "cproj.h"
 
-#define MAX_VAL 4
-#define MAXLONG 2147483647.
-#define DBLLONG 4.61168601e18
+#define MAX_VAL 4                /**< Maximum value for array dimensions */
+#define MAXLONG 2147483647.      /**< Maximum long integer value */
+#define DBLLONG 4.61168601e18    /**< Maximum double long integer value */
 
-/* Function to calculate the sine and cosine in one call.  Some computer
-   systems have implemented this function, resulting in a faster implementation
-   than calling each function separately.  It is provided here for those
-   computer systems which don`t implement this function
-  ----------------------------------------------------*/
+/** Function to calculate the sine and cosine in one call.  
+ * 
+ * Some computer systems have implemented this function, resulting in 
+ * a faster implementation than calling each function separately.  It 
+ * is provided here for those computer systems which don`t implement 
+ * this function.
+ * 
+ * @param val The angle in radians.
+ * @param sin_val Pointer to store the sine value.
+ * @param cos_val Pointer to store the cosine value.
+ * 
+ * @author D. Steinwand @date July, 1991
+ */
 void gctpc_sincos( double val, double *sin_val, double *cos_val) {
 //void sincos(val, sin_val, cos_val)
 //double val;
@@ -57,8 +64,14 @@ void gctpc_sincos( double val, double *sin_val, double *cos_val) {
 return;
 }
 
-/* Function to eliminate roundoff errors in asin
-----------------------------------------------*/
+/** Function to eliminate roundoff errors in asin. 
+ * 
+ * @param con The input asin value.
+ * 
+ * @return The corrected asin value.
+ * 
+ * @author D. Steinwand @date July, 1991
+ */
 double asinz (double con)
 {
  if (fabs(con) > 1.0)
@@ -74,6 +87,19 @@ double asinz (double con)
 /* Function to compute the constant small m which is the radius of
    a parallel of latitude, phi, divided by the semimajor axis.
 ---------------------------------------------------------------*/
+
+/**
+ * Function to compute the constant small m which is the radius of
+ * a parallel of latitude, phi, divided by the semimajor axis.
+ * 
+ * @param eccent Eccentricity of the ellipsoid.
+ * @param sinphi Sine of the latitude.
+ * @param cosphi Cosine of the latitude.
+ * 
+ * @return The computed small m value.
+ * 
+ * @author D. Steinwand @date July, 1991
+ */
 double msfnz (double eccent, double sinphi, double cosphi)
 {
 double con;
@@ -82,9 +108,17 @@ double con;
       return((cosphi / (sqrt (1.0 - con * con))));
 }
 
-/* Function to compute constant small q which is the radius of a 
-   parallel of latitude, phi, divided by the semimajor axis. 
-------------------------------------------------------------*/
+/** Function to compute constant small q which is the radius of a 
+ * parallel of latitude, phi, divided by the semimajor axis.
+ *
+ * @param eccent Eccentricity of the ellipsoid.
+ * @param sinphi Sine of the latitude.
+ * @param cosphi Cosine of the latitude.
+ *
+ * @return The computed small q value.
+ *
+ * @author D. Steinwand @date July, 1991
+ */
 double qsfnz (double eccent, double sinphi, double cosphi)
 {
 double con;
@@ -99,9 +133,18 @@ double con;
      return(2.0 * sinphi);
 }
 
-/* Function to compute phi1, the latitude for the inverse of the
-   Albers Conical Equal-Area projection.
--------------------------------------------*/
+/**
+ * Function to compute phi1, the latitude for the inverse of the
+ * Albers Conical Equal-Area projection.
+ * 
+ * @param eccent Eccentricity angle in radians.
+ * @param qs Angle in radians.
+ * @param flag Error flag number.
+ * 
+ * @return The computed value phi1 or error code 1 for convergence error.
+ * 
+ * @author D. Steinwand @date July, 1991
+ */
 double phi1z (double eccent,double qs,long *flag) {
 //double phi1z (eccent,qs,flag)
 //     double eccent;	/* Eccentricity angle in radians		*/
@@ -137,9 +180,18 @@ long i;
   return(ERROR);
 }
 
-/* Function to compute the latitude angle, phi2, for the inverse of the
-   Lambert Conformal Conic and Polar Stereographic projections.
-----------------------------------------------------------------*/
+/**
+ * Function to compute the latitude angle, phi2, for the inverse of the
+ * Lambert Conformal Conic and Polar Stereographic projections.
+ * 
+ * @param eccent Spheroid eccentricity.
+ * @param ts Constant value t.
+ * @param flag Error flag number.
+ *
+ * @return The computed value phi2 or error code 2 for convergence error.
+ *
+ * @author D. Steinwand @date July, 1991
+ */
 double phi2z(double eccent,double ts, long *flag) {
 //double phi2z(eccent,ts,flag)
 //double eccent;		/* Spheroid eccentricity		*/
@@ -171,9 +223,22 @@ long i;
   return(002);
 }
  
-/* Function to compute latitude, phi3, for the inverse of the Equidistant
-   Conic projection.
------------------------------------------------------------------*/
+
+/**
+ * Function to compute the latitude angle, phi3, for the inverse of the
+ * Equidistant Conic projection.
+ *
+ * @param ml Constant.
+ * @param e0 Constant.
+ * @param e1 Constant.
+ * @param e2 Constant.
+ * @param e3 Constant.
+ * @param flag Error flag number.
+ *
+ * @return The computed value phi3 or error code 3 for convergence error.
+ *
+ * @author D. Steinwand @date July, 1991
+ */
 double phi3z(double ml, double e0, double e1, double e2, double e3, long *flag) {
 //double phi3z(ml,e0,e1,e2,e3,flag)
 //
@@ -206,9 +271,24 @@ p_error("Latitude failed to converge after 15 iterations","PHI3Z-CONV");
 return(3);
 }
 
-/* Function to compute, phi4, the latitude for the inverse of the
-   Polyconic projection.
-------------------------------------------------------------*/
+/**
+ * Function to compute the latitude angle, phi4, for the inverse of the
+ * Polyconic projection.
+ *
+ * @param eccent Spheroid eccentricity squared.
+ * @param e0 Constant.
+ * @param e1 Constant.
+ * @param e2 Constant.
+ * @param e3 Constant.
+ * @param a Constant.
+ * @param b Constant.
+ * @param c Pointer to the computed value.
+ * @param phi Pointer to the computed latitude angle.
+ * 
+ * @return The computed value phi4 or error code 4 for convergence error.
+ *
+ * @author D. Steinwand @date July, 1991
+ */
 double phi4z (double eccent,double e0,double e1,double e2,double e3,double a,double b,double *c,double *phi) {
 //double phi4z (eccent,e0,e1,e2,e3,a,b,c,phi) 
 //double eccent;		/* Spheroid eccentricity squared	*/
@@ -260,9 +340,16 @@ p_error("Latitude failed to converge","phi4z-conv");
 return(004);
 }
 
-/* Function to convert 2 digit alternate packed DMS format (+/-)DDDMMSS.SSS
-   to 3 digit standard packed DMS format (+/-)DDDMMMSSS.SSS.
------------------------------------------------------------------*/
+/**
+ * Function to convert 2 digit alternate packed DMS format (+/-)DDDMMSS.SSS
+ * to 3 digit standard packed DMS format (+/-)DDDMMMSSS.SSS.
+ *
+ * @param pak Angle in alternate packed DMS format.
+ *
+ * @return The converted angle in 3 digit standard packed DMS format.
+ *
+ * @author D. Steinwand @date July, 1991
+ */
 double pakcz(double pak)
 //double pakcz(pak)
 //
@@ -287,8 +374,16 @@ double pakcz(double pak)
       return(con); 
       }
 
-/* Function to convert radians to 3 digit packed DMS format (+/-)DDDMMMSSS.SSS
-----------------------------------------------------------------------------*/
+
+/**
+ * Function to convert radians to 3 digit packed DMS format (+/-)DDDMMMSSS.SSS
+ *
+ * @param pak Angle in radians.
+ * 
+ * @return The converted angle in 3 digit packed DMS format.
+ * 
+ * @author D. Steinwand @date July, 1991
+ */
 double pakr2dm(double pak)
 //double pakr2dm(pak)
 //
@@ -314,10 +409,20 @@ double pakr2dm(double pak)
       return(con); 
       }
 
-/* Function to compute the constant small t for use in the forward
-   computations in the Lambert Conformal Conic and the Polar
-   Stereographic projections.
---------------------------------------------------------------*/
+
+/**
+ * Function to compute the constant small t for use in the forward
+ * computations in the Lambert Conformal Conic and the Polar
+ * Stereographic projections.
+ * 
+ * @param eccent Eccentricity of the spheroid.
+ * @param phi Latitude phi.
+ * @param sinphi Sine of the latitude.
+ * 
+ * @return The computed constant small t.
+ * 
+ * @author D. Steinwand @date July, 1991
+ */
 double tsfnz(double eccent,double phi,double sinphi)
 //double tsfnz(eccent,phi,sinphi)
 //  double eccent;	/* Eccentricity of the spheroid		*/
@@ -333,9 +438,15 @@ double tsfnz(double eccent,double phi,double sinphi)
   return (tan(.5 * (HALF_PI - phi))/con);
   }
 
-
-/* Function to return the sign of an argument
-  ------------------------------------------*/
+/**
+ * Function to return the sign of an argument.
+ * 
+ * @param x The input value.
+ * 
+ * @return -1 if x < 0, otherwise return 1.
+ * 
+ * @author D. Steinwand @date July, 1991
+ */
 int gctpc_sign(double x) {
 if (x < 0.0)
     return(-1);
@@ -343,9 +454,15 @@ else
     return(1);
 }
 
-/* Function to adjust a longitude angle to range from -180 to 180 radians
-   added if statments 
-  -----------------------------------------------------------------------*/
+/**
+ * Function to adjust a longitude angle to range from -180 to 180 radians.
+ * 
+ * @param x Angle in radians.
+ * 
+ * @return The adjusted angle in radians.
+ * 
+ * @author D. Steinwand @date July, 1991
+ */
 double adjust_lon(double x) 
 //double adjust_lon(x) 
 
@@ -384,22 +501,61 @@ for(;;)
 return(x);
 }
 
-/* Functions to compute the constants e0, e1, e2, and e3 which are used
-   in a series for calculating the distance along a meridian.  The
-   input x represents the eccentricity squared.
-----------------------------------------------------------------*/
+/**
+ * Function to compute the constant e0 - used in a series for
+ * calculating the distance along a meridian.
+ * 
+ * @param x Eccentricity squared.
+ * 
+ * @return The computed constant e0.
+ * 
+ * @author D. Steinwand @date July, 1991
+ */
 double e0fn(double x)
 {
 return(1.0-0.25*x*(1.0+x/16.0*(3.0+1.25*x)));
 }
+
+/**
+ * Function to compute the constant e1 - used in a series for
+ * calculating the distance along a meridian.
+ * 
+ * @param x Eccentricity squared.
+ * 
+ * @return The computed constant e1.
+ * 
+ * @author D. Steinwand @date July, 1991
+ */
 double e1fn(double x)
 {
 return(0.375*x*(1.0+0.25*x*(1.0+0.46875*x)));
 }
+
+/**
+ * Function to compute the constant e2 - used in a series for
+ * calculating the distance along a meridian.
+ * 
+ * @param x Eccentricity squared.
+ * 
+ * @return The computed constant e2.
+ * 
+ * @author D. Steinwand @date July, 1991
+ */
 double e2fn(double x)
 {
 return(0.05859375*x*x*(1.0+0.75*x));
 }
+
+/**
+ * Function to compute the constant e3 - used in a series for
+ * calculating the distance along a meridian.
+ * 
+ * @param x Eccentricity squared.
+ * 
+ * @return The computed constant e3.
+ * 
+ * @author D. Steinwand @date July, 1991
+ */
 double e3fn(double x) 
 {
 return(x*x*x*(35.0/3072.0));

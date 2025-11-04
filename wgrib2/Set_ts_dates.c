@@ -1,3 +1,8 @@
+/** @file
+ * @brief Change date in a time series - used in converting to grib.
+ * @author Public Domain: Wesley Ebisuzaki @date 3/2011
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -8,18 +13,40 @@
 #include "fnlist.h"
 
 /*
- * set_ts_dates
- *
- * for changing date in a time series - used in converting to grib
- *
- * 3/2011 Public Domain by Wesley Ebisuzaki
- *
+ * HEADER:100:set_ts_dates:misc:3:change date code for time series X=YYYYMMDDHH(mmss) Y=dtime Z=#msgs/date
  */
 
-/*
- * HEADER:100:set_ts_dates:misc:3:changes date code for time series X=YYYYMMDDHH(mmss) Y=dtime Z=#msgs/date
+/**
+ * Changes the reference date of the in-memory grib (sub-)message. 
+ * 
+ * You can write out the message with the new date by the -grib (fast) and -grib_out (slow) 
+ * options. Of course if the in-memory grid values have changed, you have to use the latter option. 
+ * 
+ * The -set_date X option changes the date code to X. For time series, you want the date code to 
+ * increment, and you use the -set_ts_dates X:Y:Z option. Here, X is the date code, Y is the time 
+ * increment and Z is number of fields to have the same date code. 
+ * 
+ * ## Usage
+ * -set_ts_dates  X:Y:Z
+ * 
+ * X = starting date - YYYY, YYYYMM, YYYYMMDD, YYYYMMDDHH, YYYYMMDDHHmm or YYYYMMDDHHmmSS. (YYYY=year, 
+ * MM=month, DD=day, HH=hour, mm=minute, SS=second)
+ * Y = time increment - IS, (I = positive integer, S = year, month, day, hour, minute, second)
+ * Z = block size - # fields / date code (must be one or greater)
+ *
+ * Note: if MM, DD, HH, mm, SS are not specified, they default to MM/DD = 01 and HH/mm/ss = 00.
+ * 
+ * @param ARG3 List of function arguments set by wgrib2's main() function (see @ref ARG3). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return 0 on success. Throws fatal_error() on failure.
+ * 
+ * ## Example
+ * ???
+ * 
+ * @author Wesley Ebisuzaki @date 3/2011
  */
-
 int f_set_ts_dates(ARG3) {
 
     int year, month, day, hour, minute, second, i, j, units, n;
@@ -27,41 +54,44 @@ int f_set_ts_dates(ARG3) {
     struct local_struct {
         int year, month, day, hour, minute, second;
         int unit;
-	int dtime;
-	int count, block_size;
+        int dtime;
+        int count, block_size;
     } *save;
 
     if (mode == -1) {
         *local = save = (struct local_struct *)malloc( sizeof(struct local_struct));
         if (save == NULL) fatal_error("set_ts_dates: memory allocation ","");
 
-	save->month = save->day = 1;
-	save->hour = save->minute = save->second = 0;
+        save->month = save->day = 1;
+        save->hour = save->minute = save->second = 0;
 
-	i = sscanf(arg1,"%4d%2d%2d%2d%2d%2d" , &(save->year), &(save->month), 
-		&(save->day), &(save->hour), &(save->minute), &(save->second));
+        i = sscanf(arg1,"%4d%2d%2d%2d%2d%2d" , &(save->year), &(save->month), 
+                &(save->day), &(save->hour), &(save->minute), &(save->second));
 
-	save->dtime = 0;
-	save->unit = -1;
-	save->count = -1;
+        save->dtime = 0;
+        save->count = -1;
 
         if (sscanf(arg2,"%i%n", &i, &n) != 1) fatal_error("set_ts_date: bad dt=%s",arg2);
-	if (i < 0) fatal_error("set_ts_date: dt has to be positive %s",arg2);
-	save->dtime =  i;
-	arg2 += n;
+        if (i < 0) fatal_error("set_ts_date: dt has to be positive %s",arg2);
+        save->dtime =  i;
+        arg2 += n;
 
-	if (strcmp(arg2,"second") == 0) save->unit = 13;
-	else if (strcmp(arg2,"minute") == 0) save->unit = 0;
-	else if (strcmp(arg2,"hour") == 0) save->unit = 1;
-	else if (strcmp(arg2,"day") == 0) save->unit = 2;
-	else if (strcmp(arg2,"month") == 0) save->unit = 3;
-	else if (strcmp(arg2,"year") == 0) save->unit = 4;
-	else fatal_error("set_ts_date: could not understand time unit %s", arg2);
+        save->unit = string2time_unit((char *)arg2);
+        if (save->unit == -1) {
+            /* keep the old units working */
+            if (strcmp(arg2,"second") == 0) save->unit = 13;
+            else if (strcmp(arg2,"minute") == 0) save->unit = 0;
+            else if (strcmp(arg2,"hour") == 0) save->unit = 1;
+            else if (strcmp(arg2,"day") == 0) save->unit = 2;
+            else if (strcmp(arg2,"month") == 0) save->unit = 3;
+            else if (strcmp(arg2,"year") == 0) save->unit = 4;
+            else fatal_error("set_ts_date: could not understand time unit %s", arg2);
+        }
 
-	save->block_size = atoi(arg3);
-	if (save->block_size <= 0) fatal_error("set_ts_dates: #msgs/date code must be >= 1","");
+        save->block_size = atoi(arg3);
+        if (save->block_size <= 0) fatal_error("set_ts_dates: #msgs/date code must be >= 1","");
 
-	return 0;
+        return 0;
     }
 
     if (mode == -2) { free(*local); return 0; }
@@ -82,8 +112,8 @@ int f_set_ts_dates(ARG3) {
     save->count++;
 
     if (save->unit >= 0 && save->dtime != 0) {
-       dtime *= (save->count / save->block_size);
-       add_time(&year, &month, &day, &hour, &minute, &second, dtime, units);
+        dtime *= (save->count / save->block_size);
+        add_time(&year, &month, &day, &hour, &minute, &second, dtime, units);
     }
 
     /* set reference time */

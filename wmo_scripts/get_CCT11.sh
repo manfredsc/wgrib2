@@ -1,6 +1,11 @@
 #!/bin/sh
-# 10/2024 Public Domain   Manfred Schwarb <schwarb@meteodat.ch>
-# This script updates wgrib2 with WMO code info.
+
+## @file
+## @brief This script updates wgrib2 with WMO code info.
+## @author Public Domain: Manfred Schwarb <schwarb@meteodat.ch>
+## @date 10/2024
+
+## @cond
 
 urlbase="https://github.com/wmo-im/CCT"
 
@@ -13,10 +18,11 @@ wget -nv "$urlbase/raw/master/C11.csv" -O- | sed '{
     s/,/;/g
     s/# /, /g
     s/"//g
-  }' | env LC_ALL=en_US iconv -c -f UTF8 -t ASCII//TRANSLIT | awk -F";" '
+  }' | env LC_ALL=en_US iconv -c -f UTF8 -t ASCII//TRANSLIT \
+    | grep -v "Reserved for other centres" | awk -F";" '
   {
     num=$2+0; name=$3
-    if (num>0) {
+    if (num>0) {  # omit section headers
       if (name==")") {
         if (lastname!="") name="Reserved for " lastname
       } else {
@@ -30,3 +36,5 @@ wget -nv "$urlbase/raw/master/C11.csv" -O- | sed '{
   }' > "$outfile"
 
 exit
+
+## @endcond

@@ -1,39 +1,40 @@
+/** @file
+ * @brief Header file for cartographic projections used by wgrib2 and GCTPC.
+ */
+
 #ifndef CPROJ_H
 #define CPROJ_H
 
 #include <math.h>
 
-#define PI 	3.141592653589793238
-#define HALF_PI (PI*0.5)
-#define TWO_PI 	(PI*2.0)
-#define EPSLN	1.0e-10
-#define R2D     57.2957795131
+#define PI 	3.141592653589793238	/**< Pi */
+#define HALF_PI (PI*0.5)			/**< Half Pi */
+#define TWO_PI 	(PI*2.0)			/**< Two Pi */
+#define EPSLN	1.0e-10				/**< Epsilon for floating point comparisons */
+#define R2D     57.2957795131		/**< Radians to Degrees conversion factor */
 /*
 #define D2R     0.0174532925199
 */
-#define D2R     1.745329251994328e-2
-#define S2R	4.848136811095359e-6
+#define D2R     1.745329251994328e-2	/**< Degrees to Radians conversion factor */
+#define S2R	4.848136811095359e-6	/**< Seconds to Radians conversion factor */
 
-#define OK	0
-#define ERROR  -1
+#define OK	0		/**< Success status code */
+#define ERROR  -1	/**< Error status code */
 
 /* Misc macros
  * -----------
 */
-#define SQUARE(x)       x * x   /* x**2 */
-#define CUBE(x)     x * x * x   /* x**3 */
-#define QUAD(x) x * x * x * x   /* x**4 */
+#define SQUARE(x)       x * x   /**< x**2 */
+#define CUBE(x)     x * x * x   /**< x**3 */
+#define QUAD(x) x * x * x * x   /**< x**4 */
 
-#define GMAX(A, B)      ((A) > (B) ? (A) : (B)) /* assign maximum of a and b */
-#define GMIN(A, B)      ((A) < (B) ? (A) : (B)) /* assign minimum of a and b */
+#define GMAX(A, B)      ((A) > (B) ? (A) : (B)) /**< assign maximum of a and b */
+#define GMIN(A, B)      ((A) < (B) ? (A) : (B)) /**< assign minimum of a and b */
 
-#define IMOD(A, B)      (A) - (((A) / (B)) * (B)) /* Integer mod function */
+#define IMOD(A, B)      (A) - (((A) / (B)) * (B)) /**< Integer mod function */
 
 
-
-/* Content of former proj.h
- * ------------------------
-*/
+/* Content of former proj.h */
 
 /* Projection codes
 
@@ -73,69 +74,69 @@
 */
 
 /* Define projection codes */
-#define GEO 0
-#define UTM 1
-#define SPCS 2
-#define ALBERS 3
-#define LAMCC 4
-#define MERCAT 5
-#define PS 6
-#define POLYC 7
-#define EQUIDC 8
-#define TM 9
-#define STEREO 10
-#define LAMAZ 11
-#define AZMEQD 12
-#define GNOMON 13
-#define ORTHO 14
-#define GVNSP 15
-#define SNSOID 16
-#define EQRECT 17
-#define MILLER 18
-#define VGRINT 19
-#define HOM 20
-#define ROBIN 21
-#define SOM 22
-#define ALASKA 23
-#define GOOD 24
-#define MOLL 25
-#define IMOLL 26
-#define HAMMER 27
-#define WAGIV 28
-#define WAGVII 29
-#define OBEQA 30
-#define USDEF 99
+#define GEO 0		/**< Geographic */
+#define UTM 1		/**< Universal Transverse Mercator */
+#define SPCS 2		/**< State Plane Coordinates */
+#define ALBERS 3	/**< Albers Conical Equal Area */
+#define LAMCC 4	/**< Lambert Conformal Conic */
+#define MERCAT 5	/**< Mercator */
+#define PS 6		/**< Polar Stereographic */
+#define POLYC 7	/**< Polyconic */
+#define EQUIDC 8	/**< Equidistant Conic */
+#define TM 9		/**< Transverse Mercator */
+#define STEREO 10	/**< Stereographic */
+#define LAMAZ 11	/**< Lambert Azimuthal Equal Area */
+#define AZMEQD 12	/**< Azimuthal Equidistant */
+#define GNOMON 13	/**< Gnomonic */
+#define ORTHO 14	/**< Orthographic */
+#define GVNSP 15	/**< General Vertical Near-Side Perspective */
+#define SNSOID 16	/**< Sinusoidal */
+#define EQRECT 17	/**< Equirectangular */
+#define MILLER 18	/**< Miller Cylindrical */
+#define VGRINT 19	/**< Van der Grinten */
+#define HOM 20		/**< (Hotine) Oblique Mercator */
+#define ROBIN 21	/**< Robinson */
+#define SOM 22		/**< Space Oblique Mercator */
+#define ALASKA 23	/**< Alaska Conformal */
+#define GOOD 24		/**< Interrupted Goode Homolosine */
+#define MOLL 25		/**< Mollweide */
+#define IMOLL 26	/**< Interrupted Mollweide */
+#define HAMMER 27	/**< Hammer */
+#define WAGIV 28	/**< Wagner IV */
+#define WAGVII 29	/**< Wagner VII */
+#define OBEQA 30	/**< Oblated Equal Area */
+#define USDEF 99	/**< User Defined */
 
 /* Define unit code numbers to their names */
 
-#define RADIAN 0		/* Radians */
-#define FEET 1			/* Feed */
-#define METER 2			/* Meters */
-#define SECOND 3		/* Seconds */
-#define DEGREE 4		/* Decimal degrees */
-#define INT_FEET 5		/* International Feet */
+#define RADIAN 0		/**< Radians */
+#define FEET 1			/**< Feet */
+#define METER 2			/**< Meters */
+#define SECOND 3		/**< Seconds */
+#define DEGREE 4		/**< Decimal degrees */
+#define INT_FEET 5		/**< International Feet */
 
 /* The STPLN_TABLE unit value is specifically used for State Plane -- if units
    equals STPLN_TABLE and Datum is NAD83--actual units are retrieved from
    a table according to the zone.  If Datum is NAD27--actual units will be feet.
    An error will occur with this unit if the projection is not State Plane.  */
 
-#define STPLN_TABLE 6
+#define STPLN_TABLE 6 	/**< State Plane -- units from table */
 
 /* General code numbers */
 
-#define IN_BREAK -2		/*  Return status if the interupted projection
+#define IN_BREAK -2		/**<  Return status if the interupted projection
 				    point lies in the break area */
-#define COEFCT 15		/*  projection coefficient count */
-#define PROJCT 30		/*  projection count */
-#define SPHDCT 31		/*  spheroid count */
+#define COEFCT 15		/**<  projection coefficient count */
+#define PROJCT 30		/**<  projection count */
+#define SPHDCT 31		/**<  spheroid count */
 
-#define MAXPROJ 31		/*  Maximum projection number */
-#define MAXUNIT 5		/*  Maximum unit code number */
-#define GEO_TERM 0		/*  Array index for print-to-term flag */
-#define GEO_FILE 1		/*  Array index for print-to-file flag */
-#define GEO_TRUE 1		/*  True value for geometric true/false flags */
-#define GEO_FALSE -1		/*  False val for geometric true/false flags */
+#define MAXPROJ 31		/**<  Maximum projection number */
+#define MAXUNIT 5		/**<  Maximum unit code number */
+#define GEO_TERM 0		/**<  Array index for print-to-term flag */
+#define GEO_FILE 1		/**<  Array index for print-to-file flag */
+#define GEO_TRUE 1		/**<  True value for geometric true/false flags */
+#define GEO_FALSE -1		/**<  False val for geometric true/false flags */
 
 /* GCTP Function prototypes */
 
@@ -161,10 +162,10 @@ long aziminv( double x, double y, double *lon, double *lat);
 /* rename functions in gctpc */
 
 void gctpc_sincos( double val, double *sin_val, double *cos_val);
-#define sincos(a,b,c)		gctpc_sincos(a,b,c)
+#define sincos(a,b,c)		gctpc_sincos(a,b,c) 	/**< Sine and Cosine */
 
 int gctpc_sign(double x);
-#define sign(x)			gctpc_sign(x)
+#define sign(x)			gctpc_sign(x)	/**< Sign of an argument */
 
 
 

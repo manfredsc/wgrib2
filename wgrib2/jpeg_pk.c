@@ -1,3 +1,16 @@
+/** @file
+ * @brief JPEG2000 packing for GRIB2.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 3/2008 | W. Ebisuzaki | Initial implementation
+ * 10/2024 | A. Stahl | Use g2c for Jasper encoding
+ * 11/2024 | A. Stahl | Use g2c for OpenJPEG encoding / combine implementations
+ * 3/2025 | W. Ebisuzaki | Replace ref to Jasper/OpenJPEG with G2C_JPEG2000_ENABLED
+ * @author Public Domain: Wesley Ebisuzaki @date 3/2008
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,17 +23,30 @@
 #include <grib2.h>
 #endif
 
-/* 10/2024 Public Domain   Wesley Ebisuzaki */
-
 #if G2_JPEG2000_ENABLED == 1
 
-/*
- *  writes out jpeg2000 compressed grib message
+/**
+ * Writes out JPEG2000 compressed GRIB message.
+ *
+ * @param sec Pointer to the GRIB2 sections.
+ * @param data Pointer to the data array.
+ * @param ndata Number of data points.
+ * @param nx Number of grid points in the x direction.
+ * @param ny Number of grid points in the y direction.
+ * @param use_scale Use scaling (0 or 1).
+ * @param dec_scale Decimal scaling factor.
+ * @param bin_scale Binary scaling factor.
+ * @param wanted_bits Number of bits wanted.
+ * @param max_bits Maximum number of bits.
+ * @param out Pointer to the output file struct.
+ *
+ * @return 0 for success. Returns error code or throws fatal_error() on failure.
+ *
+ * @author Public Domain: Wesley Ebisuzaki @date 3/2008
  */
-
 int jpeg2000_grib_out(unsigned char **sec, float *data, unsigned int ndata, 
-  int nx, int ny, int use_scale, int dec_scale, int bin_scale, int wanted_bits, 
-  int max_bits, struct seq_file *out) {
+        int nx, int ny, int use_scale, int dec_scale, int bin_scale, int wanted_bits, 
+        int max_bits, struct seq_file *out) {
 
     unsigned int n_defined, j;
     int iy, ix, jpclen;
@@ -48,15 +74,15 @@ int jpeg2000_grib_out(unsigned char **sec, float *data, unsigned int ndata,
         iy = ny;
     }
     else {
-	ix = n_defined;
- 	iy = 1;
+        ix = n_defined;
+        iy = 1;
     }
 
     if (n_defined != 0) {
-	min_max_array_all_defined(data, n_defined, &min_val,  &max_val);
+        min_max_array_all_defined(data, n_defined, &min_val,  &max_val);
     }
     else {
-	min_val = max_val = 0.0;
+        min_val = max_val = 0.0;
     }
 
     ncep_min_val = min_val;
@@ -66,7 +92,7 @@ int jpeg2000_grib_out(unsigned char **sec, float *data, unsigned int ndata,
         fmin = min_val;
         frange = max_val - fmin;
         ref = fmin;
-	dec_scale = 0;
+        dec_scale = 0;
         if (frange != 0.0) {
             frexp(frange, &i);
             bin_scale = i - wanted_bits;
@@ -78,19 +104,19 @@ int jpeg2000_grib_out(unsigned char **sec, float *data, unsigned int ndata,
         }
         else {
             bin_scale = nbits = 0;
-	    scale = 1;
+            scale = 1;
         }
     }
     else {
-	if (dec_scale) {
-	    dec_factor = Int_Power(10.0, -dec_scale);
-	    min_val *= dec_factor;
-	    max_val *= dec_factor;
+        if (dec_scale) {
+            dec_factor = Int_Power(10.0, -dec_scale);
+            min_val *= dec_factor;
+            max_val *= dec_factor;
             for (j = 0; j < n_defined; j++) {
                 data[j] *= dec_factor;
             }
-	}
-	ref = min_val;
+        }
+        ref = min_val;
         scale = ldexp(1.0, -bin_scale);
 //      i = (int) ( (max_val - ref)*scale + 0.5);
 //	frange = (double) i;
@@ -98,8 +124,8 @@ int jpeg2000_grib_out(unsigned char **sec, float *data, unsigned int ndata,
         frexp(frange, &nbits);
 
         if (nbits > max_bits) {
-	    bin_scale += (nbits - max_bits);
-	    nbits = max_bits;
+            bin_scale += (nbits - max_bits);
+            nbits = max_bits;
         }
     }
 
@@ -131,29 +157,29 @@ int jpeg2000_grib_out(unsigned char **sec, float *data, unsigned int ndata,
 #endif
             for (j = 0; j < n_defined; j++) {
     	        i = (int) floor(data[j]+0.5);
-	        cdata[j] = i & 255;
-	    }
+                cdata[j] = i & 255;
+            }
         }
         else if (nbytes == 2) {
 #ifdef USE_OPENMP
 #pragma omp parallel for private(i,j)
 #endif
             for (j = 0; j < n_defined; j++) {
-	        i = (int) floor(data[j]+0.5);
-	        cdata[2*j] = (i >> 8) & 255;
-	        cdata[2*j+1] = i & 255;
-	    }
+                i = (int) floor(data[j]+0.5);
+                cdata[2*j] = (i >> 8) & 255;
+                cdata[2*j+1] = i & 255;
+            }
         }
         else if (nbytes > 0) {
             p = cdata; 
             for (j = 0; j < n_defined; j++) {
-	        i = (int) floor(data[j]+0.5);
-	        for (k = 1; k <= nbytes; k++) {
-	            p[nbytes - k] = i & 255;
-		    i = i >> 8;
-	        }
-	        p += nbytes;
-	    }
+                i = (int) floor(data[j]+0.5);
+                for (k = 1; k <= nbytes; k++) {
+                    p[nbytes - k] = i & 255;
+                    i = i >> 8;
+                }
+                p += nbytes;
+            }
         }
 
         ltype = 0;
@@ -169,13 +195,13 @@ int jpeg2000_grib_out(unsigned char **sec, float *data, unsigned int ndata,
             retry = 1;
             i = g2c_enc_jpeg2000(cdata,ix,iy,nbits,ltype,ratio,retry,outjpc,jpclen);
         }
-	free(cdata);
+        free(cdata);
 
-	if (i <= 0) fatal_error_i("enc_jpeg error %d", i);
+        if (i <= 0) fatal_error_i("enc_jpeg error %d", i);
     }
     else {   // nbits == 0 || n_defined == 0
-	i = 0;
-	outjpc = (char *) malloc(1);
+        i = 0;
+        outjpc = (char *) malloc(1);
     }
 
     /* data representation section */
@@ -183,8 +209,8 @@ int jpeg2000_grib_out(unsigned char **sec, float *data, unsigned int ndata,
     // fix for buggy NCEP library 1/2009
     // NCEP routines ignore decimal scaling with nbits == 0
     if (nbits == 0) {
-	ref = ncep_min_val;
-	bin_scale = dec_scale = 0;
+        ref = ncep_min_val;
+        bin_scale = dec_scale = 0;
     }
 
     sec5 = (unsigned char *) malloc(23 * sizeof(unsigned char));

@@ -19,9 +19,10 @@ variant_map_common = {
     "tigge": "USE_TIGGE",
     "proj4": "USE_PROJ4",
     "aec": "USE_AEC",
+    "g2c": "USE_G2CLIB",
     "png": "USE_PNG",
     "jasper": "USE_JASPER",
-    "g2c": "USE_G2CLIB_LOW",
+    "g2c_low": "USE_G2CLIB_LOW",
     "g2c_high": "USE_G2CLIB_HIGH",
     "openmp": "USE_OPENMP",
     "wmo_validation": "USE_WMO_VALIDATION",
@@ -52,9 +53,13 @@ class Wgrib2(MakefilePackage, CMakePackage):
     url = "https://github.com/NOAA-EMC/wgrib2/archive/refs/tags/v3.6.0.tar.gz"
     git = "https://github.com/NOAA-EMC/wgrib2.git"
 
-    maintainers("t-brown", "AlexanderRichert-NOAA", "Hang-Lei-NOAA", "edwardhartnett")
+    maintainers(
+        "AlysonStahl-NOAA", "t-brown", "AlexanderRichert-NOAA", "Hang-Lei-NOAA", "edwardhartnett"
+    )
 
-    build_system(conditional("cmake", when="@3.2:"), conditional("makefile", when="@:3.1"))
+    build_system(
+        conditional("cmake", when="@3.2:"), conditional("makefile", when="@:3.1"), default="cmake"
+    )
 
     version("develop", branch="develop")
     version("3.7.0", sha256="b741a07710a8195c99a7d50de05bde90182ab4334f5c4a0d6d057c4e20cc6a75")
@@ -84,9 +89,6 @@ class Wgrib2(MakefilePackage, CMakePackage):
         extension="tar.gz",
     )
 
-    depends_on("c", type="build")
-    depends_on("fortran", type="build")
-
     def url_for_version(self, version):
         if version >= Version("3.2.0"):
             url_fmt = "https://github.com/NOAA-EMC/wgrib2/archive/refs/tags/v{0}.tar.gz"
@@ -104,12 +106,12 @@ class Wgrib2(MakefilePackage, CMakePackage):
         "netcdf4", 
         default=False, 
         description="Link in netcdf4 library to write netcdf3/4 files",
-        when="@:3.3"
+        when="@:3.3",
     )
     variant(
         "netcdf", 
-        default=False, 
-        description="Link in netcdf4 library to write netcdf3/4 files",
+        default=True, 
+        description="Link in netcdf library to write netcdf files",
         when="@3.4:"
     )
     variant(
@@ -152,6 +154,12 @@ class Wgrib2(MakefilePackage, CMakePackage):
     )
     variant(
         "g2c",
+        default=False,
+        description="Include NCEP g2clib (mainly for testing purposes)",
+        when="@:3.1",
+    )
+    variant(
+        "g2c_low",
         default=True,
         description="Include NCEP g2clib (png,jpeg2000)",
         when="@3.7:",
@@ -192,22 +200,27 @@ class Wgrib2(MakefilePackage, CMakePackage):
     conflicts("+netcdf3", when="+netcdf4")
     conflicts("+netcdf3", when="+netcdf")
     conflicts("+openmp", when="%apple-clang")
-    conflicts("-g2c", when="+g2c_high")
+    conflicts("~g2c_low", when="+g2c_high")
+
+    depends_on("c", type="build")
+    depends_on("fortran", type="build")
 
     depends_on("ip@5.2:", when="@develop +ipolates")
-    depends_on("g2c@2.2.0:", when="@3.7: +g2c")
+    depends_on("g2c@2.2.0:", when="@3.7: +g2c_low")
     depends_on("g2c@2.2.0:", when="@3.7: +g2c_high")
     depends_on("lapack", when="@develop +ipolates")
     depends_on("libaec@1.0.6:", when="@3.2: +aec")
-    depends_on("netcdf-c", when="@3.2: +netcdf4")
-
+    # Options to use netcdf3 or netcdf4 merged into a single option with v3.4.0
+    depends_on("netcdf-c", when="@3.4: +netcdf")
+    depends_on("netcdf-c", when="@3.2:3.3 +netcdf4")
     depends_on("jasper@:2", when="@3.2:3.4 +jasper")
-    depends_on("g2c@2.2.0: +jasper", when="@3.4:3.7 +jasper")
-    depends_on("zlib-api", when="@3.2:3.4 +png")
-    depends_on("libpng", when="@3.2:3.4 +png")
-    depends_on("g2c@2.2.0: +png", when="@3.4:3.7 +png")
+    depends_on("g2c", when="@3.5: +jasper")
+    depends_on("zlib-api", when="@3.2: +png")
+    depends_on("libpng", when="@3.2: +png")
+    depends_on("g2c +png", when="@3.5: +png")
     depends_on("openjpeg", when="@3.2:3.4 +openjpeg")
-    depends_on("g2c@2.2.0: +openjpeg", when="@3.4:3.7 +openjpeg")
+    depends_on("g2c +openjpeg", when="@3.5: +openjpeg")
+    requires("^g2c@1.9:", when="@3.5: ^g2c")
 
     @when("@:2 ^gmake@4.2:")
 
@@ -217,7 +230,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
     # Use Spack compiler wrapper flags
     def inject_flags(self, name, flags):
         if name == "cflags":
-            if self.spec.compiler.name == "apple-clang":
+            if self.spec.compiler.name in ["apple-clang", "clang"]:
                 flags.append("-Wno-error=implicit-function-declaration")
 
             # When mixing Clang/gfortran need to link to -lgfortran
@@ -229,7 +242,6 @@ class Wgrib2(MakefilePackage, CMakePackage):
                     flags.append("-L{}".format(libdir))
 
         return (flags, None, None)
-
 
 class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
     # Disable parallel build

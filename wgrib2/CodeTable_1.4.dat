@@ -1,11 +1,12 @@
-    case 0: string="Analysis Products"; break;
-    case 1: string="Forecast Products"; break;
-    case 2: string="Analysis and Forecast Products"; break;
-    case 3: string="Control Forecast Products"; break;
-    case 4: string="Perturbed Forecast Products"; break;
-    case 5: string="Control and Perturbed Forecast Products"; break;
-    case 6: string="Processed Satellite Observations"; break;
-    case 7: string="Processed Radar Observations"; break;
-    /* From 557WW GRIB Edition 2 Reference Manual */
-    case 8: string="Event Probability"; break;
-    case 255: string="Missing"; break;
+case     0: string="Analysis products"; break;
+case     1: string="Forecast products"; break;
+case     2: string="Analysis and forecast products"; break;
+case     3: string="Control forecast products"; break;
+case     4: string="Perturbed forecast products"; break;
+case     5: string="Control and perturbed forecast products"; break;
+case     6: string="Processed satellite observations"; break;
+case     7: string="Processed radar observations"; break;
+case     8: string="Event probability"; break;
+case     9: string="Experimental data"; break;
+case    10: string="ML based forecast"; break;
+case   255: string="Missing"; break;

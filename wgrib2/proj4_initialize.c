@@ -1,3 +1,7 @@
+/** @file
+ * @brief Initialize using Proj.
+ * @author Public Domain: Dusan Jovic, Wesley Ebisuzaki @date 2006
+ */
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -5,16 +9,21 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/* proj4_initialize.c       10/2024 Public Domain  Dusan Jovic, Wesley Ebisuzaki
- *
- * initialize using Proj
- */
-
 #ifdef USE_PROJ4
 
 #include <proj_api.h>
 #include "proj4_wgrib2.h"
 
+/**
+ * Initialize the projection structure using Proj.
+ *
+ * @param sec Pointer to GRIB sections.
+ * @param projection Pointer to projection structure to initialize.
+ *
+ * @return 0 for success, error code otherwise
+ *
+ * @author Dusan Jovic, Wesley Ebisuzaki @date 2006
+ */
 int proj4_initialize(unsigned char **sec, struct proj4_struct *projection) {
 
     unsigned int gdt;
@@ -33,27 +42,27 @@ int proj4_initialize(unsigned char **sec, struct proj4_struct *projection) {
     projection->radius_minor = r_min;
 
     if (gdt == 0) {
-	projection->proj_is_nop = 1;
-	projection->x_0 = projection->y_0 = projection->lat_0 = projection->lon_0 = 0.0;
-	return 0;
+        projection->proj_is_nop = 1;
+        projection->x_0 = projection->y_0 = projection->lat_0 = projection->lon_0 = 0.0;
+        return 0;
     }
 
     projection->proj_is_nop = 0;
 
     sprintf(proj4_def,"+proj=latlong +a=%lf +b=%lf",r_maj, r_min);
     if ( (projection->pj_latlon = pj_init_plus(proj4_def)) == NULL) 
-         fatal_error("proj4_initialize: pj_init_plus %s failed", proj4_def);
+            fatal_error("proj4_initialize: pj_init_plus %s failed", proj4_def);
 
     if (gdt == 10 && (GDS_Mercator_ori_angle(gds) == 0.0) ) {            // mercator no rotation
 
-	/* central point */
-	c_lon = 0.0;
+        /* central point */
+        c_lon = 0.0;
         c_lat = GDS_Mercator_latD(gds);
 
         sprintf(proj4_def,"+proj=merc +lat_ts=%lf +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +a=%lf +b=%lf",
             c_lat, r_maj, r_min);
         if ((projection->pj_grid = pj_init_plus(proj4_def)) == NULL) 
-		fatal_error("proj4_initialize: pj_init_plus %s failed", proj4_def);
+                fatal_error("proj4_initialize: pj_init_plus %s failed", proj4_def);
 
         /* longitude, latitude of first grid point */
         projection->lat_0 = lat1 = GDS_Mercator_lat1(gds);
@@ -63,10 +72,10 @@ int proj4_initialize(unsigned char **sec, struct proj4_struct *projection) {
         y_0 = lat1 * DEG_TO_RAD;
 
         if ( pj_transform(projection->pj_latlon, projection->pj_grid, 1, 1, &x_0, &y_0, NULL) != 0 ) 
-		fatal_error("proj4_initialize: Proj4 transform to lat-lon","");
+                fatal_error("proj4_initialize: Proj4 transform to lat-lon","");
 
-	projection->x_0 = x_0;
-	projection->y_0 = y_0;
+        projection->x_0 = x_0;
+        projection->y_0 = y_0;
     }
     else if (gdt == 20) {            // polar stereographic
 
@@ -89,7 +98,7 @@ int proj4_initialize(unsigned char **sec, struct proj4_struct *projection) {
         y_0 = lat1 * DEG_TO_RAD;
 
         if ( pj_transform(projection->pj_latlon, projection->pj_grid, 1, 1, &x_0, &y_0, NULL) != 0 ) 
-		fatal_error("proj4_init: Proj4 transform to lat-lon","");
+                fatal_error("proj4_init: Proj4 transform to lat-lon","");
 
         projection->x_0 = x_0;
         projection->y_0 = y_0;
@@ -116,7 +125,7 @@ int proj4_initialize(unsigned char **sec, struct proj4_struct *projection) {
         y_0 = lat1 * DEG_TO_RAD;
 
         if ( pj_transform(projection->pj_latlon, projection->pj_grid, 1, 1, &x_0, &y_0, NULL) != 0 ) 
-		fatal_error("proj4_init: Proj4 transform to lat-lon","");
+                fatal_error("proj4_init: Proj4 transform to lat-lon","");
         projection->x_0 = x_0;
         projection->y_0 = y_0;
     }
@@ -150,7 +159,7 @@ int proj4_initialize(unsigned char **sec, struct proj4_struct *projection) {
         sprintf(proj4_def,"+proj=ob_tran +o_proj=latlon +o_lon_p=%f +o_lat_p=%f",c_lon,90.0+c_lat);
         if ((projection->pj_latlon = pj_init_plus(proj4_def)) == NULL) fatal_error("Proj4: pj_init_plus %s failed", proj4_def);
 
-	/* longitude and latitude of first grid point */
+        /* longitude and latitude of first grid point */
         lon1 = GDS_NCEP_B_LatLon_lon1(gds) * 0.000001;
         lat1 = GDS_NCEP_B_LatLon_lat1(gds) * 0.000001;
 
@@ -163,7 +172,7 @@ int proj4_initialize(unsigned char **sec, struct proj4_struct *projection) {
         projection->y_0 = y_0;
     }
     else {
-	return 1;
+        return 1;
     }
     return 0;
 }

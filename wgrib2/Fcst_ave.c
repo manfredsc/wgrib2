@@ -1,3 +1,21 @@
+/**
+ * @file
+ * @brief This file contains the implementation of the -fcst_ave0 option and some helper functions.
+ * The -fcst_ave0 option is the old (v2.0.6) version of the -fcst_ave option.
+ * 
+ * Based on Ave_test.c
+ * 
+ * @author Public Domain: Wesley Ebisuzaki @date 04/2009
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 04/2009 | W. Ebisuzaki | Initial
+ * 04/2013 | W. Ebisuzaki | Added PDT=4.1
+ * 12/2014 | W. Ebisuzaki | Set use_scale = 0, optimize
+ * 01/2015 | W. Ebisuzaki | Remove set use_scale = 0
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,41 +25,85 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/*
- * Fcst_ave
- *
- *  v 0.1 experimental
- *
- * based on Ave_test.c 4/2010 (public domain Wesley Ebisuzaki)
- * v 0.2 4/2013 added PDT=4.1
- * v 0.3 12/2014 set use_scale = 0, optimize
- * v 0.4 1/2015 remove set use_scale = 0
- * 
- */
+/** Decode grib file flag. */
+extern int decode;
 
-// #define DEBUG
+/** Append grib file flag. */
+extern int file_append;
 
-extern int decode, file_append, nx, ny, save_translation;
+/** Number of grid points in x-direction. */
+extern int nx;
+
+/** Number of grid points in y-direction. */
+extern int ny;
+
+/** Flag to indicate whether to save translation information. */
+extern int save_translation;
+
+/** Pointer to the translation array. */
 extern unsigned int *translation;
+
+/** Flush of output flag. */
 extern int flush_mode;
-extern int use_scale, dec_scale, bin_scale, wanted_bits, max_bits;
+
+/** Use scaling flag. */
+extern int use_scale;
+
+/** Decimal scaling. */
+extern int dec_scale;
+
+/** Binary scaling. */
+extern int bin_scale;
+
+/** Number of bits wanted. */
+extern int wanted_bits;
+
+/** Maximum number of bits. */
+extern int max_bits;
+
+/** Output GRIB type. */
 extern enum output_grib_type grib_type;
 
+/** Structure for forecast averaging. */
 struct ave_struct {
-        double *sum;
-        int *n;
-	unsigned int n_sum;
-        int has_val, n_fields, n_missing;
-	int dt, dt_unit, nx, ny;
-	int full_dt;
-        unsigned char *first_sec[9];
-        unsigned char *next_sec[9];
-	int use_scale, dec_scale, bin_scale, wanted_bits, max_bits;
-	enum output_grib_type grib_type;
-        int ref_year, ref_month, ref_day, ref_hour, ref_minute, ref_second;
-        int fcst_year, fcst_month, fcst_day, fcst_hour, fcst_minute, fcst_second;
-        int year2, month2, day2, hour2, minute2, second2;  // verification time
-	struct seq_file out;
+    double *sum;                        /**< Sum of values. */
+    int *n;                             /**< Count of values. */
+    unsigned int n_sum;                 /**< Total number of values. */
+    int has_val;                        /**< Flag to indicate if values are present. */
+    int n_fields;                       /**< Number of fields processed. */
+    int n_missing;                      /**< Number of missing values. */
+    int dt;                             /**< Time interval. */
+    int dt_unit;                        /**< Time unit of the interval. */
+    int nx;                             /**< Number of grid points in x-direction. */
+    int ny;                             /**< Number of grid points in y-direction. */
+    int full_dt;                        /**< Full time interval. */
+    unsigned char *first_sec[9];        /**< First section of the GRIB message. */
+    unsigned char *next_sec[9];         /**< Next section of the GRIB message. */
+    int use_scale;                      /**< Use scaling flag. */
+    int dec_scale;                      /**< Decimal scaling. */
+    int bin_scale;                      /**< Binary scaling. */
+    int wanted_bits;                    /**< Number of bits wanted. */
+    int max_bits;                       /**< Maximum number of bits. */
+    enum output_grib_type grib_type;    /**< Output GRIB type. */
+    int ref_year;                       /**< Reference year. */
+    int ref_month;                      /**< Reference month. */
+    int ref_day;                        /**< Reference day. */
+    int ref_hour;                       /**< Reference hour. */
+    int ref_minute;                     /**< Reference minute. */
+    int ref_second;                     /**< Reference second. */
+    int fcst_year;                      /**< Forecast year. */
+    int fcst_month;                     /**< Forecast month. */
+    int fcst_day;                       /**< Forecast day. */
+    int fcst_hour;                      /**< Forecast hour. */
+    int fcst_minute;                    /**< Forecast minute. */
+    int fcst_second;                    /**< Forecast second. */
+    int year2;                          /**< Verification year. */
+    int month2;                         /**< Verification month. */
+    int day2;                           /**< Verification day. */
+    int hour2;                          /**< Verification hour. */
+    int minute2;                        /**< Verification minute. */
+    int second2;                        /**< Verification second. */
+    struct seq_file out;                /**< Output sequence file. */
 };
 
 static int do_ave(struct ave_struct *save);
@@ -49,12 +111,21 @@ static int free_ave_struct(struct ave_struct *save);
 static int init_ave_struct(struct ave_struct *save, unsigned int ndata);
 static int add_to_ave_struct(struct ave_struct *save, unsigned char **sec, float *data, unsigned int ndata,int missing);
 
+/**
+ * Free the memory allocated for the averaging structure.
+ * 
+ * @param save Pointer to the averaging structure to be freed.
+ * 
+ * @return 0 on success
+ * 
+ * @author Wesley Ebisuzaki @date 04/2009
+ */
 static int free_ave_struct(struct ave_struct *save) {
 #ifdef DEBUG
 printf(" free ");
 #endif
     if (save->has_val == 1) {
-	free(save->sum);
+        free(save->sum);
         free(save->n);
         free_sec(save->first_sec);
         free_sec(save->next_sec);
@@ -63,25 +134,35 @@ printf(" free ");
     return 0;
 }
 
+/**
+ * Initialize the averaging structure.
+ *
+ * @param save Pointer to the averaging structure to be initialized.
+ * @param ndata Number of data points.
+ *
+ * @return 0 on success
+ *
+ * @author Wesley Ebisuzaki @date 04/2009
+ */
 static int init_ave_struct(struct ave_struct *save, unsigned int ndata) {
     unsigned int i;
 #ifdef DEBUG
 printf(" init ");
 #endif
     if (save->has_val == 0 || save->n_sum != ndata) {
-	if (save->has_val == 1) {
-	    free(save->sum);
-	    free(save->n);
-	}
+        if (save->has_val == 1) {
+            free(save->sum);
+            free(save->n);
+        }
         if ((save->sum = (double *) malloc(((size_t) ndata) * sizeof(double))) == NULL)
-          fatal_error("ave: memory allocation problem: val","");
+            fatal_error("ave: memory allocation problem: val","");
         if ((save->n = (int *) malloc(((size_t) ndata) * sizeof(int))) == NULL)
-          fatal_error("ave: memory allocation problem: val","");
+            fatal_error("ave: memory allocation problem: val","");
     }
 
     for (i=0; i < ndata; i++) {
-	save->n[i] = 0;
-	save->sum[i] = 0.0;
+        save->n[i] = 0;
+        save->sum[i] = 0.0;
     }
     save->n_sum = ndata;
     save->has_val = 1;
@@ -92,7 +173,20 @@ printf(" init ");
     return 0;
 }
 
-static int add_to_ave_struct(struct ave_struct *save, unsigned char **sec, float *data, unsigned int ndata,int missing) {
+/**
+ * Add data to the averaging structure.
+ *
+ * @param save Pointer to the averaging structure.
+ * @param sec Pointer to the GRIB section.
+ * @param data Pointer to the data to be added.
+ * @param ndata Number of data points.
+ * @param missing Number of missing data points.
+ *
+ * @return 0 on success
+ *
+ * @author Wesley Ebisuzaki @date 04/2009
+ */
+static int add_to_ave_struct(struct ave_struct *save, unsigned char **sec, float *data, unsigned int ndata, int missing) {
 
     unsigned int i;
 
@@ -120,24 +214,33 @@ static int add_to_ave_struct(struct ave_struct *save, unsigned char **sec, float
 
     save->n_fields += 1;
     if (save->n_fields == 1) {
-	save->nx = nx;
-	save->ny = ny;
-	save->use_scale = use_scale;
-	save->dec_scale = dec_scale;
-	save->bin_scale = bin_scale;
-	save->wanted_bits = wanted_bits;
-	save->max_bits = max_bits;
-	save->grib_type = grib_type;
+        save->nx = nx;
+        save->ny = ny;
+        save->use_scale = use_scale;
+        save->dec_scale = dec_scale;
+        save->bin_scale = bin_scale;
+        save->wanted_bits = wanted_bits;
+        save->max_bits = max_bits;
+        save->grib_type = grib_type;
     }
     save->n_missing += missing;
 
     // update current verf time
     if (verftime(sec, &save->year2, &save->month2, &save->day2, &save->hour2, &save->minute2, &save->second2) != 0) {
-	fatal_error("add_to_ave_struct: could not find verification time","");
+        fatal_error("add_to_ave_struct: could not find verification time","");
     }
     return 0;
 }
 
+/**
+ * Perform the averaging operation.
+ *
+ * @param save Pointer to the averaging structure.
+ *
+ * @return 0 on success
+ *
+ * @author Wesley Ebisuzaki @date 04/2009
+ */
 static int do_ave(struct ave_struct *save) {
     int j, n, pdt;
     unsigned int i, ndata;
@@ -155,11 +258,11 @@ printf(" ave nfields=%d missing=%d\n",save->n_fields,save->n_missing);
     if ((data = (float *) malloc(((size_t) ndata) * sizeof(float))) == NULL) fatal_error("ave: memory allocation","");
     factor = 1.0 / save->n_fields;
     for (i = 0; i < ndata; i++) {
-    	if (save->n[i] != save->n_fields) data[i] = UNDEFINED;
-    	else data[i] = factor * save->sum[i];
+        if (save->n[i] != save->n_fields) data[i] = UNDEFINED;
+        else data[i] = factor * save->sum[i];
 #ifdef DEBUG
         if (i < 10) printf("data[%d]=%lf n[%d]=%d, sum[%d]=%lf\n",
-	    i,data[i],i,save->n[i],i,save->sum[i]);
+            i,data[i],i,save->n[i],i,save->sum[i]);
 #endif
     }
 
@@ -169,22 +272,22 @@ printf(" ave nfields=%d missing=%d\n",save->n_fields,save->n_missing);
 
     if (pdt == 0) {
         sec4 = (unsigned char *) malloc(58 * sizeof(unsigned char));
-	if (sec4 == NULL) fatal_error("fcst_ave: memory allocation","");
-	for (i = 0; i < 34; i++) {
-	    sec4[i] = save->first_sec[4][i];
-	}
-	uint_char((unsigned int) 58, sec4);		// length
-	sec4[8] = 8;			// pdt
-	// verification time
+        if (sec4 == NULL) fatal_error("fcst_ave: memory allocation","");
+        for (i = 0; i < 34; i++) {
+            sec4[i] = save->first_sec[4][i];
+        }
+        uint_char((unsigned int) 58, sec4);		// length
+        sec4[8] = 8;			// pdt
+        // verification time
         save_time(save->year2,save->month2,save->day2,save->hour2,save->minute2,save->second2, sec4+34);
-	sec4[41] = 1;					// 1 time range
-	uint_char(save->n_missing, sec4+42);
-	sec4[46] = 0;					// average
-	sec4[47] = 2;					// rt=constant, ft++
-	sec4[48] = save->dt_unit;					// total length of stat processing
-	uint_char(save->dt*(save->n_fields+save->n_missing-1), sec4+49);
-	sec4[53] = save->dt_unit;					// time step
-	uint_char(save->dt, sec4+54);
+        sec4[41] = 1;					// 1 time range
+        uint_char(save->n_missing, sec4+42);
+        sec4[46] = 0;					// average
+        sec4[47] = 2;					// rt=constant, ft++
+        sec4[48] = save->dt_unit;					// total length of stat processing
+        uint_char(save->dt*(save->n_fields+save->n_missing-1), sec4+49);
+        sec4[53] = save->dt_unit;					// time step
+        uint_char(save->dt, sec4+54);
     }
 
     // average of an ensemble forecast, use pdt 4.11
@@ -212,44 +315,44 @@ printf(" ave nfields=%d missing=%d\n",save->n_fields,save->n_missing);
     // average of an average or accumulation
 
     else if (pdt == 8) {
-	i = GB2_Sec4_size(save->first_sec);
-	n = save->first_sec[4][41];
-	if (i != 46 + 12*n) fatal_error("ave: invalid sec4 size for pdt=8","");
+        i = GB2_Sec4_size(save->first_sec);
+        n = save->first_sec[4][41];
+        if (i != 46 + 12*n) fatal_error("ave: invalid sec4 size for pdt=8","");
 
         // keep pdt == 8 but make it 12 bytes bigger
         sec4 = (unsigned char *) malloc( (i+12) * sizeof(unsigned char));
-	if (sec4 == NULL) fatal_error("fcst_ave: memory allocation","");
+        if (sec4 == NULL) fatal_error("fcst_ave: memory allocation","");
 
-	uint_char((unsigned int) i+12, sec4);		// new length
+        uint_char((unsigned int) i+12, sec4);		// new length
 
-	for (i = 4; i < 34; i++) {			// keep base of pdt
-	    sec4[i] = save->first_sec[4][i];
-	}
-	
-	// new verification time
+        for (i = 4; i < 34; i++) {			// keep base of pdt
+            sec4[i] = save->first_sec[4][i];
+        }
+        
+        // new verification time
         save_time(save->year2,save->month2,save->day2,save->hour2,save->minute2,save->second2, sec4+34);
 
-	// number of stat-proc loops is increased by 1
-	sec4[41] = n + 1;
+        // number of stat-proc loops is increased by 1
+        sec4[41] = n + 1;
 
-	// copy old stat-proc loops 
-	// for (j = n*12-1;  j >= 0; j--) sec4[58+j] = save->first_sec[4][46+j];
-	for (j = 0; j < n*12; j++) sec4[46+12+j] = save->first_sec[4][46+j];
+        // copy old stat-proc loops 
+        // for (j = n*12-1;  j >= 0; j--) sec4[58+j] = save->first_sec[4][46+j];
+        for (j = 0; j < n*12; j++) sec4[46+12+j] = save->first_sec[4][46+j];
 
 #ifdef DEBUG
 printf("save->n_missing =%d save->n_fields=%d\n",save->n_missing,save->n_fields);
 #endif
-	uint_char(save->n_missing, sec4+42);
-	sec4[46] = 0;			// average
-	sec4[47] = 2;			// fcst++
-	sec4[48] = save->dt_unit;						// total length of stat processing
-	uint_char(save->dt*(save->n_fields+save->n_missing-1), sec4+49);	// missing
-	sec4[53] = save->dt_unit;						// time step
-	uint_char(save->dt, sec4+54);
+        uint_char(save->n_missing, sec4+42);
+        sec4[46] = 0;			// average
+        sec4[47] = 2;			// fcst++
+        sec4[48] = save->dt_unit;						// total length of stat processing
+        uint_char(save->dt*(save->n_fields+save->n_missing-1), sec4+49);	// missing
+        sec4[53] = save->dt_unit;						// time step
+        uint_char(save->dt, sec4+54);
 
     }
     else {
-	fatal_error_i("ave with pdt %d is not supported",pdt);
+        fatal_error_i("ave with pdt %d is not supported",pdt);
     }
 
 
@@ -258,8 +361,8 @@ printf("save->n_missing =%d save->n_fields=%d\n",save->n_missing,save->n_fields)
     save->first_sec[4] = sec4;
 
     grib_wrt(save->first_sec, data, ndata, save->nx, save->ny, 
-	save->use_scale, save->dec_scale, save->bin_scale, 
-	save->wanted_bits, save->max_bits, save->grib_type, &(save->out));
+            save->use_scale, save->dec_scale, save->bin_scale, 
+            save->wanted_bits, save->max_bits, save->grib_type, &(save->out));
 
     if (flush_mode) fflush_file(&(save->out));
     save->first_sec[4] = p;
@@ -272,6 +375,26 @@ printf("save->n_missing =%d save->n_fields=%d\n",save->n_missing,save->n_fields)
  * HEADER:000:fcst_ave0:output:2:average X=time step, Y=output grib file needs file is special order
  */
 
+/**
+ * Calculates temporal averages of grib data and writes the results to a specified output file.
+ * Assumes that the reference (initial) time is constant and the verification time is increasing 
+ * constant amount between samples.
+ * 
+ * This is the old version (v2.0.6) of the -fcst_ave option.
+ * 
+ * ## Usage
+ * -fcst_ave0 (time interval) (output grib file)
+ * 
+ * The time interval is the delta time for averaging (e.g., "6hr", "1dy").
+ * 
+ * @param ARG2 List of function arguments set by wgrib2's main() function (see @ref ARG2). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return 0 for success, error code otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 04/2009
+ */
 int f_fcst_ave0(ARG2) {
 
     struct ave_struct *save;
@@ -287,90 +410,90 @@ int f_fcst_ave0(ARG2) {
     if (mode == -1) {
         save_translation = decode = 1;
 
-	// allocate static structure
+        // allocate static structure
 
         *local = save = (struct ave_struct *) malloc( sizeof(struct ave_struct));
         if (save == NULL) fatal_error("memory allocation fcst_ave","");
 
-	i = sscanf(arg1, "%d%2s", &save->dt,string);
-	if (i != 2) fatal_error("fcst_ave: delta-time: (int)(2 characters) %s", arg1);
-	save->dt_unit = -1;
-	if (strcmp(string,"hr") == 0) save->dt_unit = 1;
-	else if (strcmp(string,"dy") == 0) save->dt_unit = 2;
-	else if (strcmp(string,"mo") == 0) save->dt_unit = 3;
-	else if (strcmp(string,"yr") == 0) save->dt_unit = 4;
-	if (save->dt_unit == -1) fatal_error("fcst_ave: unsupported time unit %s", string);
+        i = sscanf(arg1, "%d%2s", &save->dt,string);
+        if (i != 2) fatal_error("fcst_ave: delta-time: (int)(2 characters) %s", arg1);
+        save->dt_unit = -1;
+        if (strcmp(string,"hr") == 0) save->dt_unit = 1;
+        else if (strcmp(string,"dy") == 0) save->dt_unit = 2;
+        else if (strcmp(string,"mo") == 0) save->dt_unit = 3;
+        else if (strcmp(string,"yr") == 0) save->dt_unit = 4;
+        if (save->dt_unit == -1) fatal_error("fcst_ave: unsupported time unit %s", string);
 
         if (fopen_file(&(save->out), arg2, file_append ? "ab" : "wb") != 0) {
             free(save);
             fatal_error("Could not open %s", arg2);
         }
 
-	save->has_val = 0;
-	save->n = NULL;
-	save->sum = NULL;
+        save->has_val = 0;
+        save->n = NULL;
+        save->sum = NULL;
         init_sec(save->first_sec);
         init_sec(save->next_sec);
 
-	return 0;
+        return 0;
     }
 
     save = (struct ave_struct *) *local;
 
     if (mode == -2) {			// cleanup
-	if (save->has_val == 1) {
-	    do_ave(save);
-	}
-	fclose_file(&(save->out));
-	free_ave_struct(save);
-	return 0;
+        if (save->has_val == 1) {
+            do_ave(save);
+        }
+        fclose_file(&(save->out));
+        free_ave_struct(save);
+        return 0;
     }
 
     // if data
     if (mode >= 0) {
-	// 1/2015 use_scale = 0;
-	pdt = GB2_ProdDefTemplateNo(sec);
+        // 1/2015 use_scale = 0;
+        pdt = GB2_ProdDefTemplateNo(sec);
 
-if (mode == 98) fprintf(stderr,"fcst_ave: pdt=%d\n",pdt);
-	// only support pdt == 0, 1 and 8
-	if (pdt != 0 && pdt != 1 && pdt != 8) return 0;
+        if (mode == 98) fprintf(stderr,"fcst_ave: pdt=%d\n",pdt);
+        // only support pdt == 0, 1 and 8
+        if (pdt != 0 && pdt != 1 && pdt != 8) return 0;
 
-	// first time through .. save data and return
+        // first time through .. save data and return
 
 
-	if (save->has_val == 0) {		// new data: write and save
-	    init_ave_struct(save, ndata);
-	    add_to_ave_struct(save, sec, data, ndata, 0);
+        if (save->has_val == 0) {		// new data: write and save
+            init_ave_struct(save, ndata);
+            add_to_ave_struct(save, sec, data, ndata, 0);
 
-	    // copy sec
+            // copy sec
             copy_sec(sec, save->first_sec);
             copy_sec(sec, save->next_sec);
 
-	    // get reference time and save it
-            get_time(sec[1]+12,&save->ref_year, &save->ref_month, &save->ref_day, &save->ref_hour, &save->ref_minute, &save->ref_second);
+            // get reference time and save it
+                get_time(sec[1]+12,&save->ref_year, &save->ref_month, &save->ref_day, &save->ref_hour, &save->ref_minute, &save->ref_second);
 
-	    if (start_ft(sec, &save->fcst_year, &save->fcst_month, &save->fcst_day, &save->fcst_hour, 
-			&save->fcst_minute, &save->fcst_second) != 0) {
-		fatal_error("fcst_ave: could not determine the start FT time","");
-	    }
+            if (start_ft(sec, &save->fcst_year, &save->fcst_month, &save->fcst_day, &save->fcst_hour, 
+                        &save->fcst_minute, &save->fcst_second) != 0) {
+                fatal_error("fcst_ave: could not determine the start FT time","");
+            }
 
-	    // get verf time and save it
-	    if (verftime(sec, &save->year2, &save->month2, &save->day2, &save->hour2, &save->minute2, &save->second2) != 0) {
-		fatal_error("fcst_ave: could not determine the verification time","");
-	    }
+            // get verf time and save it
+            if (verftime(sec, &save->year2, &save->month2, &save->day2, &save->hour2, &save->minute2, &save->second2) != 0) {
+                fatal_error("fcst_ave: could not determine the verification time","");
+            }
 
-	    save->has_val = 1;
-	    return 0;
-	}
+            save->has_val = 1;
+            return 0;
+        }
 
-	// check to see if new variable
+        // check to see if new variable
 
         new_type = 0;
 
-	// get the reference time of field
-	get_time(sec[1]+12, &year, &month, &day, &hour, &minute, &second);
+        // get the reference time of field
+        get_time(sec[1]+12, &year, &month, &day, &hour, &minute, &second);
 
-	// see if reference time has not changed
+        // see if reference time has not changed
         if (year != save->ref_year) new_type = 1;
         else if (month != save->ref_month) new_type = 1;
         else if (day != save->ref_day) new_type = 1;
@@ -379,92 +502,92 @@ if (mode == 98) fprintf(stderr,"fcst_ave: pdt=%d\n",pdt);
         else if (second != save->ref_second) new_type = 1;
 
         if (new_type == 0) {
-	    if (same_sec0(sec,save->first_sec) == 0 ||
-                same_sec1_not_time(mode,sec,save->first_sec) == 0 ||
-                same_sec3(sec,save->first_sec) == 0 ||
-                same_sec4_not_time(mode,sec,save->first_sec) == 0) 
-	        new_type = 1;
-if (mode == 98) fprintf(stderr, "fcst_ave: testsec %d %d %d %d\n", same_sec0(sec,save->first_sec),
-                same_sec1_not_time(0,sec,save->first_sec),
-                same_sec3(sec,save->first_sec),
-                same_sec4_not_time(0,sec,save->first_sec));
+            if (same_sec0(sec,save->first_sec) == 0 ||
+                    same_sec1_not_time(mode,sec,save->first_sec) == 0 ||
+                    same_sec3(sec,save->first_sec) == 0 ||
+                    same_sec4_not_time(mode,sec,save->first_sec) == 0) 
+                new_type = 1;
+            if (mode == 98) fprintf(stderr, "fcst_ave: testsec %d %d %d %d\n", same_sec0(sec,save->first_sec),
+                            same_sec1_not_time(0,sec,save->first_sec),
+                            same_sec3(sec,save->first_sec),
+                            same_sec4_not_time(0,sec,save->first_sec));
         }
-if (mode == 98) fprintf(stderr, "fcst_ave: new_type %d\n", new_type);
+        if (mode == 98) fprintf(stderr, "fcst_ave: new_type %d\n", new_type);
 
-	// unlike f_ave, assume no missing .. it is a fcst not observations
-	// check to see if verification date is expected value
+        // unlike f_ave, assume no missing .. it is a fcst not observations
+        // check to see if verification date is expected value
 
-	if (new_type == 0) {
-	    tyear = save->fcst_year;
-	    tmonth = save->fcst_month;
-	    tday = save->fcst_day;
-	    thour = save->fcst_hour;
-	    tminute = save->fcst_minute;
-	    tsecond = save->fcst_second;
+        if (new_type == 0) {
+            tyear = save->fcst_year;
+            tmonth = save->fcst_month;
+            tday = save->fcst_day;
+            thour = save->fcst_hour;
+            tminute = save->fcst_minute;
+            tsecond = save->fcst_second;
             add_time(&tyear, &tmonth, &tday, &thour, &tminute, &tsecond, save->dt, save->dt_unit);
-	    if (start_ft(sec, &year, &month, &day, &hour, &minute, &second) != 0) 
-		fatal_error("fcst_ave: could not determine the start_ft time","");
+            if (start_ft(sec, &year, &month, &day, &hour, &minute, &second) != 0) 
+                fatal_error("fcst_ave: could not determine the start_ft time","");
             if (cmp_time(year,month,day,hour,minute,second,tyear,tmonth,tday,thour,tminute,tsecond)) {
-		new_type = 1;
-if (mode == 98) fprintf(stderr, "fcst_ave: unexpected verf time, new_type=1\n");
-	    }
-	    else {
-	        save->fcst_year = year;
-	        save->fcst_month = month;
-	        save->fcst_day = day;
-	        save->fcst_hour = hour;
-	        save->fcst_minute = minute;
-	        save->fcst_second = second;
-	    }
-	}
+                new_type = 1;
+                if (mode == 98) fprintf(stderr, "fcst_ave: unexpected verf time, new_type=1\n");
+            }
+            else {
+                save->fcst_year = year;
+                save->fcst_month = month;
+                save->fcst_day = day;
+                save->fcst_hour = hour;
+                save->fcst_minute = minute;
+                save->fcst_second = second;
+            }
+        }
 
-	// check to see if verification date is expected value
+        // check to see if verification date is expected value
 
         missing = 0;
-	if (new_type == 0) {
-	    if (verftime(sec, &year, &month, &day, &hour, &minute, &second) != 0) 
-		fatal_error("fcst_ave: could not determine the verification time","");
-	    tyear = save->year2;
-	    tmonth = save->month2;
-	    tday = save->day2;
-	    thour = save->hour2;
-	    tminute = save->minute2;
-	    tsecond = save->second2;
+        if (new_type == 0) {
+            if (verftime(sec, &year, &month, &day, &hour, &minute, &second) != 0) 
+                fatal_error("fcst_ave: could not determine the verification time","");
+            tyear = save->year2;
+            tmonth = save->month2;
+            tday = save->day2;
+            thour = save->hour2;
+            tminute = save->minute2;
+            tsecond = save->second2;
             add_time(&tyear, &tmonth, &tday, &thour, &tminute, &tsecond, save->dt, save->dt_unit);
             if (cmp_time(year,month,day,hour,minute,second,tyear,tmonth,tday,thour,tminute,tsecond) != 0) new_type = 1;
-	    else {
-	        save->year2 = year;
-	        save->month2 = month;
-	        save->day2 = day;
-	        save->hour2 = hour;
-	        save->minute2 = minute;
-	        save->second2 = second;
-	    }
-	}
+            else {
+                save->year2 = year;
+                save->month2 = month;
+                save->day2 = day;
+                save->hour2 = hour;
+                save->minute2 = minute;
+                save->second2 = second;
+            }
+        }
 
-	// if data is the same as the previous, update the sum
+        // if data is the same as the previous, update the sum
 
-if (mode == 98) fprintf(stderr, "fcst_ave ave: before update_sum  new_type %d\n", new_type);
+        if (mode == 98) fprintf(stderr, "fcst_ave ave: before update_sum  new_type %d\n", new_type);
 
-	if (new_type == 0) {		// update sum
-if (mode == 98) fprintf(stderr, "fcst_ave: update sum\n");
-	    add_to_ave_struct(save, sec, data, ndata, missing);
-	    return 0;
-	}
+        if (new_type == 0) {		// update sum
+            if (mode == 98) fprintf(stderr, "fcst_ave: update sum\n");
+            add_to_ave_struct(save, sec, data, ndata, missing);
+            return 0;
+        }
 
-	// new field, do grib output and save current data
+        // new field, do grib output and save current data
 
-	do_ave(save);
+        do_ave(save);
         init_ave_struct(save, ndata);
-	add_to_ave_struct(save, sec, data, ndata, 0);
+        add_to_ave_struct(save, sec, data, ndata, 0);
         copy_sec(sec, save->first_sec);
         copy_sec(sec, save->next_sec);
 
         // get reference time and save it
         get_time(sec[1]+12,&save->ref_year, &save->ref_month, &save->ref_day, &save->ref_hour, &save->ref_minute, &save->ref_second);
         if (start_ft(sec, &save->fcst_year, &save->fcst_month, &save->fcst_day, &save->fcst_hour,
-                     &save->fcst_minute, &save->fcst_second) != 0) {
-           fatal_error("fcst_ave: could not determine the start FT time","");
+                    &save->fcst_minute, &save->fcst_second) != 0) {
+            fatal_error("fcst_ave: could not determine the start FT time","");
         }
 
         // get verf time and save it
@@ -473,7 +596,7 @@ if (mode == 98) fprintf(stderr, "fcst_ave: update sum\n");
         }
 
         save->has_val = 1;
-	return 0;
+        return 0;
     }
     return 0;
 }

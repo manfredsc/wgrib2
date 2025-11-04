@@ -1,3 +1,8 @@
+/** @file
+ * @brief IEEE packing functions for GRIB2
+ * @author Public Domain: Wesley Ebisuzaki @date 2008
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,11 +12,18 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/*
- * write grib-2 ieee file
- * public domain 2008 Wesley Ebisuzaki
+/**
+ * Writes GRIB2 ieee file.
+ * 
+ * @param sec Pointer to the GRIB2 sections
+ * @param data Pointer to the data array
+ * @param ndata Number of data points
+ * @param out Pointer to the seq_file struct
+ * 
+ * @return 0 for success, error code otherwise
+ * 
+ * @author Wesley Ebisuzaki @date 2008
  */
-
 int ieee_grib_out(unsigned char **sec, float *data, unsigned int ndata, struct seq_file *out) {
 
     unsigned int n_defined, i;
@@ -33,7 +45,7 @@ int ieee_grib_out(unsigned char **sec, float *data, unsigned int ndata, struct s
 #ifdef IEEE_BITMAP
     data_tmp = (float *) malloc(((size_t) ndata) * sizeof(float));
     for (i = 0; i < ndata; i++) {
-	data_tmp[i] = data[i];
+        data_tmp[i] = data[i];
     }
     n_defined = ndata;
     sec6 = mk_bms(data_tmp, &n_defined);			// make bitmap section
@@ -60,7 +72,7 @@ int ieee_grib_out(unsigned char **sec, float *data, unsigned int ndata, struct s
 
     /* data section */
     if (n_defined > 4294967295U/4) 
-	fatal_error("ieee_pk: grib2 data section is limited to 4G-1 bytes","");
+        fatal_error("ieee_pk: grib2 data section is limited to 4G-1 bytes","");
 
     sec7 = (unsigned char *) malloc(5 + ((size_t) n_defined) * 4);
     if (sec7 == NULL) fatal_error("ieee_pk: memory allocation sec7","");
@@ -74,9 +86,9 @@ int ieee_grib_out(unsigned char **sec, float *data, unsigned int ndata, struct s
 #endif
     for (i = 0; i < n_defined; i++) {
 #ifdef IEEE_BITMAP
-	flt2ieee_nan(data_tmp[i], p + (i<<2) );
+        flt2ieee_nan(data_tmp[i], p + (i<<2) );
 #else
-	flt2ieee_nan(data[i], p + (i<<2) );
+        flt2ieee_nan(data[i], p + (i<<2) );
 #endif
     } 
 

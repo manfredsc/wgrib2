@@ -1,3 +1,20 @@
+/** @file
+ * @brief Functions for handling different grid scan modes and output orders.
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 3/2008 | W. Ebisuzaki | Initial
+ * 3/2008 | M. Schwarb | Bug fix
+ * 7/2009 | R. Bokhorst | Bug fix
+ * 12/2014 | W. Ebisuzaki | More arguments to to_we_sn_scan(), to_we_ns_scan(), ij2p()
+ *                          old int to_we_sn_scan(float *data);
+ *                          ij2p: "if (scan == -1)" becomes "if (scan_mode == -1)"
+ * 2/2016 | W. Ebisuzaki | ij2p: 2G*
+ *                         to_we_ns: lost line added, 2G*
+ *                         to_we_sn: lost line added, speedup , 2G*
+ * @author Public Domain: Wesley Ebisuzaki @date 3/2008
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,10 +25,19 @@
 // extern unsigned int npnts;
 // extern int save_translation;
 
+/** Raw variable dimensions. */
 extern int *raw_variable_dim;
-extern enum output_order_type output_order_wanted, output_order;
 
+/** Desired output order type. */
+extern enum output_order_type output_order_wanted;
+
+/** Current output order type. */
+extern enum output_order_type output_order;
+
+/** Translation array size. */
 static unsigned int n_translation = 0;
+
+/** Pointer to translation array. */
 unsigned int *translation = NULL;
 
 /*
@@ -35,11 +61,20 @@ unsigned int *translation = NULL;
  *
  */
 
-/*
- * ij2p
- *  return pointer to data(i,j) (fortran convention)
+/**
+ * Return pointer to data(i,j) (fortran convention).
+ * 
+ * @param i Grid x-coordinate (0-based).
+ * @param j Grid y-coordinate (0-based).
+ * @param scan_mode Current scan mode.
+ * @param nx Number of grid points in the x-direction.
+ * @param ny Number of grid points in the y-direction.
+ * @param data Pointer to the data array.
+ * 
+ * @return Pointer to the data(i,j) location, or NULL on error.
+ * 
+ * @author Wesley Ebisuzaki @date 3/2008
  */
-
 float *ij2p(unsigned int i, unsigned j, int scan_mode, unsigned int nx, unsigned int ny, float *data) {
 
     if (scan_mode == -1) return NULL;
@@ -59,12 +94,20 @@ float *ij2p(unsigned int i, unsigned j, int scan_mode, unsigned int nx, unsigned
     return NULL;
 }
 
-/*
- * to_we_sn_scan
- *    this routine converts scanning order to standard we:sn
- *    default for binary and text output
+/**
+ * Converts scanning order to standard we:sn. Default for binary and text output.
+ *
+ * @param data Pointer to the data array.
+ * @param scan Current scan mode.
+ * @param npnts Number of data points.
+ * @param nx Number of grid points in the x-direction.
+ * @param ny Number of grid points in the y-direction.
+ * @param save_translation Flag indicating whether to save the translation.
+ * 
+ * @return 0 on success, error code otherwise
+ * 
+ * @author Wesley Ebisuzaki @date 3/2008
  */
-
 int to_we_sn_scan(float *data, int scan, unsigned int npnts, int nx, int ny, int save_translation) {
 
     float *data2;
@@ -77,47 +120,47 @@ int to_we_sn_scan(float *data, int scan, unsigned int npnts, int nx, int ny, int
     if (scan == -1) return -1;
     lscan = scan >> 4;
     if (lscan == 4) {
-	if (save_translation && translation) {
+        if (save_translation && translation) {
             free(translation);
             translation = NULL;
             n_translation = 0;
         }
-	return 0; 			/* already we:sn order */
+        return 0; 			/* already we:sn order */
     }
     if (save_translation && npnts != n_translation) {
-	free(translation);
-	if ((translation = (unsigned int *) malloc(((size_t) npnts) * sizeof(int))) == NULL) {
-	    fatal_error("translation: not enough memory for translation array","");
-	}
-	n_translation = npnts;
+        free(translation);
+        if ((translation = (unsigned int *) malloc(((size_t) npnts) * sizeof(int))) == NULL) {
+            fatal_error("translation: not enough memory for translation array","");
+        }
+        n_translation = npnts;
     }
 
     if (lscan == 0 && nx > 0 && ny > 0) {	/* regular grid: convert from we:ns to we:sn */
-	row_size = ((size_t) nx) * sizeof(float);
+        row_size = ((size_t) nx) * sizeof(float);
         if ((data2 = (float *) malloc(row_size)) == NULL) 
-	    fatal_error("translation: allocation of memory error","");
+            fatal_error("translation: allocation of memory error","");
         for (iy = 0; iy < ny/2; iy++) {
-	    memcpy(data2, data + ((size_t) iy) * nx, row_size);
-	    memcpy(data + iy*nx, data + (ny-1-iy) * ((size_t) nx), row_size);
-	    memcpy(data + (ny-1-iy) * ((size_t) nx), data2, row_size);
-	}
-	free(data2);
-	if (save_translation) {
+            memcpy(data2, data + ((size_t) iy) * nx, row_size);
+            memcpy(data + iy*nx, data + (ny-1-iy) * ((size_t) nx), row_size);
+            memcpy(data + (ny-1-iy) * ((size_t) nx), data2, row_size);
+        }
+        free(data2);
+        if (save_translation) {
 #ifdef USE_OPENMP
 #pragma omp parallel for private(iy, ix)
 #endif
-	    for (iy = 0; iy < ny; iy++) {
-		for (ix = 0; ix < nx; ix++) {
-		   translation[ix + iy*((size_t) nx)] = ix + (ny-1-iy)*((size_t) nx);
-		}
-	    }
-	}
-	return 0;
+            for (iy = 0; iy < ny; iy++) {
+                for (ix = 0; ix < nx; ix++) {
+                translation[ix + iy*((size_t) nx)] = ix + (ny-1-iy)*((size_t) nx);
+                }
+            }
+        }
+        return 0;
     }
 
 
     if ((data2 = (float *) malloc( ((size_t) npnts) * sizeof(float))) == NULL) 
-	fatal_error("translation: allocation of memory error","");
+        fatal_error("translation: allocation of memory error","");
 	
 //    if (lscan == 0 && nx > 0 && ny > 0) {	/* regular grid: convert from we:ns to we:sn */
 //	p0 = data;
@@ -135,36 +178,36 @@ int to_we_sn_scan(float *data, int scan, unsigned int npnts, int nx, int ny, int
 //    }
 
     if (lscan == 0 && nx < 1 && ny > 0) { /* quasi-regular grid: convert from we:ns to we:sn */
-	p0 = data;
-	p1 = data2 + npnts;
+        p0 = data;
+        p1 = data2 + npnts;
         for (iy = 0; iy < ny; iy++) {
-	    dx = raw_variable_dim[iy];
-	    p1 -= dx;
-	    memcpy(p1,p0,dx * sizeof(float));
-	    if (save_translation) for (i = 0; i < dx; i++) translation[p1+i-data2] = p0 - data + i;
-	    p0 += dx;
-	}
+            dx = raw_variable_dim[iy];
+            p1 -= dx;
+            memcpy(p1,p0,dx * sizeof(float));
+            if (save_translation) for (i = 0; i < dx; i++) translation[p1+i-data2] = p0 - data + i;
+            p0 += dx;
+        }
         memcpy(data, data2, ((size_t) npnts) * sizeof(float));
-	free(data2);
-	return 0;
+        free(data2);
+        return 0;
     }
 
     if (nx < 1 || ny < 1) {
-	free(data2);
-	fatal_error("not handled by to_we_sn_scan","");
-	return 1;
+        free(data2);
+        fatal_error("not handled by to_we_sn_scan","");
+        return 1;
     }
 
     p0 = data2;
     for (iy = 0; iy < ny; iy++) {
-	p1 = ij2p(0,iy,scan,nx,ny, data);
-	p2 = ij2p(1,iy,scan,nx,ny, data);
-	dx = p2 - p1;
-	for (ix = 0; ix < nx; ix++) {
-	    if (save_translation) translation[p0 - data2] = p1 - data;
-	    *p0++ = *p1;
-	    p1 += dx;
-	}
+        p1 = ij2p(0,iy,scan,nx,ny, data);
+        p2 = ij2p(1,iy,scan,nx,ny, data);
+        dx = p2 - p1;
+        for (ix = 0; ix < nx; ix++) {
+            if (save_translation) translation[p0 - data2] = p1 - data;
+            *p0++ = *p1;
+            p1 += dx;
+        }
     }
     memcpy(data, data2, ((size_t) npnts) * sizeof(float));
     free(data2);
@@ -176,6 +219,20 @@ int to_we_sn_scan(float *data, int scan, unsigned int npnts, int nx, int ny, int
  *    this routine converts scanning order to standard we:ns
  */
 
+/**
+ * Converts scanning order to standard we:ns.
+ *
+ * @param data Pointer to the data array.
+ * @param scan Current scan mode.
+ * @param npnts Number of data points.
+ * @param nx Number of grid points in the x-direction.
+ * @param ny Number of grid points in the y-direction.
+ * @param save_translation Flag indicating whether to save the translation.
+ * 
+ * @return 0 on success, error code otherwise
+ * 
+ * @author Wesley Ebisuzaki @date 3/2008
+ */
 int to_we_ns_scan(float *data, int scan, unsigned int npnts, int nx, int ny, int save_translation) {
 
     float *data2;
@@ -187,20 +244,20 @@ int to_we_ns_scan(float *data, int scan, unsigned int npnts, int nx, int ny, int
     if (scan == -1) return -1;
     lscan = scan >> 4;
     if (lscan == 0) {
-	if (save_translation && translation) {
+        if (save_translation && translation) {
             free(translation);
             translation = NULL;
             n_translation = 0;
         }
-	return 0;                   /* already we:ns order */
+        return 0;                   /* already we:ns order */
     }
 
     if (save_translation && npnts != n_translation) {
-	free(translation);
-	if ((translation = (unsigned int *) malloc(((size_t) npnts) * sizeof(int))) == NULL) {
-	    fatal_error("translation: not enough memory for translation array","");
-	}
-	n_translation = npnts;
+        free(translation);
+        if ((translation = (unsigned int *) malloc(((size_t) npnts) * sizeof(int))) == NULL) {
+            fatal_error("translation: not enough memory for translation array","");
+        }
+        n_translation = npnts;
     }
 
     if ((data2 = (float *) malloc(((size_t) npnts) * sizeof(float))) == NULL)
@@ -212,7 +269,7 @@ int to_we_ns_scan(float *data, int scan, unsigned int npnts, int nx, int ny, int
         for (iy = 0; iy < ny; iy++) {
             p1 -= nx;
             memcpy(p1, p0, nx * sizeof(float));
-	    if (save_translation) for (i = 0; i < nx; i++) translation[p1+i-data2] = p0 - data + i;
+            if (save_translation) for (i = 0; i < nx; i++) translation[p1+i-data2] = p0 - data + i;
             p0 += nx;
         }
         memcpy(data, data2, ((size_t) npnts) * sizeof(float));
@@ -227,7 +284,7 @@ int to_we_ns_scan(float *data, int scan, unsigned int npnts, int nx, int ny, int
             dx = raw_variable_dim[iy];
             p1 -= dx;
             memcpy(p1,p0,dx * sizeof(float));
-	    if (save_translation) for (i = 0; i < dx; i++) translation[p1+i-data2] = p0 - data + i;
+            if (save_translation) for (i = 0; i < dx; i++) translation[p1+i-data2] = p0 - data + i;
             p0 += dx;
         }
         memcpy(data, data2, ((size_t) npnts) * sizeof(float));
@@ -237,20 +294,20 @@ int to_we_ns_scan(float *data, int scan, unsigned int npnts, int nx, int ny, int
 
     if (nx < 1 || ny < 1) {
         free(data2);
-	fatal_error("not handled by to_we_ns_scan","");
-	return 1;
+        fatal_error("not handled by to_we_ns_scan","");
+        return 1;
     }
 
     /* uncommon scan order .. use general routine */
 
     p0 = data2;
     for (i = 0; i < ny; i++) {
-	iy = ny - 1 - i;
+        iy = ny - 1 - i;
         p1 = ij2p(0,iy,scan,nx,ny, data);
         p2 = ij2p(1,iy,scan,nx,ny, data);
         dx = p2 - p1;
         for (ix = 0; ix < nx; ix++) {
-	    if (save_translation) translation[p0 - data2] = p1 - data;
+            if (save_translation) translation[p0 - data2] = p1 - data;
             *p0++ = *p1;
             p1 += dx;
         }
@@ -264,35 +321,80 @@ int to_we_ns_scan(float *data, int scan, unsigned int npnts, int nx, int ny, int
  * HEADER:200:order:setup:1:decoded data in X (raw|we:sn|we:ns) order, we:sn is default
  */
 
-
+/**
+ * Set order of grid data output.
+ * 
+ * Grids can be stored in GRIB files in one of 16 different orders. The default configure is 
+ * for wgrib2 to convert all data into WE:SN order. That is, the first point is at the bottom 
+ * left, the second point is to the right and so on until it finishes up the row. Then the next 
+ * point is slightly north of the first point and the process repeats until the NE point of the 
+ * grid is reached. 
+ * 
+ * The -order raw option keeps the data in the original order as specified the grib header. Note, 
+ * latitude, longitude is available when the data are in we:sn order. 
+ * 
+ * You must use the default -order we:sn option in order to get latitude, longitude information. 
+ * 
+ * ## Usage
+ * -order raw
+ *      data is the order as specified by the grib file
+ * 
+ * -order we:ns
+ *      data is in WE:NS order
+ * 
+ * -order we:sn
+ *      data is in WE:SN order (default)
+ * 
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return 0 on success, error code otherwise
+ * 
+ * @author Wesley Ebisuzaki @date 3/2008
+ */
 int f_order(ARG1) {
     if (mode == -1) {
-	if (strcmp(arg1,"raw") == 0) output_order_wanted = raw;
-	else if (strcmp(arg1,"we:sn") == 0) output_order_wanted = wesn;
-	else if (strcmp(arg1,"we:ns") == 0) output_order_wanted = wens;
-	else {
-	    fatal_error("order: arg=%s expecting raw|we:sn|we:ns", arg1);
-	}
+        if (strcmp(arg1,"raw") == 0) output_order_wanted = raw;
+        else if (strcmp(arg1,"we:sn") == 0) output_order_wanted = wesn;
+        else if (strcmp(arg1,"we:ns") == 0) output_order_wanted = wens;
+        else {
+            fatal_error("order: arg=%s expecting raw|we:sn|we:ns", arg1);
+        }
     }
     return 0;
 }
 
-/*
- * returns a string with the name of the output_order
+/**
+ * Returns the name of the output order.
+ * 
+ * @return String with the name of the output_order.
+ * 
+ * @author Wesley Ebisuzaki @date 3/2008
  */
-
 const char *output_order_name(void) {
-	if (output_order == raw) return "raw";
-	if (output_order == wesn) return "WE:SN";
-	if (output_order == wens) return "WE:NS";
-	return "order?";
+    if (output_order == raw) return "raw";
+    if (output_order == wesn) return "WE:SN";
+    if (output_order == wens) return "WE:NS";
+    return "order?";
 }
 
+/**
+ * Undo the output order transformation.
+ * 
+ * @param data Pointer to the current data array.
+ * @param data_old_order Pointer to the array to store the old order data.
+ * @param npnts Number of points in the data array.
+ * 
+ * @return 0 on success, error code otherwise.
+ * 
+ * @author Wesley Ebisuzaki @date 3/2008
+ */
 int undo_output_order(float *data, float *data_old_order, unsigned int npnts) {
     unsigned int i;
     if (translation == NULL) {
         memcpy(data_old_order, data, ((size_t) npnts) * sizeof(float));
-	return 0;
+        return 0;
     }
     if (npnts != n_translation) fatal_error("undo_output_order: program error", "");
     for (i = 0; i < npnts; i++) {

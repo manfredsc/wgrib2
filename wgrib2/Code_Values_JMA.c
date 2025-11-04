@@ -1,3 +1,7 @@
+/** @file
+ * @brief This file contains nice to know values for JMA.
+ * @author Public Domain: Wesley Ebisuzaki @date 2022
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,6 +19,20 @@
  * HEADER:-1:JMA_Nb:inv:0:value of JMA Nb
  */
 
+/**
+ * Prints the value of JMA Nb.
+ * 
+ * ## Usage 
+ * -JMA_Nb
+ * 
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return Always returns 0.
+ * 
+ * @author Wesley Ebisuzaki @date 2022
+ */
 int f_JMA_Nb(ARG0) {
     int i;
 
@@ -25,6 +43,15 @@ int f_JMA_Nb(ARG0) {
     return 0;
 }
 
+/**
+ * Gets the value of JMA Nb.
+ * 
+ * @param sec Pointer to the GRIB2 sections.
+ * 
+ * @return Value of JMA Nb or -1 for failure.
+ * 
+ * @author Wesley Ebisuzaki @date 2022
+ */
 int JMA_Nb(unsigned char **sec) {
     int center, grid_template;
 
@@ -40,6 +67,21 @@ int JMA_Nb(unsigned char **sec) {
 /*
  * HEADER:-1:JMA_Nr:inv:0:value of JMA Nr
  */
+
+/**
+ * Prints the value of JMA Nr.
+ * 
+ * ## Usage
+ * -JMA_Nr
+ * 
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
+ * 
+ * @return Always returns 0.
+ * 
+ * @author Wesley Ebisuzaki @date 2022
+ */
 int f_JMA_Nr(ARG0) {
     int i;
 
@@ -50,6 +92,15 @@ int f_JMA_Nr(ARG0) {
     return 0;
 }
 
+/**
+ * Gets the value of JMA Nr.
+ * 
+ * @param sec Pointer to the GRIB2 sections.
+ * 
+ * @return Value of JMA Nr or -1 for failure.
+ * 
+ * @author Wesley Ebisuzaki @date 2022
+ */
 int JMA_Nr(unsigned char **sec) {
     int center, grid_template;
 

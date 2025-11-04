@@ -1,40 +1,51 @@
-/*******************************************************************************
-NAME                        GOODE'S HOMOLOSINE
+/** @file
+ * @brief Goode's Homolosine - Inverse Transformation
+ * 
+ * PURPOSE:  Transforms input Easting and Northing to longitude and
+ *          latitude for the Goode's Homolosine projection.  The
+ *          Easting and Northing must be in meters.  The longitude
+ *          and latitude values will be returned in radians.
+ * 
+ * @author D. Steinwand, EROS @date May, 1991
+ * 
+ * ### Algorithm References
+ * 1. Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
+ *    U.S. Geological Survey Professional Paper 1453 , United State Government
+ *    Printing Office, Washington D.C., 1989.
+ *
+ * 2. Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
+ *    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
+ *    State Government Printing Office, Washington D.C., 1987.
+ *
+ * 3. Goode, J.P., 1925,  The Homolosine projection:  a new device for
+ *    portraying the Earth's surface entire:  Assoc. Am. Geographers, Annals,
+ *    v. 15, p. 119-125
+ * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 5/1991 | D. Steinwand, EROS | Initial implementation
+ * 9/1992 | D. Steinwand, EROS | Updated
+ * 2/1993 | D. Steinwand, EROS | Updated
+ * 6/1993 | S. Nelson, EDC | Make changes in precision
+ */
 
-PURPOSE:	Transforms input Easting and Northing to longitude and
-		latitude for the Goode's Homolosine projection.  The
-		Easting and Northing must be in meters.  The longitude
-		and latitude values will be returned in radians.
 
-PROGRAMMER              DATE
-----------              ----
-D. Steinwand, EROS      May, 1991; Updated Sept, 1992; Updated Feb 1993
-S. Nelson, EDC		Jun, 1993	Made changes in precision.
-
-ALGORITHM REFERENCES
-
-1.  Snyder, John P. and Voxland, Philip M., "An Album of Map Projections",
-    U.S. Geological Survey Professional Paper 1453 , United State Government
-    Printing Office, Washington D.C., 1989.
-
-2.  Snyder, John P., "Map Projections--A Working Manual", U.S. Geological
-    Survey Professional Paper 1395 (Supersedes USGS Bulletin 1532), United
-    State Government Printing Office, Washington D.C., 1987.
-
-3.  Goode, J.P., 1925,  The Homolosine projection:  a new device for 
-    portraying the Earth's surface entire:  Assoc. Am. Geographers, Annals, 
-    v. 15, p. 119-125
-*******************************************************************************/
 #include "cproj.h"
 
-/* Variables common to all subroutines in this code file
-  -----------------------------------------------------*/
-static double R;		/* Radius of the earth (sphere) */
-static double lon_center[12];	/* Central meridians, one for each region */
-static double feast[12];	/* False easting, one for each region */
+/* Variables common to all subroutines in this code file */
+static double R;		/**< Radius of the earth (sphere) */
+static double lon_center[12];	/**< Central meridians, one for each region */
+static double feast[12];	/**< False easting, one for each region */
 
-/* Initialize the Goode`s Homolosine projection
-  --------------------------------------------*/
+/** Initialize the Goode`s Homolosine projection for inverse transformation.
+ * 
+ * @param r Radius of the earth (sphere)
+ * 
+ * @return Always returns 0
+ * 
+ * @author D. Steinwand, EROS @date May, 1991
+ */
 long goodinvint(double r) {
 //long goodinvint(r) 
 //double r; 			/* (I) Radius of the earth (sphere) */
@@ -80,8 +91,21 @@ radius(r);
 return(OK);
 }
 
-/* Goode`s Homolosine inverse equations--mapping x,y to lat,long 
-  -------------------------------------------------------------*/
+
+
+/** Goode`s Homolosine inverse equations--mapping x,y to lat,long 
+ * 
+ * @param x X projection coordinate
+ * @param y Y projection coordinate
+ * @param lon Pointer to the Longitude
+ * @param lat Pointer to the Latitude
+ * 
+ * @return 
+ * - 0 :: Success
+ * - 252 :: Input data error
+ * 
+ * @author D. Steinwand, EROS @date May, 1991
+ */
 long goodinv(double x, double y, double *lon, double *lat) {
 //long goodinv(x, y, lon, lat)
 //double x;		/* (I) X projection coordinate */

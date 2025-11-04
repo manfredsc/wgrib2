@@ -1,6 +1,11 @@
 #!/bin/sh
-# 10/2024 Public Domain   Manfred Schwarb <schwarb@meteodat.ch>
-# This script updates wgrib2 with WMO code info.
+
+## @file
+## @brief This script updates wgrib2 with WMO code info.
+## @author Public Domain: Manfred Schwarb <schwarb@meteodat.ch>
+## @date 10/2024
+
+## @cond
 
 urlbase="https://github.com/wmo-im/GRIB2"
 
@@ -30,32 +35,35 @@ wget -nv "$urlbase/raw/master/GRIB2_CodeFlag_4_3_CodeTable_en.csv" -O- | sed '{
         case   9: wgrib2name="clim"; break
         case  10: wgrib2name="prob wt fcst"; break
         case  11: wgrib2name="bias-corr ens fcst"; break
-        case  12: wgrib2name="post-proc anl"; break
-        case  13: wgrib2name="post-proc fcst"; break
+        case  12: wgrib2name="post-proc anl"; break   # Code figure 0 but significant post-processing has taken place
+        case  13: wgrib2name="post-proc fcst"; break  # Code figure 2 but significant post-processing has taken place
         case  14: wgrib2name="nowcast"; break
         case  15: wgrib2name="hindcast"; break
         case  16: wgrib2name="physical retrieval"; break
         case  17: wgrib2name="regression analysis"; break
         case  18: wgrib2name="difference between two forecasts"; break
         case  19: wgrib2name="first guess"; break
-        case  20: wgrib2name="analysis increment"; break  # analysis minus first guess
-        case  21: wgrib2name="initialization increment for analysis"; break  # initialized analysis minus analysis
-        case  22: wgrib2name="blended forecast"; break  # initialized analysis minus analysis
+        case  20: wgrib2name="analysis increment"; break  # Represents analysis minus first guess
+        case  21: wgrib2name="initialization increment for analysis"; break  # Represents initialized analysis minus analysis
+        case  22: wgrib2name="blended forecast"; break  # Combination of different forecast products
+        case  23: wgrib2name="anomaly"; break  # Only to be used as part of a verification/score field
         case 255: wgrib2name="missing"; break
         default: { print "ERROR: missing switch statement for",num > "/dev/stderr"; exit 1 }
       }
-      printf "case %5d: string=\"%s\"; break;  // %s\n",num,wgrib2name,name
-      if (num==21) {  # append custom entries after case 21
-        print "case   192: if (center == NCEP) string=\"fcst confidence\"; else string=\"undefined\"; break;"
-        print "case   193: if (center == NCEP) string=\"probability-matched mean\"; else string=\"undefined\"; break;"
-        print "case   194: if (center == NCEP) string=\"neighborhood probability\"; else string=\"undefined\"; break;"
-        print "case   195: if (center == NCEP) string=\"bias-corrected and downscaled ensemble forecast\"; else string=\"undefined\"; break;"
-        print "case   196: if (center == NCEP) string=\"perturbed analysis for ensemble initialization\"; else string=\"undefined\"; break;"
-        print "case   197: if (center == NCEP) string=\"ensemble agreement scale probability\"; else string=\"undefined\"; break;"
-        print "case   198: if (center == NCEP) string=\"post-processed deterministic-expert-weighted forecast\"; else string=\"undefined\"; break;"
-        print "case   199: if (center == NCEP) string=\"ens fcst based on counting\"; else string=\"undefined\"; break;"
+      if (num==255) {  # prepend custom entries before case 255
+        print "case   192: if (center == NCEP) string=\"fcst confidence\"; break;"
+        print "case   193: if (center == NCEP) string=\"probability-matched mean\"; break;"
+        print "case   194: if (center == NCEP) string=\"neighborhood probability\"; break;"
+        print "case   195: if (center == NCEP) string=\"bias-corrected and downscaled ensemble forecast\"; break;"
+        print "case   196: if (center == NCEP) string=\"perturbed analysis for ensemble initialization\"; break;"
+        print "case   197: if (center == NCEP) string=\"ensemble agreement scale probability\"; break;"
+        print "case   198: if (center == NCEP) string=\"post-processed deterministic-expert-weighted forecast\"; break;"
+        print "case   199: if (center == NCEP) string=\"ens fcst based on counting\"; break;"
       }
+      printf "case %5d: string=\"%s\"; break;  // %s\n",num,wgrib2name,name
     }
   }' > "$outfile"
 
 exit
+
+## @endcond
