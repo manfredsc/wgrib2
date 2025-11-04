@@ -22,7 +22,7 @@ extern int file_append;
 extern int flush_mode;
 
 /*
- * HEADER:100:write_sec:output:2:write grib msessage section X (0-8) to binary file Y
+ * HEADER:100:write_sec:output:2:write grib message section X (0-8) to binary file Y
  */
 
 /**
