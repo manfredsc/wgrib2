@@ -53,7 +53,7 @@
 extern double *lat;
 
 /** Pointer to array of longitude values. */
-static double *lon;
+// static double *lon;
 
 /** Current output order type. */
 extern enum output_order_type output_order;

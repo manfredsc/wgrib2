@@ -1044,7 +1044,10 @@ fprintf(stderr,"complex_pk: linked list ngroups=%u\n", ngroups);
         itmp[ii] = s->mx;
         itmp2[ii] = s->missing;
     }
-    if (i != nndata) fatal_error("complex grib_out: program error 2","");
+    if (i != nndata) {
+        fatal_error("complex grib_out: program error 2","");
+        exit(1);
+    }
 
 #ifdef USE_OPENMP
 #pragma omp parallel for private(i)

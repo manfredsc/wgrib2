@@ -22,7 +22,7 @@ extern int file_append;
 extern int flush_mode;
 
 /*
- * HEADER:100:write_sec:output:2:write grib msessage section X (0-8) to binary file Y
+ * HEADER:100:write_sec:output:2:write grib message section X (0-8) to binary file Y
  */
 
 /**
@@ -41,7 +41,9 @@ extern int flush_mode;
  * N = section number (0-8)
  * file = output file name
  * 
- * @param ARG2 ???
+ * @param ARG2 List of function arguments set by wgrib2's main() function (see @ref ARG2). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
  * 
@@ -113,7 +115,9 @@ int f_write_sec(ARG2) {
  * N = section number (0-8)
  * file = input file name
  * 
- * @param ARG2 ???
+ * @param ARG2 List of function arguments set by wgrib2's main() function (see @ref ARG2). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
  * 

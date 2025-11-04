@@ -117,7 +117,9 @@ extern int text_column;
  * Interpolation from regular lat-lon grids is now handled as special case. This speeds up the 
  * interpolation and paves the way for a bilinear interpolation for the special cases. 
  * 
- * @param ARG4 ???
+ * @param ARG4 List of function arguments set by wgrib2's main() function (see @ref ARG4). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 

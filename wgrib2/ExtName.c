@@ -70,7 +70,9 @@ char ext_name_space;
  * ## Usage
  * -misc
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success
  * 
@@ -311,7 +313,9 @@ unsigned int type_ext_name;
  * 6 | level information + forecast information
  * 7 | misc + level information + forecast information
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -383,7 +387,9 @@ int f_set_ext_name(ARG1) {
  * Several options such as -netcdf use the extended name type differently. If the extend name type is 0, 
  * they use the regular name (-var). 
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -512,7 +518,9 @@ int getExtName(unsigned char **sec, int mode, char *inv_out, char *name, char *d
  * The default field separator '.' is replaced by 'X'.
  * The default space separator '_' is replaced by 'Y'.
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -539,7 +547,9 @@ int f_set_ext_name_chars(ARG2) {
  * (Deprecated) With the expansion of "Extended Names", the full name is now a subset of the new 
  * Extended Names. Please use the -ext_name option instead.
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 

@@ -151,9 +151,9 @@ if (ptr == NULL)
       return(22);
       }
 fseek(ptr,(ind) * 432, 0);
-fread(pname,1,32,ptr);
-fread(&id,sizeof(long),1,ptr);
-fread(table,sizeof(double),9,ptr);
+if (fread(pname,1,32,ptr)) return ERROR;
+if (fread(&id,sizeof(long),1,ptr)) return ERROR;
+if (fread(table,sizeof(double),9,ptr)) return ERROR;
 fclose(ptr);
   
 if (id <= 0)

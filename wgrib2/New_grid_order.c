@@ -205,7 +205,9 @@ static int wrt_uv_sec(unsigned char **sec1, unsigned char **sec2, struct seq_fil
  * GRIB_B is a grib output file with data that cannot be processed by -new_grid because corresponding 
  * U or V fields were missing
  *
- * @param ARG2 ???
+ * @param ARG2 List of function arguments set by wgrib2's main() function (see @ref ARG2). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success, error code otherwise
  * 
