@@ -209,8 +209,8 @@ class Wgrib2(MakefilePackage, CMakePackage):
     depends_on("fortran", type="build")
 
     depends_on("ip@5.2:", when="@develop +ipolates")
-    depends_on("g2c@develop", when="@3.7: +g2c_low")
-    depends_on("g2c@develop", when="@3.7: +g2c_high")
+    depends_on("g2c@2.3.0:", when="@3.7: +g2c_low")
+    depends_on("g2c@2.3.0:", when="@3.7: +g2c_high")
     depends_on("lapack", when="@develop +ipolates")
     depends_on("libaec@1.0.6:", when="@3.2:3.8 +aec")
     # Options to use netcdf3 or netcdf4 merged into a single option with v3.4.0
