@@ -272,7 +272,7 @@ int f_subcenter(ARG0) {
 	      string = NULL;
 	      if (ctr == 7) {
           switch (subctr) {
-#include "ncep_tableC.dat"
+#include "CommonCodeTable_12.dat"
            }
         }
         if (ctr == (USAF)) {
