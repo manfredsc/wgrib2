@@ -66,8 +66,13 @@ static double cosaz;		/**< Cos of azimuth */
  * - 201 :: Input data error
  * - 202 :: Input data error
  * 
+ * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 3/1993 | T. Mittan | Initial implementation
+ * 9/2025 | W. Ebisuzaki | defined f
+ *
  * @author T. Mittan @date March, 1993
- *         W. Ebisuzaki Sep 2025 define f
  */
 long omerinvint(double r_maj, double r_min, double scale_fact, double azimuth,
         double lon_orig, double lat_orig, double false_east, double false_north,
