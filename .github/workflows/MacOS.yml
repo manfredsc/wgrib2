@@ -21,8 +21,7 @@ jobs:
   MacOS:
     runs-on: macos-latest
     env:
-      FC: gfortran
-      CC: gcc
+      FC: gfortran-12
     strategy:
       fail-fast: false
       matrix:
@@ -41,6 +40,7 @@ jobs:
       run: |
         find /Library/Frameworks/ -name "png*"
         sudo rm -rf /Library/Frameworks/Mono.framework
+        brew install gcc
         brew install jasper libpng jpeg-turbo openjpeg libaec libomp
 
     - name: "Build dependencies"
