@@ -23,7 +23,9 @@
  * Prints section 4, octets 6-7 as an unsigned integer. It is expected that each value uses 4 
  * octets of storage at the end of Section 4.
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -94,7 +96,9 @@ int number_of_coordinate_values_after_template(unsigned char **sec) {
  * ## Usage
  * -pds_fcst_time
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -799,7 +803,9 @@ unsigned char *year_of_model_version_date_location(unsigned char **sec) {
  * ## Usage:
  * -percent
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 
@@ -967,7 +973,9 @@ unsigned char *number_of_following_distribution_parameters_np_location(unsigned 
 /**
  * Prints the type of post-processing applied to the data for templates 4.70 to 4.73.
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise.
  * 

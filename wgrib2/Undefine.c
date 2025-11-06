@@ -66,7 +66,9 @@ extern unsigned int ny_;
  * 
  * Points on the box boundary are considered to be in the box.
  * 
- * @param ARG3 ???
+ * @param ARG3 List of function arguments set by wgrib2's main() function (see @ref ARG3). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
  * 
@@ -180,7 +182,9 @@ int f_undefine(ARG3) {
  * 
  * Points on the box boundary are considered to be in the box.
  * 
- * @param ARG3 ???
+ * @param ARG3 List of function arguments set by wgrib2's main() function (see @ref ARG3). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
  * 
@@ -279,7 +283,9 @@ int f_ijundefine(ARG3) {
  * -undefine_val "VALUE1:VALUE2"
  * Grid values that are within the range are set to undefined. (i.e., VALUE1 <= grid_value <= VALUE2)
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success. Throws fatal_error() on failure.
  * 

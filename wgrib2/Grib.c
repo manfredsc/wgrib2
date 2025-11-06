@@ -126,7 +126,9 @@ extern int use_bitmap;
  * @note To use bitmap for undefined values in complex packing, you can use -set_bitmap 1 or you can use 
  * the complexN-bitmap.
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -159,7 +161,7 @@ int f_set_grib_type(ARG1) {
         use_bitmap = 1;
     }
 
-#ifdef USE_AEC
+#if G2_AEC_ENABLED == 1
     else if (strcmp(arg1,"aec") == 0 || strcmp(arg1,"a") == 0) grib_type = aec;
 #endif
     else if (strcmp(arg1,"same") == 0) {
@@ -175,7 +177,7 @@ int f_set_grib_type(ARG1) {
 #if G2_JPEG2000_ENABLED == 1
             else if (pack == 40) grib_type = jpeg;
 #endif
-#ifdef USE_AEC
+#if G2_AEC_ENABLED == 1
             else if (pack == 42) grib_type = aec;
 #endif
             // cannot duplicate output grib type
@@ -216,7 +218,9 @@ int f_set_grib_type(ARG1) {
  * 0 - do not use bitmap  (default)
  * 1 - use bitmap when packing undefined values with complex packing
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -257,7 +261,9 @@ int f_set_bitmap(ARG1) {
  * ## Usage
  * -grib_out file_name
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -353,7 +359,7 @@ int grib_wrt(unsigned char **sec, float *data, unsigned int ndata, unsigned int 
         max_bits, 2, use_bitmap, out); 
     else if (grib_type == complex3) complex_grib_out(sec, data, ndata, use_scale, dec_scale, bin_scale, wanted_bits, 
         max_bits, 3, use_bitmap, out); 
-#ifdef USE_AEC
+#if G2_AEC_ENABLED == 1
     else if (grib_type == aec) aec_grib_out(sec, data, ndata, use_scale, dec_scale, bin_scale, wanted_bits, max_bits, out);
 #endif
     return 0;
@@ -414,7 +420,9 @@ int grib_wrt(unsigned char **sec, float *data, unsigned int ndata, unsigned int 
  * 
  * The default value is N = 16.
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  * 
@@ -462,7 +470,9 @@ int f_set_grib_max_bits(ARG1) {
  * 
  * Result is an integer between 1 and 25.
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  *
@@ -607,7 +617,9 @@ unsigned char *mk_bms(float *data, unsigned int *ndata) {
  * 
  * If N is > 12, you need to increase the maximum bits of allowed precision by -set_grib_max_bits.
  * 
- * @param ARG1 ???
+ * @param ARG1 List of function arguments set by wgrib2's main() function (see @ref ARG1). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  *
@@ -653,7 +665,9 @@ int f_set_bin_prec(ARG1) {
  * ## Usage
  * -precision
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  *
@@ -740,7 +754,9 @@ int f_precision(ARG0) {
  * D = decimal scaling or the text 'same' with no quotes
  * B = binary scaling or the text 'same' with no quotes
  * 
- * @param ARG2 ???
+ * @param ARG2 List of function arguments set by wgrib2's main() function (see @ref ARG2). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 for success, error code otherwise
  *

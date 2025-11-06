@@ -23,7 +23,9 @@ extern char *nl;
  * ## Usage
  * -spectral_bands_extname
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return Always returns 0.
  * 
@@ -40,7 +42,10 @@ int f_spectral_bands_extname(ARG0) {
     
     const char *shortname1=NULL, *satellite1=NULL, *pol1=NULL;
     double c=299792458.;
-    double minwave=9e19, maxwave=-9e19, sumwave=0, wl, fq;
+    double minwave=9e19, maxwave=-9e19, sumwave=0.0, wl, fq;
+
+    (void) agency;
+    (void) longname;
 
     int multisat=0, multipol=0;
 
@@ -121,18 +126,20 @@ int f_spectral_bands_extname(ARG0) {
             sprintf(inv_out,"Ins %d ",instrument);
         inv_out+=strlen(inv_out);
     }
-        
-    if(minwave*1.01<maxwave)
-        sprintf(inv_out,"%d bands: %.3g to %.3g m-1 ",nb,minwave,maxwave);
-    else {
-        wl=1.e6/value;
-        fq=c*value/1e9;
-        if     (wl>0.1  && wl<100 )  sprintf(inv_out,"%.2f um ",wl);
-        else if(fq>1    && fq<1000)  sprintf(inv_out,"%.2f GHz ",fq);
-        else                         sprintf(inv_out,"%.3g m-1 ",minwave);
 
+    if (nb > 0) {
+        sumwave /= nb;
+        if(minwave*1.01<maxwave)
+            sprintf(inv_out,"%d bands: %.3g to %.3g m-1 ",nb,minwave,maxwave);
+        else {
+            wl=1.e6/sumwave;
+            fq=c*sumwave/1e9;
+            if     (wl>0.1  && wl<100 )  sprintf(inv_out,"%.2f um ",wl);
+            else if(fq>1    && fq<1000)  sprintf(inv_out,"%.2f GHz ",fq);
+            else                         sprintf(inv_out,"%.3g m-1 ",minwave);
+        }
+        inv_out+=strlen(inv_out);
     }
-    inv_out+=strlen(inv_out);
 
     if(multipol) 
         strcat(inv_out,"mult.pol.");
@@ -154,7 +161,9 @@ int f_spectral_bands_extname(ARG0) {
  * ## Usage
  * -spectral_bands
  * 
- * @param ARG0 ???
+ * @param ARG0 List of function arguments set by wgrib2's main() function (see @ref ARG0). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return Always returns 0.
  * 

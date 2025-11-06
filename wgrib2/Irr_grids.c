@@ -73,7 +73,9 @@ extern int msg_no;
  * 
  * This option will be elimated as template 3.130 was not adopted into the grib standard.
  * 
- * @param ARG3 ???
+ * @param ARG3 List of function arguments set by wgrib2's main() function (see @ref ARG3). These arguments 
+ * won't be relevant to the average wgrib2 user. See the Usage section above for details about any input 
+ * parameters.
  * 
  * @return 0 on success, error code otherwise
  * 
