@@ -21,7 +21,7 @@ wget -nv "$urlbase/raw/master/C08.csv" -O- | sed '{
   }' | env LC_ALL=en_US iconv -c -f UTF8 -t ASCII//TRANSLIT | awk -F";" '
   {
     num=$1; agency=$2; instype=$3; shortname=$4; longname=$5
-    if (num !~ "-" && num !~ "Code") {
+    if (num !~ "-" && num !~ "Code" && agency !~ "Reserved") {
       printf "case %d:\n",num
       printf "      agency=\"%s\";\n",agency
       printf "      instype=\"%s\";\n",instype

@@ -14,4 +14,6 @@ case    12: string="Destination Earth"; break;
 case    13: string="Destination Earth test"; break;
 case    14: string="Lead Centre for Global Climate Reanalyses (LC-GCR)"; break;
 case    15: string="Lead Centre for Global Climate Reanalyses (LC-GCR) test"; break;
+case    16: string="Machine Learning Model Intercomparison Project (MLMIP)"; break;
+case    17: string="Machine Learning Model Intercomparison Project (MLMIP) test"; break;
 case   255: string="Missing"; break;

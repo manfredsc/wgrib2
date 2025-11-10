@@ -1,4 +1,3 @@
-case     0: string="Reserved"; break;
 case     1: string="Urban land"; break;
 case     2: string="Agriculture"; break;
 case     3: string="Range land"; break;
