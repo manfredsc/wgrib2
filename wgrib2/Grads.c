@@ -82,7 +82,7 @@ int f_ctl_inv(ARG0) {
     float val1, val2;
     int level_type1, level_type2;
     int undef_val1, undef_val2, i,j,k;
-    int stat_proc, pdt;
+    int stat_proc, pdt, center;
     unsigned char *sec4, *p;
     const char *string;
     char limit1[30], limit2[30];
@@ -252,6 +252,7 @@ int f_ctl_inv(ARG0) {
 
     /* add stat processing term to description */
     if (stat_proc != -1) {
+        center = GB2_Center(sec);
         string = NULL;
         switch(stat_proc) {
 #include "CodeTable_4.10.dat"
