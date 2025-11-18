@@ -15,6 +15,7 @@ set(c_src
 
 if (BUILD_SHARED_LIB)
    add_library(wgrib2_ftn_api SHARED ${fortran_src} ${c_src})
+   set_target_properties(wgrib2_ftn_api PROPERTIES SOVERSION 0)
 else()
    add_library(wgrib2_ftn_api STATIC ${fortran_src} ${c_src})
    set_property(TARGET wgrib2_ftn_api PROPERTY POSITION_INDEPENDENT_CODE ON)
