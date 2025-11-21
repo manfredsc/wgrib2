@@ -1,5 +1,6 @@
-/*
- * public domain 9/2025 M. Schwarb
+/** @file
+ * @brief Header file defining mathematical constants.
+ * @author Public Domain: Manfred Schwarb @date 9/2025
  */
 
 #ifndef _WMATH_H_
