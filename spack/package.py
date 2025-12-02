@@ -154,7 +154,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
         "aec", 
         default=True, 
         description="Use the libaec library for packing with GRIB2 template",
-        when="@:3.8",
+        when="@:3.7",
     )
     variant(
         "g2c",
@@ -213,7 +213,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
     depends_on("g2c@2.3.0:", when="@develop +g2c_low")
     depends_on("g2c@2.3.0:", when="@develop +g2c_high")
     depends_on("lapack", when="@develop +ipolates")
-    depends_on("libaec@1.0.6:", when="@3.2:3.8 +aec")
+    depends_on("libaec@1.0.6:", when="@3.2:3.7 +aec")
     # Options to use netcdf3 or netcdf4 merged into a single option with v3.4.0
     depends_on("netcdf-c", when="@3.4: +netcdf")
     depends_on("netcdf-c", when="@3.2:3.3 +netcdf4")
