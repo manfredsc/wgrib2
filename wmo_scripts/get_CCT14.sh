@@ -26,7 +26,8 @@ wget -nv "$urlbase/raw/master/C14.csv" -O- | sed '{
     /"/ s/#/,/g
         s/"//g
         s/\o316\o261/alpha/g
-  }' | env LC_ALL=en_US iconv -c -f UTF8 -t ASCII//TRANSLIT | awk -F";" '
+  }' | env LC_ALL=en_US iconv -c -f UTF8 -t ASCII//TRANSLIT \
+    | grep -v ";Reserved" | awk -F";" '
   BEGIN {
     print "/** @file"
     print " * @brief Defines Code Table 4.230. (Atmospheric chemical constituent type)"
