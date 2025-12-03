@@ -1,7 +1,7 @@
 #!/bin/sh
-# This script runs a series of tests using the RPN calculator
+# This script runs a series of tests of the gmerge program.
 #
-# Alyson Stahl 5/7/2024
+# Wesley Ebisuzaki 10/2025
 
 set -e
 echo ""
@@ -19,7 +19,6 @@ done
 
 ../aux_progs/gmerge tmp.gmerge.grb $arg
 
-
 echo "*** running gmerge and ens_qc test "
 
 ../aux_progs/gmerge - $arg | ../wgrib2/wgrib2 - -ens_qc ens_qc.x ens_qc.y ens_qc.z 1 >/dev/null
@@ -34,5 +33,20 @@ if [ "$ck" != "$newck" ] ; then
     echo "error in ens_qc"
     exit 1
 fi
+
+echo "Testing error cases."
+echo "Testing with too few arguments."
+
+../aux_progs/gmerge && exit 1
+if [ $? -ne 8 ]; then
+    exit 1
+fi
+
+echo "Testing with bad argument."
+../aux_progs/gmerge /bad_directory/tmp.gmerge.grb $arg && exit 1
+if [ $? -ne 8 ]; then
+    exit 1
+fi
+
 echo "*** SUCCESS!"
 exit 0
