@@ -278,10 +278,10 @@ int ftime2_tr(unsigned char **sec, char *inv_out, unsigned char *verf_time, int 
             print_ftime2(code_4_4a,0,code_4_4a, timea, 2, inv_out);
             inv_out += strlen(inv_out);
             if (fcst_time == 0) {
-                sprintf(inv_out," %s anl", code_4_10_name(code_4_10));
+                sprintf(inv_out," %s anl", code_4_10_name(code_4_10, center));
             }
             else {
-                sprintf(inv_out," %s(%d %s fcst)", code_4_10_name(code_4_10), fcst_time, time_range2a(fcst_unit));
+                sprintf(inv_out," %s(%d %s fcst)", code_4_10_name(code_4_10, center), fcst_time, time_range2a(fcst_unit));
             }
             inv_out += strlen(inv_out);
             return 0;
@@ -289,11 +289,11 @@ int ftime2_tr(unsigned char **sec, char *inv_out, unsigned char *verf_time, int 
         if (code_4_11 == 1) {
             inv_out += strlen(inv_out);
             if (code_4_4a == code_4_4b) {
-                sprintf(inv_out,"%d@%d %s %s", timea/timeb+1,timeb,time_range2a(code_4_4b), code_4_10_name(code_4_10));
+                sprintf(inv_out,"%d@%d %s %s", timea/timeb+1,timeb,time_range2a(code_4_4b), code_4_10_name(code_4_10, center));
             }
             else {
                 sprintf(inv_out,"%d %ss@%d %s %s", timea, time_range2a(code_4_4a), timeb, time_range2a(code_4_4b), 
-                        code_4_10_name(code_4_10));
+                        code_4_10_name(code_4_10, center));
             }
             inv_out += strlen(inv_out);
             if (fcst_time == 0) {
@@ -324,7 +324,7 @@ int ftime2_tr(unsigned char **sec, char *inv_out, unsigned char *verf_time, int 
                 sprintf(inv_out," fcst");
             }
             else {
-                sprintf(inv_out," %s fcst", code_4_10_name(code_4_10));
+                sprintf(inv_out," %s fcst", code_4_10_name(code_4_10, center));
             }
             return 0;
         }
@@ -337,14 +337,14 @@ int ftime2_tr(unsigned char **sec, char *inv_out, unsigned char *verf_time, int 
             tmp_unit = code_4_4b;
             tmp_value = timeb;
             normalize_time_range(&tmp_unit, &tmp_value);
-            sprintf(inv_out," %s@(fcst,dt=%d %s)", code_4_10_name(code_4_10),tmp_value,time_range2a(tmp_unit));
-            // sprintf(inv_out," %s@(fcst,dt=%d %s)", code_4_10_name(code_4_10),timeb,time_range2a(code_4_4b));
+            sprintf(inv_out," %s@(fcst,dt=%d %s)", code_4_10_name(code_4_10, center),tmp_value,time_range2a(tmp_unit));
+            // sprintf(inv_out," %s@(fcst,dt=%d %s)", code_4_10_name(code_4_10, center),timeb,time_range2a(code_4_4b));
             return 0;
         }
         /* 0-12 hour ave(24-12 hour fcst) */
         if (code_4_11 == 3 && timeb == 0) {
             inv_out += strlen(inv_out);
-            sprintf(inv_out,"0-%d %s %s(", timea, time_range2a(code_4_4a),code_4_10_name(code_4_10));
+            sprintf(inv_out,"0-%d %s %s(", timea, time_range2a(code_4_4a),code_4_10_name(code_4_10, center));
             inv_out += strlen(inv_out);
             print_ftime2(fcst_unit,fcst_time, code_4_4a, -timea, 3, inv_out);
             inv_out += strlen(inv_out);
@@ -356,23 +356,23 @@ int ftime2_tr(unsigned char **sec, char *inv_out, unsigned char *verf_time, int 
 
         //  ensemble acc-3 valid 174 hour
         if (code_4_11 == 3) {
-            sprintf(inv_out,"ensemble %s-3 valid %d %s", code_4_10_name(code_4_10), fcst_time, time_range2a(fcst_unit));
+            sprintf(inv_out,"ensemble %s-3 valid %d %s", code_4_10_name(code_4_10, center), fcst_time, time_range2a(fcst_unit));
             return 0;
         }
 	    
         //  ensemble acc-4 valid 174 hour
         if (code_4_11 == 4) {
-            sprintf(inv_out,"ensemble %s-4 valid %d %s", code_4_10_name(code_4_10), fcst_time, time_range2a(fcst_unit));
+            sprintf(inv_out,"ensemble %s-4 valid %d %s", code_4_10_name(code_4_10, center), fcst_time, time_range2a(fcst_unit));
             return 0;
         }
         if (code_4_11 == 5) {
 #ifdef OLD_MODE
             sprintf(inv_out,"%d %s dt %d %s%d %s %s", fcst_time, time_range2a(fcst_unit),
-            timea, time_range2a(fcst_unit), timea, time_range2a(fcst_unit), code_4_10_name(code_4_10));
+            timea, time_range2a(fcst_unit), timea, time_range2a(fcst_unit), code_4_10_name(code_4_10, center));
 #else
             print_ftime2(fcst_unit,fcst_time, code_4_4a, timea, 2, inv_out);
             inv_out += strlen(inv_out);
-            sprintf(inv_out, " (subinterval) %s", code_4_10_name(code_4_10));
+            sprintf(inv_out, " (subinterval) %s", code_4_10_name(code_4_10, center));
 
 #endif
         }
@@ -426,12 +426,12 @@ int ftime2_tr(unsigned char **sec, char *inv_out, unsigned char *verf_time, int 
         if (code_4_4a == code_4_4b) {
             i = timea/timeb+1;
             simple_time_range(&code_4_4b, &timeb);
-            if (code_4_11 == 4) sprintf(inv_out,"%d@-%d %s %s%s",i,timeb,time_range2a(code_4_4b), code_4_10_name(code_4_10),left);
-            else sprintf(inv_out,"%d@%d %s %s%s",i,timeb,time_range2a(code_4_4b), code_4_10_name(code_4_10),left);
+            if (code_4_11 == 4) sprintf(inv_out,"%d@-%d %s %s%s",i,timeb,time_range2a(code_4_4b), code_4_10_name(code_4_10, center),left);
+            else sprintf(inv_out,"%d@%d %s %s%s",i,timeb,time_range2a(code_4_4b), code_4_10_name(code_4_10, center),left);
         }
         else {
             sprintf(inv_out,"%d %ss@%d %s %s%s", timea, time_range2a(code_4_4a), timeb, time_range2a(code_4_4b), 
-                    code_4_10_name(code_4_10),left);
+                    code_4_10_name(code_4_10, center),left);
         }
         inv_out += strlen(inv_out);
         ftime2_tr(sec, inv_out, verf_time, fcst_time, fcst_unit, n+1, mode, prt_missing);

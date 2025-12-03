@@ -2208,11 +2208,12 @@ unsigned char *code_table_4_9_location(unsigned char **sec) {
  * @author Wesley Ebisuzaki @date 2009
  */
 int f_code_table_4_10(ARG0) {
-    int val;
+    int val, center;
     const char *string;
     if (mode >= 0) {
         val = code_table_4_10(sec);
         if (val >= 0) {
+            center = GB2_Center(sec);
             string = NULL;
             switch(val) {
 #include "CodeTable_4.10.dat"
