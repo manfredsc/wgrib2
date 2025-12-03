@@ -48,5 +48,11 @@ if [ $? -ne 8 ]; then
     exit 1
 fi
 
+echo "Testing with bad file."
+../aux_progs/gmerge tmp.gmerge.grb $file bad_file.grb && exit 1
+if [ $? -ne 8 ]; then
+    exit 1
+fi
+
 echo "*** SUCCESS!"
 exit 0
