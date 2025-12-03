@@ -12,6 +12,8 @@
 #include <setjmp.h>
 #include "grb2.h"
 
+int uint8(unsigned char *p);
+
 // Jump buffer for catching exit() calls
 static jmp_buf exit_jmp;
 static int exit_code = 0;

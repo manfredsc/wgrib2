@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+int rd_msg(FILE *in, FILE *out);
+
 int
 main()
 {

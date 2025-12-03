@@ -11,6 +11,8 @@
 #include <limits.h>
 #include "grb2.h"
 
+int uint8(unsigned char *p);
+
 int
 main()
 {
