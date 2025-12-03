@@ -191,6 +191,28 @@ copy_test_data(ref_jpeg2simple.txt)
 copy_test_data(LARGECAT220250305_12_1443copy.grib2)
 copy_test_data(ref_LARGECAT220250305_12_1443copy_stats.txt)
 
+# Build and run tests for auxillary programs.
+
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)  
+  # Test normal 64-bit behavior
+  add_executable(test_uint8_64bit test_uint8_64bit.c ${CMAKE_SOURCE_DIR}/aux_progs/uint8.c)
+  target_include_directories(test_uint8_64bit PRIVATE ${CMAKE_SOURCE_DIR}/aux_progs)
+  add_test(NAME test_uint8_64bit COMMAND test_uint8_64bit)
+  
+  # Test 32-bit behavior on 64-bit system using FORCE_32BIT_TEST
+  add_executable(test_uint8_32bit test_uint8_32bit.c ${CMAKE_SOURCE_DIR}/aux_progs/uint8.c)
+  target_include_directories(test_uint8_32bit PRIVATE ${CMAKE_SOURCE_DIR}/aux_progs)
+  target_compile_definitions(test_uint8_32bit PRIVATE FORCE_32BIT_TEST)
+  add_test(NAME test_uint8_32bit COMMAND test_uint8_32bit)
+else()
+  add_executable(test_uint8_32bit test_uint8_32bit.c ${CMAKE_SOURCE_DIR}/aux_progs/uint8.c)
+  target_include_directories(test_uint8_32bit PRIVATE ${CMAKE_SOURCE_DIR}/aux_progs)
+  add_test(NAME test_uint8_32bit COMMAND test_uint8_32bit)
+endif()
+
+add_executable(test_rd_msg test_rd_msg.c ${CMAKE_SOURCE_DIR}/aux_progs/gmerge.c)
+target_include_directories(test_rd_msg PRIVATE ${CMAKE_SOURCE_DIR}/aux_progs)
+add_test(NAME test_rd_msg COMMAND test_rd_msg)
 
 if (MAKE_FTN_API)
   build_ftn_api_test(test_fortran_api)
