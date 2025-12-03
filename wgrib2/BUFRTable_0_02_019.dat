@@ -2488,12 +2488,6 @@ case 988:
       shortname="WindRAD";
       longname="Wind Radar";
       break;
-case 989:
-      agency="Reserved";
-      instype="";
-      shortname="";
-      longname="";
-      break;
 case 990:
       agency="NASA";
       instype="Radiometer";
