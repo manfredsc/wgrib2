@@ -222,7 +222,7 @@ for (i = 0;;)
            }
       }
    }
-*lat  = phid * .01745329252;
+*lat  = phid * D2R;
 
 /* calculate  LONG. using final LAT. with transposed forward Stirling's 
    interpolation formula.
