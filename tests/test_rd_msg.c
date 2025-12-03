@@ -99,10 +99,7 @@ main()
         memset(incomplete_header, 0, 16);
         strcpy((char*)incomplete_header, "GRIB");
         // Set message length to 32 bytes
-        incomplete_header[8] = 0x00;
-        incomplete_header[9] = 0x00;
-        incomplete_header[10] = 0x00;
-        incomplete_header[11] = 0x20;
+        incomplete_header[15] = 32; 
 
         input = fopen("test_incomplete.tmp", "wb");
         fwrite(incomplete_header, 1, 16, input);
@@ -133,11 +130,8 @@ main()
         memset(valid_header, 0, 16);
         strcpy((char*)valid_header, "GRIB");
         // Set message length to 32 bytes
-        valid_header[8] = 0x00;
-        valid_header[9] = 0x00;
-        valid_header[10] = 0x00;
-        valid_header[11] = 0x20;
-
+        valid_header[15] = 32; 
+        
         input = fopen("test_valid.tmp", "wb");
         fwrite(valid_header, 1, 16, input);
         // Write 16 more bytes of data
