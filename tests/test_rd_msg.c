@@ -14,7 +14,6 @@ int
 main()
 {
     printf("Testing gmerge helper function rd_msg()...\n");
-    fflush(stdout); 
     printf("EOF on first read. Should return -1.");
     {
         FILE *input, *output;
@@ -38,7 +37,6 @@ main()
     }
     printf("ok!\n");
     printf("Invalid GRIB header. Should return -1.");
-    fflush(stdout); 
     {
         FILE *input, *output;
         unsigned char bad_data[16]; 
@@ -74,7 +72,14 @@ main()
         memset(large_header, 0, 16);
         strcpy((char*)large_header, "GRIB");
         // Set message length to > 1GB
-        large_header[7] = 0x40; // 1GB = 0x40000000
+        large_header[8] = 0x00;
+        large_header[9] = 0x00;
+        large_header[10] = 0x00;
+        large_header[11] = 0x40; // 1GB = 0x40000000
+        large_header[12] = 0x00;
+        large_header[13] = 0x00;
+        large_header[14] = 0x00;
+        large_header[15] = 0x00;
 
         input = fopen("test_large.tmp", "wb");
         fwrite(large_header, 1, 16, input);
@@ -94,7 +99,6 @@ main()
     }
     printf("ok!\n");
     printf("Incomplete message read. Should return -1.");
-    fflush(stdout); 
     {
         FILE *input, *output;
         unsigned char incomplete_header[16]; 
@@ -126,7 +130,6 @@ main()
     }
     printf("ok!\n");
     printf("Valid GRIB message. Should return 0.");
-    fflush(stdout); 
     {
         FILE *input, *output;
         unsigned char valid_header[16]; 
