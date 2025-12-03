@@ -85,7 +85,7 @@ main()
         fclose(input);
         fclose(output);
         //remove("test_large.tmp");
-        remove("test_output.tmp");
+        //remove("test_output.tmp");
 
         if (result != -1) return 3;
     }
