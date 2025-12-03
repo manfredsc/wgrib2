@@ -17,7 +17,7 @@
 #define ULONG_MAX 4294967295UL
 #endif
 
-int uint8(unsigned char *p);
+unsigned long int uint8(unsigned char *p);
 
 // Jump buffer for catching exit() calls
 static jmp_buf exit_jmp;
