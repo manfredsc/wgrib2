@@ -41,7 +41,7 @@ main()
         //FILE *input, *output;
         //unsigned char bad_data[16]; 
         int result;
-        result = 0;
+        result = -1;
         //memset(bad_data, 0, 16);
         //strcpy((char*)bad_data, "BADHEADER");
 
