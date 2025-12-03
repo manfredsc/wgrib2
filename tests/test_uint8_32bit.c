@@ -52,6 +52,7 @@ main()
             printf("FAIL: Error case test - function should have called exit() but didn't\n");
             return 2;
         } else {
+            result = 0; // Silence unused variable warning
             // We jumped back here from exit() - check the exit code
             if (exit_code != 8) {
                 printf("FAIL: Error case test - called exit(%d), expected exit(8)\n", exit_code);
