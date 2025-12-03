@@ -9,6 +9,8 @@
 #include <string.h>
 #include <ctype.h>
 #include <math.h>
+
+#include "wmath.h"
 #include "grb2.h"
 #include "wgrib2.h"
 #include "fnlist.h"
@@ -204,7 +206,7 @@ int f_wind_dir(ARG1) {
 #endif
             for (i = 0; i < ndata; i++) {
                 if (!UNDEFINED_VAL(data[i]) && !UNDEFINED_VAL(d1[i])) {
-                    d1[i] = (atan2(d1[i],data[i]) * 180.0 / 3.14159265359 + 180.0);
+                    d1[i] = (atan2(d1[i],data[i]) * RAD_TO_DEG + 180.0);
                 }
                 else d1[i] = UNDEFINED;
             }

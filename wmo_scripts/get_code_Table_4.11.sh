@@ -18,7 +18,8 @@ wget -nv "$urlbase/raw/master/GRIB2_CodeFlag_4_11_CodeTable_en.csv" -O- | sed '{
     s/,/;/g
     s/# /, /g
     s/"//g
-  }' | env LC_ALL=en_US iconv -c -f UTF8 -t ASCII//TRANSLIT | awk -F";" '
+  }' | env LC_ALL=en_US iconv -c -f UTF8 -t ASCII//TRANSLIT \
+    | grep -v ";Reserved" | awk -F";" '
   {
     num=$3; name=$5
     if (num !="" && num !~ "-" && num !~ "Code") {

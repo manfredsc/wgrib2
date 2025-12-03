@@ -660,7 +660,7 @@ const char *time_range2a(int tr);
 int normalize_time_range(int *tr, int *val);
 void simple_time_range(int *tr, int *val);
 int a2code_4_10(const char *string);
-const char *code_4_10_name(int code_4_10);
+const char *code_4_10_name(int code_4_10, int center);
 int a2anl_fcst(const char *string);
 
 unsigned int cksum(unsigned char const *buf, size_t length);

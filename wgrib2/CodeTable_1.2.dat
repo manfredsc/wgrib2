@@ -4,4 +4,5 @@ case     2: string="Verifying time of forecast"; break;
 case     3: string="Observation time"; break;
 case     4: string="Local time"; break;
 case     5: string="Simulation start"; break;
+case     6: string="Start of data assimilation"; break;
 case   255: string="Missing"; break;

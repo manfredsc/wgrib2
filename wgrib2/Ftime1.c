@@ -181,7 +181,7 @@ static void print_ftime(int unit1, int value1, int unit2, int value2, int format
  */
 int prt_stat_tr(int mode, unsigned char **sec, char *inv_out, unsigned char *p, int inner) {
     const char *string;
-    int unit, value, unit2, value2, unit3, value3;
+    int unit, value, unit2, value2, unit3, value3, center;
 
     // unit2,value2:  time range for which stat processing is done
     unit2 = p[2];
@@ -213,6 +213,7 @@ int prt_stat_tr(int mode, unsigned char **sec, char *inv_out, unsigned char *p, 
         return 0;
     }
 
+    center = GB2_Center(sec);
     if (inner) {
         if ((unit = code_table_4_4(sec)) < 0) return -1;
         // value = GB2_ForecastTime(sec);

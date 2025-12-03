@@ -144,7 +144,7 @@ long ip1;
 /* Forward equations
   -----------------*/
 dlon = adjust_lon(lon - lon_center);
-p2 = fabs(lat / 5.0 / .01745329252);
+p2 = fabs(lat / 5.0 / D2R);
 ip1 = (long) (p2 - EPSLN);
 
 /* Stirling's interpolation formula (using 2nd Diff.)

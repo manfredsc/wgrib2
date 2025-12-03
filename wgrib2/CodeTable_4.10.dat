@@ -15,4 +15,22 @@ case    13: string="median"; break;  // Median
 case   100: string="severity"; break;  // Severity
 case   101: string="mode"; break;  // Mode
 case   102: string="index processing"; break;  // Index processing
+case   192: if (center == NCEP) string="climatological mean"; break;
+case   193: if (center == NCEP) string="average of forecasts"; break;
+case   194: if (center == NCEP) string="average of uninitialized analyses"; break;
+case   195: if (center == NCEP) string="average of forecast accumulations"; break;
+case   196: if (center == NCEP) string="average of cuccessive forecast accumulations"; break;
+case   197: if (center == NCEP) string="average of forecast averages"; break;
+case   198: if (center == NCEP) string="average of successive forecast averages"; break;
+case   199: if (center == NCEP) string="climatological average of analyses"; break;
+case   200: if (center == NCEP) string="climatological average of forecasts"; break;
+case   201: if (center == NCEP) string="climatological RMS"; break;
+case   202: if (center == NCEP) string="climatological StdDev of forecasts"; break;
+case   203: if (center == NCEP) string="climatological StdDev of analyses"; break;
+case   204: if (center == NCEP) string="average of forecast accumulations in 6h intervals"; break;
+case   205: if (center == NCEP) string="average of forecast averages in 6h intervals"; break;
+case   206: if (center == NCEP) string="average of forecast accumulations in 12h intervals"; break;
+case   207: if (center == NCEP) string="average of forecast averages in 12h intervals"; break;
+case   208: if (center == NCEP) string="variance"; break;
+case   209: if (center == NCEP) string="coefficient"; break;
 case   255: string="missing"; break;  // Missing
