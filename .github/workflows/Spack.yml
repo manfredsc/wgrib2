@@ -35,6 +35,7 @@ jobs:
         spack-compiler: gcc
         use-common-build-cache: false
         repo-cache-key-suffix: ${{ matrix.os }}-${{ matrix.variants }}-1
+        spack-test-flag: "--test root --verbose"
 
   recipe-check:
     runs-on: ubuntu-latest
