@@ -326,7 +326,7 @@ static void som_series(double *fb, double *fa2, double *fa4, double *fc1,
 //{
 double sd,sdsq,h,sq,fc;
 
-*dlam= *dlam*0.0174532925;               /* Convert dlam to radians */
+*dlam= *dlam*D2R;               /* Convert dlam to radians */
 sd=sin(*dlam);
 sdsq=sd*sd;
 s=p21*sa*cos(*dlam)*sqrt((1.0+t*sdsq)/((1.0+w*sdsq)*(1.0+q*sdsq)));

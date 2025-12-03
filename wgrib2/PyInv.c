@@ -63,15 +63,19 @@ int f_pyinv(ARG0)
     /* Section 1 */
     {
         int year, month, day, hour, minute, second;
-        const char *string;
-        char tmp[20];
+        const char *string = NULL;
         int ctr = GB2_Center(sec);
         int subctr = GB2_Subcenter(sec);
         int ctrsubctr;
         switch (ctr) {
 #include "code_table0.dat"
         }
-        inv_out += sprintf(inv_out, ",'centre':'%d - %s'", ctr, string);
+        if (string) {
+          inv_out += sprintf(inv_out, ",'centre':'%d - %s'", ctr, string);
+        }
+        else {
+          inv_out += sprintf(inv_out, ",'centre':'%d'", ctr);
+        }
         string = NULL;
         if (subctr > 0) {  /* a lot of messages have no sub-centre declared */
           ctrsubctr = (ctr<<16)+subctr;
@@ -81,7 +85,8 @@ int f_pyinv(ARG0)
         }
         if (string == NULL) {
             inv_out += sprintf(inv_out, ",'subcentre':'%d'", subctr);
-        } else {
+        }
+        else {
             inv_out += sprintf(inv_out, ",'subcentre':'%s'", string);
         }
         inv_out += sprintf(inv_out, ",'mastertab':%d", GB2_MasterTable(sec));

@@ -62,6 +62,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
     )
 
     version("develop", branch="develop")
+    version("3.8.0", sha256="39faebada36da5457c75f0980bb68fa299b221b3e6b335bb7d29006a35830c54")
     version("3.7.0", sha256="b741a07710a8195c99a7d50de05bde90182ab4334f5c4a0d6d057c4e20cc6a75")
     version("3.6.0", sha256="55913cb58f2b329759de17f5a84dd97ad1844d7a93956d245ec94f4264d802be")
     version("3.5.0", sha256="b27b48228442a08bddc3d511d0c6335afca47252ae9f0e41ef6948f804afa3a1")
@@ -153,7 +154,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
         "aec", 
         default=True, 
         description="Use the libaec library for packing with GRIB2 template",
-        when="@:3.8",
+        when="@:3.7",
     )
     variant(
         "g2c",
@@ -212,7 +213,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
     depends_on("g2c@2.3.0:", when="@develop +g2c_low")
     depends_on("g2c@2.3.0:", when="@develop +g2c_high")
     depends_on("lapack", when="@develop +ipolates")
-    depends_on("libaec@1.0.6:", when="@3.2:3.8 +aec")
+    depends_on("libaec@1.0.6:", when="@3.2:3.7 +aec")
     # Options to use netcdf3 or netcdf4 merged into a single option with v3.4.0
     depends_on("netcdf-c", when="@3.4: +netcdf")
     depends_on("netcdf-c", when="@3.2:3.3 +netcdf4")

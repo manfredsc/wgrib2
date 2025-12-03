@@ -99,10 +99,10 @@ long tmpspheroid;	/* temporary spheroid for UTM			*/
      zone = inzone;
      if (zone == 0)
         {
-        lon1 = paksz(inparm[0],iflg) * 3600 * S2R;
+        lon1 = paksz(inparm[0],iflg) * D2R;
         if (*iflg != 0)
            return;
-        lat1 = paksz(inparm[1],iflg) * 3600 * S2R;
+        lat1 = paksz(inparm[1],iflg) * D2R;
         if (*iflg != 0)
            return;
         zone = calc_utm_zone(lon1 * R2D);
@@ -128,16 +128,16 @@ long tmpspheroid;	/* temporary spheroid for UTM			*/
      {
      /* this is the call to initialize ALBERS 
      ---------------------------------------*/
-     lat1 = paksz(inparm[2],iflg) * 3600 * S2R;
+     lat1 = paksz(inparm[2],iflg) * D2R;
      if (*iflg != 0)
          return;
-     lat2 = paksz(inparm[3],iflg) * 3600 * S2R;
+     lat2 = paksz(inparm[3],iflg) * D2R;
      if (*iflg != 0)
          return;
-     center_long = paksz(inparm[4],iflg) * 3600 * S2R;
+     center_long = paksz(inparm[4],iflg) * D2R;
      if (*iflg != 0)
         return;
-     lat_origin  = paksz(inparm[5],iflg) * 3600 * S2R;
+     lat_origin  = paksz(inparm[5],iflg) * D2R;
      if (*iflg != 0)
         return;
      *iflg = alberinvint(r_major,r_minor,lat1,lat2,center_long,lat_origin,
@@ -149,16 +149,16 @@ long tmpspheroid;	/* temporary spheroid for UTM			*/
      {
      /* this is the call to initialize LAMBERT CONFORMAL CONIC 
      --------------------------------------------------------*/
-     lat1 = paksz(inparm[2],iflg) * 3600 * S2R;
+     lat1 = paksz(inparm[2],iflg) * D2R;
      if (*iflg != 0)
         return;
-     lat2 = paksz(inparm[3],iflg) * 3600 * S2R;
+     lat2 = paksz(inparm[3],iflg) * D2R;
      if (*iflg != 0)
         return;
-     center_long = paksz(inparm[4],iflg) * 3600 * S2R;
+     center_long = paksz(inparm[4],iflg) * D2R;
      if (*iflg != 0)
         return;
-     lat_origin  = paksz(inparm[5],iflg) * 3600 * S2R;
+     lat_origin  = paksz(inparm[5],iflg) * D2R;
      if (*iflg != 0)
         return;
      *iflg = lamccinvint(r_major,r_minor,lat1,lat2,center_long,lat_origin,
@@ -170,10 +170,10 @@ long tmpspheroid;	/* temporary spheroid for UTM			*/
      {
      /* this is the call to initialize MERCATOR
      ----------------------------------------*/
-     center_long  = paksz(inparm[4],iflg) * 3600 * S2R;
+     center_long  = paksz(inparm[4],iflg) * D2R;
      if (*iflg != 0)
         return;
-     lat1   = paksz(inparm[5],iflg) * 3600 * S2R;
+     lat1   = paksz(inparm[5],iflg) * D2R;
      if (*iflg != 0)
         return;
      *iflg = merinvint(r_major,r_minor,center_long,lat1,false_easting,
@@ -185,10 +185,10 @@ long tmpspheroid;	/* temporary spheroid for UTM			*/
      {
      /* this is the call to initialize POLAR STEREOGRAPHIC 
      ----------------------------------------------------*/
-     center_long = paksz(inparm[4],iflg) * 3600 * S2R;
+     center_long = paksz(inparm[4],iflg) * D2R;
      if (*iflg != 0)
         return;
-     lat1  =  paksz(inparm[5],iflg) * 3600 * S2R;
+     lat1  =  paksz(inparm[5],iflg) * D2R;
      if (*iflg != 0)
         return;
      *iflg = psinvint(r_major,r_minor,center_long,lat1,false_easting,
@@ -200,10 +200,10 @@ long tmpspheroid;	/* temporary spheroid for UTM			*/
      {
      /* this is the call to initialize POLYCONIC
      -----------------------------------------*/
-     center_long  = paksz(inparm[4],iflg) * 3600 * S2R;
+     center_long  = paksz(inparm[4],iflg) * D2R;
      if (*iflg != 0)
         return;
-     lat_origin   = paksz(inparm[5],iflg) * 3600 * S2R;
+     lat_origin   = paksz(inparm[5],iflg) * D2R;
      if (*iflg != 0)
         return;
      *iflg = polyinvint(r_major,r_minor,center_long,lat_origin,false_easting,
@@ -215,16 +215,16 @@ long tmpspheroid;	/* temporary spheroid for UTM			*/
     {
      /* this is the call to initialize EQUIDISTANT CONIC
      ---------------------------------------------------*/
-    lat1 = paksz(inparm[2],iflg) * 3600 * S2R;
+    lat1 = paksz(inparm[2],iflg) * D2R;
     if (*iflg != 0)
        return;
-    lat2 = paksz(inparm[3],iflg) * 3600 * S2R;
+    lat2 = paksz(inparm[3],iflg) * D2R;
     if (*iflg != 0)
        return;
-    center_long  = paksz(inparm[4],iflg) * 3600 * S2R;
+    center_long  = paksz(inparm[4],iflg) * D2R;
     if (*iflg != 0)
        return;
-    lat_origin   = paksz(inparm[5],iflg) * 3600 * S2R;
+    lat_origin   = paksz(inparm[5],iflg) * D2R;
     if (*iflg != 0)
        return;
     if (inparm[8] == 0)
@@ -241,10 +241,10 @@ long tmpspheroid;	/* temporary spheroid for UTM			*/
      /* this is the call to initialize TRANSVERSE MERCATOR
      -------------------------------------------------*/
      scale_factor = inparm[2];
-     center_long  = paksz(inparm[4],iflg) * 3600 * S2R;
+     center_long  = paksz(inparm[4],iflg) * D2R;
      if (*iflg != 0)
         return;
-     lat_origin   = paksz(inparm[5],iflg) * 3600 * S2R;
+     lat_origin   = paksz(inparm[5],iflg) * D2R;
      if (*iflg != 0)
         return;
      *iflg = tminvint(r_major,r_minor,scale_factor,center_long,lat_origin,
@@ -256,10 +256,10 @@ long tmpspheroid;	/* temporary spheroid for UTM			*/
      {
      /* this is the call to initialize STEREOGRAPHIC
      ---------------------------------------------*/
-     center_long  = paksz(inparm[4],iflg) * 3600 * S2R;
+     center_long  = paksz(inparm[4],iflg) * D2R;
      if (*iflg != 0)
         return;
-     center_lat   = paksz(inparm[5],iflg) * 3600 * S2R;
+     center_lat   = paksz(inparm[5],iflg) * D2R;
      if (*iflg != 0)
         return;
      *iflg = sterinvint(radius,center_long,center_lat,false_easting, 
@@ -271,10 +271,10 @@ long tmpspheroid;	/* temporary spheroid for UTM			*/
      {
      /* this is the call to initialize LAMBERT AZIMUTHAL EQUAL-AREA 
      -------------------------------------------------------------*/
-     center_long = paksz(inparm[4],iflg) * 3600 * S2R;
+     center_long = paksz(inparm[4],iflg) * D2R;
      if (*iflg != 0)
         return;
-     center_lat  = paksz(inparm[5],iflg) * 3600 * S2R;
+     center_lat  = paksz(inparm[5],iflg) * D2R;
      if (*iflg != 0)
         return;
      *iflg = lamazinvint(radius, center_long, center_lat,false_easting,
@@ -286,10 +286,10 @@ long tmpspheroid;	/* temporary spheroid for UTM			*/
      {
      /* this is the call to initialize AZIMUTHAL EQUIDISTANT
      ------------------------------------------------------*/
-     center_long  = paksz(inparm[4],iflg) * 3600 * S2R;
+     center_long  = paksz(inparm[4],iflg) * D2R;
      if (*iflg != 0)
         return;
-     center_lat   = paksz(inparm[5],iflg) * 3600 * S2R;
+     center_lat   = paksz(inparm[5],iflg) * D2R;
      if (*iflg != 0)
         return;
      *iflg = aziminvint(radius,center_long,center_lat,false_easting,
@@ -301,10 +301,10 @@ long tmpspheroid;	/* temporary spheroid for UTM			*/
      {
      /* this is the call to initialize GNOMONIC 
      ----------------------------------------*/
-     center_long  = paksz(inparm[4],iflg) * 3600 * S2R;
+     center_long  = paksz(inparm[4],iflg) * D2R;
      if (*iflg != 0)
         return;
-     center_lat   = paksz(inparm[5],iflg) * 3600 * S2R;
+     center_lat   = paksz(inparm[5],iflg) * D2R;
      if (*iflg != 0)
         return;
      *iflg = gnominvint(radius,center_long,center_lat,false_easting,
@@ -316,10 +316,10 @@ long tmpspheroid;	/* temporary spheroid for UTM			*/
      {
      /* this is the call to initialize ORTHOGRAPHIC
      --------------------------------------------*/
-     center_long  = paksz(inparm[4],iflg) * 3600 * S2R;
+     center_long  = paksz(inparm[4],iflg) * D2R;
      if (*iflg != 0)
         return;
-     center_lat   = paksz(inparm[5],iflg) * 3600 * S2R;
+     center_lat   = paksz(inparm[5],iflg) * D2R;
      if (*iflg != 0)
         return;
      *iflg = orthinvint(radius,center_long,center_lat,false_easting,
@@ -331,10 +331,10 @@ long tmpspheroid;	/* temporary spheroid for UTM			*/
      {
      /* this is the call to initialize GENERAL VERTICAL NEAR SIDED PERSPECTIVE 
      -----------------------------------------------------------------------*/
-     center_long  = paksz(inparm[4],iflg) * 3600 * S2R;
+     center_long  = paksz(inparm[4],iflg) * D2R;
      if (*iflg != 0)
         return;
-     center_lat   = paksz(inparm[5],iflg) * 3600 * S2R;
+     center_lat   = paksz(inparm[5],iflg) * D2R;
      if (*iflg != 0)
         return;
      h = inparm[2];
@@ -347,7 +347,7 @@ long tmpspheroid;	/* temporary spheroid for UTM			*/
      {
      /* this is the call to initialize SINUSOIDAL 
      --------------------------------------------*/
-     center_long    = paksz(inparm[4],iflg) * 3600 * S2R;
+     center_long    = paksz(inparm[4],iflg) * D2R;
      if (*iflg != 0)
         return;
      *iflg = sininvint(radius, center_long,false_easting,false_northing);
@@ -358,10 +358,10 @@ long tmpspheroid;	/* temporary spheroid for UTM			*/
      {
      /* this is the call to initialize EQUIRECTANGULAR
      -----------------------------------------------*/
-     center_long  = paksz(inparm[4],iflg) * 3600 * S2R;
+     center_long  = paksz(inparm[4],iflg) * D2R;
      if (*iflg != 0)
         return;
-     lat1   = paksz(inparm[5],iflg) * 3600 * S2R;
+     lat1   = paksz(inparm[5],iflg) * D2R;
      if (*iflg != 0)
         return;
      *iflg = equiinvint(radius,center_long,lat1,false_easting,
@@ -373,7 +373,7 @@ long tmpspheroid;	/* temporary spheroid for UTM			*/
     {
     /* this is the call to initialize MILLER CYLINDRICAL
     --------------------------------------------------*/
-    center_long  = paksz(inparm[4],iflg) * 3600 * S2R;
+    center_long  = paksz(inparm[4],iflg) * D2R;
     if (*iflg != 0)
        return;
     *iflg = millinvint(radius, center_long,false_easting,false_northing);
@@ -384,7 +384,7 @@ long tmpspheroid;	/* temporary spheroid for UTM			*/
     {
     /* this is the call to initialize VAN DER GRINTEN 
     -----------------------------------------------*/
-    center_long  = paksz(inparm[4],iflg) * 3600 * S2R;
+    center_long  = paksz(inparm[4],iflg) * D2R;
     if (*iflg != 0)
        return;
     *iflg = vandginvint(radius, center_long,false_easting,false_northing);
@@ -396,32 +396,32 @@ long tmpspheroid;	/* temporary spheroid for UTM			*/
      /* this is the call to initialize HOTLINE OBLIQUE MERCATOR 
      ---------------------------------------------------------*/
      scale_factor = inparm[2];
-     lat_origin = paksz(inparm[5],iflg) * 3600 * S2R;
+     lat_origin = paksz(inparm[5],iflg) * D2R;
      if (*iflg != 0)
         return;
      if (inparm[12] != 0)
         {
         mode = 1;
-        azimuth = paksz(inparm[3],iflg) * 3600 * S2R;
+        azimuth = paksz(inparm[3],iflg) * D2R;
         if (*iflg != 0)
            return;
-        lon_origin = paksz(inparm[4],iflg) * 3600 * S2R;
+        lon_origin = paksz(inparm[4],iflg) * D2R;
         if (*iflg != 0)
            return;
         }
      else
         {
         mode = 0;
-        lon1 = paksz(inparm[8],iflg) * 3600 * S2R;
+        lon1 = paksz(inparm[8],iflg) * D2R;
         if (*iflg != 0)
            return;
-        lat1 = paksz(inparm[9],iflg) * 3600 * S2R;
+        lat1 = paksz(inparm[9],iflg) * D2R;
         if (*iflg != 0)
            return;
-        lon2 = paksz(inparm[10],iflg) * 3600 * S2R;
+        lon2 = paksz(inparm[10],iflg) * D2R;
         if (*iflg != 0)
            return;
-        lat2 = paksz(inparm[11],iflg) * 3600 * S2R;
+        lat2 = paksz(inparm[11],iflg) * D2R;
         if (*iflg != 0)
            return;
         
@@ -441,10 +441,10 @@ long tmpspheroid;	/* temporary spheroid for UTM			*/
     if (inparm[12] == 0)
        {
        mode = 1;
-       alf = paksz(inparm[3],iflg) * 3600 * S2R;
+       alf = paksz(inparm[3],iflg) * D2R;
        if (*iflg != 0)
           return;
-       lon1 = paksz(inparm[4],iflg) * 3600 * S2R;
+       lon1 = paksz(inparm[4],iflg) * D2R;
        if (*iflg != 0)
           return;
        time = inparm[8];
@@ -465,7 +465,7 @@ long tmpspheroid;	/* temporary spheroid for UTM			*/
     {
     /* this is the call to initialize HAMMER 
     --------------------------------------*/
-    center_long  = paksz(inparm[4],iflg) * 3600 * S2R;
+    center_long  = paksz(inparm[4],iflg) * D2R;
     if (*iflg != 0)
        return;
     *iflg = haminvint(radius, center_long,false_easting,false_northing);
@@ -476,7 +476,7 @@ long tmpspheroid;	/* temporary spheroid for UTM			*/
     {
     /* this is the call to initialize ROBINSON 
     ----------------------------------------*/
-    center_long  = paksz(inparm[4],iflg) * 3600 * S2R;
+    center_long  = paksz(inparm[4],iflg) * D2R;
     if (*iflg != 0)
        return;
     *iflg = robinvint(radius, center_long,false_easting,false_northing);
@@ -495,7 +495,7 @@ long tmpspheroid;	/* temporary spheroid for UTM			*/
      {
      /* this is the call to initialize MOLLWEIDE
      -------------------------------------------*/
-     center_long = paksz(inparm[4],iflg) * 3600 * S2R;
+     center_long = paksz(inparm[4],iflg) * D2R;
      if (*iflg != 0)
         return;
      *iflg = molwinvint(radius, center_long,false_easting,false_northing);
@@ -522,7 +522,7 @@ long tmpspheroid;	/* temporary spheroid for UTM			*/
      {
      /* this is the call to initialize WAGNER IV 
      -----------------------------------------*/
-     center_long = paksz(inparm[4],iflg) * 3600 * S2R;
+     center_long = paksz(inparm[4],iflg) * D2R;
      if (*iflg != 0)
         return;
      *iflg = wivinvint(radius, center_long,false_easting,false_northing);
@@ -533,7 +533,7 @@ long tmpspheroid;	/* temporary spheroid for UTM			*/
      {
      /* this is the call to initialize WAGNER VII 
      ------------------------------------------*/
-     center_long = paksz(inparm[4],iflg) * 3600 * S2R;
+     center_long = paksz(inparm[4],iflg) * D2R;
      if (*iflg != 0)
         return;
      *iflg = wviiinvint(radius, center_long,false_easting,false_northing);
@@ -544,15 +544,15 @@ long tmpspheroid;	/* temporary spheroid for UTM			*/
     {
     /* this is the call to initialize OBLATED EQUAL AREA
     ---------------------------------------------------*/
-    center_long = paksz(inparm[4],iflg) * 3600 * S2R;
+    center_long = paksz(inparm[4],iflg) * D2R;
     if (*iflg != 0)
        return;
-    center_lat  = paksz(inparm[5],iflg) * 3600 * S2R;
+    center_lat  = paksz(inparm[5],iflg) * D2R;
     if (*iflg != 0)
        return;
     shape_m = inparm[2];
     shape_n = inparm[3];
-    angle = paksz(inparm[8],iflg) * 3600 * S2R;
+    angle = paksz(inparm[8],iflg) * D2R;
     if (*iflg != 0)
        return;
     *iflg = obleqinvint(radius,center_long,center_lat,shape_m, shape_n,

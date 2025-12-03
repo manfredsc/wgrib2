@@ -7,16 +7,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+
+#include "wmath.h"
 #include "grb2.h"
 #include "wgrib2.h"
 #include "fnlist.h"
 
-/* M_PI is not ANSI C but are commonly defined */
-/* values from GNU C library version of math.h copyright Free Software Foundation, Inc. */
-
-#ifndef M_PI
-#define M_PI           3.14159265358979323846  /**< pi */
-#endif
 
 /** Decode grib file flag. */
 extern int decode;
