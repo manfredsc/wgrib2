@@ -39,7 +39,6 @@ main()
     printf("Testing error case: upper byte set (should trigger exit)\n");
     {
         unsigned char test_bytes[8];
-        unsigned long result;
 
         memset(test_bytes, 0, 8);
         test_bytes[0] = 0x01;  // Set upper byte - this should cause exit(8)
@@ -47,12 +46,11 @@ main()
         // Set up jump point to catch the exit()
         if (setjmp(exit_jmp) == 0) {
             // First time through - call the function that should exit
-            result = uint8(test_bytes);
+            uint8(test_bytes);
             // If we get here, the function didn't exit as expected
             printf("FAIL: Error case test - function should have called exit() but didn't\n");
             return 2;
         } else {
-            result = 0; // Silence unused variable warning
             // We jumped back here from exit() - check the exit code
             if (exit_code != 8) {
                 printf("FAIL: Error case test - called exit(%d), expected exit(8)\n", exit_code);
