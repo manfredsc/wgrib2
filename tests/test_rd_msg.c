@@ -157,5 +157,7 @@ main()
 
         if (result != 0) return 5;
     }
-
+    printf("ok!\n");
+    printf("SUCCESS!\n");
+    return 0;
 }

@@ -12,6 +12,11 @@
 #include <setjmp.h>
 #include "grb2.h"
 
+#ifdef FORCE_32BIT_TEST
+#undef ULONG_MAX
+#define ULONG_MAX 4294967295UL
+#endif
+
 int uint8(unsigned char *p);
 
 // Jump buffer for catching exit() calls
