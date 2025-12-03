@@ -2,6 +2,7 @@ case     0: classification="Nimbus"; break;
 case     1: classification="VTPR"; break;
 case     2: classification="Tiros 1 (Tiros, NOAA-6 to NOAA-13)"; break;
 case     3: classification="Tiros 2 (NOAA-14 onwards)"; break;
+case     4: classification="NEON"; break;
 case    10: classification="EOS"; break;
 case    20: classification="GPM-core"; break;
 case    31: classification="DMSP"; break;
