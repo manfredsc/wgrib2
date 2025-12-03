@@ -58,23 +58,7 @@ main()
         unsigned long result;
         unsigned long expected = (0x01UL << 56);
 
-        // Debug the input bytes
-        printf("\nDEBUG: Input bytes: ");
-        for(int i = 0; i < 8; i++) {
-            printf("%02X ", test_bytes[i]);
-        }
-        printf("\n");
-        
-        // Test the bit shifting manually
-        printf("DEBUG: Manual calculation:\n");
-        printf("  p[0] = 0x%02X, p[0] << 56 = 0x%lX\n", test_bytes[0], (unsigned long)test_bytes[0] << 56);
-        printf("  1UL << 56 = 0x%lX\n", 1UL << 56);
-        printf("  0x01UL << 56 = 0x%lX\n", 0x01UL << 56);
-        
         result = uint8(test_bytes);
-        
-        printf("DEBUG: result=%lu, expected=%lu\n", result, expected);
-        printf("DEBUG: expected in hex=0x%lX, result in hex=0x%lX\n", expected, result);
 
         if (result != expected) {
             printf("FAIL: MSB only test - expected %lu, got %lu\n", expected, result);
