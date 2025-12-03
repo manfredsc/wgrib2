@@ -30,8 +30,8 @@ main()
         fclose(input);
         fclose(output);
 
-        remove("test_empty.tmp");
-        remove("test_output.tmp");
+        //remove("test_empty.tmp");
+        //remove("test_output.tmp");
 
         if (result != -1) return 1;
     }
@@ -56,8 +56,8 @@ main()
 
         fclose(input);
         fclose(output);
-        remove("test_bad.tmp");
-        remove("test_output.tmp");
+        //remove("test_bad.tmp");
+        //remove("test_output.tmp");
 
         if (result != -1) return 2;
     }
@@ -84,7 +84,7 @@ main()
 
         fclose(input);
         fclose(output);
-        remove("test_large.tmp");
+        //remove("test_large.tmp");
         remove("test_output.tmp");
 
         if (result != -1) return 3;
@@ -115,8 +115,8 @@ main()
 
         fclose(input);
         fclose(output);
-        remove("test_incomplete.tmp");
-        remove("test_output.tmp");
+        //remove("test_incomplete.tmp");
+        //remove("test_output.tmp");
 
         if (result != -1) return 4;
     }
@@ -131,7 +131,7 @@ main()
         strcpy((char*)valid_header, "GRIB");
         // Set message length to 32 bytes
         valid_header[15] = 32; 
-        
+
         input = fopen("test_valid.tmp", "wb");
         fwrite(valid_header, 1, 16, input);
         // Write 16 more bytes of data
@@ -146,8 +146,8 @@ main()
 
         fclose(input);
         fclose(output);
-        remove("test_valid.tmp");
-        remove("test_output.tmp");
+        //remove("test_valid.tmp");
+        //remove("test_output.tmp");
 
         if (result != 0) return 5;
     }
