@@ -65,6 +65,7 @@ main()
     }
     printf("ok!\n");
     printf("Message too large (> 1GB). Should return -1.");
+    fflush(stdout); 
     {
         FILE *input, *output;
         unsigned char large_header[16]; 
@@ -93,6 +94,7 @@ main()
     }
     printf("ok!\n");
     printf("Incomplete message read. Should return -1.");
+    fflush(stdout); 
     {
         FILE *input, *output;
         unsigned char incomplete_header[16]; 
@@ -124,6 +126,7 @@ main()
     }
     printf("ok!\n");
     printf("Valid GRIB message. Should return 0.");
+    fflush(stdout); 
     {
         FILE *input, *output;
         unsigned char valid_header[16]; 
