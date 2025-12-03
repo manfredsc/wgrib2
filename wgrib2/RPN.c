@@ -36,6 +36,8 @@
 #include <math.h>
 #include <string.h>
 #include <ctype.h>
+
+#include "wmath.h"
 #include "grb2.h"
 #include "wgrib2.h"
 #include "fnlist.h"
@@ -89,10 +91,6 @@ static float *stack[STACK_SIZE];
 #define SCALAR 0 /**< Scalar type code value. */
 #define VECTOR 1 /**< Vector type code value. */
 #define DBL_VEC 2 /**< Double vector type code value. */
-
-#ifndef M_PI
-#define M_PI           3.14159265358979323846  /**< pi */
-#endif
 
 int push(int top, unsigned int ndata, int type, float f, float *ff, double *d);
 static void gbl_wt(double *val, double *wt, float *data, int i, int j, int nx, int ny, double wt0);

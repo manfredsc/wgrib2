@@ -162,7 +162,7 @@ int a2code_4_10(const char *string) {
     return i;
 }
 
-const char *code_4_10_name(int code_4_10) {
+const char *code_4_10_name(int code_4_10, int center) {
     const char *string;
     
     string = "???";

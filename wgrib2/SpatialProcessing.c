@@ -42,10 +42,10 @@
  * @author Wesley Ebisuzaki @date 2010
  */
 int f_spatial_proc(ARG0) {
-    int val, val1;
+    int val, val1, center;
     const char *string;
     if (mode >= 0 && GB2_ProdDefTemplateNo(sec) == 15) {
-
+        center = GB2_Center(sec);
         val1 = code_table_4_10(sec);
         string = NULL;
         switch(val1) {

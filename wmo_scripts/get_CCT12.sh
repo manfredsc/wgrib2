@@ -18,8 +18,7 @@ wget -nv "$urlbase/raw/master/C12.csv" -O- | sed '{
     s/,/;/g
     s/# /, /g
     s/"//g
-  }' | env LC_ALL=en_US iconv -c -f UTF8 -t ASCII//TRANSLIT \
-    | grep -v "Reserved for other centres" | awk -F";" '
+  }' | env LC_ALL=en_US iconv -c -f UTF8 -t ASCII//TRANSLIT | awk -F";" '
   {
     num=$1+0; name=$4; subnum=$3+0
     if (num>0) {  # omit section headers

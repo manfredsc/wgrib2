@@ -13,6 +13,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+
+#include "wmath.h"
 #include "grb2.h"
 #include "wgrib2.h"
 #include "fnlist.h"
@@ -28,9 +30,6 @@ extern double *lat;
 
 /** Pointer to array of longitude values. */
 extern double *lon;
-
-/** Conversion factor from degrees to radians. */
-#define CONV (3.14159265/180.0)
 
 /*
  * HEADER:100:stats:inv:0:statistical summary of data values
@@ -94,7 +93,7 @@ int f_stats(ARG0) {
             mn = data[i] < mn ? data[i] : mn;
             if (do_wt) {
                 if (lat[i] != last_lat) {
-                    last_coslat = cosf((float) CONV*lat[i]);
+                    last_coslat = cosf((float)(DEG_TO_RAD*lat[i]));
                     last_lat = lat[i];
                 }
                 wt += last_coslat;

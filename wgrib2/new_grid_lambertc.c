@@ -12,19 +12,12 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "wmath.h"
 #include "grb2.h"
 #include "wgrib2.h"
 #include "cproj.h"
 #include "fnlist.h"
-
-#ifndef M_PI
-#define M_PI           3.14159265358979323846  /**< pi */
-#endif
-
-#ifndef DEG_TO_RAD
-#define RAD_TO_DEG  (180.0/M_PI) /**< Radians to degrees conversion factor. */
-#define DEG_TO_RAD  (M_PI/180.0) /**< Degrees to radians conversion factor. */
-#endif
 
 /**
  * Calculate the lat-lon of the first grid point given the lat-lon of the center of the grid.
