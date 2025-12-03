@@ -9,6 +9,8 @@
 #include <string.h>
 #include <ctype.h>
 #include <math.h>
+
+#include "wmath.h"
 #include "grb2.h"
 #include "wgrib2.h"
 #include "fnlist.h"
@@ -200,8 +202,8 @@ int f_wind_uv(ARG1) {
                         save->speed[i] = 0.0;
                     }
                     else if (!UNDEFINED_VAL(save->dir[i])) {
-                        u = -save->speed[i]*sin(save->dir[i] * 3.14159265359/180.0);
-                        v = -save->speed[i]*cos(save->dir[i] * 3.14159265359/180.0);
+                        u = -save->speed[i]*sin(save->dir[i] * DEG_TO_RAD);
+                        v = -save->speed[i]*cos(save->dir[i] * DEG_TO_RAD);
                         save->dir[i] = u;
                         save->speed[i] = v;
                     }

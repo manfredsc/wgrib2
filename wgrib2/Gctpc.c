@@ -13,6 +13,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "wmath.h"
 #include "cproj.h"
 #include "grb2.h"
 #include "wgrib2.h"
@@ -32,21 +34,6 @@
   10/2015 added Lambert Azimuthal Equal Area Projection
 */
 
-/* M_PI, M_PI_2, M_PI_4, and M_SQRT2 are not ANSI C but are commonly defined */
-/* values from GNU C library version of math.h copyright Free Software Foundation, Inc. */
-
-#ifndef M_PI
-#define M_PI           3.14159265358979323846  /**< pi */
-#endif
-#ifndef M_PI_2
-#define M_PI_2         1.57079632679489661923  /**< pi/2 */
-#endif
-#ifndef M_PI_4
-#define M_PI_4         0.78539816339744830962  /**< pi/4 */
-#endif
-#ifndef M_SQRT2
-#define M_SQRT2        1.41421356237309504880  /**< sqrt(2) */
-#endif
 
 /** Flag indicating whether to use the gctpc library */
 extern int use_gctpc;
