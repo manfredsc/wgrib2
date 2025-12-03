@@ -210,7 +210,8 @@ else()
   add_test(NAME test_uint8_32bit COMMAND test_uint8_32bit)
 endif()
 
-add_executable(test_rd_msg test_rd_msg.c ${CMAKE_SOURCE_DIR}/aux_progs/gmerge.c)
+add_executable(test_rd_msg test_rd_msg.c ${CMAKE_SOURCE_DIR}/aux_progs/gmerge.c 
+              ${CMAKE_SOURCE_DIR}/aux_progs/uint8.c)
 target_include_directories(test_rd_msg PRIVATE ${CMAKE_SOURCE_DIR}/aux_progs)
 add_test(NAME test_rd_msg COMMAND test_rd_msg)
 
