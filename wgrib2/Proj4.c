@@ -11,6 +11,9 @@
 #include <stdio.h>
 #include <stdlib.h> 
 #include <string.h>
+#include <math.h>
+
+#include "wmath.h"
 #include "grb2.h"
 #include "wgrib2.h"
 #include "fnlist.h"
@@ -28,17 +31,6 @@ extern enum output_order_type output_order;
 
 /** Flag to use Proj4 library for transformations. */
 extern int use_proj4;
-
-
-#ifndef M_PI
-#define M_PI           3.14159265358979323846  /**< pi */
-#endif
-#ifndef M_PI_2
-#define M_PI_2         1.57079632679489661923  /**< pi/2 */
-#endif
-#ifndef M_PI_4
-#define M_PI_4         0.78539816339744830962  /**< pi/4 */
-#endif
 
 /** Pointer to array of latitude values. */
 extern double *lat;

@@ -7,6 +7,7 @@ set(src grb2_cmd.c grb2_inq.c grb2_mk_inv.c grb2_wrt.c)
 
 if (BUILD_SHARED_LIB)
    add_library(wgrib2_c_api SHARED ${src})
+   set_target_properties(wgrib2_c_api PROPERTIES SOVERSION 0)
 else()
    add_library(wgrib2_c_api STATIC ${src})
    set_property(TARGET wgrib2_c_api PROPERTY POSITION_INDEPENDENT_CODE ON)

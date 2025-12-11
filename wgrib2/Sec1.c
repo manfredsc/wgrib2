@@ -222,15 +222,14 @@ int f_RT(ARG0) {
  */
 int f_center(ARG0) {
     int ctr;
-    char tmp[20];
-    const char *string;
+    const char *string = NULL;
  
     if (mode >= 0) {
         ctr = GB2_Center(sec);
         switch (ctr) {
 #include "code_table0.dat"
         }
-        if (mode == 0) {
+        if (string == NULL || mode == 0) {
             sprintf(inv_out,"center=%d", ctr);
         }
         else {
@@ -270,11 +269,16 @@ int f_subcenter(ARG0) {
         ctr = GB2_Center(sec);
         subctr = GB2_Subcenter(sec);
         string = NULL;
+        if (ctr == (USAF)) {
+            switch (subctr) {
+#include "gribtables/usaf/usaf_tableC2.dat"
+            }
+        }
         if (subctr > 0) {  /* a lot of messages have no sub-centre declared */
-          ctrsubctr = (ctr<<16)+subctr;
-          switch (ctrsubctr) {
+            ctrsubctr = (ctr<<16)+subctr;
+            switch (ctrsubctr) {
 #include "CommonCodeTable_12.dat"
-          }
+            }
         }
         if (mode == 0 || string == NULL) {
             sprintf(inv_out,"subcenter=%d", subctr);
