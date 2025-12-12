@@ -42,7 +42,7 @@ int compare_grib2_files(const char *fname1, const char *fname2) {
             fclose(f1);
             fclose(f2);
             printf("Error reading files.\n");
-            return (err1 || err2) ? 2 : 0;  // Check for read errors
+            return (err1 || err2) ? 1 : 0;  // Check for read errors
         }
 
         if (memcmp(buf1, buf2, n1) != 0) {
