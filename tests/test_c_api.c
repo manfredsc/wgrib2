@@ -6,6 +6,10 @@
 #include "c_wgrib2api.h"
 #include "wgrib2_c_test_util.h"
 #include <stdio.h>
+#include <ctype.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #define GRB_FILE "data/gdaswave.t00z.wcoast.0p16.f000.grib2"
 #define GRB_INV "junk_ftn_api.inv"
