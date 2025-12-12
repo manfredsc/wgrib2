@@ -32,8 +32,7 @@ int compare_grib2_files(const char *fname1, const char *fname2) {
         if (n1 != n2) {
             fclose(f1);
             fclose(f2);
-            printf("File sizes differ.\n");
-            return 1;  // Files differ in size
+            return 100;  // Files differ in size
         }
 
         if (n1 == 0) {
@@ -41,15 +40,13 @@ int compare_grib2_files(const char *fname1, const char *fname2) {
             int err2 = ferror(f2);
             fclose(f1);
             fclose(f2);
-            printf("Error reading files.\n");
-            return (err1 || err2) ? 1 : 0;  // Check for read errors
+            return (err1 || err2) ? 101 : 0;  // Check for read errors
         }
 
         if (memcmp(buf1, buf2, n1) != 0) {
             fclose(f1);
             fclose(f2);
-            printf("File contents differ.\n");
-            return 1;  // Files differ in content
+            return 102;  // Files differ in content
         }
     }
 }
