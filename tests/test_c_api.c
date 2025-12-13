@@ -24,10 +24,10 @@ main()
         }
         
 
-        //if ((ret = compare_grib2_files(GRB_FILE, EXP_GRB_FILE))) {
-        //    printf("Grib files differ.\n");
-        //    return 3;
-        //}
+        if ((ret = compare_files(GRB_INV, EXP_GRB_IN))) {
+            printf("Grib files differ.\n");
+            return 3;
+        }
     }
     
     printf("ok!\n");
