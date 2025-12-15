@@ -21,7 +21,12 @@
 int compare_files(char *fname1, char *fname2) {
     FILE *f1 = fopen(fname1, "r");
     FILE *f2 = fopen(fname2, "r");
-    if (f1 == NULL || f2 == NULL) return 101;
+    if (f1 == NULL || f2 == NULL) {
+        printf("Error opening files for comparison.\n");
+        if (f1) fclose(f1);
+        if (f2) fclose(f2);
+        return 101;
+    }
 
     int c1, c2;
 
@@ -41,6 +46,7 @@ int compare_files(char *fname1, char *fname2) {
         if (c1 != c2) {
             fclose(f1);
             fclose(f2);
+            printf("Files differ.\n");
             return 103;
         }
         // else equal non-whitespace chars; continue
