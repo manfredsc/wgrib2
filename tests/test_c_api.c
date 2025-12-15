@@ -18,9 +18,10 @@
 static jmp_buf exit_jmp;
 static int exit_code = 0;
 
-// Override exit() to catch it during testing
-void exit(int code) {
-    exit_code = code;
+/* Test-only override */
+void fatal_error(const char *fmt, const char *arg) {
+    (void)fmt; (void)arg;        /* silence unused warnings */
+    exit_code = 1;
     longjmp(exit_jmp, 1);
 }
 
