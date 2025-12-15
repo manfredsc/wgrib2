@@ -20,24 +20,29 @@ int
 main()
 {
     printf("Testing grb2_mk_inv()...\n");
+    fflush(stdout);
     {
         int ret;
 
         if ((ret = grb2_mk_inv(GRB_FILE, GRB_INV))) {
             printf("grb2_mk_inv() failed with return code %d\n", ret);
+            fflush(stdout);
             return 2;
         }
         
 
         if ((ret = compare_files(GRB_INV, EXP_GRB_IN))) {
             printf("Inventory files differ.\n");
+            fflush(stdout);
             return 3;
         }
     }
     printf("ok!\n");
     printf("Testing wgrib2_add_cmd()...\n");
+    fflush(stdout);
     {
         printf("Testing overly long command string...\n");
+        fflush(stdout);
 
         wgrib2_init_cmds();
         char longopt[CMD_LEN + 1];
@@ -46,6 +51,7 @@ main()
         if (setjmp(fatal_err) == 0) {
             wgrib2_add_cmd(longopt);
             printf("ERROR: wgrib2_add_cmd() did not error on long option\n");
+            fflush(stdout);
             return 11;
         } 
         
