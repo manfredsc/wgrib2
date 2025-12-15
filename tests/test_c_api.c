@@ -14,7 +14,7 @@
 #define GRB_INV "junk_ftn_api.inv"
 #define EXP_GRB_IN "data/ref_gdaswave.t00z.wcoast.0p16.f000.grib2.inv"
 
-extern jmp_buf fatal_err;
+jmp_buf fatal_err;
 
 int
 main()
