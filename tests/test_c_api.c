@@ -9,7 +9,7 @@
 
 #define GRB_FILE "data/gdaswave.t00z.wcoast.0p16.f000.grib2"
 #define GRB_INV "junk_ftn_api.inv"
-#define EXP_GRB_IN "junk_ftn_api.inv"
+#define EXP_GRB_IN "data/ref_gdaswave.t00z.wcoast.0p16.f000.inv"
 
 int
 main()
@@ -25,7 +25,7 @@ main()
         
 
         if ((ret = compare_files(GRB_INV, EXP_GRB_IN))) {
-            printf("Grib files differ.\n");
+            printf("Inventory files differ.\n");
             return 3;
         }
     }
