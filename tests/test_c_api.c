@@ -38,13 +38,14 @@ main()
     printf("Testing wgrib2_add_cmd()...\n");
     {
         printf("Testing overly long command string...\n");
+        int ret;
 
         wgrib2_init_cmds();
         char longopt[CMD_LEN + 1];
         memset(longopt, 'A', CMD_LEN);
         longopt[CMD_LEN] = '\0';
-        wgrib2_add_cmd(longopt);
-        if (setjmp(fatal_err) == 0) {
+        ret = wgrib2_add_cmd(longopt);
+        if (ret == NULL) {
             printf("ERROR: wgrib2_add_cmd() did not error on long option\n");
             return 10;
         } 
