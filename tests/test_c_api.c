@@ -14,7 +14,8 @@
 #define GRB_INV "junk_ftn_api.inv"
 #define EXP_GRB_IN "data/ref_gdaswave.t00z.wcoast.0p16.f000.grib2.inv"
 
-extern jmp_buf fatal_err;
+//extern jmp_buf fatal_err;
+static jmp_buf exit_jmp;
 
 int
 main()
@@ -46,14 +47,13 @@ main()
         fflush(stdout);
 
         wgrib2_init_cmds();
-        char longopt[CMD_LEN + 1];
-        memset(longopt, 'A', CMD_LEN);
-        longopt[CMD_LEN] = '\0';
-        if (setjmp(fatal_err) == 0) {
-            wgrib2_add_cmd(longopt);
-            printf("ERROR: wgrib2_add_cmd() did not error on long option\n");
-            fflush(stdout);
-            return 11;
+        if (setjmp(exit_jmp) == 0) {
+            char longopt[CMD_LEN + 1];
+            memset(longopt, 'A', CMD_LEN);
+            longopt[CMD_LEN] = '\0';
+            wgrib2_add_cmd(longopt); /* should trigger fatal_error → exit() */
+            printf("ERROR: wgrib2_add_cmd() accepted an overly long string\n");
+            return 10;
         } 
         
         /** 
