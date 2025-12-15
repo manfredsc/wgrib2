@@ -8,18 +8,13 @@
 #include <string.h>
 #include <stdio.h>
 #include <signal.h>
+#include <setjmp.h>
 
 #define GRB_FILE "data/gdaswave.t00z.wcoast.0p16.f000.grib2"
 #define GRB_INV "junk_ftn_api.inv"
 #define EXP_GRB_IN "data/ref_gdaswave.t00z.wcoast.0p16.f000.grib2.inv"
 
-static volatile int fatal_error_called = 0;
-
-/** Override fatal_error for testing */
-void fatal_error(const char *fmt, const char *arg) {
-    (void)fmt; (void)arg;
-    fatal_error_called = 1;
-}
+extern jmp_buf fatal_err;
 
 int
 main()
@@ -43,17 +38,16 @@ main()
     printf("Testing wgrib2_add_cmd()...\n");
     {
         printf("Testing overly long command string...\n");
-        char longopt[CMD_LEN + 1];
-        fatal_error_called = 0;
+
         wgrib2_init_cmds();
-        
+        char longopt[CMD_LEN + 1];
         memset(longopt, 'A', CMD_LEN);
         longopt[CMD_LEN] = '\0';
-        wgrib2_add_cmd(longopt);
-        if (!fatal_error_called) {
-            printf("ERROR: expected fatal_error for long string\n");
+        if (setjmp(fatal_err) == 0) {
+            wgrib2_add_cmd(longopt);
+            printf("ERROR: wgrib2_add_cmd() did not error on long option\n");
             return 10;
-        }
+        } 
         
         /** 
         printf("Testing too many commands...\n");

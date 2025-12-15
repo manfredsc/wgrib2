@@ -22,18 +22,6 @@ function(copy_test_data name)
     FILE_PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
 endfunction()
 
-function(build_c_api_test name)
-  add_executable(${name} ${name}.c wgrib2_c_test_util.c)
-  target_link_libraries(${name} PUBLIC wgrib2_c_api)
-  add_test(NAME ${name} COMMAND ${name})
-endfunction()
-
-function(build_ftn_api_test name)
-  add_executable(${name} ${name}.F90)
-  target_link_libraries(${name} PRIVATE wgrib2_ftn_api)
-  add_test(NAME ${name} COMMAND ${name})
-endfunction()
-
 # Some test files are large and are kept on the NOAA EMC FTP
 # site. This function is used to download such test data. It takes two
 # arguments, the URL and the file to be downloaded.
@@ -191,13 +179,17 @@ copy_test_data(ref_jpeg2simple.txt)
 copy_test_data(LARGECAT220250305_12_1443copy.grib2)
 copy_test_data(ref_LARGECAT220250305_12_1443copy_stats.txt)
 
-
 #if (MAKE_FTN_API)
-  #build_ftn_api_test(test_fortran_api)
+#  add_executable(test_fortran_api ${name}.F90)
+#  target_link_libraries(test_fortran_api PRIVATE wgrib2_ftn_api)
+#  add_test(NAME test_fortran_api COMMAND test_fortran_api)
 #endif()
 if (BUILD_LIB)
   shell_test(test_lib)
-  build_c_api_test(test_c_api)
+
+  add_executable(test_c_api test_c_api.c wgrib2_c_test_util.c)
+  target_link_libraries(test_c_api PUBLIC wgrib2_c_api)
+  add_test(NAME test_c_api COMMAND test_c_api)
 endif()
 if (BUILD_SHARED_LIB)
   shell_test(test_shared_lib)
