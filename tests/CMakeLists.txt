@@ -189,6 +189,7 @@ if (BUILD_LIB)
 
   add_executable(test_c_api test_c_api.c wgrib2_c_test_util.c)
   target_link_libraries(test_c_api PUBLIC wgrib2_c_api)
+  set_property(TARGET test_c_api PROPERTY POSITION_INDEPENDENT_CODE ON)
   add_test(NAME test_c_api COMMAND test_c_api)
 endif()
 if (BUILD_SHARED_LIB)
