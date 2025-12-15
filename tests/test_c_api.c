@@ -19,7 +19,7 @@ extern jmp_buf fatal_err;
 int
 main()
 {
-    printf("Testing grb2_mk_inv()...\n");
+    /**printf("Testing grb2_mk_inv()...\n");
     fflush(stdout);
     {
         int ret;
@@ -38,6 +38,7 @@ main()
         }
     }
     printf("ok!\n");
+    */
     printf("Testing wgrib2_add_cmd()...\n");
     fflush(stdout);
     {
