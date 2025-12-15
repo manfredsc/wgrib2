@@ -14,13 +14,7 @@
 #define GRB_INV "junk_ftn_api.inv"
 #define EXP_GRB_IN "data/ref_gdaswave.t00z.wcoast.0p16.f000.grib2.inv"
 
-//extern jmp_buf fatal_err;
-
-static int fatal_error_called = 0;
-void __wrap_fatal_error(const char *fmt, const char *arg) {
-    (void)fmt; (void)arg;
-    fatal_error_called = 1; /* don’t call __real_fatal_error */
-}
+extern jmp_buf fatal_err;
 
 int
 main()
@@ -49,16 +43,11 @@ main()
         char longopt[CMD_LEN + 1];
         memset(longopt, 'A', CMD_LEN);
         longopt[CMD_LEN] = '\0';
-        wgrib2_add_cmd(longopt);
-        if (!fatal_error_called) {
+        if (setjmp(fatal_err) == 0) {
+            wgrib2_add_cmd(longopt);
             printf("ERROR: wgrib2_add_cmd() did not error on long option\n");
             return 10;
-        }
-        //if (setjmp(fatal_err) == 0) {
-        //    wgrib2_add_cmd(longopt);
-        //    printf("ERROR: wgrib2_add_cmd() did not error on long option\n");
-        //    return 10;
-        //} 
+        } 
         
         /** 
         printf("Testing too many commands...\n");
