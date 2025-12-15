@@ -47,9 +47,9 @@ main()
 
         wgrib2_init_cmds();
         if (setjmp(fatal_err) == 0) {
-            char longopt[CMD_LEN + 1];
-            memset(longopt, 'A', CMD_LEN);
-            longopt[CMD_LEN] = '\0';
+            char longopt[CMD_LEN + 2];
+            memset(longopt, 'A', CMD_LEN + 1);
+            longopt[CMD_LEN + 1] = '\0';
             wgrib2_add_cmd(longopt);
             printf("ERROR: wgrib2_add_cmd() did not error on long option\n");
             fflush(stdout);
