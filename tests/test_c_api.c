@@ -5,6 +5,7 @@
 
 #include "c_wgrib2api.h"
 #include "wgrib2_c_test_util.h"
+#include <string.h>
 #include <stdio.h>
 #include <signal.h>
 #include <setjmp.h>
