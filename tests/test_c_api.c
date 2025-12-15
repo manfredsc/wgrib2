@@ -14,7 +14,7 @@
 #define GRB_INV "junk_ftn_api.inv"
 #define EXP_GRB_IN "data/ref_gdaswave.t00z.wcoast.0p16.f000.grib2.inv"
 
-jmp_buf fatal_err;
+extern jmp_buf fatal_err;
 
 int
 main()
@@ -43,8 +43,8 @@ main()
         char longopt[CMD_LEN + 1];
         memset(longopt, 'A', CMD_LEN);
         longopt[CMD_LEN] = '\0';
+        wgrib2_add_cmd(longopt);
         if (setjmp(fatal_err) == 0) {
-            wgrib2_add_cmd(longopt);
             printf("ERROR: wgrib2_add_cmd() did not error on long option\n");
             return 10;
         } 
