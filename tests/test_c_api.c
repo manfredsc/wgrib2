@@ -8,11 +8,13 @@
 #include <string.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <setjmp.h>
 
 #define GRB_FILE "data/gdaswave.t00z.wcoast.0p16.f000.grib2"
 #define GRB_INV "junk_c_api.inv"
 #define EXP_GRB_INV "data/ref_gdaswave.t00z.wcoast.0p16.f000.grib2.inv"
 
+extern jmp_buf fatal_err;
 int
 main()
 {
@@ -37,6 +39,11 @@ main()
     {
         char longopt[CMD_LEN + 1];
 
+        if (setjmp(fatal_err) == 0) {
+            printf("Caught expected fatal error for long command string.\n");
+            return 4;
+        } 
+        
         wgrib2_init_cmds();
         memset(longopt, 'A', CMD_LEN);
         longopt[CMD_LEN] = '\0';
