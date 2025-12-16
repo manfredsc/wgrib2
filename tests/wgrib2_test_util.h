@@ -1,5 +1,5 @@
 /**
- * This is the header file for wgrib2_c_test_util.c.
+ * This is the header file for wgrib2_test_util.c.
  * 
  * Alyson Stahl 9/18/2025
  */
