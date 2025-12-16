@@ -17,7 +17,6 @@ int
 main()
 {
     printf("Testing grb2_mk_inv()...\n");
-
     {
         int ret;
 
@@ -30,6 +29,18 @@ main()
             printf("Inventory files differ.\n");
             return 3;
         }
+    }
+    printf("ok!\n");
+    printf("Testing wgrib2_add_cmd()...\n");
+    printf("Testing with overly long command string...\n");
+    fflush(stdout);
+    {
+        char longopt[CMD_LEN + 1];
+
+        wgrib2_init_cmds();
+        memset(longopt, 'A', CMD_LEN);
+        longopt[CMD_LEN] = '\0';
+        wgrib2_add_cmd(longopt);
     }
     printf("ok!\n");
     printf("SUCCESS!\n");
