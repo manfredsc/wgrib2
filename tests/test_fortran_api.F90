@@ -4,27 +4,27 @@ program test_fortran_api
    use, intrinsic :: iso_c_binding, only: c_char, c_int
    implicit none
 
-   character(len=*), parameter :: GRB2_FILE = 'data/gdaswave.t00z.wcoast.0p16.f000.grib2'
-   character(len=*), parameter :: GRB2_INV = 'junk_ftn_api.inv'
-   character(len=*), parameter :: EXP_GRB2_INV = 'data/ref_gdaswave.t00z.wcoast.0p16.f000.grib2.inv'
+   character(len=*), parameter :: GRB2_FILE = "data/gdaswave.t00z.wcoast.0p16.f000.grib2"
+   character(len=*), parameter :: GRB2_INV = "junk_ftn_api.inv"
+   character(len=*), parameter :: EXP_GRB2_INV = "data/ref_gdaswave.t00z.wcoast.0p16.f000.grib2.inv"
    logical :: use_ncep_table = .false.
 
    logical :: ret
    integer :: iret
 
    interface 
-      function compare_files(file1, file2) bind(c)
+      function compare_files(fname1, fname2) bind(c)
          use, intrinsic :: iso_c_binding, only: c_char, c_int
          implicit none
-         character(kind=c_char), intent(in) :: file1(*)
-         character(kind=c_char), intent(in) :: file2(*)
+         character(kind=c_char), intent(in) :: fname1(*)
+         character(kind=c_char), intent(in) :: fname2(*)
          integer(c_int) :: compare_files
       end function compare_files
-      function compare_grib2_files(file1, file2) bind(c)
+      function compare_grib2_files(fname1, fname2) bind(c)
          use, intrinsic :: iso_c_binding, only: c_char, c_int
          implicit none
-         character(kind=c_char), intent(in) :: file1(*)
-         character(kind=c_char), intent(in) :: file2(*)
+         character(kind=c_char), intent(in) :: fname1(*)
+         character(kind=c_char), intent(in) :: fname2(*)
          integer(c_int) :: compare_grib2_files
       end function compare_grib2_files
    end interface
@@ -56,7 +56,7 @@ program test_fortran_api
    iret = grb2_mk_inv(GRB2_FILE, GRB2_INV, use_ncep_table)
    if (iret .ne. 0) stop 11
    
-   iret = compare_files(trim(GRB2_INV), trim(EXP_GRB2_INV))
+   iret = compare_files(GRB2_INV, EXP_GRB2_INV)
    if (iret .ne. 0) stop 12
 
    print *, 'SUCCESS!'
