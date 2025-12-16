@@ -14,7 +14,7 @@
 /**
  * Compare two text files, ignoring whitespace differences. 
  * 
- * Return 0 if they are identical, 1 if they differ.
+ * Return 0 if they are identical, error code otherwise.
  * 
  * Alyson Stahl 12/2025
  */
@@ -40,7 +40,12 @@ int compare_files(const char *fname1, const char *fname2) {
             int same = (c1 == EOF && c2 == EOF);
             fclose(f1);
             fclose(f2);
-            return same ? 0 : 102;
+            if (same) {
+                return 0;   // Both files ended simultaneously
+            } else {
+                printf("Files differ in length.\n");
+                return 102; 
+            }
         }
 
         if (c1 != c2) {
@@ -56,7 +61,7 @@ int compare_files(const char *fname1, const char *fname2) {
 /**
  * Compare two GRIB2 files. 
  * 
- * Return 0 if they are identical, 1 if they differ.
+ * Return 0 if they are identical, error code otherwise.
  * 
  * Alyson Stahl 12/2025
  */
@@ -75,7 +80,8 @@ int compare_grib2_files(const char *fname1, const char *fname2) {
         if (n1 != n2) {
             fclose(f1);
             fclose(f2);
-            return 102;  // Files differ in size
+            printf("Files differ in size.\n");
+            return 102; 
         }
 
         if (n1 == 0) {
@@ -83,13 +89,19 @@ int compare_grib2_files(const char *fname1, const char *fname2) {
             int err2 = ferror(f2);
             fclose(f1);
             fclose(f2);
-            return (err1 || err2) ? 103 : 0;  // Check for read errors
+            if (err1 || err2) {
+                printf("Error reading files.\n");
+                return 103;  
+            } else {
+                return 0;   // End of both files reached, they are identical
+            }
         }
 
         if (memcmp(buf1, buf2, n1) != 0) {
             fclose(f1);
             fclose(f2);
-            return 104;  // Files differ in content
+            printf("Files differ in content.\n");
+            return 104;  
         }
     }
 }
