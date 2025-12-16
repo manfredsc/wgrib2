@@ -14,8 +14,13 @@
 #define GRB_INV "junk_ftn_api.inv"
 #define EXP_GRB_IN "data/ref_gdaswave.t00z.wcoast.0p16.f000.grib2.inv"
 
-extern jmp_buf fatal_err;
-//static jmp_buf exit_jmp;
+static volatile int fatal_error_called = 0;
+
+/** Override fatal_error for testing */
+void fatal_error(const char *fmt, const char *arg) {
+    (void)fmt; (void)arg;
+    fatal_error_called = 1;
+}
 
 int
 main()
@@ -45,25 +50,17 @@ main()
     {
         printf("Testing overly long command string...\n");
         fflush(stdout);
-
-        /*
-         * Some environments may route fatal_error() differently,
-         * resulting in an alternate error (e.g., from wgrib2_cmd()).
-         * Treat either fatal path as success to keep this test portable.
-         */
+        
+        char longopt[CMD_LEN + 1];
+        fatal_error_called = 0;
         wgrib2_init_cmds();
-        if (setjmp(fatal_err) == 0) {
-            char longopt[CMD_LEN + 1];
-            memset(longopt, 'A', CMD_LEN);
-            longopt[CMD_LEN] = '\0';
-            wgrib2_add_cmd(longopt);
-            /* If we reach here, try executing the command list, which should also fail. */
-            if (setjmp(fatal_err) == 0) {
-                (void)wgrib2_cmd();
-                printf("ERROR: neither long option nor command execution triggered fatal_error()\n");
-                fflush(stdout);
-                return 11;
-            }
+
+        memset(longopt, 'A', CMD_LEN);
+        longopt[CMD_LEN] = '\0';
+        wgrib2_add_cmd(longopt);
+        if (!fatal_error_called) {
+            printf("ERROR: expected fatal_error for long string\n");
+            return 10;
         }
         
         /** 
