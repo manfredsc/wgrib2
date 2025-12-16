@@ -20,6 +20,13 @@ program test_fortran_api
          character(kind=c_char), intent(in) :: file2(*)
          integer(c_int) :: compare_files
       end function compare_files
+      function compare_grib2_files(file1, file2) bind(c)
+         use intrinsic :: iso_c_binding, only: c_char, c_int
+         implicit none
+         character(kind=c_char), intent(in) :: file1(*)
+         character(kind=c_char), intent(in) :: file2(*)
+         integer(c_int) :: compare_grib2_files
+      end function compare_grib2_files
    end interface
    
    print *, "Testing Fortran API..."

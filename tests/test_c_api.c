@@ -10,7 +10,7 @@
 #include <stdio.h>
 
 #define GRB_FILE "data/gdaswave.t00z.wcoast.0p16.f000.grib2"
-#define GRB_INV "junk_ftn_api.inv"
+#define GRB_INV "junk_c_api.inv"
 #define EXP_GRB_IN "data/ref_gdaswave.t00z.wcoast.0p16.f000.grib2.inv"
 
 int

@@ -18,7 +18,7 @@
  * 
  * Alyson Stahl 12/2025
  */
-int compare_files(char *fname1, char *fname2) {
+int compare_files(const char *fname1, const char *fname2) {
     FILE *f1 = fopen(fname1, "r");
     FILE *f2 = fopen(fname2, "r");
     if (f1 == NULL || f2 == NULL) {
