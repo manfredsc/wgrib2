@@ -52,8 +52,12 @@ program test_fortran_api
    if (.not. ret) stop 7
 
    print *, "Testing grb2_mk_inv()..."
+
    iret = grb2_mk_inv(GRB2_FILE, GRB2_INV, use_ncep_table)
    if (iret .ne. 0) stop 11
+   
+   iret - = compare_files(trim(GRB2_INV), trim(EXP_GRB2_INV))
+   if (iret .ne. 0) stop 12
    
    print *, 'SUCCESS!'
 end program test_fortran_api
