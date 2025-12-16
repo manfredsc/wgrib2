@@ -1,7 +1,7 @@
 program test_fortran_api
 
    use wgrib2api
-   use, intrinsic :: iso_c_binding, only: c_char, c_int
+   use, intrinsic :: iso_c_binding, only: c_char, c_int, c_null_char
    implicit none
 
    character(len=*), parameter :: GRB2_FILE = "data/gdaswave.t00z.wcoast.0p16.f000.grib2"
@@ -56,7 +56,7 @@ program test_fortran_api
    iret = grb2_mk_inv(GRB2_FILE, GRB2_INV, use_ncep_table)
    if (iret .ne. 0) stop 11
    
-   iret = compare_files(GRB2_INV, EXP_GRB2_INV)
+   iret = compare_files(trim(GRB2_INV)//c_null_char, trim(EXP_GRB2_INV)//c_null_char)
    if (iret .ne. 0) stop 12
 
    print *, 'SUCCESS!'
