@@ -6,6 +6,7 @@
 #include "c_wgrib2api.h"
 #include "wgrib2_c_test_util.h"
 #include <string.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <signal.h>
 #include <setjmp.h>
@@ -15,11 +16,17 @@
 #define EXP_GRB_IN "data/ref_gdaswave.t00z.wcoast.0p16.f000.grib2.inv"
 
 static volatile int fatal_error_called = 0;
+static char fatal_error_msg[256];
 
-/** Override fatal_error for testing */
-void fatal_error(const char *fmt, const char *arg) {
-    (void)fmt; (void)arg;
+void test_fatal_error(const char *fmt, ...) {
     fatal_error_called = 1;
+
+    va_list ap;
+    va_start(ap, fmt);
+    if (fmt) {
+        vsnprintf(fatal_error_msg, sizeof fatal_error_msg, fmt, ap);
+    }
+    va_end(ap);
 }
 
 int
@@ -50,7 +57,7 @@ main()
     {
         printf("Testing overly long command string...\n");
         fflush(stdout);
-        
+
         char longopt[CMD_LEN + 1];
         fatal_error_called = 0;
         wgrib2_init_cmds();
