@@ -1,5 +1,10 @@
 /* This is a test of the wgrib2 c api.
  *
+ * Note: This test uses setjmp/longjmp to catch fatal_error() calls. This may cause an 
+ * Illegal Instruction error (or similar) when using the Intel Classic compiler. I haven't 
+ * been able to find a workaround for this. CMakeLists.txt has been modified to skip this 
+ * test when using the Intel Classic compiler.
+ * 
  * Alyson Stahl
 */
 

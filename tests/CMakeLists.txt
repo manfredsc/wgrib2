@@ -187,6 +187,7 @@ endif()
 if (BUILD_LIB)
   shell_test(test_lib)
 
+  # Test will not behave with Intel Classic compiler due to longjmp issues.
   if (NOT CMAKE_C_COMPILER_ID MATCHES "^Intel$")
     add_executable(test_c_api test_c_api.c wgrib2_test_util.c)
     target_link_libraries(test_c_api PUBLIC wgrib2_c_api)
