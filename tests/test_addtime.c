@@ -187,6 +187,82 @@ main()
         if (ret != 1) return 52;
     }
     printf("ok!\n");
+    printf("Testing Cmp_time()...\n");
+    {
+        int ret;
+        struct full_date date0, date1;
+        date0.year = 2024;
+        date0.month = 6;
+        date0.day = 15;
+        date0.hour = 12;
+        date0.minute = 30;
+        date0.second = 45;
+
+        date1.year = 2024;
+        date1.month = 6;
+        date1.day = 15;
+        date1.hour = 12;
+        date1.minute = 30;
+        date1.second = 45;
+
+        /** Equal dates. */
+        ret = Cmp_time(&date0, &date1);
+        if (ret != 0) return 53;
+
+        /** Different years. */
+        date0.year = 2023;
+        ret = Cmp_time(&date0, &date1);
+        if (ret != -1) return 54;
+
+        ret = Cmp_time(&date1, &date0);
+        if (ret != 1) return 55;
+
+        /** Different months. */
+        date0.year = 2024;
+        date0.month = 5;
+        ret = Cmp_time(&date0, &date1);
+        if (ret != -1) return 56;
+
+        ret = Cmp_time(&date1, &date0);
+        if (ret != 1) return 57;
+
+        /** Different days. */
+        date0.month = 6;
+        date0.day = 14;
+        ret = Cmp_time(&date0, &date1);
+        if (ret != -1) return 58;
+
+        ret = Cmp_time(&date1, &date0);
+        if (ret != 1) return 59;
+
+        /** Different hours. */
+        date0.day = 15;
+        date0.hour = 11;
+        ret = Cmp_time(&date0, &date1);
+        if (ret != -1) return 60;
+
+        ret = Cmp_time(&date1, &date0);
+        if (ret != 1) return 61;
+
+        /** Different minutes. */
+        date0.hour = 12;
+        date0.minute = 29;
+        ret = Cmp_time(&date0, &date1);
+        if (ret != -1) return 62;
+
+        ret = Cmp_time(&date1, &date0);
+        if (ret != 1) return 63;
+
+        /** Different seconds. */
+        date0.minute = 30;
+        date0.second = 44;
+        ret = Cmp_time(&date0, &date1);
+        if (ret != -1) return 64;
+
+        ret = Cmp_time(&date1, &date0);
+        if (ret != 1) return 65;
+    }
+    printf("ok!\n");
     printf("SUCCESS!\n");
     return 0;
 }
