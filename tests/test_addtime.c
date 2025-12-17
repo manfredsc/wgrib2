@@ -263,6 +263,65 @@ main()
         if (ret != 1) return 65;
     }
     printf("ok!\n");
+    printf("Testing add_time()...\n");
+    {
+        int ret;
+        int year0 = 2024, month0 = 6, day0 = 15, hour0 = 12, minute0 = 30, second0 = 45, dtime = 1;
+        int year = year0, month = month0, day = day0, hour = hour0, minute = minute0, second = second0;
+        int unit;
+
+        /** No valid time unit (should return 0) - check for + and - dtime */
+        unit = 255;
+        ret = add_time(&year, &month, &day, &hour, &minute, &second, dtime, unit);
+        if (ret != 0) return 70;
+
+        ret = add_time(&year, &month, &day, &hour, &minute, &second, -dtime, unit);
+        if (ret != 0) return 71;
+
+        /** Invalid time unit (should return 1) - check for + and - dtime*/
+        unit = 15;
+        ret = add_time(&year, &month, &day, &hour, &minute, &second, dtime, unit);
+        if (ret != 1) return 72;
+
+        ret = add_time(&year, &month, &day, &hour, &minute, &second, -dtime, unit);
+        if (ret != 1) return 73;
+
+        /** Add then subtract dtime from the date. Should result in the original date. */
+        /** YEAR */
+        unit = YEAR;
+        ret = add_time(&year, &month, &day, &hour, &minute, &second, dtime, unit);
+        if (ret != 0) return 74;
+
+        ret = add_time(&year, &month, &day, &hour, &minute, &second, -dtime, unit);
+        if (ret != 0) return 75;
+
+        if (year != year0 || month != month0 || day != day0 || hour != hour0 || 
+            minute != minute0 || second != second0) return 76;
+
+        /** DECADE */
+        unit = DECADE;
+        ret = add_time(&year, &month, &day, &hour, &minute, &second, dtime, unit);
+        if (ret != 0) return 77;
+
+        ret = add_time(&year, &month, &day, &hour, &minute, &second, -dtime, unit);
+        if (ret != 0) return 78;
+
+        if (year != year0 || month != month0 || day != day0 || hour != hour0 || 
+            minute != minute0 || second != second0) return 79;
+
+        /** CENTURY */
+        unit = CENTURY;
+        ret = add_time(&year, &month, &day, &hour, &minute, &second, dtime, unit);
+        if (ret != 0) return 80;
+
+        ret = add_time(&year, &month, &day, &hour, &minute, &second, -dtime, unit);
+        if (ret != 0) return 81;
+
+        if (year != year0 || month != month0 || day != day0 || hour != hour0 || 
+            minute != minute0 || second != second0) return 82;
+
+    }
+    printf("ok!\n");
     printf("SUCCESS!\n");
     return 0;
 }
