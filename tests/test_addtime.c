@@ -80,6 +80,24 @@ main()
         if (ret != 0) return 26;
     }
     printf("ok!\n");
+    printf("Testing save_time() and get_time()...\n");
+    {
+        int ret;
+        int year = 2024, month = 6, day = 15, hour = 12, minute = 30, second = 45;
+        int out_yr, out_mon, out_day, out_hr, out_min, out_sec;
+        unsigned char buf[7];
+
+        /* Save time into buffer */
+        ret = save_time(year, month, day, hour, minute, second, buf);
+        if (ret != 0) return 30;
+
+        /* Get time from buffer and check result. */
+        ret = get_time(buf, &out_yr, &out_mon, &out_day, &out_hr, &out_min, &out_sec);
+        if (ret != 0) return 31;
+        if (year != out_yr || month != out_mon || day != out_day ||
+            hour != out_hr || minute != out_min || second != out_sec) return 32;
+    }
+    printf("ok!\n");
     printf("SUCCESS!\n");
     return 0;
 }
