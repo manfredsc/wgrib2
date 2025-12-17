@@ -41,7 +41,6 @@ main()
     printf("ok!\n");
     printf("Testing wgrib2_add_cmd()...\n");
     printf("Testing with overly long command string...\n");
-    fflush(stdout);
     {
         char longopt[CMD_LEN + 1];
         wgrib2_init_cmds();
@@ -49,13 +48,25 @@ main()
         longopt[CMD_LEN] = '\0';
 
         if (setjmp(fatal_err) == 0) {
-            /* First pass: call will trigger fatal_error() and longjmp back here */
-            (void)wgrib2_add_cmd(longopt);
-            /* If we get here, fatal_error() did not occur (unexpected) */
+            wgrib2_add_cmd(longopt);
             printf("ERROR: expected fatal_error but call returned.\n");
-        } else {
-            /* longjmp path: fatal_error() was called as intended */
-            printf("Caught fatal_error via longjmp.\n");
+            return 10;
+        }
+    }
+    printf("ok!\n");
+    printf("Testing with too many options...\n");
+    {
+        int i;
+        wgrib2_init_cmds();
+
+        if (setjmp(fatal_err) == 0) {
+            for (i = 0; i < N_CMDS + 1; i++) {
+                char opt[20];
+                snprintf(opt, sizeof(opt), "-opt%d", i);
+                wgrib2_add_cmd(opt);
+            }
+            printf("ERROR: expected fatal_error but call returned.\n");
+            return 11;
         }
     }
     printf("ok!\n");
