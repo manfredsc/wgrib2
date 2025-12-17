@@ -98,6 +98,30 @@ main()
             hour != out_hr || minute != out_min || second != out_sec) return 32;
     }
     printf("ok!\n");
+    printf("Testing Save_time() and Get_time()...\n");
+    {
+        int ret;
+        struct full_date date, out_date;
+        unsigned char buf[7];
+
+        date.year = 2024;
+        date.month = 6;
+        date.day = 15;
+        date.hour = 12;
+        date.minute = 30;
+        date.second = 45;
+
+        /* Save time into buffer */
+        ret = Save_time(&date, buf);
+        if (ret != 0) return 32;
+
+        /* Get time from buffer and check result. */
+        ret = Get_time(buf, &out_date);
+        if (ret != 0) return 33;
+        if (date.year != out_date.year || date.month != out_date.month || date.day != out_date.day ||
+            date.hour != out_date.hour || date.minute != out_date.minute || date.second != out_date.second) return 34;
+    }
+    printf("ok!\n");
     printf("SUCCESS!\n");
     return 0;
 }
