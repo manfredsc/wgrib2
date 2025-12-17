@@ -122,6 +122,71 @@ main()
             date.hour != out_date.hour || date.minute != out_date.minute || date.second != out_date.second) return 34;
     }
     printf("ok!\n");
+    printf("Testing cmp_time()...\n");
+    {
+        int ret;
+        int year = 2024, month = 6, day = 15, hour = 12, minute = 30, second = 45;
+
+        /** Equal dates. */
+        ret = cmp_time(year, month, day, hour, minute, second,
+                       year, month, day, hour, minute, second);
+        if (ret != 0) return 40;
+
+        /** Different years. */
+        ret = cmp_time(year - 1, month, day, hour, minute, second,
+                       year, month, day, hour, minute, second);
+        if (ret != -1) return 41;
+
+        ret = cmp_time(year, month, day, hour, minute, second,
+                       year - 1, month, day, hour, minute, second);
+        if (ret != 1) return 42;
+
+        /** Different months. */
+        ret = cmp_time(year, month - 1, day, hour, minute, second,
+                       year, month, day, hour, minute, second);
+        if (ret != -1) return 43;
+
+        ret = cmp_time(year, month, day, hour, minute, second,
+                       year, month - 1, day, hour, minute, second);
+        if (ret != 1) return 44;
+
+        /** Different days. */
+        ret = cmp_time(year, month, day - 1, hour, minute, second,
+                       year, month, day, hour, minute, second);
+        if (ret != -1) return 45;
+
+        ret = cmp_time(year, month, day, hour, minute, second,
+                       year, month, day - 1, hour, minute, second);
+        if (ret != 1) return 46;
+
+        /** Different hours. */
+        ret = cmp_time(year, month, day, hour - 1, minute, second,
+                       year, month, day, hour, minute, second);
+        if (ret != -1) return 47;
+
+        ret = cmp_time(year, month, day, hour, minute, second,
+                       year, month, day, hour - 1, minute, second);
+        if (ret != 1) return 48;
+
+        /** Different minutes. */
+        ret = cmp_time(year, month, day, hour, minute - 1, second,
+                       year, month, day, hour, minute, second);
+        if (ret != -1) return 49;
+
+        ret = cmp_time(year, month, day, hour, minute, second,
+                       year, month, day, hour, minute - 1, second);
+        if (ret != 1) return 50;
+
+        /** Different seconds. */
+        ret = cmp_time(year, month, day, hour, minute, second - 1,
+                       year, month, day, hour, minute, second);
+        if (ret != -1) return 51;
+
+        ret = cmp_time(year, month, day, hour, minute, second,
+                       year, month, day, hour, minute, second - 1);
+        if (ret != 1) return 52;
+    }
+    printf("ok!\n");
     printf("SUCCESS!\n");
     return 0;
 }
