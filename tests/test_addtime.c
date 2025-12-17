@@ -6,6 +6,8 @@
 
 #include <stdio.h>
 
+int check_datecode(int year, int month, int day);
+
 int
 main()
 {
