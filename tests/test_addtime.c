@@ -5,8 +5,8 @@
  */
 
 #include <stdio.h>
-
-int check_datecode(int year, int month, int day);
+#include "wgrib2.h"
+//#include "CodeTable4_4.h"
 
 int
 main()
@@ -47,6 +47,37 @@ main()
          */
         ret = check_datecode(1900, 2, 29);
         if (ret != 3) return 17;
+    }
+    printf("ok!\n");
+    printf("Testing check_time()...\n");
+    {
+        int ret;
+        /* check_time(int year, int month, int day, int hour, int minute, int second) */
+
+        /* Invalid hour */
+        ret = check_time(2024, 6, 15, -1, 0, 0);
+        if (ret != 4) return 20;
+
+        ret = check_time(2024, 6, 15, 24, 0, 0);
+        if (ret != 4) return 21;
+
+        /* Invalid minute */
+        ret = check_time(2024, 6, 15, 12, -1, 0);
+        if (ret != 5) return 22;
+
+        ret = check_time(2024, 6, 15, 12, 60, 0);
+        if (ret != 5) return 23;
+
+        /* Invalid second */
+        ret = check_time(2024, 6, 15, 12, 0, -1);
+        if (ret != 6) return 24;
+
+        ret = check_time(2024, 6, 15, 12, 0, 60);
+        if (ret != 6) return 25;
+
+        /* Valid time */
+        ret = check_time(2024, 6, 15, 12, 30, 45);
+        if (ret != 0) return 26;
     }
     printf("ok!\n");
     printf("SUCCESS!\n");
