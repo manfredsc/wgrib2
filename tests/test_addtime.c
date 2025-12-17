@@ -190,20 +190,8 @@ main()
     printf("Testing Cmp_time()...\n");
     {
         int ret;
-        struct full_date date0, date1;
-        date0.year = 2024;
-        date0.month = 6;
-        date0.day = 15;
-        date0.hour = 12;
-        date0.minute = 30;
-        date0.second = 45;
-
-        date1.year = 2024;
-        date1.month = 6;
-        date1.day = 15;
-        date1.hour = 12;
-        date1.minute = 30;
-        date1.second = 45;
+        struct full_date date0 = { 2024, 6, 15, 12, 30, 45 };
+        struct full_date date1 = { 2024, 6, 15, 12, 30, 45 };
 
         /** Equal dates. */
         ret = Cmp_time(&date0, &date1);
@@ -309,14 +297,46 @@ main()
                 return 77;
             }
         }
+    }
+    printf("ok!\n");
+    printf("Testing Add_time()...\n");
+    {
+        int ret;
+        struct full_date date = { 2024, 1, 1, 12, 30, 45 };
+        struct full_date exp_date = { 2024, 1, 1, 12, 30, 45 };
+        int dtime = 59, unit = DAY;
 
-        /** Test some edge cases for leap years and unit = DAY. */
-        /*/
-        dtime = 59;
-        month0 = month = 1;
-        day0 = day = 1;
+        /** Test with dtime = 0. Should not change the date. */
+        ret = Add_time(&date, 0, unit);
+        if (ret != 0) return 80;
 
-        ret = add_time(&year, &month, &day, &hour, &minute, &second, dtime, DAY); */
+        if (date.year != exp_date.year || date.month != exp_date.month || date.day != exp_date.day ||
+            date.hour != exp_date.hour || date.minute != exp_date.minute || date.second != exp_date.second) {
+            return 81;
+        }
+
+        /** Test some edge cases with leap year and unit = DAY. */
+        exp_date.month = 2;
+        exp_date.day = 29;
+
+        ret = Add_time(&date, dtime, unit);
+        if (ret != 0) return 82;
+
+        if (date.year != exp_date.year || date.month != exp_date.month || date.day != exp_date.day ||
+            date.hour != exp_date.hour || date.minute != exp_date.minute || date.second != exp_date.second) {
+            return 83;
+        }
+
+        date.month = 4;
+        date.day = 28;
+
+        ret = Add_time(&date, -dtime, unit);
+        if (ret != 0) return 84;
+
+        if (date.year != exp_date.year || date.month != exp_date.month || date.day != exp_date.day ||
+            date.hour != exp_date.hour || date.minute != exp_date.minute || date.second != exp_date.second) {
+            return 85;
+        }
     }
     printf("ok!\n");
     printf("SUCCESS!\n");
