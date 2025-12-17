@@ -268,58 +268,55 @@ main()
         int ret;
         int year0 = 2024, month0 = 6, day0 = 15, hour0 = 12, minute0 = 30, second0 = 45, dtime = 1;
         int year = year0, month = month0, day = day0, hour = hour0, minute = minute0, second = second0;
-        int unit;
+        int unit[] = { MINUTE, HOUR, DAY, MONTH, YEAR, DECADE, NORMAL, CENTURY, HOUR3, HOUR6, HOUR12, SECOND };
+        int n_units = sizeof(unit) / sizeof(unit[0]);
 
         /** No valid time unit (should return 0) - check for + and - dtime */
-        unit = 255;
-        ret = add_time(&year, &month, &day, &hour, &minute, &second, dtime, unit);
+        ret = add_time(&year, &month, &day, &hour, &minute, &second, dtime, 255);
         if (ret != 0) return 70;
 
-        ret = add_time(&year, &month, &day, &hour, &minute, &second, -dtime, unit);
+        ret = add_time(&year, &month, &day, &hour, &minute, &second, -dtime, 255);
         if (ret != 0) return 71;
 
         /** Invalid time unit (should return 1) - check for + and - dtime*/
-        unit = 15;
-        ret = add_time(&year, &month, &day, &hour, &minute, &second, dtime, unit);
+        ret = add_time(&year, &month, &day, &hour, &minute, &second, dtime, 15);
         if (ret != 1) return 72;
 
-        ret = add_time(&year, &month, &day, &hour, &minute, &second, -dtime, unit);
+        ret = add_time(&year, &month, &day, &hour, &minute, &second, -dtime, 15);
         if (ret != 1) return 73;
 
-        /** Add then subtract dtime from the date. Should result in the original date. */
-        /** YEAR */
-        unit = YEAR;
-        ret = add_time(&year, &month, &day, &hour, &minute, &second, dtime, unit);
+        /** Valid time unit with dt = 0. */
+        ret = add_time(&year, &month, &day, &hour, &minute, &second, 0, MINUTE);
         if (ret != 0) return 74;
 
-        ret = add_time(&year, &month, &day, &hour, &minute, &second, -dtime, unit);
-        if (ret != 0) return 75;
+        /** Add then subtract dtime from the date. Should result in the original date. */
+        for (size_t i = 0; i < n_units; i++) {
+            ret = add_time(&year, &month, &day, &hour, &minute, &second, dtime, unit[i]);
+            if (ret != 0) {
+                printf("add_time() failed for +dtime with unit %d\n", unit[i]);
+                return 75;
+            }
 
-        if (year != year0 || month != month0 || day != day0 || hour != hour0 || 
-            minute != minute0 || second != second0) return 76;
+            ret = add_time(&year, &month, &day, &hour, &minute, &second, -dtime, unit[i]);
+            if (ret != 0) {
+                printf("add_time() failed for -dtime with unit %d\n", unit[i]);
+                return 76;
+            }
 
-        /** DECADE */
-        unit = DECADE;
-        ret = add_time(&year, &month, &day, &hour, &minute, &second, dtime, unit);
-        if (ret != 0) return 77;
+            if (year != year0 || month != month0 || day != day0 || hour != hour0 || 
+                minute != minute0 || second != second0) {
+                printf("Test failed for unit %d\n", unit[i]);
+                return 77;
+            }
+        }
 
-        ret = add_time(&year, &month, &day, &hour, &minute, &second, -dtime, unit);
-        if (ret != 0) return 78;
+        /** Test some edge cases for leap years and unit = DAY. */
+        /*/
+        dtime = 59;
+        month0 = month = 1;
+        day0 = day = 1;
 
-        if (year != year0 || month != month0 || day != day0 || hour != hour0 || 
-            minute != minute0 || second != second0) return 79;
-
-        /** CENTURY */
-        unit = CENTURY;
-        ret = add_time(&year, &month, &day, &hour, &minute, &second, dtime, unit);
-        if (ret != 0) return 80;
-
-        ret = add_time(&year, &month, &day, &hour, &minute, &second, -dtime, unit);
-        if (ret != 0) return 81;
-
-        if (year != year0 || month != month0 || day != day0 || hour != hour0 || 
-            minute != minute0 || second != second0) return 82;
-
+        ret = add_time(&year, &month, &day, &hour, &minute, &second, dtime, DAY); */
     }
     printf("ok!\n");
     printf("SUCCESS!\n");
