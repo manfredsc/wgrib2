@@ -96,6 +96,6 @@ jobs:
         cd wgrib2
         mkdir b
         cd b
-        cmake -DCMAKE_PREFIX_PATH="~/ip" .. -DUSE_OPENMP=OFF
+        cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH="~/ip" .. -DUSE_OPENMP=OFF
         make VERBOSE=1
         ctest --verbose --output-on-failure --rerun-failed
