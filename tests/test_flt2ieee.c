@@ -5,6 +5,7 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 #include "wgrib2.h"
 
 int
