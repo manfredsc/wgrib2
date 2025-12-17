@@ -37,6 +37,7 @@ endfunction()
 function(build_test name)
   add_executable(${name} ${name}.c)
   target_link_libraries(${name} PRIVATE wgrib2_lib)
+  target_include_directories(${name} PRIVATE ${CMAKE_SOURCE_DIR}/wgrib2)
   add_test(NAME ${name} COMMAND ${name})
 endfunction()
 

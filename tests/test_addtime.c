@@ -6,7 +6,7 @@
 
 #include <stdio.h>
 #include "wgrib2.h"
-//#include "CodeTable4_4.h"
+#include "CodeTable4_4.h"
 
 int
 main()
