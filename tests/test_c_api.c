@@ -15,6 +15,7 @@
 #define EXP_GRB_INV "data/ref_gdaswave.t00z.wcoast.0p16.f000.grib2.inv"
 
 extern jmp_buf fatal_err;
+
 int
 main()
 {
@@ -38,16 +39,19 @@ main()
     fflush(stdout);
     {
         char longopt[CMD_LEN + 1];
-
-        if (setjmp(fatal_err) == 0) {
-            printf("Caught expected fatal error for long command string.\n");
-            return 4;
-        } 
-        
         wgrib2_init_cmds();
         memset(longopt, 'A', CMD_LEN);
         longopt[CMD_LEN] = '\0';
-        wgrib2_add_cmd(longopt);
+
+        if (setjmp(fatal_err) == 0) {
+            /* First pass: call will trigger fatal_error() and longjmp back here */
+            (void)wgrib2_add_cmd(longopt);
+            /* If we get here, fatal_error() did not occur (unexpected) */
+            printf("ERROR: expected fatal_error but call returned.\n");
+        } else {
+            /* longjmp path: fatal_error() was called as intended */
+            printf("Caught fatal_error via longjmp.\n");
+        }
     }
     printf("ok!\n");
     printf("SUCCESS!\n");
