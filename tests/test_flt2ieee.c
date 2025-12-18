@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 #include "wgrib2.h"
 
 int
@@ -23,6 +24,13 @@ main(){
         exp_buf[2] = 0x00;
         exp_buf[3] = 0x00;
         if (memcmp(buf, exp_buf, 4) != 0) return 10;
+
+        /** Test case where exp < 0 */
+        x = -ldexpf(1.0f, -128);
+        flt2ieee(x, buf);
+        exp_buf[0] = 0x80;
+        if (memcmp(buf, exp_buf, 4) != 0) return 11;
+
            
     }
 }
