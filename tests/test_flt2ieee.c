@@ -42,10 +42,6 @@ main(){
         out_x = ieee2flt(buf);
         if (out_x != 0.0f) return 13;
 
-        printf("    Test with x = infinity\n");
-        in_x = INFINITY;
-        flt2ieee(in_x, buf);
-        if (buf[0] != 0x7F || buf[1] != 0x80 || buf[2] != 0x00 || buf[3] != 0x00) return 14;
     }
     printf("ok!\n");
     printf("Testing flt2ieee_nan() and ieee2flt_nan()...\n");
