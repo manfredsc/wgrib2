@@ -25,7 +25,7 @@ main(){
         if (in_x != out_x) return 10;
 
         printf("    Test where exp < 0.\n");
-        in_x = -ldexpf(1.0f, -128);
+        in_x = ldexpf(1.0f, -128);
         flt2ieee(in_x, buf);
         out_x = ieee2flt(buf);
         if (in_x != out_x) return 11;
