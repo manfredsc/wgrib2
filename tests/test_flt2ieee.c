@@ -25,13 +25,13 @@ main(){
         if (in_x != out_x) return 10;
 
         printf("    Test with x < 0.\n");
-        in_x = -0.99999999;
+        in_x = -1.999999941;
         flt2ieee(in_x, buf);
         out_x = ieee2flt(buf);
         if (in_x != out_x) return 11;
 
         printf("    Test with x > 0.\n");
-        in_x = 0.99999999;
+        in_x = 1.999999941;
         flt2ieee(in_x, buf);
         out_x = ieee2flt(buf);
         if (in_x != out_x) return 12;
