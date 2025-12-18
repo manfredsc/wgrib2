@@ -74,7 +74,7 @@ main(){
         if (out_x != 0.0f) return 13;
 
         printf("    Test with x = NaN\n");
-        in_x = NAN;
+        in_x = (float) UNDEFINED;
         flt2ieee_nan(in_x, buf);
         out_x = ieee2flt_nan(buf);
         if (!isnan(out_x)) return 14;
