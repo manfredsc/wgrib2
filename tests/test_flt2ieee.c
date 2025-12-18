@@ -35,5 +35,20 @@ main(){
         flt2ieee(in_x, buf);
         out_x = ieee2flt(buf);
         if (in_x != out_x) return 12;
+
+        printf("    Test where exp < 0.\n");
+        in_x = ldexpf(1.0f, -128);
+        flt2ieee(in_x, buf);
+        out_x = ieee2flt(buf);
+        if (out_x != 0.0f) return 13;
+
+        printf("    Test where exp > 255.\n");
+        in_x = ldexpf(1.0f, 129);
+        flt2ieee(in_x, buf);
+        out_x = ieee2flt(buf);
+
     }
+    printf("ok!\n");
+    printf("SUCCESS!\n");
+    return 0;
 }
