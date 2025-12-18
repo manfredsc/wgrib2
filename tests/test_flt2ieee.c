@@ -16,7 +16,7 @@ main(){
         float x;
         unsigned char buf[4], exp_buf[4];
         
-        /** Test with x = 0.0 */
+        printf("    Test with x = 0.0\n");
         x = 0.0;
         flt2ieee(x, buf);
         exp_buf[0] = 0x00;
@@ -25,12 +25,19 @@ main(){
         exp_buf[3] = 0x00;
         if (memcmp(buf, exp_buf, 4) != 0) return 10;
 
-        /** Test case where exp < 0 */
-        x = -ldexpf(1.0f, -128);
+        printf("    Test case where exp < 0\n");
+        x = -ldexpf(1.0f, -129);
         flt2ieee(x, buf);
         exp_buf[0] = 0x80;
         if (memcmp(buf, exp_buf, 4) != 0) return 11;
 
-           
+        //printf("    Test case where exp > 255\n");
+        //x = ldexpf(1.0f, 129);
+        //flt2ieee(x, buf);
+        //exp_buf[0] = 0x7f;
+        //exp_buf[1] = 0x80;
+        //exp_buf[2] = 0x00;
+        //exp_buf[3] = 0x00;
+        //if (memcmp(buf, exp_buf, 4) != 0) return 12;
     }
 }
