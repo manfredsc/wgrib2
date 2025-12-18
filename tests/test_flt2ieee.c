@@ -43,7 +43,7 @@ main(){
         if (out_x != 0.0f) return 13;
 
         printf("    Test where exp > 255.\n");
-        in_x = ldexpf(1.0f, 129);
+        in_x = ldexpf(1.0f, 130);
         flt2ieee(in_x, buf);
         out_x = ieee2flt(buf);
 
