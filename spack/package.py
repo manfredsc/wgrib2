@@ -6,8 +6,8 @@
 import os
 import re
 
-import spack.build_systems.cmake
-import spack.build_systems.makefile
+import spack_repo.builtin.build_systems.cmake
+import spack_repo.builtin.build_systems.makefile
 from spack.package import *
 
 variant_map_common = {
