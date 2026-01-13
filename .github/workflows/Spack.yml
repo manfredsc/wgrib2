@@ -33,7 +33,7 @@ jobs:
         custom-recipe: spack/package.py
         use-repo-cache: false
         spack-compiler: gcc
-        use-common-build-cache: false
+        use-common-build-cache: true
         repo-cache-key-suffix: ${{ matrix.os }}-${{ matrix.variants }}-1
 
   recipe-check:
