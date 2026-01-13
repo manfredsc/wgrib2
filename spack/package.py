@@ -6,6 +6,7 @@
 import os
 import re
 
+from spack_repo.builtin.build_systems import cmake, makefile
 from spack_repo.builtin.build_systems.cmake import CMakePackage
 from spack_repo.builtin.build_systems.makefile import MakefilePackage
 
@@ -248,7 +249,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
 
         return (flags, None, None)
 
-class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
+class CMakeBuilder(cmake.CMakeBuilder):
     # Disable parallel build
     parallel = False
 
@@ -260,7 +261,7 @@ class CMakeBuilder(spack.build_systems.cmake.CMakeBuilder):
         return args
 
 
-class MakefileBuilder(spack.build_systems.makefile.MakefileBuilder):
+class MakefileBuilder(makefile.MakefileBuilder):
     # Disable parallel build
     parallel = False
 
