@@ -287,7 +287,7 @@ class MakefileBuilder(makefile.MakefileBuilder):
             value = int(spec.variants[variant_name].value)
             makefile.filter(r"^%s=.*" % makefile_option, "{}={}".format(makefile_option, value))
 
-    def setup_build_environment(self, env):
+    def setup_build_environment(self, env: EnvironmentModifications) -> None:
         if self.spec.compiler.name in ["oneapi", "intel"]:
             comp_sys = "intel_linux"
         elif self.spec.compiler.name in ["gcc", "clang", "apple-clang"]:
