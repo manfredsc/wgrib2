@@ -39,6 +39,8 @@
 
 #if G2_AEC_ENABLED == 1
 
+#include <libaec.h>
+
 /**
  * Writes out AEC compressed GRIB message.
  *
