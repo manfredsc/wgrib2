@@ -20,8 +20,7 @@
 #cmakedefine DISABLE_TIMEZONE
 #cmakedefine DISABLE_ALARM
 #cmakedefine USE_NAMES NCEP
-#cmakedefine USE_G2CLIB_HIGH
-#cmakedefine USE_G2CLIB_LOW
+#cmakedefine USE_G2CLIB
 #cmakedefine BUILD_EXTRA
 #cmakedefine MAKE_FTN_API
 #cmakedefine DISABLE_STAT

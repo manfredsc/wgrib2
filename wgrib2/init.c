@@ -21,7 +21,7 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-#ifdef USE_G2CLIB_HIGH
+#ifdef USE_G2CLIB
 #include <grib2.h>
 extern gribfield *grib_data;    /**< Pointer to GRIB data. */
 extern int free_gribfield;      /**< Flag for allocated gribfield. */
@@ -189,7 +189,7 @@ extern int nc4;         /**< NetCDF version 4 flag. */
 void init_globals(void) {
     int i;
 
-#ifdef USE_G2CLIB_HIGH
+#ifdef USE_G2CLIB
     free_gribfield = 0;			// flag for allocated gribfield
 #endif
 

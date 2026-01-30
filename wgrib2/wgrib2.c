@@ -32,7 +32,7 @@ jmp_buf fatal_err;      /**< Stores fatal error. */
 #include "wgrib2.h"
 #include "fnlist.h"
 
-#ifdef USE_G2CLIB_HIGH 
+#ifdef USE_G2CLIB
 #include <grib2.h>
 gribfield *grib_data;       /**< Pointer to GRIB field data. */
 int free_gribfield;			/**< Flag for allocated gribfield. */
@@ -164,7 +164,7 @@ int wgrib2(int argc, const char **argv) {
     double ref;
 //    double *ddata, ref;
 
-#ifdef USE_G2CLIB_HIGH
+#ifdef USE_G2CLIB
     float missing_c_val_1, missing_c_val_2;
     g2int *bitmap, has_bitmap;
     g2float *g2_data;
@@ -705,7 +705,7 @@ int wgrib2(int argc, const char **argv) {
 
             /* USE G2CLIB */
 
-#ifdef USE_G2CLIB_HIGH
+#ifdef USE_G2CLIB
             if (use_g2clib == 2) {
                 err = g2_getfld(msg,submsg,1,1,&grib_data);
                 if (err != 0) fatal_error("Fatal g2clib decode err=%d msg=%d for %s", err, msg_no,in_file.filename);
@@ -898,7 +898,7 @@ int wgrib2(int argc, const char **argv) {
 
         submsg++;
 
-#ifdef USE_G2CLIB_HIGH
+#ifdef USE_G2CLIB
         if (free_gribfield) { g2_free(grib_data); free_gribfield = 0;}
 #endif
 
