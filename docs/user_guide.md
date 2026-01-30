@@ -48,13 +48,10 @@ Additional CMake build options can be used to configure the build by setting the
 | FTP_TEST_FILES | Fetch and test with files on FTP site. | OFF |
 | FTP_LARGE_TEST_FILES | Fetch and test with very large files on FTP site. | OFF |
 | FTP_EXTRA_TEST_FILES | Test with more large files fetched via FTP. | OFF |
-| USE_TIGGE | Enable use of TIGGE gribtables | ON |
 | USE_UDF | Enable User-Defined functions | OFF |
-| USE_WMO_VALIDATION | Use WMO Validation Tables (unofficial templates) | OFF |
 | DISABLE_ALARM | Disable alarm for non-compatible systems | OFF |
 | DISABLE_STAT | Disable POSIX feature | OFF |
 | BUILD_EXTRA | Build user-contributed code. This code is no longer supported - use at your own risk. | OFF |
-| USE_MYSQL | Use with BUILD_EXTRA = ON to enable user-contributed MySQL options. It is user's responsibility to ensure MySQL is available. | OFF |
 
 ## Documentation for Previous Versions of wgrib2
 

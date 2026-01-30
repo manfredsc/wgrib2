@@ -9,8 +9,6 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-#ifdef USE_TIGGE
-
 /** Use TIGGE flag. */
 int tigge;
 
@@ -34,10 +32,4 @@ int f_tigge(ARG0) {
     if (mode == -1) tigge = 1;
     return 0;
 }
-#else
-int f_tigge(ARG0) {
-    if (mode == -1) {fprintf(stderr,"tigge is not installed\n"); return 1;}
-    return 0;
-}
-#endif
 
