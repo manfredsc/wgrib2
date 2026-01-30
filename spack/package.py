@@ -161,7 +161,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
     variant(
         "g2c",
         default=False,
-        description="Include NCEP g2clib (mainly for testing purposes)",
+        description="Include NCEP g2clib ",
         when="@:3.1,develop",
     )
     variant(
