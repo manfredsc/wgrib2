@@ -36,9 +36,6 @@ jobs:
         - { 
             options: "-DBUILD_WGRIB=ON"
           }
-        - {
-            options: "-DUSE_G2CLIB=ON"
-          }
         gcc-version: [12]
         include:
           - gcc-version: 14
