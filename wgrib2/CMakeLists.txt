@@ -28,7 +28,7 @@ elseif(CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$")
 endif()
 
 if(CMAKE_Fortran_COMPILER_ID MATCHES "^(Intel|IntelLLVM)$")
-  set(CMAKE_Fortran_FLAGS "-g -traceback -heap-arrays 32 ${CMAKE_Fortran_FLAGS}")
+  set(CMAKE_Fortran_FLAGS "-g -traceback ${CMAKE_Fortran_FLAGS}")
   set(CMAKE_Fortran_FLAGS_DEBUG "-O0 -g -traceback ${CMAKE_Fortran_FLAGS}")
 elseif(CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$")
   set(CMAKE_Fortran_FLAGS "-O2 -g -Wall -Wno-tabs -fbacktrace ${CMAKE_Fortran_FLAGS}")
