@@ -127,10 +127,8 @@ unsigned char *flag_table_3_3_location(unsigned char **sec) {
         case 90:
         case 110:
               return gds+46;
-#ifdef WMO_VALIDATION
         case 60:
               return gds+71;
-#endif
         case 32768:
             if (center == NCEP) return gds+54;
             return NULL;
