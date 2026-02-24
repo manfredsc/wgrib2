@@ -174,8 +174,8 @@ main()
                     &dtime, &unit);
 
             if (dtime != exp_dtime[i] || unit != exp_unit[i]) {
-                printf("Error for test %d: expected dtime=%d, unit=%d.\n",
-                        i, exp_dtime[i], exp_unit[i]);
+                printf("Error for test %d: returned dtime=%d, unit=%d; expected dtime=%d, unit=%d\n",
+                        i, dtime, unit, exp_dtime[i], exp_unit[i]);
                 return 16;
             }
         }
