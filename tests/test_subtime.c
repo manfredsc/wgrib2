@@ -125,44 +125,49 @@ main()
         exp_unit[3] = DAY;
 
         /** Case 5: Different years, months, and days, with time1 < time0 (sign < 0). */
-        year1[4] = 2019;
+        year0[4] = 2021; year1[4] = 2020;
+        month0[4] = 2; month1[4] = 1;
+        day0[4] = 2; day1[4] = 1;
+        hour1[4] = hour0[4];
+        minute1[4] = minute0[4];
+        second1[4] = second0[4];
         exp_dtime[4] = -398;
         exp_unit[4] = DAY;
 
         /** Case 6: Different years, months, days, and hours, where unit is HOUR. */
         minute1[5] = minute0[5];
         second1[5] = second0[5];
-        exp_dtime[5] = 2;
+        exp_dtime[5] = 9554;
         exp_unit[5] = HOUR;
 
         /** Case 7: Different years, months, days, and hours, where unit is HOUR12. */
         hour1[6] = 12;
         minute1[6] = minute0[6];
         second1[6] = second0[6];
-        exp_dtime[6] = 1;
+        exp_dtime[6] = 797;
         exp_unit[6] = HOUR12;
 
         /** Case 8: Different years, months, days, and hours, where unit is HOUR6. */
         hour1[7] = 18;
         minute1[7] = minute0[7];
         second1[7] = second0[7];
-        exp_dtime[7] = 1;
+        exp_dtime[7] = 1595;
         exp_unit[7] = HOUR6;
 
         /** Case 9: Different years, months, days, and hours, where unit is HOUR3. */
         hour1[8] = 21;
         minute1[8] = minute0[8];
         second1[8] = second0[8];
-        exp_dtime[8] = 1;
+        exp_dtime[8] = 3191;
         exp_unit[8] = HOUR3;
 
         /** Case 10: Different years, months, days, hours, and minutes. */
         second1[9] = second0[9];
-        exp_dtime[9] = 1;
+        exp_dtime[9] = 573270;
         exp_unit[9] = MINUTE;
         
         /** Case 11: Different years, months, days, hours, minutes, and seconds. */
-        exp_dtime[10] = 45;
+        exp_dtime[10] = 34396245;
         exp_unit[10] = SECOND;
 
         for (int i = 0; i < NUM_TESTS; i++) {
