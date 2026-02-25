@@ -1,5 +1,6 @@
 /**
- * This tests the utility functions update_sec3() and update_sec4().
+ * This is a test for the wgrib2 project. This test is for update_sec3.c
+ * and update_sec4.c.
  * 
  * Alyson Stahl, 2/2026
  */

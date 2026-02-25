@@ -1,5 +1,5 @@
 /**
- * This tests the utility functions in units.c.
+ * This is a test for the wgrib2 project. This test is for units.c.
  * 
  * Alyson Stahl, 2/2026
  */

@@ -1,5 +1,5 @@
 /**
- * This tests the utility functions in subtime.c.
+ * This is a test for the wgrib2 project. This test is for subtime.c.
  * 
  * Alyson Stahl, 2/2026
  */
