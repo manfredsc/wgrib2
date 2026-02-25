@@ -1,5 +1,5 @@
 /**
- * This tests the utility functions in addtime.c.
+ * This is a test for the wgrib2 project. This test is for addtime.c.
  * 
  * Alyson Stahl, 12/2025
  */

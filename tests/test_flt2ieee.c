@@ -1,8 +1,7 @@
 /**
- * This tests the functions converting between ieee and float.
+ * This is a test for the wgrib2 project. 
  * 
- * Includes flt2ieee(), flt2ieee_nan(), ieee2flt(), and ieee2ieee_nan()
- * 
+ * This test is for flt2ieee.c, flt2ieee_nan.c, ieee2flt.c, and ieee2flt_nan.c.
  * Alyson Stahl, 12/2025
  */
 
