@@ -63,7 +63,7 @@ main()
         };
 
         unsigned char sec1[16] = {0};
-        unsigned char sec4[64] = {0};
+        unsigned char sec4[100] = {0};
         unsigned char *sec[5];
 
         sec[0] = NULL;
