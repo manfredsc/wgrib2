@@ -434,11 +434,9 @@ int get_latlon(unsigned char **sec, double **lon, double **lat) {
     else if (grid_template == 40) {
         err = gauss2ll(sec, lat, lon);
     }
-#ifdef WMO_VALIDATION
     else if (grid_template == 60) {
         err = cubed_sphere2ll(sec, lat, lon);
     }
-#endif
     else if (grid_template == 90) {
         err = space_view2ll(sec, lat, lon);
     }

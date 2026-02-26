@@ -14,7 +14,7 @@ ls -l ../wgrib2
 [ $? -ne 8 ] && exit 2
 
 echo "*** testing inventory of gdaswave.t00z.wcoast.0p16.f000.grib2..."
-../wgrib2/wgrib2 data/gdaswave.t00z.wcoast.0p16.f000.grib2 > tmp.txt
+../wgrib2/wgrib2 data/gdaswave.t00z.wcoast.0p16.f000.grib2 -inv tmp.txt -Match_inv
 cat tmp.txt
 diff -w tmp.txt data/ref_gdaswave.t00z.wcoast.0p16.f000.grib2.inv
 

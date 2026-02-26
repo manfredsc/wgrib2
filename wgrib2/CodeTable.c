@@ -666,9 +666,7 @@ unsigned char *code_table_3_2_location(unsigned char **sec) {
         case 204:
         case 1000:
         case 1100:
-#ifdef WMO_VALIDATION
         case 60:
-#endif
             return sec[3]+14;
         default: break;
     }

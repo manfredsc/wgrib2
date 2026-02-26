@@ -75,13 +75,6 @@ int f_config(ARG0) {
     strcat(inv_out, "AEC is installed\n" );
 #endif
 
-#ifdef USE_MYSQL
-    strcat(inv_out, "mysql package is installed\n");
-#else
-    strcat(inv_out, "mysql package is not installed\n");
-#endif
-
-
 #ifdef USE_REGEX
     strcat(inv_out, "regex package is installed\n");
 #else
@@ -91,12 +84,6 @@ int f_config(ARG0) {
     strcat(inv_out, "flush_mode=1\n");
 #else
     strcat(inv_out, "flush_mode determined by stat()\n");
-#endif
-
-#ifdef USE_TIGGE
-    strcat(inv_out, "tigge package is installed\n");
-#else
-    strcat(inv_out, "tigge package is not installed\n");
 #endif
 
 #ifdef USE_IPOLATES
