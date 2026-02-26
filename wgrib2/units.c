@@ -162,6 +162,23 @@ int a2code_4_10(const char *string) {
     return i;
 }
 
+/**
+ * Converts a Code Table 4.10 (Type of Statistical Processing) value to its
+ * corresponding ASCII string representation.
+ * 
+ * @param code_4_10 Code Table 4.10 value.
+ * @param center Center value (not currently used).
+ * 
+ * @return Corresponding string representation of the Code Table 4.10 value. Returns "???" on failure.
+ * 
+ * @author Wesley Ebisuzaki @date 2005
+ * 
+  * ### Program History Log
+ * Date | Programmer | Comments
+ * -----|------------|---------
+ * 2005 | W. Ebisuzaki | Initial
+ * 11/2025 | M. Schwarb | Added center input parameter for future use (not currently used)
+ */
 const char *code_4_10_name(int code_4_10, int center) {
     const char *string;
     
