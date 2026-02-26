@@ -1,5 +1,7 @@
 program test_fortran_api
+
    use wgrib2api
+   use, intrinsic :: iso_c_binding, only: c_char, c_int, c_null_char
    implicit none
 
    character(len=*), parameter :: GRB2_FILE = 'data/gdaswave.t00z.wcoast.0p16.f000.grib2'
@@ -14,6 +16,23 @@ program test_fortran_api
    logical :: ret
    integer :: iret
 
+   interface 
+      function compare_files(fname1, fname2) bind(c)
+         use, intrinsic :: iso_c_binding, only: c_char, c_int
+         implicit none
+         character(kind=c_char), intent(in) :: fname1(*)
+         character(kind=c_char), intent(in) :: fname2(*)
+         integer(c_int) :: compare_files
+      end function compare_files
+      function compare_grib2_files(fname1, fname2) bind(c)
+         use, intrinsic :: iso_c_binding, only: c_char, c_int
+         implicit none
+         character(kind=c_char), intent(in) :: fname1(*)
+         character(kind=c_char), intent(in) :: fname2(*)
+         integer(c_int) :: compare_grib2_files
+      end function compare_grib2_files
+   end interface
+   
    print *, "Testing Fortran API..."
 
    print *, "Testing grb2_DEFINED_VAL() and grb2_UNDEFINED_VAL()..."
@@ -37,9 +56,12 @@ program test_fortran_api
    if (.not. ret) stop 7
 
    print *, "Testing grb2_mk_inv()..."
+
    iret = grb2_mk_inv(GRB2_FILE, GRB2_INV, use_ncep_table)
    if (iret .ne. 0) stop 11
    
+   iret = compare_files(trim(GRB2_INV)//c_null_char, trim(EXP_GRB2_INV)//c_null_char)
+   if (iret .ne. 0) stop 12
    print *, "Testing grb2_inq()..."
    iret = grb2_inq(GRB2_FILE, GRB2_INV, ':WVHGT:',nx=nx,ny=ny,get_ref_edate=get_ref_edate)
    if (iret.ne. 1) stop 12

@@ -260,34 +260,34 @@ int add_dt(int *year, int *month, int *day, int *hour, int *minute, int *second,
         jday = d + monthjday[m-1];
         if (leap(y) && m > 2) jday++;
             dtime += jday;
-/*
-        while (dtime < 0) {
-            y--;
-	    dtime += 365 + leap(y);
+        /*
+                while (dtime < 0) {
+                    y--;
+                dtime += 365 + leap(y);
+                }
+        */
+        /* one year chunks */
+        while (dtime > 365 + leap(y)) {
+            dtime -= (365 + leap(y));
+            y++;
         }
-*/
-	/* one year chunks */
-    while (dtime > 365 + leap(y)) {
-        dtime -= (365 + leap(y));
-        y++;
-    }
 
-	/* calculate the month and day */
+        /* calculate the month and day */
 
-    if (leap(y) && dtime == FEB29) {
-        m = 2;
-        d = 29;
-    }
-    else {
-        if (leap(y) && dtime > FEB29) dtime--;
-        for (i = 11; monthjday[i] >= dtime; --i);
-        m = i + 1;
-        d = dtime - monthjday[i];
-    }
-    *year = y;
-    *month = m;
-    *day = d;
-    return 0;
+        if (leap(y) && dtime == FEB29) {
+            m = 2;
+            d = 29;
+        }
+        else {
+            if (leap(y) && dtime > FEB29) dtime--;
+            for (i = 11; monthjday[i] >= dtime; --i);
+            m = i + 1;
+            d = dtime - monthjday[i];
+        }
+        *year = y;
+        *month = m;
+        *day = d;
+        return 0;
    }
    fprintf(stderr,"add_time: undefined time unit %d\n", unit);
    return 1;
