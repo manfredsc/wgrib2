@@ -32,7 +32,6 @@ Additional CMake build options can be used to configure the build by setting the
 | USE_NETCDF | Read and write NetCDF files | OFF | NetCDF-c | 
 | USE_IPOLATES | Use NCEPLIBS-ip library (required for grid interpolation) | OFF | [NCEPLIBS-ip v5.2.0+](https://github.com/NOAA-EMC/NCEPLIBS-ip) |
 | USE_G2CLIB | Use NCEPLIBS-g2c decoders (needed for '-g2clib 2' option and PNG, JPEG2000, and AEC packing types)  | OFF | [NCEPLIBS-g2c 2.3.0+](https://github.com/NOAA-EMC/NCEPLIBS-g2c) |
-| USE_AEC | Use AEC to enable encoding/decoding of GRIB2 data with CCSDS packing (packing type 42) | OFF | [libaec v1.0.6+](https://gitlab.dkrz.de/k202009/libaec) |
 | USE_OPENMP | Use with OpenMP | OFF | OpenMP-c |
 | USE_PROJ4 | Use with Proj.4 library | OFF | N/A |
 | USE_REGEX | Enable regular expression matching options | ON | Regex Library (may be unavailable on non-POSIX systems) |

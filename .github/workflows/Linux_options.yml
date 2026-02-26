@@ -27,9 +27,6 @@ jobs:
         - {
             options: "-DUSE_IPOLATES=ON -DBLA_VENDOR=OpenBLAS"
           }
-        - {
-            options: "-DUSE_AEC=ON"
-          }
         - { 
             options: "-DUSE_NETCDF=ON"
           }
