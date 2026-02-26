@@ -116,7 +116,7 @@ static int sub_day(int year1, int month1, int day1, int year0, int month0, int d
  * @param dtime Pointer to store the difference in time.
  * @param unit Pointer to store the unit of time.
  * 
- * @return 0 on success, -1 on error.
+ * @return Always returns 0.
  * 
  * @author Wesley Ebisuzaki @date 8/2011
  */
@@ -186,6 +186,7 @@ int sub_time(int year1, int month1, int day1, int hour1, int minute1, int second
         }
         dt = dt * 24 + i;
         *dtime = sign * dt;
+        *unit = HOUR;
         return 0;
     }
 
