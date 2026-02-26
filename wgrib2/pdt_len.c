@@ -134,7 +134,7 @@ int pdt_len(unsigned char **sec, int pdt) {
             case 1101: return 50 + vert_coor;
         }
     }
-    center = GB2_Center(sec);
+    center = (sec == NULL) ? -1 : GB2_Center(sec);
     if (center == JMA1 || center == JMA2) {
         switch(pdt) {
             case 50000:
