@@ -11,8 +11,6 @@
 #include "wgrib2.h"
 #include "fnlist.h"
 
-#ifdef WMO_VALIDATION
-
 /** Output order type. */
 extern enum output_order_type output_order;
 
@@ -255,4 +253,3 @@ int cubed_spherell2xy(unsigned char **sec, int n, double *lon, double *lat, doub
     }
     return 0;
 }
-#endif
