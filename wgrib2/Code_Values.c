@@ -929,8 +929,6 @@ int mode_number(unsigned char **sec) {
  * 
  * @return The number of following distribution parameters (NP), or -1 if the PDT number is not valid.
  * 
- * @note Currently only implemented for template 4.68.
- * 
  * @author Wesley Ebisuzaki @date 2009
  */
 int number_of_following_distribution_parameters_np(unsigned char **sec) {
@@ -947,8 +945,6 @@ int number_of_following_distribution_parameters_np(unsigned char **sec) {
  * 
  * @return Pointer to the byte in section 4 that contains the number of following distribution parameters (Np), or 
  * NULL if the PDT number is not valid.
- * 
- * @note Currently only implemented for template 4.68.
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -1018,8 +1014,6 @@ int type_of_post_processing(unsigned char **sec) {
  * 
  * @return The cluster identifier as an integer, or -1 if the PDT number is not valid.
  * 
- * @note Currently only implemented for template 4.14.
- * 
  * @author Wesley Ebisuzaki @date 2009
  */
 int cluster_identifier(unsigned char **sec) {
@@ -1036,8 +1030,6 @@ int cluster_identifier(unsigned char **sec) {
  * 
  * @return Pointer to the byte in section 4 that contains the cluster identifier, or NULL if the 
  * PDT number is not valid.
- * 
- * @note Currently only implemented for template 4.14.
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -1064,8 +1056,6 @@ unsigned char *cluster_identifier_location(unsigned char **sec) {
  * 
  * @return The number of clusters as an integer, or -1 if the PDT number is not valid.
  * 
- * @note Currently only implemented for template 4.14.
- * 
  * @author Wesley Ebisuzaki @date 2009
  */
 int number_of_clusters(unsigned char **sec) {
@@ -1082,8 +1072,6 @@ int number_of_clusters(unsigned char **sec) {
  * 
  * @return Pointer to the byte in section 4 that contains the number of clusters, or NULL if the 
  * PDT number is not valid.
- * 
- * @note Currently only implemented for template 4.14.
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -1109,8 +1097,6 @@ unsigned char *number_of_clusters_location(unsigned char **sec) {
  * 
  * @return The number of forecasts in the cluster as an integer, or -1 if the PDT number is not valid.
  * 
- * @note Currently only implemented for templates 4.13 and 4.14.
- * 
  * @author Wesley Ebisuzaki @date 2009
  */
 int number_of_forecasts_in_the_cluster(unsigned char **sec) {
@@ -1127,8 +1113,6 @@ int number_of_forecasts_in_the_cluster(unsigned char **sec) {
  * 
  * @return Pointer to the byte in section 4 that contains the number of forecasts in the cluster, or NULL if the
  * PDT number is not valid.
- * 
- * @note Currently only implemented for templates 4.13 and 4.14.
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -1185,8 +1169,6 @@ unsigned char *list_of_nc_ensemble_forecast_numbers_location(unsigned char **sec
  * 
  * @return The number of contributing spectral bands as an integer, or -1 if the PDT number is not valid.
  * 
- * @note Not implemented for template 4.32 and 4.33.
- * 
  * @author Wesley Ebisuzaki @date 2009
  */
 int number_of_contributing_spectral_bands(unsigned char **sec) {
@@ -1203,8 +1185,6 @@ int number_of_contributing_spectral_bands(unsigned char **sec) {
  * 
  * @return Pointer to the byte in section 4 that contains the number of contributing spectral bands, or NULL 
  * if the PDT number is not valid.
- * 
- * @note Not implemented for template 4.32 and 4.33.
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
@@ -1262,8 +1242,6 @@ unsigned char *number_of_categories_location(unsigned char **sec) {
  * 
  * @return The number of partitions as an integer, or -1 if the PDT number is not valid.
  * 
- * @note Currently not implemented for template 4.53.
- * 
  * @author Wesley Ebisuzaki @date 2009
 */
 int number_of_partitions(unsigned char **sec) {
@@ -1279,8 +1257,6 @@ int number_of_partitions(unsigned char **sec) {
  * 
  * @return Pointer to the byte in section 4 that contains the number of partitions, or NULL if 
  * the PDT number is not valid.
- * 
- * @note Currently not implemented for template 4.53.
  * 
  * @author Wesley Ebisuzaki @date 2009
  */
