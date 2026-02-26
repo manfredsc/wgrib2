@@ -141,7 +141,7 @@ if(USE_IPOLATES)
   endif()
 endif()
 
-if(USE_G2CLIB_HIGH OR USE_G2CLIB_LOW)
+if(USE_G2CLIB)
   target_link_libraries(obj_lib PUBLIC g2c::g2c)
   target_link_libraries(wgrib2_exe PRIVATE g2c::g2c)
   if(BUILD_LIB)

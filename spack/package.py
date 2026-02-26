@@ -161,20 +161,20 @@ class Wgrib2(MakefilePackage, CMakePackage):
     variant(
         "g2c",
         default=False,
-        description="Include NCEP g2clib (mainly for testing purposes)",
-        when="@:3.1",
+        description="Include NCEP g2clib ",
+        when="@:3.1,develop",
     )
     variant(
         "g2c_low",
         default=True,
         description="Include NCEP g2clib (png,jpeg2000)",
-        when="@3.7:",
+        when="@3.7:3.8",
     )
     variant(
         "g2c_high",
         default=False,
         description="Include NCEP g2clib (add -g2clib 2)",
-        when="@3.7:",
+        when="@3.7:3.8",
     )
     variant(
         "disable_timezone", default=False, description="Some machines do not support timezones", when="@:3.8"
@@ -212,8 +212,9 @@ class Wgrib2(MakefilePackage, CMakePackage):
     depends_on("fortran", type="build")
 
     depends_on("ip@5.2:", when="@develop +ipolates")
-    depends_on("g2c@2.3.0:", when="@develop +g2c_low")
-    depends_on("g2c@2.3.0:", when="@develop +g2c_high")
+    depends_on("g2c@2.3.0:", when="@3.7:3.8 +g2c_low")
+    depends_on("g2c@2.3.0:", when="@3.7:3.8 +g2c_high")
+    depends_on("g2c@2.3.0:", when="@develop +g2c")
     depends_on("lapack", when="@develop +ipolates")
     depends_on("libaec@1.0.6:", when="@3.2:3.7 +aec")
     # Options to use netcdf3 or netcdf4 merged into a single option with v3.4.0

@@ -14,7 +14,7 @@
 #if defined USE_NETCDF
 #include <netcdf.h>
 #endif
-#ifdef USE_G2CLIB_LOW
+#ifdef USE_G2CLIB
 #include <grib2.h>
 #endif
 
@@ -67,7 +67,7 @@ int f_config(ARG0) {
 #else
     strcat(inv_out, "Netcdf package is not installed\n");
 #endif
-#ifdef USE_G2CLIB_LOW
+#ifdef USE_G2CLIB
     strcat(inv_out, "g2clib v" );
     strcat(inv_out, G2C_VERSION " is installed\n" );
 #endif
@@ -163,13 +163,6 @@ int f_config(ARG0) {
 #if (DEFAULT_G2CLIB == 2)
     strcat(inv_out, "default decoding: g2clib\n");
 #endif
-
-#ifdef USE_G2CLIB_HIGH
-    strcat(inv_out, "-g2clib 2 is available\n");
-#else
-    strcat(inv_out, "-g2clib 2 is not available\n");
-#endif
-
     strcat(inv_out,"Supported decoding: simple, complex, rle, ieee");
 #if G2_PNG_ENABLED == 1
     strcat(inv_out, ", png");

@@ -31,8 +31,7 @@ Additional CMake build options can be used to configure the build by setting the
 | MAKE_FTN_API | Build Fortran API | OFF | BUILD_LIB = ON |
 | USE_NETCDF | Read and write NetCDF files | OFF | NetCDF-c | 
 | USE_IPOLATES | Use NCEPLIBS-ip library (required for grid interpolation) | OFF | [NCEPLIBS-ip v5.2.0+](https://github.com/NOAA-EMC/NCEPLIBS-ip) |
-| USE_G2CLIB_HIGH | Use NCEPLIBS-g2c high-level decoder (needed for '-g2clib 2' option)  | OFF | [NCEPLIBS-g2c 2.2.0+](https://github.com/NOAA-EMC/NCEPLIBS-g2c) |
-| USE_G2CLIB_LOW | Use NCEPLIBS-g2c low-level decoders for PNG (packing type 41) and Jpeg2000 (packing type 40) | OFF | [NCEPLIBS-g2c 2.2.0+](https://github.com/NOAA-EMC/NCEPLIBS-g2c) with desired decoders enabled |
+| USE_G2CLIB | Use NCEPLIBS-g2c decoders (needed for '-g2clib 2' option and PNG, JPEG2000, and AEC packing types)  | OFF | [NCEPLIBS-g2c 2.3.0+](https://github.com/NOAA-EMC/NCEPLIBS-g2c) |
 | USE_OPENMP | Use with OpenMP | OFF | OpenMP-c |
 | USE_PROJ4 | Use with Proj.4 library | OFF | N/A |
 | USE_REGEX | Enable regular expression matching options | ON | Regex Library (may be unavailable on non-POSIX systems) |
