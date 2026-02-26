@@ -75,7 +75,6 @@ int pdt_len(unsigned char **sec, int pdt) {
             case 11: return 49 + 12*n + vert_coor;
             case 12: return 48 + 12*n + vert_coor;
             case 13: if (sec) nc = sec[4][57];
-                printf("nc = %d, n = %d\n", nc, n);
                 return 80 + 12*n + nc + vert_coor;
             case 14: if (sec) nc = sec[4][53];
                 return 76 + 12*n + nc + vert_coor;

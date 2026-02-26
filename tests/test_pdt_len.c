@@ -11,6 +11,9 @@
 
 #define N_PDT_CASES 58
 #define N_JMA_PDT_CASES 13
+#define SEC1_SIZE 16
+#define SEC3_SIZE 32
+#define SEC4_SIZE 96
 
 extern jmp_buf fatal_err;
 
@@ -26,8 +29,8 @@ main()
     }
     printf("Testing pdt_len() with pdt = -1 in GRIB section. Should return -1...\n");
     {
-        unsigned char sec1[16] = {0};
-        unsigned char sec4[64] = {0};
+        unsigned char sec1[SEC1_SIZE] = {0};
+        unsigned char sec4[SEC4_SIZE] = {0};
         unsigned char *sec[5];
 
         sec[0] = NULL;
@@ -62,8 +65,8 @@ main()
             82, 87, 31, 38, 54, 51, 50, 66
         };
 
-        unsigned char sec1[16] = {0};
-        unsigned char sec4[100] = {0};
+        unsigned char sec1[SEC1_SIZE] = {0};
+        unsigned char sec4[SEC4_SIZE] = {0};
         unsigned char *sec[5];
 
         sec[0] = NULL;
@@ -134,9 +137,9 @@ main()
             58, 98, 98, 98, 103, 82, 52, 60, 60, 80, 80, 81, 61 
         };
 
-        unsigned char sec1[16] = {0};
-        unsigned char sec3[32] = {0};
-        unsigned char sec4[84] = {0};
+        unsigned char sec1[SEC1_SIZE] = {0};
+        unsigned char sec3[SEC3_SIZE] = {0};
+        unsigned char sec4[SEC4_SIZE] = {0};
         unsigned char *sec[5];
 
         sec[0] = NULL;
