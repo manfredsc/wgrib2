@@ -52,12 +52,14 @@ main()
             56, 57, 58, 59, 60, 61, 62, 63, 67, 68, 70, 71, 72, 73, 91, 254, 1000, 
             1001, 1002, 1100, 1101
         };
-
+        
         int exp_pdt_len[N_PDT_CASES] = {
-            50, 53, 52, 84, 80, 63, 51, 50, 74, 87, 75, 77, 76, 108, 104, 53, 59, 
-            30, 52, 61, 64, 88, 53, 52, 55, 76, 79, 61, 66, 87, 90, 74, 77, 75, 
-            54, 57, 56, 58, 64, 67, 59, 60, 84, 83, 83, 88, 88, 55, 58, 79, 82, 99, 
-            31, 38, 54, 51, 50, 66
+            50, 53, 52, 85, 81, 63, 51, 50, 74, 87,
+            75, 77, 76, 109, 105, 53, 59, 30, 52, 61,
+            64, 88, 53, 52, 55, 76, 79, 61, 66, 87,
+            90, 74, 77, 63, 56, 59, 56, 58, 64, 67,
+            59, 60, 84, 83, 83, 88, 88, 55, 58, 79,
+            82, 87, 31, 38, 54, 51, 50, 66
         };
 
         unsigned char sec1[16] = {0};
@@ -83,8 +85,14 @@ main()
         sec4[22] = 2;  /* used by pdt 32,33,34 */
         sec4[14] = 2;  /* used by pdt 35 */
 
-        sec4[19] = 1; /** used by pdt 67, 68 for stat proc time */
-        sec4[34] = 2; /* used by pdt 91 for stat proc time */
+        /* Number of forecasts in cluster (nc = 1) */
+        sec4[57] = 1; /* used by pdt 3 and 13 */
+        sec4[53] = 1; /* used by pdt 4 and 14 */
+        sec4[34] = 1; /* used by pdt 51 and 91 */
+
+        /* Number of following function parameters (np = 1) */
+        sec4[12] = 1; /* used by pdt 53 and 54 */
+        sec4[19] = 1; /* used by pdt 57, 58, 67, and 68 */
 
         /* Statistical processing: set n = 1 where applicable. */
         sec4[41] = 1; /* used by pdt 8  */
@@ -98,7 +106,6 @@ main()
         sec4[51] = 1; /* used by pdt 61 */
         sec4[54] = 1; /* used by pdt 9 and 46 */
         sec4[55] = 1; /* used by pdt 34, 67, 68 */
-        sec4[57] = 0; /* used by pdt 47 - for n == 0 case */
 
         for (int i = 0; i < N_PDT_CASES; i++) {
             int actual_len;
