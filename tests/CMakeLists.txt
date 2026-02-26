@@ -22,6 +22,25 @@ function(copy_test_data name)
     FILE_PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
 endfunction()
 
+function(build_c_api_test name)
+  add_executable(${name} ${name}.c)
+  target_link_libraries(${name} PUBLIC wgrib2_c_api)
+  add_test(NAME ${name} COMMAND ${name})
+endfunction()
+
+function(build_ftn_api_test name)
+  add_executable(${name} ${name}.F90)
+  target_link_libraries(${name} PRIVATE wgrib2_ftn_api)
+  add_test(NAME ${name} COMMAND ${name})
+endfunction()
+
+function(build_test name)
+  add_executable(${name} ${name}.c)
+  target_link_libraries(${name} PRIVATE wgrib2_lib)
+  target_include_directories(${name} PRIVATE ${CMAKE_SOURCE_DIR}/wgrib2)
+  add_test(NAME ${name} COMMAND ${name})
+endfunction()
+
 # Some test files are large and are kept on the NOAA EMC FTP
 # site. This function is used to download such test data. It takes two
 # arguments, the URL and the file to be downloaded.
@@ -186,13 +205,21 @@ if (MAKE_FTN_API)
 endif()
 if (BUILD_LIB)
   shell_test(test_lib)
-
   # Test will not behave with Intel Classic compiler due to longjmp issues.
   if (NOT CMAKE_C_COMPILER_ID MATCHES "^Intel$")
     add_executable(test_c_api test_c_api.c wgrib2_test_util.c)
     target_link_libraries(test_c_api PUBLIC wgrib2_c_api)
     add_test(NAME test_c_api COMMAND test_c_api)
   endif()
+  build_c_api_test(test_c_api)
+  build_test(test_string2time_unit)
+  build_test(test_read_latlon)
+  build_test(test_pdt_len)
+  build_test(test_addtime)
+  build_test(test_flt2ieee)
+  build_test(test_units)
+  build_test(test_update_sec)
+  build_test(test_subtime)
 endif()
 if (BUILD_SHARED_LIB)
   shell_test(test_shared_lib)
