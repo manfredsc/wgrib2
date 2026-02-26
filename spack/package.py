@@ -145,7 +145,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
         description="Add commands for user-defined functions and shell commands",
     )
     variant("regex", default=True, description="Use regular expression library (POSIX-2)")
-    variant("tigge", default=True, description="Ability for TIGGE-like variable names")
+    variant("tigge", default=True, description="Ability for TIGGE-like variable names",when="@:3.8")
     variant(
         "proj4",
         default=False,
@@ -177,7 +177,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
         when="@3.7:3.8",
     )
     variant(
-        "disable_timezone", default=False, description="Some machines do not support timezones"
+        "disable_timezone", default=False, description="Some machines do not support timezones", when="@:3.8"
     )
     variant(
         "disable_alarm",
@@ -197,7 +197,7 @@ class Wgrib2(MakefilePackage, CMakePackage):
         when="@:3.7"
     )
     variant("openmp", default=True, description="OpenMP parallelization")
-    variant("wmo_validation", default=False, description="WMO validation")
+    variant("wmo_validation", default=False, description="WMO validation", when="@:3.1")
     #    variant("shared", default=False, description="Enable shared library", when="+lib")
     variant("disable_stat", default=False, description="Disable POSIX feature", when="@:3.1")
     variant("openjpeg", default=False, description="Enable OpenJPEG", when="@:3.7")

@@ -95,8 +95,6 @@ struct gribtable_s local_gribtable[] = {
     { -1, -1, -1, -1, -1, -1, -1, -1, NULL, NULL, NULL }
 };
 
-#ifdef USE_TIGGE
-
 /** Struct for TIGGE GRIB table. */
 struct gribtable_s tigge_gribtable[] = {
 #include "gribtables/tigge/tigge_gribtable.dat"
@@ -104,4 +102,3 @@ struct gribtable_s tigge_gribtable[] = {
     { -1, -1, -1, -1, -1, -1, -1, -1, NULL, NULL, NULL }
 };
 
-#endif

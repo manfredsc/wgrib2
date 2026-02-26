@@ -32,12 +32,10 @@ extern struct gribtable_s *user_gribtable;
 
 static struct gribtable_s *search_gribtable(struct gribtable_s *gribtable, unsigned char **sec);
 
-#ifdef USE_TIGGE
 /** Flag to use TIGGE */
 extern int tigge;
 /** TIGGE Grib Table */
 extern struct gribtable_s tigge_gribtable[];
-#endif
 
 /** Indicates the GRIB table name to use */
 extern int names;
@@ -78,14 +76,10 @@ int getName_all(unsigned char **sec, int mode, char *inv_out, char *name, char *
     if (p == NULL && names == ECMWF) p = search_gribtable(ECMWF_gribtable, sec);
     if (p == NULL && names == DWD1) p = search_gribtable(DWD1_gribtable, sec);
     if (p == NULL && names == NCEP) {
-#ifdef USE_TIGGE
         if (tigge && p == NULL) p = search_gribtable(tigge_gribtable, sec);		/* tigge is default table */
-#endif
         if (p == NULL) p = search_gribtable(NCEP_gribtable, sec);
-#ifdef USE_TIGGE
         /* if undefined and a tigge file */
         if (p == NULL && !tigge && (code_table_1_3(sec) == 4 || code_table_1_3(sec) == 5)) p = search_gribtable(tigge_gribtable, sec);
-#endif
     }
 
     /* check local tables */

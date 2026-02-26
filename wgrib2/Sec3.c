@@ -183,11 +183,9 @@ int get_nxny_(unsigned char **sec, unsigned int *nx, unsigned int *ny, unsigned 
         case 120: *nx = uint4_missing(gds+14);			// nx = bin along radials, ny = num radials
             *ny = uint4_missing(gds+18);
             break;
-#ifdef WMO_VALIDATION
         case 60: *nx = uint4_missing(gds+30);
             *ny = uint4_missing(gds+34);
             break;
-#endif
         case 32768:
         case 32769:
             if (center == NCEP) {
@@ -280,10 +278,8 @@ int get_nxny_(unsigned char **sec, unsigned int *nx, unsigned int *ny, unsigned 
     else if (*nx > 0 && *ny > 0) npoints = (unsigned) *nx * *ny;
     *npnts = GB2_Sec3_npts(sec);
 
-#ifdef WMO_VALIDATION
     /* if global cubed sphere */
     if (grid_template == 60 && GDS_Gnom_tile(gds) == 0) npoints *= 6;
-#endif
 
 
     if ((*nx != 0 || *ny != 0) && GB2_Sec3_npts(sec) != npoints && GDS_Scan_staggered_storage(*scan) == 0) {
@@ -949,7 +945,6 @@ int f_grid(ARG0) {
                 sprintf(inv_out,"pole of stretching lat=%lf lon=%lf stretching=%lf",
                     ieee2flt(gds+40), ieee2flt(gds+44),ieee2flt(gds+48));
                 break;
-#ifdef WMO_VALIDATION
             case 60: sprintf(inv_out,"%sCubed Sphere grid: face C%d:", nl, GDS_Gnom_face_size(gds));
                 inv_out += strlen(inv_out);
                 if (GDS_Gnom_tile(gds) == 0) {
@@ -973,7 +968,6 @@ int f_grid(ARG0) {
                     GDS_Gnom_B(gds));
                 inv_out += strlen(inv_out);
                 break;
-#endif
             case 90: 
                 sprintf(inv_out,"%sSpace view perspective or orthographic grid (%d x %d)",nl,nx,ny);
                 inv_out += strlen(inv_out);

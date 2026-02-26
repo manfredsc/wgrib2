@@ -10,7 +10,6 @@
 #include "grb2.h"
 #include "wgrib2.h"
 #include "fnlist.h"
-#ifdef WMO_VALIDATION
 
 /** Decode grib file flag. */
 extern int decode;
@@ -205,9 +204,3 @@ int f_cubeface2global(ARG2) {
     }
     return 0;
 }	
-#else
-int f_cubeface2global(ARG2) {
-    fatal_error("cubeface2global: not installed","");
-    return 0;	
-}
-#endif
