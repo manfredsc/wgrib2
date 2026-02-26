@@ -34,6 +34,13 @@ function(build_ftn_api_test name)
   add_test(NAME ${name} COMMAND ${name})
 endfunction()
 
+function(build_test name)
+  add_executable(${name} ${name}.c)
+  target_link_libraries(${name} PRIVATE wgrib2_lib)
+  target_include_directories(${name} PRIVATE ${CMAKE_SOURCE_DIR}/wgrib2)
+  add_test(NAME ${name} COMMAND ${name})
+endfunction()
+
 # Some test files are large and are kept on the NOAA EMC FTP
 # site. This function is used to download such test data. It takes two
 # arguments, the URL and the file to be downloaded.
@@ -198,6 +205,9 @@ endif()
 if (BUILD_LIB)
   shell_test(test_lib)
   build_c_api_test(test_c_api)
+  build_test(test_units)
+  build_test(test_update_sec)
+  build_test(test_subtime)
 endif()
 if (BUILD_SHARED_LIB)
   shell_test(test_shared_lib)
