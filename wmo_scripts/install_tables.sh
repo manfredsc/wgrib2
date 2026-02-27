@@ -7,9 +7,9 @@
 cd tables.tmp || exit 1
 
 #for fil in *.dat *.c; do
-#  diff -Nu "../../wgrib2/$fil" .
+#  diff -Nu "../../src/$fil" .
 #done
 
-cp -vp ./*.dat ./*.c ../../wgrib2/
+cp -vp ./*.dat ./*.c ../../src/
 
 exit

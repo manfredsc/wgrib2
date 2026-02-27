@@ -31,9 +31,7 @@ Additional CMake build options can be used to configure the build by setting the
 | MAKE_FTN_API | Build Fortran API | OFF | BUILD_LIB = ON |
 | USE_NETCDF | Read and write NetCDF files | OFF | NetCDF-c | 
 | USE_IPOLATES | Use NCEPLIBS-ip library (required for grid interpolation) | OFF | [NCEPLIBS-ip v5.2.0+](https://github.com/NOAA-EMC/NCEPLIBS-ip) |
-| USE_G2CLIB_HIGH | Use NCEPLIBS-g2c high-level decoder (needed for '-g2clib 2' option)  | OFF | [NCEPLIBS-g2c 2.2.0+](https://github.com/NOAA-EMC/NCEPLIBS-g2c) |
-| USE_G2CLIB_LOW | Use NCEPLIBS-g2c low-level decoders for PNG (packing type 41) and Jpeg2000 (packing type 40) | OFF | [NCEPLIBS-g2c 2.2.0+](https://github.com/NOAA-EMC/NCEPLIBS-g2c) with desired decoders enabled |
-| USE_AEC | Use AEC to enable encoding/decoding of GRIB2 data with CCSDS packing (packing type 42) | OFF | [libaec v1.0.6+](https://gitlab.dkrz.de/k202009/libaec) |
+| USE_G2CLIB | Use NCEPLIBS-g2c decoders (needed for '-g2clib 2' option and PNG, JPEG2000, and AEC packing types)  | OFF | [NCEPLIBS-g2c 2.3.0+](https://github.com/NOAA-EMC/NCEPLIBS-g2c) |
 | USE_OPENMP | Use with OpenMP | OFF | OpenMP-c |
 | USE_PROJ4 | Use with Proj.4 library | OFF | N/A |
 | USE_REGEX | Enable regular expression matching options | ON | Regex Library (may be unavailable on non-POSIX systems) |
@@ -48,13 +46,10 @@ Additional CMake build options can be used to configure the build by setting the
 | FTP_TEST_FILES | Fetch and test with files on FTP site. | OFF |
 | FTP_LARGE_TEST_FILES | Fetch and test with very large files on FTP site. | OFF |
 | FTP_EXTRA_TEST_FILES | Test with more large files fetched via FTP. | OFF |
-| USE_TIGGE | Enable use of TIGGE gribtables | ON |
 | USE_UDF | Enable User-Defined functions | OFF |
-| USE_WMO_VALIDATION | Use WMO Validation Tables (unofficial templates) | OFF |
 | DISABLE_ALARM | Disable alarm for non-compatible systems | OFF |
 | DISABLE_STAT | Disable POSIX feature | OFF |
 | BUILD_EXTRA | Build user-contributed code. This code is no longer supported - use at your own risk. | OFF |
-| USE_MYSQL | Use with BUILD_EXTRA = ON to enable user-contributed MySQL options. It is user's responsibility to ensure MySQL is available. | OFF |
 
 ## Documentation for Previous Versions of wgrib2
 

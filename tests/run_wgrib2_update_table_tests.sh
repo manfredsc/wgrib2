@@ -10,7 +10,7 @@ echo "*** Running wgrib2 update table tests"
 echo "*** testing MRMS update 3/2025"
 file=data/ref_simple_packing.grib2
 # wgrib2=wgrib2
-wgrib2=../wgrib2/wgrib2
+wgrib2=../src/wgrib2
 inv=`$wgrib2 $file -set_var var209_255_1_161_3_57 | cut -f4 -d:`
 if [ "$inv" != "ReflectivityAtLowestAltitude" ] ; then
    echo "failed: making ReflectivityAtLowestAltitude"
