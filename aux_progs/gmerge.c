@@ -13,6 +13,7 @@
  * 12/2022 | W. Ebisuzaki | better error messages, list of input files can be 1 file
  * 01/2023 | W. Ebisuzaki | updated for 2023, cmake compile added
  * 05/2025 | W. Ebisuzaki | increase N again (32..200..system limit)
+ * 12/2025 | A. Stahl | Moved rd_msg() to rd_msg.c to support testing
  * 
  * @author Public Domain: Wesley Ebisuzaki @date 05/2009
  */
@@ -24,7 +25,6 @@
 /** Current Version of gmerge */
 #define VERSION "gmerge v1.6 5/2025"
 
-unsigned long int uint8(unsigned char *);
 int rd_msg(FILE *, FILE *);
 
 /**
@@ -108,45 +108,3 @@ int main(int argc, char **argv) {
     exit(0);
 }
 
-/** Maximum Buffer Size */
-#define BSIZE 4096*8
-
-/**
- * Reads a GRIB2 message from the input file and writes it to the output file.
- *
- * @param in Pointer to the input file.
- * @param out Pointer to the output file.
- *
- * @return 0 on success, non-zero on error.
- *
- * @author Wesley Ebisuzaki @date 05/2009
- */
-int rd_msg(FILE *in, FILE *out) {
-    long unsigned int n;
-    int i,j,k;
-    unsigned char header[BSIZE];
-
-    if (feof(in)) return -1;
-
-    i = fread(header, 1, 16, in);
-    if (i != 16) return -1;
-    if (header[0] != 'G' || header[1] != 'R' || header[2] != 'I' || 
-        header[3] != 'B') return -1;
-
-    n = uint8(&(header[8]));
-
-    j = n < BSIZE ? n : BSIZE;
-    k = fread(header+16,1,j-16,in);
-    if (k != j-16) return -1;
-
-    fwrite(header,1,j,out);
-    n -= j;
-
-    while (n) {
-        j = n < BSIZE ? n : BSIZE;
-        k = fread(header,1,j,in);
-        fwrite(header,1,j,out);
-        n -= j;
-    }
-    return 0;
-}

@@ -1,5 +1,5 @@
 
-add_executable(gmerge gmerge.c uint8.c)
+add_executable(gmerge gmerge.c rd_msg.c uint8.c)
 
 add_executable(smallest_grib2 smallest_grib2.c uint8.c)
 
