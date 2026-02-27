@@ -91,7 +91,7 @@ endif()
 
 # write config.h
 message(STATUS "Writing config.h...")
-configure_file("${PROJECT_SOURCE_DIR}/wgrib2/config.h.in" "${CMAKE_CURRENT_BINARY_DIR}/config.h")
+configure_file("${PROJECT_SOURCE_DIR}/src/config.h.in" "${CMAKE_CURRENT_BINARY_DIR}/config.h")
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 message(STATUS "Adding wgrib2, aux_probs subdirectories...")
@@ -100,7 +100,7 @@ if (BUILD_EXTRA)
   add_subdirectory(extra)
 endif()
 
-add_subdirectory(wgrib2)
+add_subdirectory(src)
 add_subdirectory(aux_progs)
 
 if(BUILD_LIB)

@@ -68,7 +68,7 @@ jobs:
        
         make VERBOSE=1
         ctest --verbose --output-on-failure --rerun-failed
-        gcovr --root .. -v --html-details --exclude ../tests --exclude CMakeFiles --exclude '.*\.dat$' --exclude ../wgrib2/gctpc --print-summary -o test-coverage.html &> /dev/null
+        gcovr --root .. -v --html-details --exclude ../tests --exclude CMakeFiles --exclude '.*\.dat$' --exclude ../src/gctpc --print-summary -o test-coverage.html &> /dev/null
 
     - name: cache-data
       if: steps.cache-data.outputs.cache-hit != 'true'

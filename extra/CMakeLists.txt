@@ -6,7 +6,7 @@
 
 set(src Mysql.c Mysql_dump.c Mysql_speed.c)
 
-include_directories(../wgrib2/)
+include_directories(../src/)
 
 add_library(wgrib2_extra OBJECT ${src})
 target_compile_definitions(wgrib2_extra PUBLIC ${definitions_list}) 

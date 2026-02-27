@@ -21,10 +21,10 @@ done
 
 echo "*** running gmerge and ens_qc test "
 
-../aux_progs/gmerge - $arg | ../wgrib2/wgrib2 - -ens_qc ens_qc.x ens_qc.y ens_qc.z 1 >/dev/null
+../aux_progs/gmerge - $arg | ../src/wgrib2 - -ens_qc ens_qc.x ens_qc.y ens_qc.z 1 >/dev/null
 
 ck="1559805086 4891"
-newck=`../wgrib2/wgrib2 ens_qc.x -match spread -stats | cksum`
+newck=`../src/wgrib2 ens_qc.x -match spread -stats | cksum`
 echo "ck=$ck"
 echo "newck=$newck"
 if [ "$ck" != "$newck" ] ; then
