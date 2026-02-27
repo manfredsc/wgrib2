@@ -100,7 +100,7 @@ if (BUILD_EXTRA)
   add_subdirectory(extra)
 endif()
 
-add_subdirectory(wgrib2)
+add_subdirectory(src)
 add_subdirectory(aux_progs)
 
 if(BUILD_LIB)
