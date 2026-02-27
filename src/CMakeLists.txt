@@ -96,8 +96,8 @@ target_compile_definitions(obj_lib PUBLIC ${definitions_list})
 # Write wgrib2_meta.h. This is installed and contains pre-processor
 # defines for other packages using wgrib2.
 configure_file (
-  "${PROJECT_SOURCE_DIR}/wgrib2/wgrib2_meta.h.in"
-  "${PROJECT_BINARY_DIR}/wgrib2/wgrib2_meta.h"
+  "${PROJECT_SOURCE_DIR}/src/wgrib2_meta.h.in"
+  "${PROJECT_BINARY_DIR}/src/wgrib2_meta.h"
   )
 
 add_executable(wgrib2_exe wgrib2_main.c)
@@ -162,7 +162,7 @@ target_link_libraries(wgrib2_exe PRIVATE gctpc -lm)
 target_link_libraries(wgrib2_exe PRIVATE obj_lib)
 
 if(BUILD_LIB)
-  set(headers wgrib2_api.h wgrib2.h ${CMAKE_BINARY_DIR}/wgrib2/wgrib2_meta.h)
+  set(headers wgrib2_api.h wgrib2.h ${CMAKE_BINARY_DIR}/src/wgrib2_meta.h)
   set_target_properties(wgrib2_lib PROPERTIES PUBLIC_HEADER "${headers}")
   target_link_libraries(wgrib2_lib PUBLIC gctpc -lm)
   target_compile_definitions(wgrib2_lib PUBLIC ${definitions_list})
