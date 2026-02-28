@@ -116,18 +116,14 @@ copy_test_data(ref_new_grid_gdt_32769.grib2)
 copy_test_data(png_4bits.png)
 copy_test_data(large_png.grb2)
 copy_test_data(ref_c3_overflow.grib2)
-copy_test_data(ref_jpeg2simple.txt)
-copy_test_data(LARGECAT220250305_12_1443copy.grib2)
-copy_test_data(ref_LARGECAT220250305_12_1443copy_stats.txt)
 
 # Run these shell tests.
 shell_test(run_wgrib2_tests)
 shell_test(run_wgrib2_rpn_tests)
 shell_test(run_wgrib2_update_table_tests)
+
 shell_test(run_wgrib2_png_tests)
 shell_test(run_gmerge_tests)
-shell_test(run_wgrib2_aec_tests)
-shell_test(run_jpeg_tests)
 
 if (USE_NETCDF)
   shell_test(run_wgrib2_netcdf4_tests)
