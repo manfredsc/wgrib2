@@ -8,6 +8,24 @@
 #include <limits.h>
 #include "grb2.h"
 
+/** For unit tests only. Sets ULONG_MAX to 32-bit max if FORCE_32BIT_TEST is defined. */
+#ifdef FORCE_32BIT_TEST
+#undef ULONG_MAX
+#define ULONG_MAX 4294967295UL
+#endif
+
+/**
+ * Converts an 8-byte unsigned integer from a byte array to an unsigned long integer.
+ *
+ * @param p Pointer to an array of at least 8 bytes representing the unsigned integer in big-endian order.
+ *
+ * @return The converted unsigned long integer.
+ *
+ * @note On 32-bit systems, if the value exceeds the maximum representable value of unsigned long int,
+ *       the program will print an error message and exit.
+ *
+ * @author Wesley Ebisuzaki @date 2006
+ */
 unsigned long int uint8(unsigned char *p) {
 
 #if (ULONG_MAX == 4294967295UL) 
