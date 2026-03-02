@@ -234,14 +234,13 @@ main()
         unsigned char *sec[10] = { 0 };
 
         msg[15] = 32;
-        msg[3] = 8;
-        msg[4] = 7;
-
-        msg[11] = 40;
-        msg[12] = 1;
+        msg[19] = 8;
+        msg[20] = 7;
+        msg[27] = 16;
+        msg[28] = 8; /* section 7 length is 16, which runs past the end of the message */
 
         sec[0] = msg;
-        sec[7] = msg;
+        sec[7] = msg + 16;
         sec[8] = msg + 32;
 
         if (setjmp(fatal_err) == 0) {
