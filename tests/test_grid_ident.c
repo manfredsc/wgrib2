@@ -32,9 +32,9 @@ main()
             p_lambert_conic, p_unknown
         };
         double exp_radius = 6367.47 * 1000.0;
-        double exp_nx = 10;
-        double exp_ny = 20;
-        double exp_n = exp_nx * exp_ny;
+        int exp_nx = 10;
+        int exp_ny = 20;
+        int exp_n = exp_nx * exp_ny;
 
         /* Sections 0, 1, and 3 (grid definition). */
         unsigned char sec0[16] = {0};
