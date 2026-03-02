@@ -89,7 +89,8 @@ main()
         return 18;
     }
 
-    /* Verify that buf1 still contains test_string */
+
+    printf("Verifying that the contents of the current inv_out buffer are unchanged...\n");
     for (i = 0; test_string[i] != '\0'; i++) {
         if (buf1[i] != test_string[i]) {
             return 19;
