@@ -1,6 +1,10 @@
 /**
  * This is a test for the wgrib2 project. This test is for mk_gdt.c.
  * 
+ * NOTE: The function mk_gdt() contains some unreachable code. The switch
+ * statement handles cases that are not present in the current version of 
+ * gdt_table. The default case is also unreachable.
+ * 
  * Alyson Stahl, 2/2026
  */
 
