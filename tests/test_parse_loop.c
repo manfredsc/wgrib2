@@ -50,7 +50,7 @@ main()
     }
     printf("Testing parse_loop() with invalid string. Should throw fatal_error()...\n");
     {
-        const char *string = "1:4:2:1";
+        const char *string = "invalid";
         int start, end, step;
 
         if (setjmp(fatal_err) == 0) {
