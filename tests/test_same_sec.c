@@ -34,28 +34,28 @@ main()
 
         /* identical sections, should return 1 */
         if (!same_sec0(sec_a, sec_b)) {
-            fprintf(stderr,"same_sec0: identical sections should return 1\n");
+            printf("same_sec0: identical sections should return 1\n");
             return 10;
+        }
+
+        /* different edition number, should return 0 */
+        sec0_b[7] = 1;
+        if (same_sec0(sec_a, sec_b)) {
+            printf("same_sec0: different edition number should return 0\n");
+            return 11;
+        }
+
+        /* identical sections, but different edition number, should return 1 */
+        if (!same_sec0_not_var(1, sec_a, sec_b)) {
+            printf("same_sec0_not_var: should ignore edition number and return 1\n");
+            return 12;
         }
 
         /* different discipline, should return 0 */
         sec0_b[6] = 1;
-        if (same_sec0(sec_a, sec_b)) {
-            fprintf(stderr,"same_sec0: different discipline should return 0\n");
-            return 11;
-        }
-
-        /* identical sections, but different discipline, should return 1 */
-        if (!same_sec0_not_var(1, sec_a, sec_b)) {
-            fprintf(stderr,"same_sec0_not_var: should ignore discipline and return 1\n");
-            return 12;
-        }
-
-        /* different edition number, should return 0 */
-        sec0_b[6] = 0;
-        sec0_b[7] = 1;
+        sec0_b[7] = 2; /* reset edition number to original value */
         if (same_sec0_not_var(1, sec_a, sec_b)) {
-            fprintf(stderr,"same_sec0_not_var: different edition number should return 0\n");
+            printf("same_sec0_not_var: different discipline should return 0\n");
             return 13;
         }
     }
