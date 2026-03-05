@@ -251,7 +251,12 @@ main()
         unsigned char *sec_a[10] = {0};
         unsigned char *sec_b[10] = {0};
 
-        for (int i = 0; i < 21; i++) sec1_b[i] = sec1_a[i];
+        /**
+         * same_sec1_not_var() does not compare beyond byte 12. 
+         * Test will break if same_sec1_not_var() ever compares all 21 bytes.
+         */
+        for (int i = 0; i < 12; i++) sec1_b[i] = sec1_a[i];
+        for (int i = 12; i < 21; i++) sec1_b[i] = 255;
 
         sec_a[1] = sec1_a;
         sec_b[1] = sec1_b;
@@ -371,6 +376,46 @@ main()
                 return 1;
             }
             sec3_b[i] = sec3_a[i];
+        }
+    }
+    printf("Testing same_sec4()...\n");
+    {
+        unsigned char sec4_a[10] = {
+            0, 0, 0, 20,    /* Section length */
+            4,              /* Section number */
+            0, 0,           /* Num coordinate values after template */
+            0, 0,           /* Product definition template number */
+            0               /* Template */
+        };
+        unsigned char sec4_b[10] = {0};
+        unsigned char *sec_a[10] = {0};
+        unsigned char *sec_b[10] = {0};
+
+        for (int i = 0; i < 10; i++) sec4_b[i] = sec4_a[i];
+
+        sec_a[4] = sec4_a;
+        sec_b[4] = sec4_b;
+
+        if (!same_sec4(sec_a, sec_b)) {
+            printf("same_sec4: sections should be the same\n");
+            return 1;
+        }
+
+        /* different section length */
+        sec4_b[3] = 19;
+        if (same_sec4(sec_a, sec_b)) {
+            printf("same_sec4: different section length should return 0\n");
+            return 1;
+        }
+        sec4_b[3] = sec4_a[3];
+
+        for (int i = 10; i < 20; i++) {
+            sec4_b[i] = 255;
+            if (same_sec4(sec_a, sec_b)) {
+                printf("same_sec4: sections should be different at byte %d\n", i);
+                return 1;
+            }
+            sec4_b[i] = sec4_a[i];
         }
     }
     printf("SUCCESS!\n");
