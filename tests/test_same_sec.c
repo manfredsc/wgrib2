@@ -422,6 +422,7 @@ main()
     }
     printf("Testing same_sec4_not_time()...\n");
     {
+        unsigned char sec1[21] = {0};
         unsigned char sec4_a[46] = {
             0, 0, 0, 46,    /* Section length */
             4,              /* Section number */
@@ -448,52 +449,26 @@ main()
 
         for (int i = 0; i < 46; i++) sec4_b[i] = sec4_a[i];
 
+        sec_a[1] = sec1; /* Section 1 is accessed for Center */
+        sec_b[1] = sec1;
         sec_a[4] = sec4_a;
         sec_b[4] = sec4_b;
 
-        int size = GB2_Sec4_size(sec_a);
-        printf("size = %d\n", size);
-
-        int pdt = GB2_ProdDefTemplateNo(sec_a);
-        printf("pdt = %d\n", pdt);
-        
-        unsigned char *p = stat_proc_verf_time_location(sec_a);
-        if (p == NULL) {
-            printf("stat_time = NULL\n");
-        }
-        else {
-            int stat_time = (int) (p - sec_a[4]);
-            printf("stat_time = %d\n", stat_time);
-        }
-        /*
-        p = code_table_4_4_location(sec_a);
-        if (p == NULL) {
-            printf("code_4_4 = NULL\n");
-        }
-        else {
-            int code_4_4 = (int) (p - sec_a[4]);
-            printf("code_4_4 = %d\n", code_4_4);
-        }
-        */
-
         /* First testing on PDT with stat time */
-        /**
+
         if (!same_sec4_not_time(1, sec_a, sec_b)) {
             printf("same_sec4_not_time: sections should be the same\n");
             return 1;
-        } */
+        } 
 
         /* different section length */
-        /**
         sec4_b[3] = 45;
         if (same_sec4_not_time(1, sec_a, sec_b)) {
             printf("same_sec4_not_time: different section length should return 0\n");
             return 1;
         }
         sec4_b[3] = sec4_a[3];
-         */
   
-        /** 
         for (int i = 4; i < 46; i++) {
             sec4_b[i] = 255;
             if (i >= 17 && i < 22) {
@@ -515,9 +490,7 @@ main()
                 }
             }
             sec4_b[i] = sec4_a[i];
-        }
-            */
-        
+        }        
     }
     printf("SUCCESS!\n");
     return 0;
