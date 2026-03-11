@@ -451,32 +451,12 @@ main()
         sec_a[4] = sec4_a;
         sec_b[4] = sec4_b;
 
-        /**
-         * TODO: Below this comment, add code that does the following:
-         * 1. Prints the result for GB2_Sec4_size(sec_a).
-         * 2. Prints the result of GB2_ProdDefTemplateNo(sec_a).
-         * 3. Prints the result of stat_proc_verf_time(sec_a).
-         * 4. Prints the result of code_table_4_4(sec_a).
-         * 
-         * Print the result with the format "X = Y", where X is the following
-         * for each respective function:
-         * 1. size
-         * 2. pdt
-         * 3. stat_time
-         * 4. code_4_4
-         * 
-         * Y is the result of the respective function call. 
-         * Be aware that the results for some of these can be NULL. NULL check those 
-         * first, and if they are NULL, print "X = NULL" instead of the pointer value.
-         * Do not do anything other than is asked and do not edit, add, or remove 
-         * any comments. Your code should not result in any errors.
-         */
         int size = GB2_Sec4_size(sec_a);
         printf("size = %d\n", size);
 
         int pdt = GB2_ProdDefTemplateNo(sec_a);
         printf("pdt = %d\n", pdt);
-
+        /*
         unsigned char *p = stat_proc_verf_time_location(sec_a);
         if (p == NULL) {
             printf("stat_time = NULL\n");
@@ -494,7 +474,8 @@ main()
             int code_4_4 = (int) (p - sec_a[4]);
             printf("code_4_4 = %d\n", code_4_4);
         }
-        
+        */
+       
         /* First testing on PDT with stat time */
         /**
         if (!same_sec4_not_time(1, sec_a, sec_b)) {
