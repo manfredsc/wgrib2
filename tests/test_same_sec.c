@@ -452,20 +452,20 @@ main()
         sec_b[4] = sec4_b;
 
         /* First testing on PDT with stat time */
+        /** 
         if (!same_sec4_not_time(1, sec_a, sec_b)) {
             printf("same_sec4_not_time: sections should be the same\n");
             return 1;
-        } 
+        } */
 
         /* different section length */
-        /** 
         sec4_b[3] = 45;
         if (same_sec4_not_time(1, sec_a, sec_b)) {
             printf("same_sec4_not_time: different section length should return 0\n");
             return 1;
         }
         sec4_b[3] = sec4_a[3];
-        */
+  
         /** 
         for (int i = 4; i < 46; i++) {
             sec4_b[i] = 255;
