@@ -383,16 +383,15 @@ main()
     }
     printf("Testing same_sec4()...\n");
     {
-        unsigned char sec4_a[10] = {
-            0, 0, 0, 20,    /* Section length */
-            4,              /* Section number */
-            0, 0,           /* Num coordinate values after template */
-            0, 0,           /* Product definition template number */
-            0               /* Template */
-        };
-        unsigned char sec4_b[10] = {0};
+        unsigned char sec4_a[20] = {0};
+        unsigned char sec4_b[20] = {0};
         unsigned char *sec_a[10] = {0};
         unsigned char *sec_b[10] = {0};
+
+        sec4_a[3] = 20; /* section length */
+        sec4_b[3] = 20;
+        sec4_a[4] = 4;  /* section number */
+        sec4_b[4] = 4;
 
         for (int i = 0; i < 20; i++) sec4_b[i] = sec4_a[i];
 
