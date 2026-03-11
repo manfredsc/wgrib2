@@ -456,7 +456,7 @@ main()
 
         int pdt = GB2_ProdDefTemplateNo(sec_a);
         printf("pdt = %d\n", pdt);
-        /*
+        
         unsigned char *p = stat_proc_verf_time_location(sec_a);
         if (p == NULL) {
             printf("stat_time = NULL\n");
@@ -465,7 +465,7 @@ main()
             int stat_time = (int) (p - sec_a[4]);
             printf("stat_time = %d\n", stat_time);
         }
-
+        /*
         p = code_table_4_4_location(sec_a);
         if (p == NULL) {
             printf("code_4_4 = NULL\n");
@@ -475,7 +475,7 @@ main()
             printf("code_4_4 = %d\n", code_4_4);
         }
         */
-       
+
         /* First testing on PDT with stat time */
         /**
         if (!same_sec4_not_time(1, sec_a, sec_b)) {
