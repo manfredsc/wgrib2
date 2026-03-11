@@ -420,6 +420,75 @@ main()
             sec4_b[i] = sec4_a[i];
         }
     }
+    printf("Testing same_sec4_not_time()...\n");
+    {
+        unsigned char sec4_a[46] = {
+            0, 0, 0, 46,    /* Section length */
+            4,              /* Section number */
+            0, 0,           /* Num coord values after template */
+            0, 8,           /* Product definition template number */
+            /* Product Definition Template 8 */
+            0, 0,           /* Parameter category and number */
+            0, 0, 0,        /* Generating process info */
+            0, 0,           /* Hours after ref time cutoff */
+            0,              /* Minutes after ref time cutoff */
+            0,              /* Indicator of unit of time range */
+            0, 0, 0, 0,     /* Forecast time in units specified by PDT */
+            0, 0, 0, 0, 0, 0, /* Type, scale factor, scaled value of first fixed surface */
+            0, 0, 0, 0, 0, 0, /* Type, scale factor, scaled value of second fixed surface */
+            /* Time of end of overall time interval */
+            (2025 >> 8) & 0xff, (2025 & 0xff), /* Year */
+            3, 15, 12, 0, 0,                   /* Month, day, hour, minute, second */
+            /* Rest of Template */
+            0, 0, 0, 0, 0
+        };
+        unsigned char sec4_b[46] = {0};
+        unsigned char *sec_a[10] = {0};
+        unsigned char *sec_b[10] = {0};
+
+        for (int i = 0; i < 20; i++) sec4_b[i] = sec4_a[i];
+
+        sec_a[4] = sec4_a;
+        sec_b[4] = sec4_b;
+
+        /* First testing on PDT with stat time */
+        if (!same_sec4_not_time(1, sec_a, sec_b)) {
+            printf("same_sec4_not_time: sections should be the same\n");
+            return 1;
+        }
+
+        /* different section length */
+        sec4_b[3] = 45;
+        if (same_sec4_not_time(1, sec_a, sec_b)) {
+            printf("same_sec4_not_time: different section length should return 0\n");
+            return 1;
+        }
+        sec4_b[3] = sec4_a[3];
+
+        for (int i = 4; i < 46; i++) {
+            sec4_b[i] = 255;
+            if (i >= 17 && i < 22) {
+                if (!same_sec4_not_time(1, sec_a, sec_b)) {
+                    printf("same_sec4_not_time: different forecast time should return 1\n");
+                    return 1;
+                }
+            }
+            else if (i >= 34 && i < 41) {
+                if (!same_sec4_not_time(1, sec_a, sec_b)) {
+                    printf("same_sec4_not_time: different end of overall time interval should return 1\n");
+                    return 1;
+                }
+            }
+            else {
+                if (same_sec4_not_time(1, sec_a, sec_b)) {
+                    printf("same_sec4_not_time: sections should be different at byte %d\n", i);
+                    return 1;
+                }
+            }
+            sec4_b[i] = sec4_a[i];
+        }
+        
+    }
     printf("SUCCESS!\n");
     return 0;
 }
