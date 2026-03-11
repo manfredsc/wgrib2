@@ -394,7 +394,7 @@ main()
         unsigned char *sec_a[10] = {0};
         unsigned char *sec_b[10] = {0};
 
-        for (int i = 0; i < 10; i++) sec4_b[i] = sec4_a[i];
+        for (int i = 0; i < 20; i++) sec4_b[i] = sec4_a[i];
 
         sec_a[4] = sec4_a;
         sec_b[4] = sec4_b;
