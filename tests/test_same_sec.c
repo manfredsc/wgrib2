@@ -465,6 +465,7 @@ main()
         }
         sec4_b[3] = sec4_a[3];
 
+        /** 
         for (int i = 4; i < 46; i++) {
             sec4_b[i] = 255;
             if (i >= 17 && i < 22) {
@@ -487,6 +488,7 @@ main()
             }
             sec4_b[i] = sec4_a[i];
         }
+            */
         
     }
     printf("SUCCESS!\n");
