@@ -356,6 +356,9 @@ main()
 
         for (int i = 0; i < 15; i++) sec3_b[i] = sec3_a[i];
 
+        sec_a[3] = sec3_a;
+        sec_b[3] = sec3_b;
+
         if (!same_sec3(sec_a, sec_b)) {
             printf("same_sec3: sections should be the same\n");
             return 1;
