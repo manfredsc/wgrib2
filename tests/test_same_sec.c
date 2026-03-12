@@ -542,6 +542,15 @@ main()
             sec4_b[i] = sec4_a[i];
         }
 
+        /* Now testing on sections with unhandled PDT */
+        sec4_a[8] = 16; /* PDT Number */
+        sec4_b[8] = 16;
+
+        if (same_sec4_not_time(1, sec_a, sec_b)) {
+            printf("same_sec4_not_time: unhandled PDT should return 0\n");
+            return 1;
+        }
+
     }
     printf("SUCCESS!\n");
     return 0;
