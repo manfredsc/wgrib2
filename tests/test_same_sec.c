@@ -764,7 +764,7 @@ main()
                         printf("same_sec4_but_ensemble: different indicator of unit time range should return 1\n");
                     }
                     else if (i >= 20 && i < 24) {
-                        printf("same_sec4_but_ensemble: different forecast time should return 1\n");
+                        printf("same_sec4_but_ensemble: different forecast time should return 1. Failed at index %d\n", i);
                     }
                     else if (i == 36) {
                         printf("same_sec4_but_ensemble: different type of ensemble forecast should return 1\n");
@@ -783,7 +783,71 @@ main()
             }
             sec4_b[i] = sec4_a[i];
         }
+    }
+    printf("Testing same_sec4_not_var()...\n");
+    {
+        unsigned char sec1[21] = {0};
+        unsigned char sec4_a[34] = {
+            0, 0, 0, 34,    /* Section length */
+            4,              /* Section number */
+            0, 0,           /* Num coord values after template */
+            0, 7,           /* Product definition template number */
+            /* Product Definition Template 7 */
+            0, 0,           /* Parameter category and number */
+            0, 0, 0,        /* Generating process info */
+            0, 0,           /* Hours after ref time cutoff */
+            0,              /* Minutes after ref time cutoff */
+            0,              /* Indicator of unit of time range */
+            0, 0, 0, 0,     /* Forecast time in units specified by PDT */
+            0, 0, 0, 0, 0, 0, /* Type, scale factor, scaled value of first fixed surface */
+            0, 0, 0, 0, 0, 0, /* Type, scale factor, scaled value of second fixed surface */
+        };
+        unsigned char sec4_b[34] = {0};
+        unsigned char *sec_a[10] = {0};
+        unsigned char *sec_b[10] = {0};
 
+        for (int i = 0; i < 34; i++) sec4_b[i] = sec4_a[i];
+
+        sec_a[1] = sec1; /* Section 1 is accessed for Center */
+        sec_b[1] = sec1;
+        sec_a[4] = sec4_a;
+        sec_b[4] = sec4_b;
+
+        if (!same_sec4_not_var(1, sec_a, sec_b)) {
+            printf("same_sec4_not_var: sections should be the same\n");
+            return 1;
+        } 
+
+        /* different section length */
+        sec4_b[3] = 33;
+        if (same_sec4_not_var(1, sec_a, sec_b)) {
+            printf("same_sec4_not_var: different section length should return 0\n");
+            return 1;
+        }
+        sec4_b[3] = sec4_a[3];
+  
+        for (int i = 4; i < 34; i++) {
+            sec4_b[i] = 255;
+            if (i == 9) {
+                if (!same_sec4_not_var(1, sec_a, sec_b)) {
+                    printf("same_sec4_not_var: different parameter category should return 1\n");
+                    return 1;
+                }
+            }
+            else if (i == 10) {
+                if (!same_sec4_not_var(1, sec_a, sec_b)) {
+                    printf("same_sec4_not_var: different parameter number should return 1\n");
+                    return 1;
+                }
+            }
+            else {
+                if (same_sec4_not_var(1, sec_a, sec_b)) {
+                    printf("same_sec4_not_var: sections should be different at byte %d\n", i);
+                    return 1;
+                }
+            }
+            sec4_b[i] = sec4_a[i];
+        }
     }
     printf("SUCCESS!\n");
     return 0;
