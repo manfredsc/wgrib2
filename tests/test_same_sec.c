@@ -454,7 +454,7 @@ main()
         sec_a[4] = sec4_a;
         sec_b[4] = sec4_b;
 
-        /* First testing on PDT with stat time */
+        /* First testing on PDT with stat time (PDT 8) */
 
         if (!same_sec4_not_time(1, sec_a, sec_b)) {
             printf("same_sec4_not_time: sections should be the same\n");
@@ -490,7 +490,39 @@ main()
                 }
             }
             sec4_b[i] = sec4_a[i];
-        }        
+        }
+        
+        /* Now testing on PDT without stat time (PDT 7) */
+        sec4_a[3] = 34; /* section length */
+        sec4_b[3] = 34;
+
+        sec4_a[8] = 7; /* PDT Number */
+        sec4_b[8] = 7;
+
+        if (!same_sec4_not_time(1, sec_a, sec_b)) {
+            printf("same_sec4_not_time: sections should be the same\n");
+            return 1;
+        } 
+
+        for (int i = 4; i < 34; i++) {
+            sec4_b[i] = 255;
+            if (i >= 17 && i < 22) {
+                if (!same_sec4_not_time(1, sec_a, sec_b)) {
+                    printf("same_sec4_not_time: different forecast time should return 1\n");
+                    return 1;
+                }
+            }
+            else {
+                if (same_sec4_not_time(1, sec_a, sec_b)) {
+                    printf("same_sec4_not_time: sections should be different at byte %d\n", i);
+                    return 1;
+                }
+            }
+            sec4_b[i] = sec4_a[i];
+        }
+
+        
+
     }
     printf("SUCCESS!\n");
     return 0;
