@@ -591,7 +591,7 @@ main()
         }
         sec4_b[3] = sec4_a[3];
 
-        for (int i = 4; i < 57; i++) {
+        for (int i = 4; i < 58; i++) {
             sec4_b[i] = 255;
             if (i >= 34 && i < 41) {
                 if (!same_sec4_diff_ave_period(sec_a, sec_b)) {
@@ -675,9 +675,9 @@ main()
         }
         sec4_b[3] = sec4_a[3];
   
-        for (int i = 4; i < 57; i++) {
+        for (int i = 4; i < 58; i++) {
             sec4_b[i] = 255;
-            if (i >= 17 && i < 22) {
+            if (i >= 18 && i < 22) {
                 if (!same_sec4_for_merge(1, sec_a, sec_b)) {
                     printf("same_sec4_for_merge: different forecast time should return 1. Failed at index %d\n", i);
                     return 1;
@@ -849,7 +849,87 @@ main()
             sec4_b[i] = sec4_a[i];
         }
     }
+    printf("Testing same_sec4_unmerge_fcst()...\n");
+    {
+        unsigned char sec1[21] = {0};
+        unsigned char sec4_a[58] = {
+            0, 0, 0, 58,    /* Section length */
+            4,              /* Section number */
+            0, 0,           /* Num coord values after template */
+            0, 8,           /* Product definition template number */
+            /* Product Definition Template 8 */
+            0, 0,           /* Parameter category and number */
+            0, 0, 0,        /* Generating process info */
+            0, 0,           /* Hours after ref time cutoff */
+            0,              /* Minutes after ref time cutoff */
+            0,              /* Indicator of unit of time range */
+            0, 0, 0, 0,     /* Forecast time in units specified by PDT */
+            0, 0, 0, 0, 0, 0, /* Type, scale factor, scaled value of first fixed surface */
+            0, 0, 0, 0, 0, 0, /* Type, scale factor, scaled value of second fixed surface */
+            /* Time of end of overall time interval */
+            (2025 >> 8) & 0xff, (2025 & 0xff), /* Year */
+            3, 15, 12, 0, 0,    /* Month, day, hour, minute, second */
+            1,                  /* Number of time ranges */
+            /* Rest of Template */
+            0, 0, 0, 0, 0, 0, 
+            0, 0, 0, 0, 0, 0, 
+            0, 0, 0, 0
+        };
+        unsigned char sec4_b[58] = {0};
+        unsigned char *sec_a[10] = {0};
+        unsigned char *sec_b[10] = {0};
 
+        for (int i = 0; i < 58; i++) sec4_b[i] = sec4_a[i];
+
+        sec_a[1] = sec1; /* Section 1 is accessed for Center */
+        sec_b[1] = sec1;
+        sec_a[4] = sec4_a;
+        sec_b[4] = sec4_b;
+
+        if (!same_sec4_unmerge_fcst(1, sec_a, sec_b)) {
+            printf("same_sec4_unmerge_fcst: sections should be the same\n");
+            return 1;
+        } 
+
+        for (int i = 4; i < 58; i++) {
+            sec4_b[i] = 255;
+            if (i >= 34 && i < 40) {
+                if (!same_sec4_unmerge_fcst(1, sec_a, sec_b)) {
+                    printf("same_sec4_unmerge_fcst: different verification time should return 1\n");
+                    return 1;
+                }
+            }
+            else if (i >= 49 && i < 53) {
+                if (!same_sec4_unmerge_fcst(1, sec_a, sec_b)) {
+                    printf("same_sec4_unmerge_fcst: different length of time range should return 1\n");
+                    return 1;
+                }
+            }
+            else {
+                if (same_sec4_unmerge_fcst(1, sec_a, sec_b)) {
+                    printf("same_sec4_unmerge_fcst: sections should be different at byte %d\n", i);
+                    return 1;
+                }
+            }
+            sec4_b[i] = sec4_a[i];
+        }
+
+        /* number of time ranges must be 1 */
+        sec4_a[41] = 0;
+        if (same_sec4_unmerge_fcst(1, sec_a, sec_b)) {
+            printf("same_sec4_unmerge_fcst: number of time ranges n != 1 should return 0\n");
+            return 1;
+        }
+        sec4_a[41] = 1;
+
+        /* must have stat proc time */
+        sec4_a[8] = 7; /* PDT Number */
+        sec4_b[8] = 7;
+        if (same_sec4_unmerge_fcst(1, sec_a, sec_b)) {
+            printf("same_sec4_unmerge_fcst: PDT without stat time should return 0\n");
+            return 1;   
+        }
+    }
     printf("SUCCESS!\n");
     return 0;
 }
