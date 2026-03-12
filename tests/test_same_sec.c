@@ -679,13 +679,13 @@ main()
             sec4_b[i] = 255;
             if (i >= 17 && i < 22) {
                 if (!same_sec4_for_merge(1, sec_a, sec_b)) {
-                    printf("same_sec4_for_merge: different forecast time should return 1\n");
+                    printf("same_sec4_for_merge: different forecast time should return 1. Failed at index %d\n", i);
                     return 1;
                 }
             }
             else if (i >= 34 && i < 41) {
                 if (!same_sec4_for_merge(1, sec_a, sec_b)) {
-                    printf("same_sec4_for_merge: different end of overall time interval should return 1\n");
+                    printf("same_sec4_for_merge: different end of overall time interval should return 1. Failed at index %d\n", i);
                     return 1;
                 }
             }
@@ -849,6 +849,7 @@ main()
             sec4_b[i] = sec4_a[i];
         }
     }
+
     printf("SUCCESS!\n");
     return 0;
 }
