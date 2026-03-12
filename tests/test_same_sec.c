@@ -521,7 +521,26 @@ main()
             sec4_b[i] = sec4_a[i];
         }
 
-        
+        /* Now testing on PDT without code table 4.4 (PDT 35)*/
+        sec4_a[3] = 15; /* section length */
+        sec4_b[3] = 15;
+
+        sec4_a[8] = 35; /* PDT Number */
+        sec4_b[8] = 35;
+
+        if (!same_sec4_not_time(1, sec_a, sec_b)) {
+            printf("same_sec4_not_time: sections should be the same\n");
+            return 1;
+        }
+
+        for (int i = 4; i < 15; i++) {
+            sec4_b[i] = 255;
+            if (same_sec4_not_time(1, sec_a, sec_b)) {
+                printf("same_sec4_not_time: sections should be different at byte %d\n", i);
+                return 1;
+            }
+            sec4_b[i] = sec4_a[i];
+        }
 
     }
     printf("SUCCESS!\n");
