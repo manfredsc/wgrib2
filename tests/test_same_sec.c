@@ -626,7 +626,165 @@ main()
             return 1;
         }
     }
+    printf("Testing same_sec4_for_merge()...\n");
+    {
+        unsigned char sec1[21] = {0};
+        unsigned char sec4_a[58] = {
+            0, 0, 0, 58,    /* Section length */
+            4,              /* Section number */
+            0, 0,           /* Num coord values after template */
+            0, 8,           /* Product definition template number */
+            /* Product Definition Template 8 */
+            0, 0,           /* Parameter category and number */
+            0, 0, 0,        /* Generating process info */
+            0, 0,           /* Hours after ref time cutoff */
+            0,              /* Minutes after ref time cutoff */
+            0,              /* Indicator of unit of time range */
+            0, 0, 0, 0,     /* Forecast time in units specified by PDT */
+            0, 0, 0, 0, 0, 0, /* Type, scale factor, scaled value of first fixed surface */
+            0, 0, 0, 0, 0, 0, /* Type, scale factor, scaled value of second fixed surface */
+            /* Time of end of overall time interval */
+            (2025 >> 8) & 0xff, (2025 & 0xff), /* Year */
+            3, 15, 12, 0, 0,    /* Month, day, hour, minute, second */
+            /* Rest of Template */
+            0, 0, 0, 0, 0, 0, 
+            0, 0, 0, 0, 0, 0, 
+            0, 0, 0, 0, 0
+        };
+        unsigned char sec4_b[58] = {0};
+        unsigned char *sec_a[10] = {0};
+        unsigned char *sec_b[10] = {0};
 
+        for (int i = 0; i < 58; i++) sec4_b[i] = sec4_a[i];
+
+        sec_a[1] = sec1; /* Section 1 is accessed for Center */
+        sec_b[1] = sec1;
+        sec_a[4] = sec4_a;
+        sec_b[4] = sec4_b;
+
+        if (!same_sec4_for_merge(1, sec_a, sec_b)) {
+            printf("same_sec4_for_merge: sections should be the same\n");
+            return 1;
+        } 
+
+        /* different section length */
+        sec4_b[3] = 57;
+        if (same_sec4_for_merge(1, sec_a, sec_b)) {
+            printf("same_sec4_for_merge: different section length should return 0\n");
+            return 1;
+        }
+        sec4_b[3] = sec4_a[3];
+  
+        for (int i = 4; i < 57; i++) {
+            sec4_b[i] = 255;
+            if (i >= 17 && i < 22) {
+                if (!same_sec4_for_merge(1, sec_a, sec_b)) {
+                    printf("same_sec4_for_merge: different forecast time should return 1\n");
+                    return 1;
+                }
+            }
+            else if (i >= 34 && i < 41) {
+                if (!same_sec4_for_merge(1, sec_a, sec_b)) {
+                    printf("same_sec4_for_merge: different end of overall time interval should return 1\n");
+                    return 1;
+                }
+            }
+            else {
+                if (same_sec4_for_merge(1, sec_a, sec_b)) {
+                    printf("same_sec4_for_merge: sections should be different at byte %d\n", i);
+                    return 1;
+                }
+            }
+            sec4_b[i] = sec4_a[i];
+        }
+
+        /* Now testing on PDT without stat time (PDT 7) */
+        sec4_a[3] = 34; /* section length */
+        sec4_b[3] = 34;
+
+        sec4_a[8] = 7; /* PDT Number */
+        sec4_b[8] = 7;
+
+        if (same_sec4_for_merge(1, sec_a, sec_b)) {
+            printf("same_sec4_for_merge: PDT without stat time should return 0\n");
+            return 1;
+        }
+    }
+    printf("Testing same_sec4_but_ensemble()...\n");
+    {
+        unsigned char sec1[21] = {0};
+        unsigned char sec4_a[39] = {
+            0, 0, 0, 39,    /* Section length */
+            4,              /* Section number */
+            0, 0,           /* Num coord values after template */
+            0, 41,          /* Product definition template number */
+            /* Product Definition Template 41 */
+            0, 0,           /* Parameter category and number */
+            0, 0,           /* Atmospheric Chemical Constituent Type */
+            0, 0, 0,        /* Generating process info */
+            0, 0,           /* Hours after ref time cutoff */
+            0,              /* Minutes after ref time cutoff */
+            0,              /* Indicator of unit of time range (Code Table 4.4) */
+            0, 0, 0, 0,     /* Forecast time in units specified by PDT */
+            0, 0, 0, 0, 0, 0, /* Type, scale factor, scaled value of first fixed surface */
+            0, 0, 0, 0, 0, 0, /* Type, scale factor, scaled value of second fixed surface */
+            0,              /* Type of ensemble forecast */
+            0,              /* Perturbation number */
+            0,              /* Number of forecasts in ensemble */
+        };
+        unsigned char sec4_b[58] = {0};
+        unsigned char *sec_a[10] = {0};
+        unsigned char *sec_b[10] = {0};
+
+        for (int i = 0; i < 58; i++) sec4_b[i] = sec4_a[i];
+
+        sec_a[1] = sec1; /* Section 1 is accessed for Center */
+        sec_b[1] = sec1;
+        sec_a[4] = sec4_a;
+        sec_b[4] = sec4_b;
+
+        /* use mode = 98 for coverage */
+        if (!same_sec4_but_ensemble(98, sec_a, sec_b)) {
+            printf("same_sec4_but_ensemble: sections should be the same\n");
+            return 1;
+        } 
+
+        /* different section length */
+        sec4_b[3] = 38;
+        if (same_sec4_but_ensemble(1, sec_a, sec_b)) {
+            printf("same_sec4_but_ensemble: different section length should return 0\n");
+            return 1;
+        }
+
+        for (int i = 4; i < 39; i++) {
+            sec4_b[i] = 255;
+            if (i == 19 || (i >= 20 && i < 24) || i == 36 || i == 37) {
+                if (!same_sec4_but_ensemble(1, sec_a, sec_b)) {
+                    if (i == 19) {
+                        printf("same_sec4_but_ensemble: different indicator of unit time range should return 1\n");
+                    }
+                    else if (i >= 20 && i < 24) {
+                        printf("same_sec4_but_ensemble: different forecast time should return 1\n");
+                    }
+                    else if (i == 36) {
+                        printf("same_sec4_but_ensemble: different type of ensemble forecast should return 1\n");
+                    }
+                    else {
+                        printf("same_sec4_but_ensemble: different perturbation number should return 1\n");
+                    }
+                    return 1;
+                }
+            }
+            else {
+                if (same_sec4_but_ensemble(1, sec_a, sec_b)) {
+                    printf("same_sec4_but_ensemble: sections should be different at byte %d\n", i);
+                    return 1;
+                }
+            }
+            sec4_b[i] = sec4_a[i];
+        }
+
+    }
     printf("SUCCESS!\n");
     return 0;
 }
