@@ -578,14 +578,14 @@ main()
         sec_a[4] = sec4_a;
         sec_b[4] = sec4_b;
 
-        if (!same_sec4_diff_ave_period(1, sec_a, sec_b)) {
+        if (!same_sec4_diff_ave_period(sec_a, sec_b)) {
             printf("same_sec4_diff_ave_period: sections should be the same\n");
             return 1;
         } 
 
         /* different section length */
         sec4_b[3] = 57;
-        if (same_sec4_diff_ave_period(1, sec_a, sec_b)) {
+        if (same_sec4_diff_ave_period(sec_a, sec_b)) {
             printf("same_sec4_diff_ave_period: different section length should return 0\n");
             return 1;
         }
@@ -594,19 +594,19 @@ main()
         for (int i = 4; i < 57; i++) {
             sec4_b[i] = 255;
             if (i >= 34 && i < 41) {
-                if (!same_sec4_diff_ave_period(1, sec_a, sec_b)) {
+                if (!same_sec4_diff_ave_period(sec_a, sec_b)) {
                     printf("same_sec4_diff_ave_period: different end of overall time interval should return 1\n");
                     return 1;
                 }
             }
             else if (i >= 49 && i < 53) {
-                if (!same_sec4_diff_ave_period(1, sec_a, sec_b)) {
+                if (!same_sec4_diff_ave_period(sec_a, sec_b)) {
                     printf("same_sec4_diff_ave_period: different time range return 1\n");
                     return 1;
                 }
             }
             else {
-                if (same_sec4_diff_ave_period(1, sec_a, sec_b)) {
+                if (same_sec4_diff_ave_period(sec_a, sec_b)) {
                     printf("same_sec4_diff_ave_period: sections should be different at byte %d\n", i);
                     return 1;
                 }
@@ -621,11 +621,12 @@ main()
         sec4_a[8] = 7; /* PDT Number */
         sec4_b[8] = 7;
 
-        if (same_sec4_diff_ave_period(1, sec_a, sec_b)) {
+        if (same_sec4_diff_ave_period(sec_a, sec_b)) {
             printf("same_sec4_diff_ave_period: PDT without stat time should return 0\n");
             return 1;
         }
     }
+
     printf("SUCCESS!\n");
     return 0;
 }
