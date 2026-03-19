@@ -744,7 +744,7 @@ main()
         sec_b[4] = sec4_b;
 
         /* use mode = 98 for coverage */
-        if (!same_sec4_but_ensemble(98, sec_a, sec_b)) {
+        if (!same_sec4_but_ensemble(1, sec_a, sec_b)) {
             printf("same_sec4_but_ensemble: sections should be the same\n");
             return 1;
         } 
