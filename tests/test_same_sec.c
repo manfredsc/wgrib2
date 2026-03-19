@@ -755,11 +755,12 @@ main()
             printf("same_sec4_but_ensemble: different section length should return 0\n");
             return 1;
         }
+        sec4_b[3] = sec4_a[3];
 
         for (int i = 4; i < 39; i++) {
             sec4_b[i] = 255;
             if (i == 19 || (i >= 20 && i < 24) || i == 36 || i == 37) {
-                if (!same_sec4_but_ensemble(98, sec_a, sec_b)) {
+                if (!same_sec4_but_ensemble(1, sec_a, sec_b)) {
                     if (i == 19) {
                         printf("same_sec4_but_ensemble: different indicator of unit time range should return 1\n");
                     }
