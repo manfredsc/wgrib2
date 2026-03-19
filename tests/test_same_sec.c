@@ -732,11 +732,11 @@ main()
             0,              /* Perturbation number */
             0,              /* Number of forecasts in ensemble */
         };
-        unsigned char sec4_b[58] = {0};
+        unsigned char sec4_b[39] = {0};
         unsigned char *sec_a[10] = {0};
         unsigned char *sec_b[10] = {0};
 
-        for (int i = 0; i < 58; i++) sec4_b[i] = sec4_a[i];
+        for (int i = 0; i < 39; i++) sec4_b[i] = sec4_a[i];
 
         sec_a[1] = sec1; /* Section 1 is accessed for Center */
         sec_b[1] = sec1;
@@ -744,7 +744,7 @@ main()
         sec_b[4] = sec4_b;
 
         /* use mode = 98 for coverage */
-        if (!same_sec4_but_ensemble(1, sec_a, sec_b)) {
+        if (!same_sec4_but_ensemble(98, sec_a, sec_b)) {
             printf("same_sec4_but_ensemble: sections should be the same\n");
             return 1;
         } 
