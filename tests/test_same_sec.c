@@ -251,12 +251,7 @@ main()
         unsigned char *sec_a[10] = {0};
         unsigned char *sec_b[10] = {0};
 
-        /**
-         * same_sec1_not_var() does not compare beyond byte 12. 
-         * Test will break if same_sec1_not_var() ever compares all 21 bytes.
-         */
-        for (int i = 0; i < 12; i++) sec1_b[i] = sec1_a[i];
-        for (int i = 12; i < 21; i++) sec1_b[i] = 255;
+        for (int i = 0; i < 21; i++) sec1_b[i] = sec1_a[i];
 
         sec_a[1] = sec1_a;
         sec_b[1] = sec1_b;
@@ -274,7 +269,7 @@ main()
         }
         sec1_b[3] = sec1_a[3];
 
-        for (int i = 4; i < 12; i++) {
+        for (int i = 4; i < 21; i++) {
             if (i == 9 || i == 10) continue; /* ignores master table and local table */
             sec1_b[i] = 255;
             if (same_sec1_not_var(1, sec_a, sec_b)) {
